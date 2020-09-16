@@ -25,9 +25,9 @@ def submission(sid):
     filename = submission.filename
     contents = None
     if contest.s3:
-      contents = contest.s3.Object(f"{submission.id}/{submission.filename}").get()['Body'].read().decode()
+      contents = contest.s3.Object(f"{ submission.id }/{ submission.filename }").get()['Body'].read().decode()
     else:
-      contents = open(f"/tmp/submissions/{submission.id}/{submission.filename}").read()
+      contents = open(f"/tmp/submissions/{ submission.id }/{ submission.filename }").read()
     return render_template('submission.html', submission=submission, filename=filename, contents=contents)
   return render_template("404.html")
 
@@ -36,7 +36,7 @@ def run_submission(sid):
   submission = contest.get_submission(sid)
   if submission:
     contest.test_submission(sid)
-    return redirect(f'/submissions/{sid}')
+    return redirect(f'/submissions/{ sid }')
   return render_template('404.html')
 
 @app.route('/submissions/<sid>/delete')
@@ -53,7 +53,7 @@ def problems():
 
 @app.route('/problems/<pid>')
 def problem(pid):
-  desc = open(f"problems/{pid}.md").read()
+  desc = open(f"problems/{ pid }.md").read()
   return render_template('problem.html', problem=contest.get_problem(pid), desc=desc)
   
 @app.route('/problems/<pid>/submit', methods=['GET', 'POST'])
@@ -64,7 +64,7 @@ def submit(pid):
       return render_template('401.html')
     team = contest.get_team(session['user_id'])
     submission = contest.submit(problem, request, team)
-    return redirect(f'/submissions/{submission.id}')
+    return redirect(f'/submissions/{ submission.id }')
 
   return render_template('submit.html', problem=problem)
 

@@ -5,7 +5,7 @@ class JavaRunner(ProgramRunner):
   lang = "Java"
 
   def compile(self):
-    java_file = f"/tmp/submissions/{self.submission.id}/{self.submission.filename}"
+    java_file = f"/tmp/submissions/{ self.submission.id }/{ self.submission.filename }"
     
     compile_proc = subprocess.run(['javac', java_file])
     
@@ -13,7 +13,7 @@ class JavaRunner(ProgramRunner):
       raise Exception('compile_error')
   
   def exec(self, input):
-    cp = f"/tmp/submissions/{self.submission.id}"
+    cp = f"/tmp/submissions/{ self.submission.id }"
     classfile = self.submission.filename[:-5] # Cut off .class
 
     return subprocess.run(

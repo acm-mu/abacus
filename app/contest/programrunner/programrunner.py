@@ -23,7 +23,7 @@ class ProgramRunner:
     if end - start > self.submission.runtime:
       self.submission.runtime = end - start
 
-    print(f'stdout: {res.stdout}')
+    print(f'stdout: { res.stdout }')
 
     if res.stderr:
       test['status'] = 'run_time_error'
@@ -43,11 +43,11 @@ class ProgramRunner:
       self.compile()
     except Exception:
       self.submission.status = 'wrong_answer'
-      print(f"[ProgramRunner] Failed to compile '{self.submission.filename}'", flush=True)
+      print(f"[ProgramRunner] Failed to compile '{ self.submission.filename }'", flush=True)
       return
 
     all_passed = True
-    print(f"[ProgramRunner] Running {len(self.submission.tests)} for '{self.submission.id}'", flush=True)
+    print(f"[ProgramRunner] Running { len(self.submission.tests) } for '{ self.submission.id }'", flush=True)
     for test in self.submission.tests:
       status = self.run_test(test)
 

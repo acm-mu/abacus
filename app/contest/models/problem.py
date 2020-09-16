@@ -9,17 +9,17 @@ class Problem:
 
     self.tests = []
 
-    testdata_dir = f"testdata/{self.id}"
+    testdata_dir = f"testdata/{ self.id }"
     for filename in os.listdir(testdata_dir):
       # If `in` file.
       if filename[-3:] == ".in":
         # `ans` file for `in` file.
-        ans_file = f"{testdata_dir}/{filename[:-3]}.ans"
+        ans_file = f"{ testdata_dir }/{ filename[:-3] }.ans"
         # If `ans` file exists
         if os.path.isfile(ans_file):
           # Test metadata
           self.tests.append({
-            'in_file': f"{testdata_dir}/{filename}",
+            'in_file': f"{ testdata_dir }/{ filename }",
             'ans_file': ans_file,
             'status': 'pending'
           })

@@ -19,9 +19,9 @@ class ContestService:
 
     if username and password and hostname:
       if "." in hostname:
-        self.mongo_client = MongoClient(f'mongodb+srv://{username}:{password}@{hostname}')
+        self.mongo_client = MongoClient(f'mongodb+srv://{ username }:{ password }@{ hostname }')
       else:
-        self.mongo_client = MongoClient(f'mongodb://{username}:{password}@{hostname}:27017')
+        self.mongo_client = MongoClient(f'mongodb://{ username }:{ password }@{ hostname }:27017')
 
       self.db = self.mongo_client.competition
 
@@ -45,7 +45,7 @@ class ContestService:
       session['admin'] = True
       return True
 
-    team = self.db.teams.find_one({"username": formdata['username']})
+    team = self.db.teams.find_one({ "username": formdata['username'] })
     if team and team['password'].lower() == password:
       session['user_id'] = str(team['_id'])
       session['user_name'] = team['username']
@@ -57,7 +57,7 @@ class ContestService:
     self.problems = {}
     for obj in self.db.problems.find():
       self.problems[obj['id']] = Problem(obj)
-    print(f"Loaded {len(self.problems)} problem(s).")
+    print(f"Loaded { len(self.problems) } problem(s).")
 
   def get_problems(self):
     return self.problems.values()
@@ -70,11 +70,11 @@ class ContestService:
     for obj in self.db.teams.find():
       self.teams[str(obj['_id'])] = Team.fromObj(obj)
 
-    print(f"Loaded {len(self.teams)} team(s).")
+    print(f"Loaded { len(self.teams) } team(s).")
 
   def save_teams(self):
     for team in self.teams:
-      self.db.teams.update_one({'id': team.id}, { '$set': team.__dict__ })
+      self.db.teams.update_one({ 'id': team.id }, { '$set': team.__dict__ })
   
   def get_teams(self):
     return self.teams.values()
@@ -88,15 +88,15 @@ class ContestService:
     self.submissions = {}
     for obj in self.db.submissions.find():
       self.submissions[str(obj['_id'])] = Submission(obj)
-    print(f"Loaded {len(self.submissions)} submission(s).")
+    print(f"Loaded { len(self.submissions) } submission(s).")
 
   def save_submission(self, sid):
     sub = self.get_submission(sid)
-    self.db.submissions.update_one({'id': sub.id}, {'$set': sub.__dict__})
+    self.db.submissions.update_one({ 'id': sub.id }, { '$set': sub.__dict__ })
 
   def save_submissions(self):
     for sub in self.submissions.values():
-      self.db.submissions.update_one({'id': sub.id}, {'$set': sub.__dict__})
+      self.db.submissions.update_one({ 'id': sub.id }, { '$set': sub.__dict__ })
 
   def get_submissions(self):
     return sorted(self.submissions.values(), key=lambda s: int(s.date))
@@ -112,12 +112,12 @@ class ContestService:
     team.submissions.remove(sid)
 
     # Delete from mongo 'teams'
-    self.db.teams.update_one({'id': team.id}, { '$set': team.__dict__ })
+    self.db.teams.update_one({ 'id': team.id }, { '$set': team.__dict__ })
     
     # Delete from mongo 'submissions'
-    self.db.submissions.delete_one({'id': sid})
+    self.db.submissions.delete_one({ 'id': sid })
     if self.s3:
-      self.s3.Object(f"{submission.id}/{submission.filename}").delete()
+      self.s3.Object(f"{ submission.id }/{ submission.filename }").delete()
 
     # Remove from submissions list
     if sid in self.submissions:
@@ -132,14 +132,14 @@ class ContestService:
     _id = self.db.submissions.insert_one({}).inserted_id
 
     # Save file to `tmp` directory
-    path = f"/tmp/submissions/{str(_id)}/{sub_file.filename}"
+    path = f"/tmp/submissions/{ str(_id) }/{ sub_file.filename }"
     os.makedirs(os.path.dirname(path), exist_ok=True)
     sub_file.save(path)
 
     # Upload file to AWS S3 Bucket
     if self.s3:
       with open(path, "rb") as file_obj:
-        self.s3.upload_fileobj(file_obj, f"{str(_id)}/{sub_file.filename}")
+        self.s3.upload_fileobj(file_obj, f"{ str(_id) }/{ sub_file.filename }")
 
     # Generate sha1 hash for file
     h = hashlib.sha1()
@@ -177,13 +177,13 @@ class ContestService:
     self.submissions[submission.id] = submission
 
     # Update metadata in mongodb
-    self.db.submissions.update_one({'_id': _id}, {'$set': submission.__dict__})
+    self.db.submissions.update_one({ '_id': _id }, { '$set': submission.__dict__ })
 
     # Add sdubmission to team's submissions
     team.submissions.append(submission.id)
 
     # Save to mongodb
-    self.db.teams.update_one({'username': team.username}, { '$set': team.__dict__ })
+    self.db.teams.update_one({ 'username': team.username }, { '$set': team.__dict__ })
 
     return submission
 
@@ -198,11 +198,11 @@ class ContestService:
     submission = self.get_submission(sid)
 
     # Download Submission
-    d = f"/tmp/submissions/{submission.id}"
+    d = f"/tmp/submissions/{ submission.id }"
     os.makedirs(d, exist_ok=True)
-    key = f"{submission.id}/{submission.filename}"
+    key = f"{ submission.id }/{ submission.filename }"
     if self.s3:
-      self.s3.download_file(key, f"/tmp/submissions/{key}")
+      self.s3.download_file(key, f"/tmp/submissions/{ key }")
 
     # Find Program Runner to run Submission
     runner = self.get_runner(submission.language)
@@ -210,7 +210,7 @@ class ContestService:
       # Run submission
       runner(submission).run()
     else:
-      print(f"Couldn't find ProgramRunner for lang='{submission.language}'")
+      print(f"Couldn't find ProgramRunner for lang='{ submission.language }'")
 
     # Cleanup
     if self.s3:
