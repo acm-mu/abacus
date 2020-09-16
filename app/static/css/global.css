@@ -1,0 +1,194 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@300;400;600;700&display=swap');
+@import url('https://semantic-ui.com/dist/themes/default/assets/fonts/icons.woff2');
+
+:root {
+  --bg-color: #eee;
+  --gold: #FFCA08;
+  --blue: #1B3665;
+  --sky-blue: #00B1BC;
+  --light-green: #AAE2AB;
+  --dark-green: #4AAE4B;
+  --green: #52bb50;
+  --red: #F20707;
+  --light-red: #F67B51;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg-color);
+  color: #555;
+  font-family: 'Open Sans', sans-serif;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,h2,h3,h4,h5,h6{
+  font-family: "Open Sans", sans-serif;
+  color: #2A353A;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: normal;
+}
+
+/* header */
+
+.ui.fixed.menu.inverted {
+  background: var(--blue);
+}
+
+.header.item img.logo {
+  width: 70px !important;
+  height: 20px;
+}
+
+/* Block System */
+
+.main.container {
+  /* account for header */
+  margin-top: 4em;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.ui.text.container,
+.ui.container {
+  max-width: none !important;
+  width: 75vw;
+}
+
+.block {
+  background: white;
+  padding: 20px 30px;
+  /* Creating a border around the block the same color as the 
+     background creates a psuedo-margin. The border unlike the 
+     margin will resize the block proportionally */
+  border: .5rem solid var(--bg-color);
+}
+
+.transparent.block {
+  background: transparent;
+  padding: 0;
+}
+
+.xs-3 {
+  width: 25%;
+}
+
+.xs-6 {
+  width: 50%;
+}
+
+.xs-9 {
+  width: 75%;
+}
+
+.xs-12 {
+  width: 100%;
+}
+
+/* Button */
+
+a.button {
+  padding: 10px 12px;
+  font-size: 12px;
+  border-radius: 3px;
+  color: #fff;
+  margin-bottom: 1em;
+
+  text-align: center;
+  cursor: pointer;
+  border: none;
+}
+
+/* Icon */
+
+.icn:before {
+  font-family: Icons;
+  font-weight: 900;
+  content: "";
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  margin: 0 5px;
+}
+
+/* Icons */
+
+.icn.delete {
+  color: var(--red);
+}
+
+.icn.pending {
+  color: #555;
+  font-weight: bold;
+}
+
+.icn.wrong_answer, 
+.icn.run_time_error, 
+.icn.timeout_error {
+  color: red;
+  font-weight: bold;
+}
+
+.icn.accepted {
+  color: #84CD64;
+  font-weight: bold
+}
+
+.icn.rejected {
+  color: var(--red);
+  font-weight: bold;
+}
+
+/* Icons:before */
+
+.icn.delete:before {
+  content: '\f1f8';
+}
+
+.icn.pending:before {
+  content: "\f128";
+}
+
+.icn.rejected:before {
+  content: "\f00d";
+}
+
+.icn.accepted:before {
+  content: "\f00c";
+}
+
+.icn.wrong_answer:before, 
+.icn.run_time_error:before,
+.icn.timeout_error:before {
+  content: "\f00d";
+}
+
+/* Icons:after */
+
+td.pending:after {
+  content: "Pending";
+}
+
+td.wrong_answer:after {
+  content: "Wrong Answer";
+}
+
+td.run_time_error:after {
+  content: "Run Time Error";
+}
+
+td.timeout_error:after {
+  content: "Time Limit Expired";
+}
+
+td.accepted:after {
+  content: "Accepted";
+}

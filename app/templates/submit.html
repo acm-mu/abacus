@@ -1,0 +1,74 @@
+{% include 'header.html' %}
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/submit.css') }}">
+
+<title>Kattis Open Source - Submit {{problem.name}}</title>
+
+{% include 'progress.html' %}
+
+<div class='xs-12 block'>
+  <h1>Submit a solution to {{ problem.id }} - {{ problem.name }}</h1>
+
+  <form class="ui form" action="" method="POST" enctype="multipart/form-data">
+    <div id="file_dialog">
+      <div class="message">
+        <b>Drag & drop</b>&nbsp; a file here to upload<br />
+        <i>(Or click and choose file)</i>
+      </div>
+      <input id="sub_files_input" type="file" name="sub_file">
+    </div>
+
+    <div class="two fields">
+      <div class="field" id="languages">
+        <label>Language</label>
+        <select name="language" class="ui field dropdown">
+          <option value="Python 3">Python 3</option>
+          <option value="Java">Java</option>
+          <option value="C">C</option>
+        </select>
+      </div>
+
+      <div class="field" id="mainClass">
+        <label>Main class</label>
+        <input name="main_class" id="mainClass" type="text" class="ui input">
+      </div>
+    </div>
+    <div class="ui button">Cancel</div>
+    <input class="ui button" type="submit" value="Submit">
+  </form>
+</div>
+
+{% include 'footer.html' %}
+
+<script defer>
+  const sub_files_input = document.querySelector('#sub_files_input');
+  const message = document.querySelector('#file_dialog .message');
+  const languages = document.querySelector('#languages select');
+
+  const mainClass = document.querySelector('#mainClass');
+  const mainClassInput = document.querySelector('#mainClass input');
+
+  sub_files_input.onchange = function () {
+    const list = document.createElement('ul');
+    let language = "Java"
+    Array.from(this.files).forEach((file) => {
+      if (file.name.match(/\.java/)) language = "Java";
+      if (file.name.match(/\.py/)) language = "Python 3";
+      if (file.name.match(/\.c/)) language = "C";
+      const listItem = document.createElement('li');
+      listItem.innerText = file.name;
+      list.appendChild(listItem);
+    })
+    message.innerHTML = "<h3>Your submission will include the following files:</h3>"
+    message.appendChild(list);
+
+    languages.value = language;
+    if (language != "Java") {
+      mainClass.style.display = "none";
+    } else {
+      console.log(this.files[0])
+      mainClass.style.display = "block";
+      mainClassInput.value = this.files[0].name.replace(".java", "");
+    }
+  }
+</script>

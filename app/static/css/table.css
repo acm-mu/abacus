@@ -1,0 +1,82 @@
+.ui.table td.team_problem_solve {
+  padding: 0;
+  color: #555;
+  text-align: center;
+  font-family: 'Open Sans';
+}
+
+.ui.table td.team_problem_solve.solved {
+  background: var(--light-green) no-repeat center/32px url("images/standings/check.svg");
+}
+
+.ui.table td.team_problem_solve.failed {
+  background: var(--light-red) no-repeat center/32px url("images/standings/cross.svg");
+  color: #fff;
+}
+
+table {
+  border: none !important;
+}
+
+td,
+th {
+  border: none !important;
+  border-left: 1px solid #E7E7E8 !important;
+  border-bottom: 1px solid #E7E7E8 !important;
+  vertical-align: top !important;
+  font-size: 16px !important;
+  padding: 4px 16px !important;
+}
+
+td {
+  vertical-align: middle !important;
+}
+
+thead tr:first-child>th {
+  border-top: 1px solid #E7E7E8 !important;
+}
+
+tr>th:last-child,
+tr>td:last-child {
+  border-right: 1px solid #E7E7E8 !important;
+}
+
+th {
+  color: #898992 !important;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  padding: 14px 16px !important;
+  text-transform: uppercase;
+  background: #F7F8F9 !important;
+  text-align: left;
+}
+
+td a {
+  color: #4E92D0;
+  font-family: "Open Sans", sans-serif;
+  font-size: 16px;
+}
+
+/* Result */
+
+.result {
+  background: #F9F9F9;
+  border: 1px solid #C9C9C9;
+  display: block;
+  float: left;
+  padding: 0;
+  text-align: center;
+  border-radius: 4px;
+  font-size: 11px;
+  height: 17px;
+  width: 17px;
+  line-height: 1.42857143;
+  margin: 1px;
+}
+
+.result:before,
+.result:before {
+  margin: 0;
+  margin-top: -1px;
+}

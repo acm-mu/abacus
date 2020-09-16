@@ -1,0 +1,30 @@
+{% include 'header.html' %}
+
+<div class='block xs-6'>
+  {% if 'user_id' in session %}
+  <h3>You are already logged in!</h3>
+  {% else %}
+  <form action="/login" method="POST" class="ui form">
+    <img src="{{ url_for('static', filename='images/fulllogo.png') }}" width="300px">
+    <div class="field">
+      <label>Username</label>
+      <input type="text" name="username" required>
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" name="password" required>
+    </div>
+    <input type='submit' class="ui blue button" value="Login">
+  </form>
+  {% endif %}
+</div>
+
+<style>
+  .ui.form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+</style>
+
+{% include 'footer.html' %}

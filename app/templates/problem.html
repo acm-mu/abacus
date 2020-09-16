@@ -1,0 +1,36 @@
+{% include 'header.html' %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
+<link rel='stylesheet' type='text/css' href="{{ url_for('static', filename='css/problem.css') }}">
+
+<title>Kattis Open Source - {{problem.name}}</title>
+
+{% include 'progress.html' %}
+
+<div class='xs-9 problem block'>
+  <h1>Problem {{ problem.id }}<br>{{ problem.name }}</h1>
+
+  <hr>
+
+  <div class='markdown'> {{ desc }} </div>
+  
+</div>
+<div class='xs-3 block'>
+  <div style='display: flex; justify-content: space-evenly'>
+    <a href='/problems/{{problem.id}}/submit' class="icon button" id="submit" data-tooltip="Submit"
+      data-position="top center" data-inverted="">
+      <i class="upload icon"></i>
+      Submit
+    </a>
+    <a class="icon button" id="stats" data-tooltip="Stats" data-position="top center" data-inverted="">
+      <i class="chart bar icon"></i>
+      Stats
+    </a>
+  </div>
+  <p><b>Problem ID:</b> {{ problem.id }}</p>
+  <p><b>CPU Time limit:</b> {{ problem.cpu_time_limit }}</p>
+  <p><b>Memory limit:</b> {{ problem.memory_limit }}</p>
+  <p><b>Download:</b> <a>Sample data files</a></p>
+</div>
+
+{% include 'footer.html' %}

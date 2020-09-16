@@ -1,0 +1,4 @@
+Flask>=1.1.2
+pymongo>=3.11.0
+dnspython>=2.0.0 # For connecting to remote mongodb servers
+boto3>=1.14.59 # For connecting to Amazon S3

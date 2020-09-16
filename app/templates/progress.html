@@ -1,0 +1,50 @@
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/progress.css') }}">
+
+<div class='xs-12 block'>
+  <div class='upper'>
+    <p><b>Start</b> <span id='start' value='1599411600000'></span></p>
+    <h1>Example Competition</h1>
+    <p><b>End</b> <span id='end' value='1599757200000'></span></p>
+  </div>
+
+  <div class='progress'>
+    <div id='progress-bar'>&nbsp;</div>
+  </div>
+
+  <div class='lower'>
+    <p><b>Time elapsed</b> <span id='timeElapsed'></span></p>
+    <p><b>Time remaining</b> <span id='timeRemaining'></span></p>
+  </div>
+</div>
+
+<script defer>
+  const start = document.querySelector('#start');
+  const end = document.querySelector('#end');
+
+  const startDate = new Date(parseInt(start.getAttribute('value'), 10));
+  const endDate = new Date(parseInt(end.getAttribute('value'), 10));
+
+  const timeElapsed = document.querySelector('#timeElapsed');
+  const timeRemaining = document.querySelector('#timeRemaining');
+
+  const progressBar = document.querySelector('#progress-bar');
+
+  setInterval(() => {
+    start.innerText = startDate.toLocaleString();
+    end.innerText = endDate.toLocaleString();
+
+    const total = endDate - startDate;
+    const now = Date.now();
+    const percent = Math.min((now - startDate) / total, 1);
+
+    if (endDate - now > 0) {
+      timeElapsed.innerText = format(now - startDate);
+      timeRemaining.innerText = format(endDate - now);
+    } else {
+      timeElapsed.innerText = format(endDate - startDate);
+      timeRemaining.innerText = "Finished";
+    }
+
+    progressBar.style.width = `${percent * 100}%`;
+  }, 20);
+</script>
