@@ -1,1 +1,1 @@
-from .contest import ContestService
+from .contest import contest

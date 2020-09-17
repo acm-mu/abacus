@@ -218,3 +218,5 @@ class ContestService:
 
     # Save
     self.save_submission(sid)
+  
+contest = ContestService()
