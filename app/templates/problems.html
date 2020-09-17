@@ -1,28 +1,34 @@
-{% include 'header.html' %}
+{% extends 'page.html' %}
 
-<title>Kattis Open Source - Problems</title>
+{% block head %}
 
-{% include 'progress.html' %}
+  <title>Kattis Open Source - Problems</title>
 
-<div class='transparent xs-12 block'>
-<table class="ui celled table">
-  <thead>
-    <tr>
-      <th></th>
-      <th>Problem Name</th>
-      <th># of Tests</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for problem in problems %}
-    <tr>
-      <th class="collapsing">{{ problem.id }}</th>
-      <td><a href='/problems/{{ problem.id }}'>{{ problem.name }}</a></td>
-      <td>{{ problem.tests|length }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-</div>
+{% endblock %}
 
-{% include 'footer.html' %}
+{% block content %}
+
+  {% include 'countdown.html' %}
+
+  <div class='transparent xs-12 block'>
+    <table class="ui celled table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Problem Name</th>
+          <th># of Tests</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for problem in problems %}
+        <tr>
+          <th class="collapsing">{{ problem.id }}</th>
+          <td><a href='/problems/{{ problem.id }}'>{{ problem.name }}</a></td>
+          <td>{{ problem.tests|length }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+{% endblock %}

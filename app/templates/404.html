@@ -1,5 +1,7 @@
-{% include 'header.html' %}
+{% extends 'page.html' %}
 
-<img src="{{ url_for('static', filename='images/404.png') }}">
+{% block content %}
 
-{% include 'footer.html' %}
+  <img src="{{ url_for('static', filename='images/404.png') }}">
+
+{% endblock %}

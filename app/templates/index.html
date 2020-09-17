@@ -1,7 +1,13 @@
-{% include 'header.html' %}
+{% extends 'page.html' %}
 
-<title>Kattis Open Source</title>
+{% block head %}
 
-{% include 'progress.html' %}
+  <title>Kattis Open Source</title>
 
-{% include 'footer.html' %}
+{% endblock %}
+
+{% block content %}
+
+  {% include 'countdown.html' %}
+
+{% endblock %}

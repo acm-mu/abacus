@@ -2,17 +2,19 @@
 <html lang="en">
 
 <head>
-  <link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css'>
+  <link rel='stylesheet' type='text/css'
+    href='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css'>
   <script src='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js'></script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel='stylesheet' type='text/css' href="{{ url_for('static', filename='css/global.css') }}">
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/table.css') }}">
   <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
   <link rel='icon' type='image/png' href="{{ url_for('static', filename='images/logo.png') }}">
+  {% block head %} {% endblock %}
 </head>
 
 <body>
-  <div class="ui fixed inverted menu" >
+  <div class="ui fixed inverted menu">
     <div class="ui container">
       <a href="/" class="header item">
         <img class="logo" src="{{ url_for('static', filename='images/fulllogoy.png') }}">
@@ -34,3 +36,8 @@
   </div>
 
   <div class="ui main text container">
+    {% block content %} {% endblock %}
+  </div>
+</body>
+
+</html>
