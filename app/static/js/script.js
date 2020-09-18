@@ -1,13 +1,16 @@
 function formatTime(milliseconds) {
-    const date = new Date(milliseconds);
+    
+    let hours = Math.floor(milliseconds / (1000 * 60 * 60));
+    milliseconds %= (1000 * 60 * 60);
 
-    let minutes = "" + date.getMinutes();
+    let minutes = "" + Math.floor(milliseconds / (1000 * 60));
     if (minutes < 10) minutes = "0" + minutes;
-
-    let seconds = "" + date.getSeconds();
+    milliseconds %= (1000 * 60);
+    
+    let seconds = "" + Math.floor(milliseconds / 1000);
     if (seconds < 10) seconds = "0" + seconds;
 
-    return  `${date.getHours()}:${minutes}:${seconds}`;
+    return  `${hours}:${minutes}:${seconds}`;
 }
 
 // Any elements that have a `time` attribute with milliseconds will be formmated.
@@ -34,14 +37,10 @@ function convertMarkdown() {
 // With appropriate default values.
 function fillDateInputs() {
   document.querySelectorAll('.date.fields').forEach((dateField) => {
-    let value = new Date(dateField.getAttribute('date')).toISOString();
+    let values = dateField.getAttribute('date').split(' ');
 
-    // YYYY-MM-DDTHH:MM:SS.####Z
-    let date = value.substring(0, 10); // The first 10 chars represents the date (YYYY-MM-DD)
-    let time = value.substring(11, 16); // The following 5 chars after 'T' represent the time (HH:MM)
-
-    dateField.querySelector('input[type=date]').value = date;
-    dateField.querySelector('input[type=time]').value = time;
+    dateField.querySelector('input[type=date]').value = values[0];
+    dateField.querySelector('input[type=time]').value = values[1].substring(0, 5); // Cut of seconds
   })
 }
 
