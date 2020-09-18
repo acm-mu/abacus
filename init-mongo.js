@@ -1,5 +1,14 @@
 // This script will use the MONGO_INITDB_DATABASE database defined in the `docker-compose.yml`
 
+// Settings
+db.createCollection('settings');
+
+db.settings.insert({
+  competition_name: "Example Competition",
+  start_date: new Date('2020-09-15T08:00:00.000+00:00'),
+  end_date: new Date('2020-09-25T08:00:00.000+00:00')
+})
+
 // Problems
 db.createCollection('problems');
 

@@ -3,9 +3,9 @@
 
 <div class='xs-12 block'>
   <div class='upper'>
-    <p><b>Start</b> <span id='start' value='1599411600000'></span></p>
-    <h1>Example Competition</h1>
-    <p><b>End</b> <span id='end' value='1599757200000'></span></p>
+    <p><b>Start</b> <span id='start' value="{{ settings['start_date'] }}"></span></p>
+    <h1>{{ settings['competition_name'] }}</h1>
+    <p><b>End</b> <span id='end' value="{{ settings['end_date'] }}"></span></p>
   </div>
 
   <div class='countdown'>

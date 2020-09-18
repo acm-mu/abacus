@@ -10,7 +10,7 @@ app.register_blueprint(blue)
 
 @app.route('/')
 def index():
-  return render_template('index.html')
+  return render_template('index.html', settings=contest.get_settings())
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -18,7 +18,7 @@ def login():
     if contest.auth_login(request.form, session):
       return redirect('/')
 
-  return render_template('login.html', session=session)
+  return render_template('login.html', session=session, settings=contest.get_settings())
  
 @app.route('/logout')
 def logout():

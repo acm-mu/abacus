@@ -8,6 +8,8 @@ class ContestService:
     self.init_mongo()
     self.init_s3()
 
+    self.load_settings()
+
     self.load_problems()
     self.load_teams()
     self.load_submissions()
@@ -33,6 +35,21 @@ class ContestService:
     if aws_access_key and aws_secret_key:
       self.s3_client = boto3.Session(aws_access_key_id=aws_access_key, aws_secret_access_key=aws_secret_key)
       self.s3 = self.s3_client.resource('s3').Bucket("mu-kattis-submissions")
+
+  def load_settings(self):
+    if not(self.db):
+      return False
+    
+    self.settings = self.db.settings.find_one({})
+
+    print('Loaded settings', flush=True)
+    print(self.settings, flush=True)
+
+  def save_settings(self):
+    self.db.settings.update_one({ '_id': self.settings['_id'] }, { '$set': self.settings })
+
+  def get_settings(self):
+    return self.settings
 
   def auth_login(self, formdata, session):
     m = hashlib.sha256()

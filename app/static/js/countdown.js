@@ -2,8 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const start = document.querySelector('#start');
   const end = document.querySelector('#end');
 
-  const startDate = new Date(parseInt(start.getAttribute('value'), 10));
-  const endDate = new Date(parseInt(end.getAttribute('value'), 10));
+  const startDate = new Date(start.getAttribute('value'));
+  const endDate = new Date(end.getAttribute('value'));
 
   const timeElapsed = document.querySelector('#timeElapsed');
   const timeRemaining = document.querySelector('#timeRemaining');
@@ -19,10 +19,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const percent = Math.min((now - startDate) / total, 1);
 
     if (endDate - now > 0) {
-      timeElapsed.innerText = format(now - startDate);
-      timeRemaining.innerText = format(endDate - now);
+      timeElapsed.innerText = formatTime(now - startDate);
+      timeRemaining.innerText = formatTime(endDate - now);
     } else {
-      timeElapsed.innerText = format(endDate - startDate);
+      timeElapsed.innerText = formatTime(endDate - startDate);
       timeRemaining.innerText = "Finished";
     }
 
