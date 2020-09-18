@@ -26,5 +26,6 @@ def settings():
         contest.settings['end_date'] = end_date
 
         contest.save_settings()
+        return render_template('admin/settings.html', settings=contest.get_settings(), status="success")
 
     return render_template('admin/settings.html', settings=contest.get_settings())

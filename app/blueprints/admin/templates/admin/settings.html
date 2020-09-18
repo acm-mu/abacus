@@ -3,9 +3,22 @@
 {% block content %}
 
   <div class='block xs-6'>
+    {% if status == 'success' %}
+
+        <div class="ui tiny icon message success">
+          <i class="check tiny icon"></i>
+          <div class="content">
+            <div class="header">
+              Your changes have been saved!
+            </div>
+          </div>
+        </div>
+        
+    {% endif %}
+
     <form class='ui form' action="" method="POST">
       <h1>Competition Settings</h1>
-
+      
       <div class="field">
         <label>Competition Name</label>
         <input type="text" name="competition-name" value="{{ settings['competition_name'] }}">
