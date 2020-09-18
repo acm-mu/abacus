@@ -24,7 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (language != "Java") {
       mainClass.style.display = "none";
     } else {
-      console.log(this.files[0])
       mainClass.style.display = "block";
       mainClassInput.value = this.files[0].name.replace(".java", "");
     }

@@ -42,9 +42,6 @@ class ContestService:
     
     self.settings = self.db.settings.find_one({})
 
-    print('Loaded settings', flush=True)
-    print(self.settings, flush=True)
-
   def save_settings(self):
     self.db.settings.update_one({ '_id': self.settings['_id'] }, { '$set': self.settings })
 
@@ -168,8 +165,6 @@ class ContestService:
     for sub in [self.get_submission(sid) for sid in team.submissions]:
       if sub.prob_id == problem.id:
         sub_no += 1
-
-    print(team.__dict__, flush=True)
 
     # Describe Submission metadata
     submission = Submission({

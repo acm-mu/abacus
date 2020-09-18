@@ -23,8 +23,6 @@ class ProgramRunner:
     if end - start > self.submission.runtime:
       self.submission.runtime = end - start
 
-    print(f'stdout: { res.stdout }')
-
     if res.stderr:
       test['status'] = 'run_time_error'
     elif res.stdout.rstrip() == outfile.read().rstrip():
