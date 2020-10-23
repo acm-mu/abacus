@@ -1,6 +1,7 @@
 function formatTime(milliseconds) {
     
     let hours = Math.floor(milliseconds / (1000 * 60 * 60));
+    if (hours < 10) hours = "0" + hours;
     milliseconds %= (1000 * 60 * 60);
 
     let minutes = "" + Math.floor(milliseconds / (1000 * 60));
@@ -10,7 +11,7 @@ function formatTime(milliseconds) {
     let seconds = "" + Math.floor(milliseconds / 1000);
     if (seconds < 10) seconds = "0" + seconds;
 
-    return  `${hours}:${minutes}:${seconds}`;
+    return `${hours}:${minutes}:${seconds}`;
 }
 
 // Any elements that have a `time` attribute with milliseconds will be formmated.
