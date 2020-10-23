@@ -1,7 +1,6 @@
 from contest.models import *
 from pymongo import MongoClient
 import shutil, os, hashlib, boto3, time
-from .programrunner import ProgramRunner
 
 class ContestService:
   def __init__(self):
@@ -34,7 +33,7 @@ class ContestService:
     self.s3 = None
     if aws_access_key and aws_secret_key:
       self.s3_client = boto3.Session(aws_access_key_id=aws_access_key, aws_secret_access_key=aws_secret_key)
-      self.s3 = self.s3_client.resource('s3').Bucket("mu-kattis-submissions")
+      self.s3 = self.s3_client.resource('s3').Bucket("abacus-submissions")
 
   def load_settings(self):
     if not(self.db):
@@ -199,36 +198,10 @@ class ContestService:
 
     return submission
 
-  def get_runner(self, language):
-    # Iterate over all classes that inherit `ProgramRunner` to find one for `language`
-    for runner in ProgramRunner.__subclasses__():
-      if runner.lang == language:
-        return runner
-    return None
-
-  def test_submission(self, sid):
-    submission = self.get_submission(sid)
-
-    # Download Submission
-    d = f"/tmp/submissions/{ submission.id }"
-    os.makedirs(d, exist_ok=True)
-    key = f"{ submission.id }/{ submission.filename }"
-    if self.s3:
-      self.s3.download_file(key, f"/tmp/submissions/{ key }")
-
-    # Find Program Runner to run Submission
-    runner = self.get_runner(submission.language)
-    if runner:
-      # Run submission
-      runner(submission).run()
-    else:
-      print(f"Couldn't find ProgramRunner for lang='{ submission.language }'")
-
-    # Cleanup
-    if self.s3:
-      shutil.rmtree(d)
-
-    # Save
-    self.save_submission(sid)
+  def get_users(self):
+    return []
+  
+  def get_user(self, uid):
+    return {}
   
 contest = ContestService()
