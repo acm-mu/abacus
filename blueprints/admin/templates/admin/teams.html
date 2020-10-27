@@ -1,0 +1,70 @@
+{% extends 'admin/page.html' %}
+
+{% block head %}
+
+  <title>Abacus - Problems</title>
+
+  <script>
+    function createTeam() {
+      $('.ui.modal').modal('show')
+    }
+  </script>
+
+{% endblock %}
+
+{% block content %}
+
+  <div class='transparent xs-12 block'>
+    <button class="ui blue button" onclick=createTeam() >Create Team</button>
+    <table class="ui celled table">
+      <thead>
+        <tr>
+          <th>Displayname</th>
+          <th>Username</th>
+          <th>Password</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for problem in problems %}
+        <tr>
+          <th class="collapsing">{{ problem.id }}</th>
+          <td><a href='/problems/{{ problem.id }}'>{{ problem.name }}</a></td>
+          <td>{{ problem.tests|length }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <form class="ui modal" method="POST" action="" async>
+    <i class="close icon"></i>
+    <div class="header">
+      New Team
+    </div>
+    <div class="content">
+      <div class="ui form">
+        <div class="field">
+          <label>Username</label>
+          <input type="text" name="user-name" placeholder="User Name">
+        </div>
+        <div class="field">
+          <label>Displayname</label>
+          <input type="text" name="display-name" placeholder="Display Name">
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input type="text" name="password" placeholder="Password">
+        </div>
+      </div>
+    </div>
+    <div class="actions">
+      <div class="ui gray deny button">
+        Cancel
+      </div>
+      <button type="submit" class="ui positive button">
+        Create 
+      </button>
+    </div>
+  </form>
+
+{% endblock %}
