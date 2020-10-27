@@ -28,7 +28,6 @@ def teams():
       Item={
         'user_name': request.form['user_name'],
         'display_name': request.form['display_name'],
-        'school_id': request.form['school_id'],
         'password': request.form['password']
       }
     )
@@ -39,10 +38,6 @@ def teams():
 def submissions():
   if request.method == 'GET':
     return dumps(contest.submissions)
-
-@api.route('/schools')
-def schools():
-  return dumps(contest.schools)
 
 @api.route('/problems')
 def problems():

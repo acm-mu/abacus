@@ -6,7 +6,6 @@ class ContestService:
     self.init_aws()
 
     self.load_problems()
-    self.load_schools()
     self.load_settings()
     self.load_submissions()
     self.load_users()
@@ -36,11 +35,7 @@ class ContestService:
   def load_problems(self):
     problems = self.db.Table('problem').scan()['Items']
     self.problems = {problem['problem_id']: problem for problem in problems}
-
-  def load_schools(self):
-    schools = self.db.Table('school').scan()['Items']
-    self.schools = {school['school_id']: school for school in schools}
-
+    
   def load_settings(self):
     settings = self.db.Table('setting').scan()['Items']
     self.settings = {s['key']: s['value'] for s in settings}
