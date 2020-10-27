@@ -1,4 +1,5 @@
 import os, hashlib, boto3, time, hashlib
+from flask import session
 
 class ContestService:
   def __init__(self):
@@ -10,7 +11,7 @@ class ContestService:
     self.load_submissions()
     self.load_users()
 
-  def auth_login(self, form_data, session):
+  def auth_login(self, form_data):
     m = hashlib.sha256()
     m.update(form_data['password'].encode())
     password = m.hexdigest()
@@ -25,7 +26,7 @@ class ContestService:
         
     return True
 
-  def home(self, session):
+  def home(self):
     if 'user_id' not in session or session['user_type'] == "team":
       return '/'
     

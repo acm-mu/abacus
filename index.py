@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, request, redirect, url_for
+from flask import Flask, render_template, session, request, redirect
 from contest import contest, api
 from blueprints import *
 import os, binascii
@@ -16,9 +16,8 @@ def index():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
   if request.method == 'POST':
-    if contest.auth_login(request.form, session):
-      pass
-    return redirect('/')
+    if contest.auth_login(request.form):
+      return redirect(contest.home())
 
   return render_template('login.html', session=session)
 
