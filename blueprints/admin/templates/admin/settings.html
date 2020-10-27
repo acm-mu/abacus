@@ -3,29 +3,27 @@
 {% block content %}
 
   <div class='block xs-6'>
-    {% if status == 'success' %}
 
-        <div class="ui tiny icon message success">
-          <i class="check tiny icon"></i>
-          <div class="content">
-            <div class="header">
-              Your changes have been saved!
-            </div>
-          </div>
+    <div id="success-message" style="display:none" class="ui tiny icon message success">
+      <i class="check tiny icon"></i>
+      <div class="content">
+        <div class="header">
+          Success!
         </div>
-        
-    {% endif %}
+        <p>Your changes have successfully been saved.</p>
+      </div>
+    </div>
 
-    <form class='ui form' action="" method="POST">
+    <form class='ui form' action="/api/contest" method="POST" onsuccess="success" async>
       <h1>Competition Settings</h1>
       
       <div class="field">
         <label>Competition Name</label>
-        <input type="text" name="competition-name" value="{{ settings['competition_name'] }}">
+        <input type="text" name="competition-name">
       </div>
 
       <label>Start Date</label>
-      <div class="date two fields" date="{{ settings['start_date'] }}">
+      <div class="date two fields" id="start_date">
         <div class="field">
           <input type="date" name="start-date">
         </div>
@@ -35,7 +33,7 @@
       </div>
 
       <label>End Date</label>
-      <div class="date two fields" date="{{ settings['end_date'] }}">
+      <div class="date two fields" id="end_date">
         <div class="field">
           <input type="date" name="end-date">
         </div>
@@ -47,4 +45,25 @@
       <input class="ui primary button" type="submit" value="Save">
     </form>
   </div>
+{% endblock %}
+
+{% block head %}
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    fetch('/api/contest')
+      .then(res => res.json())
+      .then(res => {
+          document.querySelector("input[name='competition-name']").value = res.competition_name
+          document.querySelector("#start_date").setAttribute('date', res.start_date)
+          document.querySelector("#end_date").setAttribute('date', res.end_date)
+
+          // Defined in js/script.js
+          fillDateInputs()
+      })
+  })
+
+  function success() {
+    document.querySelector('#success-message').style.display = 'flex'
+  }
+</script>
 {% endblock %}
