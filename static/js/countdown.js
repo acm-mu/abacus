@@ -1,31 +1,40 @@
+let startDate, endDate;
+
 document.addEventListener('DOMContentLoaded', () => {
-  const start = document.querySelector('#start');
-  const end = document.querySelector('#end');
+  fetch('/api/contest')
+    .then(res => res.json())
+    .then(res => {
+      document.querySelector('#competition_name').innerText = res.competition_name
+      startDate = new Date(res.start_date)
+      endDate = new Date(res.end_date)
+    })
 
-  const startDate = new Date(start.getAttribute('value'));
-  const endDate = new Date(end.getAttribute('value'));
+  const start = document.querySelector('#start_time')
+  const end = document.querySelector('#end_time')
 
-  const timeElapsed = document.querySelector('#timeElapsed');
-  const timeRemaining = document.querySelector('#timeRemaining');
+  const timeElapsed = document.querySelector('#timeElapsed')
+  const timeRemaining = document.querySelector('#timeRemaining')
 
-  const progressBar = document.querySelector('#progress-bar');
+  const progressBar = document.querySelector('#progress-bar')
 
   setInterval(() => {
-    start.innerText = startDate.toLocaleString();
-    end.innerText = endDate.toLocaleString();
+    if (!startDate || !endDate) return
+    
+    start.innerText = startDate.toLocaleString()
+    end.innerText = endDate.toLocaleString()
 
-    const total = endDate - startDate;
-    const now = Date.now();
-    const percent = Math.min((now - startDate) / total, 1);
+    const total = endDate - startDate
+    const now = Date.now()
+    const percent = Math.min((now - startDate) / total, 1)
 
     if (endDate - now > 0) {
-      timeElapsed.innerText = formatTime(now - startDate);
-      timeRemaining.innerText = formatTime(endDate - now);
+      timeElapsed.innerText = formatTime(now - startDate)
+      timeRemaining.innerText = formatTime(endDate - now)
     } else {
-      timeElapsed.innerText = formatTime(endDate - startDate);
-      timeRemaining.innerText = "Finished";
+      timeElapsed.innerText = formatTime(endDate - startDate)
+      timeRemaining.innerText = "Finished"
     }
 
-    progressBar.style.width = `${percent * 100}%`;
+    progressBar.style.width = `${percent * 100}%`
   }, 20);
 })
