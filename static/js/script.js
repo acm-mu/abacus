@@ -49,3 +49,25 @@ document.addEventListener("DOMContentLoaded", () => {
   convertMarkdown();
   fillDateInputs();
 });
+
+document.addEventListener('submit', function(e) {
+  const form = e.target
+  if (!form.hasAttribute('async')) return
+
+  const event = this
+
+  // Call asynchronously
+  fetch(form.action, {
+    method: form.method,
+    body: new FormData(form)
+  })
+    .then(res => {
+      if (res.status == '200') {
+        let onSuccess = window[form.getAttribute('onsuccess')]
+        onSuccess && onSuccess.call(form, event)
+      }
+    })
+
+  // Prevent default action
+  e.preventDefault()
+})
