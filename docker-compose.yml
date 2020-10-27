@@ -1,32 +1,12 @@
 version: "3.7"
 services:
   app:
-    container_name: kattis_app
-    restart: unless-stopped
+    container_name: abacus
     build:
-      context: app
+      context: .
       dockerfile: Dockerfile
-    depends_on:
-      - mongodb
+    restart: unless-stopped
     ports:
       - 80:80
-    environment:
-      MONGODB_HOSTNAME: mongodb
-      MONGODB_USERNAME: root
-      MONGODB_PASSWORD: root
-      ADMIN_PASS: 5E884898DA28047151D0E56F8DC6292773603D0D6AABBDD62A11EF721D1542D8 # password
     volumes: 
-      - ./app:/app
-      - ./data/submissions:/tmp/submissions
-  mongodb:
-    container_name: kattis_mongodb
-    image: mongo:latest
-    ports:
-      - 27017:27017
-    environment: 
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: root
-      MONGO_INITDB_DATABASE: competition
-    volumes:
-      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
-      - ./data/mongo-data:/data/db
+      - ./:/app
