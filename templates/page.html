@@ -2,6 +2,9 @@
 <html lang="en">
 
 <head>
+
+<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+
   <link rel='stylesheet' type='text/css'
     href='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css'>
   <script src='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js'></script>
@@ -12,6 +15,7 @@
   <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
   <link rel='icon' type='image/png' href="{{ url_for('static', filename='images/logo.png') }}">
   {% block head %} {% endblock %}
+  {% block script %} {% endblock %}
 </head>
 
 <body>
