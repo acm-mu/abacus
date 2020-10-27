@@ -1,207 +1,118 @@
-from contest.models import *
-from pymongo import MongoClient
-import shutil, os, hashlib, boto3, time
+import os, hashlib, boto3, time, hashlib
 
 class ContestService:
   def __init__(self):
-    self.init_mongo()
-    self.init_s3()
-
-    self.load_settings()
+    self.init_aws()
 
     self.load_problems()
-    self.load_teams()
+    self.load_schools()
+    self.load_settings()
     self.load_submissions()
+    self.load_users()
 
-  def init_mongo(self):
-    username = os.environ.get('MONGODB_USERNAME', None)
-    password = os.environ.get('MONGODB_PASSWORD', None)
-    hostname = os.environ.get('MONGODB_HOSTNAME', None)
+  def auth_login(self, form_data, session):
+    m = hashlib.sha256()
+    m.update(form_data['password'].encode())
+    password = m.hexdigest()
 
-    if username and password and hostname:
-      if "." in hostname:
-        self.mongo_client = MongoClient(f'mongodb+srv://{ username }:{ password }@{ hostname }')
-      else:
-        self.mongo_client = MongoClient(f'mongodb://{ username }:{ password }@{ hostname }:27017')
+    for user in self.users.values():
+      if user['user_name'] == form_data['username']:
+        if user['password'] == password:
+          session['user_id'] = user['user_id']
+          session['user_name'] = user['user_name']
+          session['user_type'] = user['type']
+          return True
+        
+    return True
 
-      self.db = self.mongo_client.competition
+  def home(self, session):
+    if 'user_id' not in session or session['user_type'] == "team":
+      return '/'
+    
+    if session['user_type'] == 'admin':
+      return '/admin'
 
-  def init_s3(self):
+  def load_problems(self):
+    problems = self.db.Table('problem').scan()['Items']
+    self.problems = {problem['problem_id']: problem for problem in problems}
+
+  def load_schools(self):
+    schools = self.db.Table('school').scan()['Items']
+    self.schools = {school['school_id']: school for school in schools}
+
+  def load_settings(self):
+    settings = self.db.Table('setting').scan()['Items']
+    self.settings = {s['key']: s['value'] for s in settings}
+
+  def save_settings(self, settings):
+    self.settings = settings
+
+    with self.db.Table('setting').batch_writer() as batch:
+      for key, value in self.settings.items():
+        batch.put_item(
+          Item={
+            'key': key,
+            'value': value
+          }
+        )
+  
+  def load_submissions(self):
+    submissions = self.db.Table('submission').scan()['Items']
+    self.submissions = {sub['submission_id']: sub for sub in submissions}
+
+  def load_users(self):
+    users = self.db.Table('user').scan()['Items']
+    self.users = {user['user_id']: user for user in users}
+
+  def init_aws(self):
     aws_access_key = os.environ.get('AWS_ACCESS_KEY', None)
     aws_secret_key = os.environ.get('AWS_SECRET_KEY', None)
 
-    self.s3 = None
-    if aws_access_key and aws_secret_key:
-      self.s3_client = boto3.Session(aws_access_key_id=aws_access_key, aws_secret_access_key=aws_secret_key)
-      self.s3 = self.s3_client.resource('s3').Bucket("abacus-submissions")
+    if not(aws_access_key) or not(aws_secret_key):
+      self.db = self.s3 = None
 
-  def load_settings(self):
-    if not(self.db):
-      return False
-    
-    self.settings = self.db.settings.find_one({})
+    self.aws = boto3.Session(
+      aws_access_key_id=aws_access_key, 
+      aws_secret_access_key=aws_secret_key,
+      region_name="us-east-2")
 
-  def save_settings(self):
-    self.db.settings.update_one({ '_id': self.settings['_id'] }, { '$set': self.settings })
-
-  def get_settings(self):
-    return self.settings
-
-  def auth_login(self, formdata, session):
-    m = hashlib.sha256()
-    m.update(formdata['password'].encode())
-    password = m.hexdigest()
-
-    if formdata['username'] == 'admin' and password == os.environ.get('ADMIN_PASS', "").lower():
-      session['user_id'] = 'admin'
-      session['user_name'] = 'admin'
-      session['admin'] = True
-      return True
-
-    team = self.db.teams.find_one({ "username": formdata['username'] })
-    if team and team['password'].lower() == password:
-      session['user_id'] = str(team['_id'])
-      session['user_name'] = team['username']
-      return True
-      
-    return False
-
-  def load_problems(self):
-    self.problems = {}
-    for obj in self.db.problems.find():
-      self.problems[obj['id']] = Problem(obj)
-    print(f"Loaded { len(self.problems) } problem(s).")
-
-  def get_problems(self):
-    return self.problems.values()
-
-  def get_problem(self, problem_id):
-    return self.problems[problem_id]
-
-  def load_teams(self):
-    self.teams = {}
-    for obj in self.db.teams.find():
-      self.teams[str(obj['_id'])] = Team.fromObj(obj)
-
-    print(f"Loaded { len(self.teams) } team(s).")
-
-  def save_teams(self):
-    for team in self.teams:
-      self.db.teams.update_one({ 'id': team.id }, { '$set': team.__dict__ })
-  
-  def get_teams(self):
-    return self.teams.values()
-
-  def get_team(self, tid):
-    if tid in self.teams:
-      return self.teams[tid]
-    return None
-
-  def load_submissions(self):
-    self.submissions = {}
-    for obj in self.db.submissions.find():
-      self.submissions[str(obj['_id'])] = Submission(obj)
-    print(f"Loaded { len(self.submissions) } submission(s).")
-
-  def save_submission(self, sid):
-    sub = self.get_submission(sid)
-    self.db.submissions.update_one({ 'id': sub.id }, { '$set': sub.__dict__ })
-
-  def save_submissions(self):
-    for sub in self.submissions.values():
-      self.db.submissions.update_one({ 'id': sub.id }, { '$set': sub.__dict__ })
-
-  def get_submissions(self):
-    return sorted(self.submissions.values(), key=lambda s: int(s.date))
-
-  def get_submission(self, sid):
-    if sid in self.submissions:
-      return self.submissions[sid]
-    return None
-
-  def del_submission(self, sid):
-    submission = self.get_submission(sid)
-    team = self.get_team(submission.team_id)
-    team.submissions.remove(sid)
-
-    # Delete from mongo 'teams'
-    self.db.teams.update_one({ 'id': team.id }, { '$set': team.__dict__ })
-    
-    # Delete from mongo 'submissions'
-    self.db.submissions.delete_one({ 'id': sid })
-    if self.s3:
-      self.s3.Object(f"{ submission.id }/{ submission.filename }").delete()
-
-    # Remove from submissions list
-    if sid in self.submissions:
-      del self.submissions[sid]
+    self.db = self.aws.resource('dynamodb')
+    self.s3 = self.aws.resource('s3')
 
   def submit(self, problem, request, team):
     language = request.form['language']
     main_class = request.form['main_class']
     sub_file = request.files['sub_file']
-
-    # Generate mongodb _id for submission
-    _id = self.db.submissions.insert_one({}).inserted_id
-
-    # Save file to `tmp` directory
-    path = f"/tmp/submissions/{ str(_id) }/{ sub_file.filename }"
-    os.makedirs(os.path.dirname(path), exist_ok=True)
-    sub_file.save(path)
+    submission_id = '1'
 
     # Upload file to AWS S3 Bucket
-    if self.s3:
-      with open(path, "rb") as file_obj:
-        self.s3.upload_fileobj(file_obj, f"{ str(_id) }/{ sub_file.filename }")
+    self.s3.Bucket('abacus-submissions').upload_fileobj(sub_file, f"{ submission_id }/{ sub_file.filename }")
 
     # Generate sha1 hash for file
     h = hashlib.sha1()
-    with open(path) as file_obj:
-      h.update(file_obj.read().encode())
-
-    # Count submission number for team
-    sub_no = 1
-    for sub in [self.get_submission(sid) for sid in team.submissions]:
-      if sub.prob_id == problem.id:
-        sub_no += 1
+    h.update(sub_file.read().encode())
 
     # Describe Submission metadata
-    submission = Submission({
-      'id': str(_id),
-      'sub_no': sub_no,
-      'status': "Pending",
-      'runtime': 0,
-      'date': int(time.time() * 1000),
-      'language': language,
-      'main_class': main_class,
-      'filename': sub_file.filename,
-      'filesize': os.path.getsize(path),
-      'sha1sum': h.hexdigest(),
-      'team_id': team.id,
-      'team_name': team.name,
-      'prob_id': problem.id,
-      'prob_name': problem.name,
-      'tests': problem.copy_tests()
-    })
+    self.db.Table('submission').put_item(
+      Item={
+        'id': submission_id,
+        'sub_no': 0,
+        'status': "Pending",
+        'runtime': 0,
+        'date': int(time.time() * 1000),
+        'language': language,
+        'main_class': main_class,
+        'filename': sub_file.filename,
+        'filesize': os.path.getsize(path),
+        'sha1sum': h.hexdigest(),
+        'team_id': team.id,
+        'team_name': team.name,
+        'prob_id': problem.id,
+        'prob_name': problem.name,
+        'tests': problem.copy_tests()
+      }
+    )
 
-    # Save Submission
-    self.submissions[submission.id] = submission
-
-    # Update metadata in mongodb
-    self.db.submissions.update_one({ '_id': _id }, { '$set': submission.__dict__ })
-
-    # Add sdubmission to team's submissions
-    team.submissions.append(submission.id)
-
-    # Save to mongodb
-    self.db.teams.update_one({ 'username': team.username }, { '$set': team.__dict__ })
-
-    return submission
-
-  def get_users(self):
-    return []
-  
-  def get_user(self, uid):
-    return {}
+    return submission_id
   
 contest = ContestService()
