@@ -1,7 +1,7 @@
 from flask import Flask, render_template, session, request, redirect
 from contest import contest, api
 from blueprints import *
-import os, binascii
+import os, binascii, base64
 
 app = Flask(__name__)
 
@@ -19,7 +19,7 @@ def login():
     if contest.auth_login(request.form):
       return redirect(contest.home())
 
-  return render_template('login.html', session=session)
+  return render_template('login.html')
 
 @app.route('/logout')
 def logout():

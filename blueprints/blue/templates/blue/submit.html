@@ -4,7 +4,7 @@
 
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/submit.css') }}">
 
-  <title>Abacus - Submit {{problem.name}}</title>
+  <title>Abacus - Submit </title>
 
   <script src="{{ url_for('static', filename='js/submit.js') }}"></script>
 
@@ -15,15 +15,16 @@
   {% include 'countdown.html' %}
 
   <div class='xs-12 block'>
-    <h1>Submit a solution to {{ problem.id }} - {{ problem.name }}</h1>
+    <h1>Submit a solution to - </h1>
 
-    <form class="ui form" action="" method="POST" enctype="multipart/form-data" async>
+    <form class="ui form" action="/api/submissions" method="POST" enctype="multipart/form-data" callback="submissionSuccess" async>
+      <input type="hidden" name="problem-id" value="{{ pid }}">
       <div id="file_dialog">
         <div class="message">
           <b>Drag & drop</b>&nbsp; a file here to upload<br />
           <i>(Or click and choose file)</i>
         </div>
-        <input id="sub_files_input" type="file" name="sub_file">
+        <input id="sub_files_input" type="file" name="sub-file">
       </div>
 
       <div class="two fields">
@@ -38,7 +39,7 @@
 
         <div class="field" id="mainClass">
           <label>Main class</label>
-          <input name="main_class" id="mainClass" type="text" class="ui input">
+          <input name="main-class" id="mainClass" type="text" class="ui input">
         </div>
       </div>
       <div class="ui button">Cancel</div>
@@ -46,4 +47,12 @@
     </form>
   </div>
 
+{% endblock %}
+
+{% block script %}
+<script>
+  function submissionSuccess(res) {
+    window.location.href = `/submissions/${res['submission_id']}`
+  }
+</script>
 {% endblock %}

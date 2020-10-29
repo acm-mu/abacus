@@ -181,7 +181,7 @@ td.pending:after {
   content: "Pending";
 }
 
-td.wrong_answer:after {
+td.wrong_answer:after, td.rejected:after {
   content: "Wrong Answer";
 }
 

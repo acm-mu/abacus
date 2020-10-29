@@ -21,6 +21,11 @@ function formatTimes() {
 
     timeElement.innerText = formatTime(time)
   });
+
+  document.querySelectorAll("[fromNow]").forEach((timeElement) => {
+    const time = parseInt(timeElement.getAttribute("fromNow"), 10)
+    timeElement.innerText = moment(time).fromNow()
+  })
 }
 
 // Any elements with the class `markdown` will convert to HTML.
@@ -72,7 +77,11 @@ document.addEventListener('submit', function(e) {
     .then(res => {
       if (res.status == '200') {
         let onSuccess = window[form.getAttribute('onsuccess')]
-        onSuccess && onSuccess.call(form, event)
+        onSuccess && onSuccess.call(this, form, event)
+        res.json().then(res => {
+          let callback = window[form.getAttribute('callback')]
+          callback && callback.call(this, res)
+        })
       }
     })
 

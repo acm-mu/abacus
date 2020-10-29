@@ -1,2 +1,2 @@
 Flask>=1.1.2
-boto3>=1.14.59 # For connecting to Amazon S3
+boto3>=1.14.59

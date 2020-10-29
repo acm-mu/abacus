@@ -32,9 +32,9 @@
       </thead>
       <tbody>
         <tr>
-          <td rowspan="2"><a href='/submissions/{{submission.id}}'>{{(submission.id|string)[:7]}}</a>
+          <td rowspan="2"><a href='/submissions/{{submission.submission_id}}'>{{(submission.submission_id|string)[:7]}}</a>
           </td>
-          <td time="{{submission.date}}"></td>
+          <td fromNow="{{submission.date}}"></td>
           <td><a href='/problems/{{submission.prob_id}}'>{{submission.prob_name}}</a></td>
           <td class='icn {{submission.status}}'></td>
           <td>{{(submission.runtime|string)[:4]}}</td>
@@ -43,20 +43,18 @@
         <tr>
           <td colspan="5">
             {% for test in submission.tests %}
-              {% if test['status'] == 'accepted' %}
+              {% if test['result'] == 'accepted' %}
               <span class="result icn accepted"></span>
-              {% elif test['status'] == 'pending' %}
-              <span class="result"></span>
-              {% else %}
+              {% elif test['result'] == 'rejected' %}
               <span class="result icn rejected"></span>
+              {% else %}
+              <span class="result"></span>
               {% endif %}
             {% endfor %}
           </td>
         </tr>
       </tbody>
     </table>
-
-    <a class="ui button" href="/submissions/{{submission.id}}/run">Run Tests</a>
   </div>
 
   <div class='xs-12 block'>
