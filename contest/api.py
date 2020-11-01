@@ -60,8 +60,24 @@ def problems():
   contest.load_problems()
   return dumps(contest.problems())
 
-@api.route('/problems/<prob_id>')
+@api.route('/problems/<prob_id>', methods=['GET', 'POST'])
 def problem(prob_id):
+  if request.method == "POST":
+    tests = {k:v for k,v in request.form.items() if '-in' in k or '-out' in k}
+    tests = [{'in': tests[f"{n}-in"], 'out': tests[f"{n}-out"]} for n in range(1, int(len(tests) / 2) + 1)]
+    print(tests,flush=True)
+    contest.db.Table('problem').put_item(
+      Item={
+        'problem_id': request.form['problem-id'],
+        'problem_name': request.form['problem-name'],
+        'memory_limit': request.form['memory-limit'],
+        'cpu_time_limit': request.form['cpu-time-limit'],
+        'description': request.form['description'],
+        'tests': tests
+      }
+    )
+    return request.form
+  
   return dumps(contest.problems()[prob_id])
 
 class AbacusEncoder(json.JSONEncoder):
