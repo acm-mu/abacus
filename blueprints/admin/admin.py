@@ -15,3 +15,13 @@ def teams():
 @admin.route('/settings')
 def settings():
     return render_template('admin/settings.html')
+
+@admin.route('/problems')
+def problems():
+    return render_template('admin/problems.html', problems=contest.problems().values())
+
+@admin.route('/problems/<pid>/edit')
+def edit_problem(pid):
+    if pid not in contest.problems():
+        return render_template('404.html')
+    return render_template('admin/edit_problem.html', problem=contest.problems()[pid])
