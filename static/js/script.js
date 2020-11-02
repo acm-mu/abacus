@@ -57,10 +57,22 @@ function createElement(html) {
   return temp.content.firstChild
 }
 
+function highlightItem() {
+  document.querySelectorAll('a.item[href]').forEach((e) => {
+    if (e.classList.contains('header'))
+      return
+    const href = e.getAttribute('href');
+    if (window.location.pathname == href)
+      e.classList.add('active')
+  })
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   formatTimes();
   convertMarkdown();
   fillDateInputs();
+
+  highlightItem();
 });
 
 document.addEventListener('submit', function(e) {
@@ -71,7 +83,7 @@ document.addEventListener('submit', function(e) {
 
   // Call asynchronously
   fetch(form.action, {
-    method: form.method,
+    method: form.getAttribute('method'),
     body: new FormData(form)
   })
     .then(res => {

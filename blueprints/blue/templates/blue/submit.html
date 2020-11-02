@@ -1,4 +1,4 @@
-{% extends 'page.html' %}
+{% extends 'blue/page.html' %}
 
 {% block head %}
 
@@ -52,7 +52,7 @@
 {% block script %}
 <script>
   function submissionSuccess(res) {
-    window.location.href = `/submissions/${res['submission_id']}`
+    window.location.href = `/blue/submissions/${res['submission_id']}`
   }
 </script>
 {% endblock %}

@@ -1,20 +1,18 @@
 {% extends 'page.html' %}
 
 {% block navbar %}
-<div class="ui fixed inverted menu">
+<div class="ui fixed inverted blue menu">
   <div class="ui container">
     <a href="/" class="header item">
       <img class="logo" src="{{ url_for('static', filename='images/fulllogoy.png') }}">
     </a>
-    <a href="/admin/" class="item">Home</a>
-    <a href="/admin/users" class="item">Users</a>
-    <a href="/admin/problems" class="item">Problems</a>
-    <a href="/admin/submissions" class="item">Submissions</a>
-    <a href="/admin/clarifications" class="item">Clarifications</a>
+    <a href="/blue/" class="item">Home</a>
+    <a href="/blue/problems" class="item">Problems</a>
+    <a href="/blue/standings" class="item">Standings</a>
+    <a href="/blue/submissions" class="item">Submissions</a>
 
     {% if 'user_id' in session %}
     <div class="right menu">
-      <a href="/admin/settings" class="right item"><i class="cog icon"></i></a>
       <a href="/{{ session['division'] }}"><div class='item'>{{session['user_name']}}</div></a>
       <a href='/logout' class="item">Log out</a>
     </div>

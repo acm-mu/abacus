@@ -1,4 +1,4 @@
-{% extends 'page.html' %}
+{% extends 'blue/page.html' %}
 
 {% block head %}
 
@@ -22,8 +22,8 @@
       <tbody>
         {% for problem in problems %}
         <tr>
-          <th class="collapsing">{{ problem.problem_id }}</th>
-          <td><a href='/problems/{{ problem.problem_id }}'>{{ problem.problem_name }}</a></td>
+          <th class="collapsing">{{ problem.id }}</th>
+          <td><a href='/blue/problems/{{ problem.id }}'>{{ problem.problem_name }}</a></td>
           <td>{{ problem.tests|length }}</td>
         </tr>
         {% endfor %}

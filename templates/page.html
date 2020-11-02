@@ -22,27 +22,22 @@
 
 <body>
   {% block navbar %}
-    <!-- Default navbar implementation -->
-    <div class="ui fixed inverted blue menu">
-      <div class="ui container">
-        <a href="/" class="header item">
-          <img class="logo" src="{{ url_for('static', filename='images/fulllogoy.png') }}">
-        </a>
-        <a href="/" class="item">Home</a>
-        <a href="/problems" class="item">Problems</a>
-        <a href="/standings" class="item">Standings</a>
-        <a href="/submissions" class="item">Submissions</a>
+  <div class="ui fixed inverted blue menu">
+    <div class="ui container">
+      <a href="/" class="header item">
+        <img class="logo" src="{{ url_for('static', filename='images/fulllogoy.png') }}">
+      </a>
 
-        {% if 'user_id' in session %}
-        <div class="right menu">
-          <div class='item'>{{session['user_name']}}</div>
-          <a href='/logout' class="item">Log out</a>
-        </div>
-        {% else %}
-        <a href='/login' class="right item">Log in</a>
-        {% endif %}
+      {% if 'user_id' in session %}
+      <div class="right menu">
+        <a href="/{{ session['division'] }}"><div class='item'>{{session['user_name']}}</div></a>
+        <a href='/logout' class="item">Log out</a>
       </div>
+      {% else %}
+      <a href='/login' class="right item">Log in</a>
+      {% endif %}
     </div>
+  </div>
   {% endblock %}
 
   <div class="ui main text container">

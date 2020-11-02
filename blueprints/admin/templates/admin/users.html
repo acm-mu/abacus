@@ -1,0 +1,132 @@
+{% extends 'admin/page.html' %}
+
+{% block head %}
+
+<title>Abacus - Problems</title>
+
+{% endblock %}
+
+{% block content %}
+
+  {% include 'countdown.html' %}
+
+  <div class='transparent xs-12 block'>
+    <button class="ui blue button" onclick=createTeam()>Create Team</button>
+    <table class="ui celled table">
+      <thead>
+        <tr>
+          <th class='collapsing'>#</th>
+          <th>Username</th>
+          <th>Type</th>
+          <th>Displayname</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+        <tr uuid="{{ user['user_id'] }}">
+          <td>{{ loop.index }}</td>
+          <td><a href='#' onclick=editTeam(this)>{{ user.user_name }}</a></td>
+          <td>{{ user.type }}</td>
+          <td>{{ user.display_name }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <form class="ui modal" id="userModal" method="POST" action="/api/teams" onsuccess="refresh" async>
+    <i class="close icon"></i>
+    <div class="header" id='modal_header'></div>
+    <div class="content">
+      <div class="ui form">
+        <input name="user-id" style="display: none"> 
+        <div class="field">
+          <label>Username</label>
+          <input type="text" name="user-name" placeholder="User Name">
+        </div>
+        <div class="field">
+          <label>User Type</label>
+          <select name="type">
+            <option value="team">Team</option>
+            <option value="judge">Judge</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Displayname</label>
+          <input type="text" name="display-name" placeholder="Display Name">
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input type="text" name="password" placeholder="Password">
+        </div>
+      </div>
+    </div>
+    <div class="actions">
+      <div class="ui gray deny button">Cancel</div>
+      <div class="ui negative button" id='delete' onclick=deleteUser()>Delete</div>
+      <button type="submit" class="ui positive button">Create</button>
+    </div>
+  </form>
+
+{% endblock %}
+
+{% block script %}
+  <script>
+    let form, modal_header
+    let uuid, type, username, displayname, password, submit, del
+
+    function createTeam() {
+      form.setAttribute('method', 'POST')
+      modal_header.innerText = "Create Team"
+      uuid.value = ""
+      type.value = "team"
+      username.value = ""
+      displayname.value = ""
+      password.value = ""
+      submit.innerText = "Create"
+      del.style.display = "none"
+
+      $('.ui.modal').modal('show')
+    }
+
+    function deleteUser() {
+      form.setAttribute('method', 'DELETE')
+      submit.click()
+    }
+
+    function editTeam(elem) {
+      const tr = elem.parentNode.parentNode
+
+      form.setAttribute('method', 'PUT')
+      modal_header.innerText = "Edit Users"
+      uuid.value = tr.getAttribute('uuid')
+      username.value = tr.children[1].innerText
+      type.value = tr.children[2].innerText
+      displayname.value = tr.children[3].innerText
+      password.value = ""
+      submit.innerText = "Save"
+      del.style.display = "inline-block"
+
+      $('.ui.modal').modal('show')
+    }
+
+    function refresh() {
+      window.location.reload()
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      form = document.querySelector('#userModal')
+      uuid = document.querySelector('input[name="user-id"]')
+      type = document.querySelector('select[name="type"]')
+      modal_header = document.querySelector('#modal_header')
+
+      username = document.querySelector('input[name="user-name"]')
+      displayname = document.querySelector('input[name="display-name"]')
+      password = document.querySelector('input[name="password"]')
+
+      del = document.querySelector('#delete')
+      submit = document.querySelector('button[type="submit"]')
+    })
+  </script>
+{% endblock %}

@@ -1,4 +1,4 @@
-{% extends 'page.html' %}
+{% extends 'blue/page.html' %}
 
 {% block head %}
 
@@ -13,7 +13,7 @@
   {% include 'countdown.html' %}
 
   <div class='xs-9 problem block'>
-    <h1>Problem {{ problem.problem_id }}
+    <h1>Problem {{ problem.id }}
     <br>
     {{ problem.problem_name }}</h1>
 
@@ -24,7 +24,7 @@
   </div>
   <div class='xs-3 block'>
     <div style='display: flex; justify-content: space-evenly'>
-      <a href='/problems/{{ problem.problem_id }}/submit' class="icon button" id="submit" data-tooltip="Submit"
+      <a href='/blue/problems/{{ problem.id }}/submit' class="icon button" id="submit" data-tooltip="Submit"
         data-position="top center" data-inverted="">
         <i class="upload icon"></i>
         Submit
@@ -34,7 +34,7 @@
         Stats
       </a>
     </div>
-    <p><b>Problem ID:</b> {{ problem.problem_id }}</p>
+    <p><b>Problem ID:</b> {{ problem.id }}</p>
     <p><b>CPU Time limit:</b> {{ problem.cpu_time_limit }}</p>
     <p><b>Memory limit:</b> {{ problem.memory_limit }}</p>
     <p><b>Download:</b> <a>Sample data files</a></p>

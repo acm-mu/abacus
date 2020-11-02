@@ -1,7 +1,11 @@
 from flask import Blueprint, render_template, session
 from contest import contest
 
-blue = Blueprint('blue_bp', __name__, url_prefix='/', template_folder='templates')
+blue = Blueprint('blue_bp', __name__, url_prefix='/blue', template_folder='templates')
+
+@blue.route('/')
+def index():
+  return render_template('blue/index.html')
 
 @blue.route('/standings')
 def standings():

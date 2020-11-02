@@ -31,20 +31,21 @@ class ContestService:
           session['user_id'] = user['user_id']
           session['user_name'] = user['user_name']
           session['user_type'] = user['type']
+          session['division'] = user['division']
           return True
         
     return False
 
   def home(self):
     if 'user_id' not in session or session['user_type'] == "team":
-      return '/'
+      return f"/{session['division']}"
     
     if session['user_type'] == 'admin':
       return '/admin'
 
   def problems(self):
     problems = self.db.Table('problem').scan()['Items']
-    return {problem['problem_id']: problem for problem in problems}
+    return {problem['id']: problem for problem in problems}
     
   def settings(self):
     settings = self.db.Table('setting').scan()['Items']

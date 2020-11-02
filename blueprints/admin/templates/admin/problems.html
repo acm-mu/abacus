@@ -11,20 +11,25 @@
   {% include 'countdown.html' %}
 
   <div class='transparent xs-12 block'>
+    <a href="/admin/problems/new"><button class="ui blue button">Create Problem</button></a>
     <table class="ui celled table">
       <thead>
         <tr>
           <th></th>
           <th>Problem Name</th>
-          <th># of Tests</th>
+          <th># Test Cases</th>
+          <th>Time Limit</th>
+          <th>Memory Limit</th>
         </tr>
       </thead>
       <tbody>
         {% for problem in problems %}
         <tr>
-          <th class="collapsing">{{ problem.problem_id }}</th>
-          <td><a href='/admin/problems/{{ problem.problem_id }}/edit'>{{ problem.problem_name }}</a></td>
+          <th class="collapsing">{{ problem.id }}</th>
+          <td><a href='/admin/problems/{{ problem.id }}/edit'>{{ problem.problem_name }}</a></td>
           <td>{{ problem.tests|length }}</td>
+          <td>{{ problem.cpu_time_limit }} ms</td>
+          <td>{{ problem.memory_limit }} MB</td>
         </tr>
         {% endfor %}
       </tbody>

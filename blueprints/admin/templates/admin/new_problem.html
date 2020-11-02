@@ -1,66 +1,35 @@
 {% extends 'admin/page.html' %}
 
 {% block content %}
-<div id="success-message" style="display:none" class="ui tiny icon message success">
-  <i class="check tiny icon"></i>
-  <div class="content">
-    <div class="header">
-      Success!
-    </div>
-    <p>Your changes have successfully been saved.</p>
-  </div>
-</div>
-
-<form class="ui form" action='/api/problems/{{ problem.id }}' method='PUT' onsuccess="success" async>
-  
-  <input type="submit" value="Save" class="ui primary button" style="float: right">
-  <div class="ui negative button" onclick=deleteProblem() style='float: right'>Delete</div>
-  <h1 style='float: left'>Edit Problem {{ problem.id }}</h1>
-
-  <input name='problem-id' style='display:none' value='{{ problem.problem_id }}'>
-
+<form class="ui form" action='/api/problems' method='POST' onsuccess="success" async>
+  <input type="submit" value="Create" class="ui primary button" style="float: right">
+  <h1>New Problem</h1>
   <div class="field">
     <label>Problem ID</label>
-    <input name='id' value='{{ problem.id }}'>
+    <input name='id'>
   </div>
-
   <div class="field">
     <label>Problem Name</label>
-    <input name='problem-name' value='{{ problem.problem_name }}'>
+    <input name='problem-name'>
   </div>
 
   <div class="two fields">
     <div class="field">
       <label>Memory Limit</label>
-      <input name='memory-limit' value='{{ problem.memory_limit }}'>
+      <input name='memory-limit'>
     </div>
     <div class="field">
       <label>CPU Time Limit</label>
-      <input name='cpu-time-limit' value='{{ problem.cpu_time_limit }}'>
+      <input name='cpu-time-limit'>
     </div>
   </div>
 
   <div class="field">
     <label>Tests</label>
     <div class="ui top attached tabular menu" id="tests">
-      {% for test in problem.tests %}
-      <div class="item" onclick=makeActive(this)>{{ loop.index }}</div>
-      {% endfor %}
       <div class="item" onclick=newTest(this)>+</div>
     </div>
     <div class="ui bottom attached active tab segment" id="tests_content">
-      {% for test in problem.tests %}
-      <div class="two fields" style="display: none">
-        <div class="field">
-          <label>Input</label>
-          <textarea name='{{ loop.index }}-in'>{{ test.in }}</textarea>
-        </div>
-        <div class="field">
-          <label>Answer</label>
-          <textarea name='{{ loop.index }}-out'>{{ test.out }}</textarea>
-        </div>
-      </div>
-      {% endfor %}
       <div class="field">
         <div class="ui button negative" onclick=deleteActive(this)>Delete</div>
       </div>
@@ -70,11 +39,11 @@
   <div class="two fields">
     <div class="field">
       <label>Problem Description</label>
-      <textarea name='description' rows id='input_desc'>{{ problem.description }}</textarea>
+      <textarea name='description' rows id='input_desc'></textarea>
     </div>
     <div class="field">
       <label>Preview</label>
-      <div id='preview' class='markdown'>{{ problem.description }}</div>
+      <div id='preview' class='markdown'></div>
     </div>
   </div>
 </form>
@@ -92,13 +61,6 @@
 {% block script %}
 <script>
 let converter, textarea, preview;
-
-  function convertMarkdown() {
-      let md = textarea.value;
-      md = md.replaceAll("&gt;", ">");
-      md = md.replaceAll("&lt;", "<");
-      preview.innerHTML = converter.makeHtml(md);
-  }
 
   function adjustHeight() {
     textarea.style.height = '5px'
@@ -124,15 +86,6 @@ let converter, textarea, preview;
       '</div>'), document.querySelector('#tests_content .ui.button').parentNode)
 
     makeActive(newItem)
-  }
-
-  function deleteProblem() {
-    const form = document.querySelector('.ui.form')
-    form.setAttribute('method', "DELETE")
-    document.querySelector('.ui.form input[type="submit"]').click()
-    setTimeout(() => {
-      window.location.href='/admin/problems'
-    }, 500)
   }
 
   function deleteActive(elem) {
@@ -161,21 +114,23 @@ let converter, textarea, preview;
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    converter = new showdown.Converter();
+    converter = new showdown.Converter()
     textarea = document.querySelector('#input_desc')
     preview = document.querySelector('#preview')
     
-    textarea.addEventListener('keyup', () => {  
-      convertMarkdown()
+    textarea.addEventListener('keyup', () => {
+      let md = textarea.value;
+      md = md.replaceAll("&gt;", ">");
+      md = md.replaceAll("&lt;", "<");
+      preview.innerHTML = converter.makeHtml(md);
       adjustHeight()
     })
 
-    adjustHeight()
     $('#tests .item:first-child').click()
 })
 
 function success() {
-  document.querySelector('#success-message').style.display = 'flex'
+  window.location.href = '/admin/problems'
 }
 </script>
 {% endblock %}
