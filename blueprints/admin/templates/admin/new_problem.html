@@ -62,6 +62,13 @@
 <script>
 let converter, textarea, preview;
 
+  function refreshPreview() {
+      let md = textarea.value;
+      md = md.replaceAll("&gt;", ">");
+      md = md.replaceAll("&lt;", "<");
+      preview.innerHTML = converter.makeHtml(md);
+  }
+
   function adjustHeight() {
     textarea.style.height = '5px'
     textarea.style.height = (textarea.scrollHeight + 15) + 'px'
@@ -119,10 +126,7 @@ let converter, textarea, preview;
     preview = document.querySelector('#preview')
     
     textarea.addEventListener('keyup', () => {
-      let md = textarea.value;
-      md = md.replaceAll("&gt;", ">");
-      md = md.replaceAll("&lt;", "<");
-      preview.innerHTML = converter.makeHtml(md);
+      refreshPreview()
       adjustHeight()
     })
 

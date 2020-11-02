@@ -93,7 +93,7 @@
 <script>
 let converter, textarea, preview;
 
-  function convertMarkdown() {
+  function refreshPreview() {
       let md = textarea.value;
       md = md.replaceAll("&gt;", ">");
       md = md.replaceAll("&lt;", "<");
@@ -166,7 +166,7 @@ let converter, textarea, preview;
     preview = document.querySelector('#preview')
     
     textarea.addEventListener('keyup', () => {  
-      convertMarkdown()
+      refreshPreview()
       adjustHeight()
     })
 
