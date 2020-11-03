@@ -21,7 +21,7 @@ def teams():
 def settings():
   if 'user_id' not in session:
     return render_template('401.html')
-  return render_template('admin/settings.html')
+  return render_template('admin/settings.html', settings=contest.settings())
 
 @admin.route('/submissions')
 def submissions():

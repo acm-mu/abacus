@@ -21,11 +21,11 @@
       <h3>Competition Settings</h3>
       <div class="field">
         <label>Competition Name</label>
-        <input type="text" name="competition-name">
+        <input type="text" name="competition-name" value="{{ settings['competition_name'] }}">
       </div>
 
       <label>Start Date</label>
-      <div class="date two fields" id="start_date">
+      <div class="date two fields" id="start_date" date="{{ settings['start_date'] }}">
         <div class="field">
           <input type="date" name="start-date">
         </div>
@@ -35,7 +35,7 @@
       </div>
 
       <label>End Date</label>
-      <div class="date two fields" id="end_date">
+      <div class="date two fields" id="end_date" date="{{ settings['end_date'] }}">
         <div class="field">
           <input type="date" name="end-date">
         </div>
@@ -48,22 +48,22 @@
       <h3>Scoring Settings</h3>
       <div class="field">
         <label>Points per Yes</label>
-        <input type="number" name="points-per-yes">
+        <input type="number" name="points-per-yes" value="{{ settings['points_per_yes']}}">
       </div>
       
       <div class="field">
         <label>Points per No</label>
-        <input type="number" name="points-per-no">
+        <input type="number" name="points-per-no" value="{{ settings['points_per_no'] }}">
       </div>
       
       <div class="field">
         <label>Points per Compilation Error</label>
-        <input type="number" name="points-per-compilation-error">
+        <input type="number" name="points-per-compilation-error" value="{{ settings['points_per_compilation_error'] }}">
       </div>
       
       <div class="field">
         <label>Points per Minute (1st Yes)</label>
-        <input type="number" name="points-per-minute">
+        <input type="number" name="points-per-minute" value="{{ settings['points_per_minute'] }}">
       </div>
 
       <input class="ui primary button" type="submit" value="Save">
@@ -73,19 +73,6 @@
 
 {% block head %}
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    fetch('/api/contest')
-      .then(res => res.json())
-      .then(res => {
-          document.querySelector("input[name='competition-name']").value = res.competition_name
-          document.querySelector("#start_date").setAttribute('date', res.start_date)
-          document.querySelector("#end_date").setAttribute('date', res.end_date)
-
-          // Defined in js/script.js
-          fillDateInputs()
-      })
-  })
-
   function success() {
     document.querySelector('#success-message').style.display = 'flex'
   }
