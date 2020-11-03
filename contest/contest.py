@@ -99,6 +99,7 @@ class ContestService:
         'sub_no': sub_no,
         'status': "pending",
         'runtime': 0,
+        'score': 0,
         'date': int(time.time() * 1000),
         'language': language,
         'main_class': main_class,
