@@ -37,7 +37,7 @@
           <td>{{submission.sub_no}}</td>
           <td>{{submission.language}}</td>
           <td class='icn {{submission.status}}'></td>
-          <td fromNow='{{submission.date}}'></td>
+          <td fromNow='{{submission.date*1000}}'></td>
         </tr>
         {% endfor %}
       </tbody>

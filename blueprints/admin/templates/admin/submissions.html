@@ -40,7 +40,7 @@
           <td>{{submission.language}}</td>
           <td class='icn {{submission.status}}'></td>
           <td>{{submission.runtime}}</td>
-          <td fromNow='{{submission.date}}'></td>
+          <td fromNow='{{submission.date*1000}}'></td>
           <td>{{submission.score}}</td>
         </tr>
         {% endfor %}
