@@ -22,6 +22,7 @@
           <th>Status</th>
           <th>Runtime</th>
           <th>Time</th>
+          <th>Score</th>
         </tr>
       </thead>
       <tbody>
@@ -40,6 +41,7 @@
           <td class='icn {{submission.status}}'></td>
           <td>{{submission.runtime}}</td>
           <td fromNow='{{submission.date}}'></td>
+          <td>{{submission.score}}</td>
         </tr>
         {% endfor %}
       </tbody>

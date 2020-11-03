@@ -30,9 +30,10 @@
           <th>STATUS</th>
           <th>CPU</th>
           <th>LANG</th>
+          <th>SCORE</th>
         </tr>
         <tr>
-          <th colspan="5">TEST CASES</th>
+          <th colspan="6">TEST CASES</th>
         </tr>
       </thead>
       <tbody>
@@ -44,6 +45,7 @@
           <td class='icn {{submission.status}}'></td>
           <td>{{(submission.runtime|string)[:4]}}</td>
           <td>{{submission.language}}</td>
+          <td>{{submission.score}}</td>
         </tr>
         <tr>
           <td colspan="5">
