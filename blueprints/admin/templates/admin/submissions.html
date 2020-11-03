@@ -20,6 +20,7 @@
           <th>Submission #</th>
           <th>Language</th>
           <th>Status</th>
+          <th>Runtime</th>
           <th>Time</th>
         </tr>
       </thead>
@@ -37,6 +38,7 @@
           <td>{{submission.sub_no}}</td>
           <td>{{submission.language}}</td>
           <td class='icn {{submission.status}}'></td>
+          <td>{{submission.runtime}}</td>
           <td fromNow='{{submission.date}}'></td>
         </tr>
         {% endfor %}
