@@ -38,6 +38,7 @@ def submission(sid):
 @blue.route('/problems')
 def problems():
   problems = contest.problems().values()
+  problems = sorted(problems, key=lambda prob: prob['id'])
   return render_template('blue/problems.html', problems=problems)
 
 @blue.route('/problems/<pid>')
@@ -53,4 +54,5 @@ def submit(pid):
     return render_template("404.html")
   if 'user_id' not in session or session['user_type'] != "team":
     return render_template("401.html")
-  return render_template(f'blue/submit.html', pid=pid)
+  problem_id = contest.problems()[pid]['problem_id']
+  return render_template(f'blue/submit.html', problem_id=problem_id)

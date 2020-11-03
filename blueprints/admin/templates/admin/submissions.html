@@ -33,7 +33,7 @@
         {% for submission in submissions %}
         <tr>
           <td><a href='/admin/submissions/{{ submission.submission_id }}'>{{ (submission.submission_id|string)[:7] }}</a></td>
-          <td><a href='/admin/problems/{{ submission.prob_id }}/edit'>{{ submission.prob_name}} </a></td>
+          <td><a href='/admin/problems/{{ submission.problem_id }}/edit'>{{ submission.prob_name}} </a></td>
           <td>{{submission.team_name}}</td>
           <td>{{submission.sub_no}}</td>
           <td>{{submission.language}}</td>

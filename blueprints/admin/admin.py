@@ -28,6 +28,11 @@ def submissions():
   if 'user_id' not in session:
     return render_template('401.html')
   submissions = list(contest.submissions().values())
+  for submission in submissions:
+    submission['team_name'] = contest.users()[submission['team_id']]['user_name']
+    prob_id = [prob for prob in contest.problems().values() if prob['problem_id'] == submission['prob_id']][0]['id']
+    submission['problem_id'] = prob_id
+    submission['prob_name'] = contest.problems()[prob_id]['problem_name']
   submissions = sorted(submissions, key= lambda obj:obj['date'], reverse=True)
   return render_template('admin/submissions.html', submissions=submissions)
 
@@ -79,7 +84,9 @@ def clarifications():
 def problems():
   if 'user_id' not in session:
     return render_template('401.html')
-  return render_template('admin/problems.html', problems=contest.problems().values())
+  problems = contest.problems().values()
+  problems = sorted(problems, key=lambda prob: prob['id'])
+  return render_template('admin/problems.html', problems=problems)
 
 @admin.route('/problems/<pid>/edit')
 def edit_problem(pid):

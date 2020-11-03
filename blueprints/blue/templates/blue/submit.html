@@ -18,7 +18,7 @@
     <h1>Submit a solution to - </h1>
 
     <form class="ui form" action="/api/submissions" method="POST" enctype="multipart/form-data" callback="submissionSuccess" async>
-      <input type="hidden" name="problem-id" value="{{ pid }}">
+      <input type="hidden" name="problem-id" value="{{ problem_id }}">
       <div id="file_dialog">
         <div class="message">
           <b>Drag & drop</b>&nbsp; a file here to upload<br />

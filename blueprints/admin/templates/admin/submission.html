@@ -40,7 +40,7 @@
           <td rowspan="2"><a href='/admin/submissions/{{submission.submission_id}}'>{{(submission.submission_id|string)[:7]}}</a>
           </td>
           <td fromNow="{{submission.date}}"></td>
-          <td><a href='/admin/problems/{{submission.prob_id}}/edit'>{{submission.prob_name}}</a></td>
+          <td><a href='/admin/problems/{{submission.problem_id}}/edit'>{{submission.prob_name}}</a></td>
           <td class='icn {{submission.status}}'></td>
           <td>{{(submission.runtime|string)[:4]}}</td>
           <td>{{submission.language}}</td>
