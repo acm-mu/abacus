@@ -46,6 +46,7 @@ def submission(sid):
 @admin.route('/submissions/<sid>/invoke')
 def invoke_submission(sid):
   submission = contest.submissions()[sid]
+  filename = submission['filename'] if submission['language'] == "Python 3" else f"{submission['filename'][:-5]}.class"
   payload = {
     'Records': [
       {
@@ -54,7 +55,7 @@ def invoke_submission(sid):
             "name": "abacus-submissions"
           },
           "object": {
-            "key": f"{sid}/{submission['filename'][:-5]}.class"
+            "key": f"{sid}/{filename}"
           }
         }
       }
