@@ -47,6 +47,7 @@ def submission(sid):
   contents = contest.s3.Bucket('abacus-submissions').Object(f"{ submission['submission_id'] }/{ submission['filename'] }").get()['Body'].read().decode()
   filename = submission['filename']
   problem = [prob for prob in contest.problems().values() if prob['problem_id'] == submission['prob_id']][0]
+  submission['prob_id'] = problem['id']
   submission['problem_id'] = problem['problem_id']
   submission['prob_name'] = problem['problem_name']
   return render_template('admin/submission.html', submission=submission, filename=filename, contents=contents)
