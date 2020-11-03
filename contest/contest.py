@@ -78,6 +78,8 @@ class ContestService:
     problem_id = request.form['problem-id']
     problem = self.problems()[problem_id]
 
+    sub_no = len([sub for sub in self.submissions().values() if sub['team_id'] == session['user_id'] and sub['prob_id'] == problem_id]) + 1
+
     # Upload file to AWS S3 Bucket
     key = f"{ submission_id }/{ sub_file.filename }"
     self.s3.Bucket('abacus-submissions').upload_fileobj(sub_file, key)
@@ -91,7 +93,7 @@ class ContestService:
 
     item = {
         'submission_id': submission_id,
-        'sub_no': 0,
+        'sub_no': sub_no,
         'status': "pending",
         'runtime': 0,
         'date': int(time.time() * 1000),
