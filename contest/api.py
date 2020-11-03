@@ -64,8 +64,22 @@ def teams():
 
   return dumps({K: V for K, V in contest.users().items() if V['type'] == "team"})
 
-@api.route('/submissions', methods=['GET', 'POST'])
+@api.route('/submissions', methods=['GET', 'POST', 'DELETE'])
 def submissions():
+  if request.method == "DELETE":
+    submission_id = request.form['submission_id']
+    contest.db.Table('submission').delete_item(
+      Key={
+        'submission_id': submission_id
+      }
+    )
+    contest.s3.Bucket('abacus-submissions').delete_objects(
+      Delete={
+        'Objects': [{
+          'Key': f"{submission_id}"
+        }]
+      })
+
   if request.method == "POST":
     return dumps(contest.submit(request))
 

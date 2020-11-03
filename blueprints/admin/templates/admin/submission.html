@@ -16,7 +16,11 @@
 
   <div class='xs-12 block'>
     <h1>Submission</h1>
-    <a href='/admin/submissions/{{ submission.submission_id }}/invoke' class="ui button">Rerun</a>
+    <form action="/api/submissions" method="DELETE" async onsuccess="redirect">
+      <a href='/admin/submissions/{{ submission.submission_id }}/invoke' class="ui button">Rerun</a>
+      <input style="display:none" name="submission_id" value="{{ submission.submission_id }}">
+      <input type="submit" class="ui red button" value="Delete">
+    </form>
     <table class='ui table celled'>
       <thead>
         <tr>
@@ -83,4 +87,12 @@
     </pre>
   </div>
 
+{% endblock %}
+
+{% block script %}
+<script>
+  function redirect() {
+    window.location = "/admin/submissions"
+  }
+</script>
 {% endblock %}
