@@ -46,6 +46,9 @@ def submission(sid):
   submission = submissions[sid]
   contents = contest.s3.Bucket('abacus-submissions').Object(f"{ submission['submission_id'] }/{ submission['filename'] }").get()['Body'].read().decode()
   filename = submission['filename']
+  problem = [prob for prob in contest.problems() if prob['problem_id'] == submission['problem_id']][0]
+  submission['problem_id'] = problem['problem_id']
+  submission['prob_name'] = problem['problem_name']
   return render_template('admin/submission.html', submission=submission, filename=filename, contents=contents)
 
 @admin.route('/submissions/<sid>/invoke')
