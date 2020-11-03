@@ -100,7 +100,7 @@ class ContestService:
         'status': "pending",
         'runtime': 0,
         'score': 0,
-        'date': int(time.time() * 1000),
+        'date': int(time.time()),
         'language': language,
         'main_class': main_class,
         'filename': sub_file.filename,
