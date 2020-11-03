@@ -19,6 +19,7 @@ class ContestService:
 
     self.db = self.aws.resource('dynamodb')
     self.s3 = self.aws.resource('s3')
+    self.lmbda = self.aws.client('lambda')
 
   def auth_login(self, form_data):
     m = hashlib.sha256()

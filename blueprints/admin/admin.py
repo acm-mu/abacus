@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template, session
+from flask import Blueprint, render_template, session, redirect
+import json
 from contest import contest
 
 admin = Blueprint('admin_bp', __name__, url_prefix='/admin',
@@ -41,6 +42,31 @@ def submission(sid):
   contents = contest.s3.Bucket('abacus-submissions').Object(f"{ submission['submission_id'] }/{ submission['filename'] }").get()['Body'].read().decode()
   filename = submission['filename']
   return render_template('admin/submission.html', submission=submission, filename=filename, contents=contents)
+
+@admin.route('/submissions/<sid>/invoke')
+def invoke_submission(sid):
+  submission = contest.submissions()[sid]
+  payload = {
+    'Records': [
+      {
+        's3': {
+          'bucket': {
+            "name": "abacus-submissions"
+          },
+          "object": {
+            "key": f"{sid}/{submission['filename'][:-5]}.class"
+          }
+        }
+      }
+    ]
+  }
+
+  contest.lmbda.invoke(
+    FunctionName='PythonRunner' if submission['language'] == "Python 3" else 'JavaRunner',
+    InvocationType='Event',
+    Payload=json.dumps(payload)
+  )
+  return redirect(f"/admin/submissions/{sid}")
 
 @admin.route('/clarifications')
 def clarifications():
