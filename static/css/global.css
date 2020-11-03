@@ -21,6 +21,7 @@
 *:before,
 *:after {
   box-sizing: border-box;
+  outline: none;
 }
 
 body {
@@ -41,6 +42,10 @@ h1,h2,h3,h4,h5,h6{
 
 .ui.fixed.menu.inverted.blue {
   background: var(--blue);
+}
+
+.ui.fixed.menu.inverted.gold {
+  background: var(--gold);
 }
 
 .header.item img.logo {
@@ -195,4 +200,8 @@ td.timeout_error:after {
 
 td.accepted:after {
   content: "Accepted";
+}
+
+section[tabindex] {
+  display: none;
 }
