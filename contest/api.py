@@ -22,8 +22,8 @@ def settings():
   
   return dumps(data)
 
-@api.route('/teams', methods=['GET', 'PUT', 'POST', 'DELETE'])
-def teams():
+@api.route('/users', methods=['GET', 'PUT', 'POST', 'DELETE'])
+def users():
   if request.method == "DELETE":
     contest.db.Table('user').delete_item(
       Key={
@@ -31,6 +31,10 @@ def teams():
       }
     )
   if request.method in ["POST", "PUT"]:
+    if 'sub-file' in request.files:
+      ## TODO: import users from csv
+      return 
+
     m = hashlib.sha256()
     m.update(request.form['password'].encode())
 
@@ -39,10 +43,11 @@ def teams():
         Key={
             'user_id': request.form['user-id']
         },
-        UpdateExpression=f"SET #ty = :type, user_name = :user_name, display_name = :display_name, password = :password",
+        UpdateExpression=f"SET #ty = :type, user_name = :user_name, division = :division, display_name = :display_name, password = :password",
         ExpressionAttributeValues={
             ':type': request.form['type'],
             ':user_name': request.form['user-name'],
+            ':division': request.form['division'],
             ':display_name': request.form['display-name'],
             ':password': m.hexdigest()
         },
@@ -50,14 +55,14 @@ def teams():
           "#ty": "type"
         })
 
-
-    if request.method == "POST":
+    elif request.method == "POST":
       contest.db.Table('user').put_item(
         Item={
           'user_id': uuid.uuid4().hex,
           'type': request.form['type'],
           'user_name': request.form['user-name'],
           'display_name': request.form['display-name'],
+          'division': request.form['division'],
           'password': m.hexdigest()
         }
       )

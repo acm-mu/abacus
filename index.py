@@ -1,13 +1,14 @@
 from flask import Flask, render_template, session, request, redirect
 from contest import contest, api
 from blueprints import *
-import os, binascii, base64
+import os, binascii
 
 app = Flask(__name__)
 
 app.register_blueprint(api)
 app.register_blueprint(admin)
 app.register_blueprint(blue)
+app.register_blueprint(gold)
 
 @app.route('/')
 def index():
@@ -27,7 +28,7 @@ def logout():
   del session['user_name']
   if 'admin' in session:
     del session['admin']
-  return redirect(request.referrer)
+  return redirect('/')
 
 if __name__ == "__main__":
   app.secret_key = binascii.hexlify(os.urandom(24))

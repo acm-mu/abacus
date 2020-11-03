@@ -40,6 +40,9 @@ class ContestService:
   def home(self):
     if 'user_id' not in session or session['user_type'] == "team":
       return f"/{session['division']}"
+
+    if session['user_type'] == 'judge':
+      return '/'
     
     if session['user_type'] == 'admin':
       return '/admin'
@@ -76,7 +79,7 @@ class ContestService:
     submission_id = uuid.uuid4().hex
 
     problem_id = request.form['problem-id']
-    problem = self.problems()[problem_id]
+    problem = [prob for prob in contest.problems().values() if prob['problem_id'] == problem_id][0]
 
     sub_no = len([sub for sub in self.submissions().values() if sub['team_id'] == session['user_id'] and sub['prob_id'] == problem_id]) + 1
 
@@ -103,9 +106,7 @@ class ContestService:
         'filesize': file_size,
         'sha1sum': h.hexdigest(),
         'team_id': session['user_id'],
-        'team_name': session['user_name'],
         'prob_id': problem_id,
-        'prob_name': problem['problem_name'],
         'tests': problem['tests']
       }
 
