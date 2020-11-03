@@ -14,7 +14,11 @@ def settings():
     contest.save_settings({
       'competition_name': request.form['competition-name'],
       'start_date': f"{ request.form['start-date'] } { request.form['start-time'] }",
-      'end_date': f"{ request.form['end-date'] } { request.form['end-time'] }"
+      'end_date': f"{ request.form['end-date'] } { request.form['end-time'] }",
+      'points_per_yes': request.form['points-per-yes'],
+      'points_per_no': request.form['points-per-no'],
+      'points_per_compilation_error': request.form['points-per-compilation-error'],
+      'points_per_minute': request.form['points-per-minute']
     })
   data = contest.settings()  
   if 'user_id' in session:

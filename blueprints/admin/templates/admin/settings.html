@@ -15,8 +15,10 @@
     </div>
 
     <form class='ui form' action="/api/contest" method="POST" onsuccess="success" async>
-      <h1>Competition Settings</h1>
-      
+      <h1>Settings</h1>
+      <hr>
+    
+      <h3>Competition Settings</h3>
       <div class="field">
         <label>Competition Name</label>
         <input type="text" name="competition-name">
@@ -40,6 +42,28 @@
         <div class="field">
           <input type="time" name="end-time">
         </div>
+      </div>
+      <br />
+      
+      <h3>Scoring Settings</h3>
+      <div class="field">
+        <label>Points per Yes</label>
+        <input type="number" name="points-per-yes">
+      </div>
+      
+      <div class="field">
+        <label>Points per No</label>
+        <input type="number" name="points-per-no">
+      </div>
+      
+      <div class="field">
+        <label>Points per Compilation Error</label>
+        <input type="number" name="points-per-compilation-error">
+      </div>
+      
+      <div class="field">
+        <label>Points per Minute (1st Yes)</label>
+        <input type="number" name="points-per-minute">
       </div>
 
       <input class="ui primary button" type="submit" value="Save">
