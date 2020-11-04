@@ -74,7 +74,6 @@ class ContestService:
 
   def submit(self, request):
     language = request.form['language']
-    main_class = request.form['main-class']
     sub_file = request.files['sub-file']
     submission_id = uuid.uuid4().hex
 
@@ -102,7 +101,6 @@ class ContestService:
         'score': 0,
         'date': int(time.time()),
         'language': language,
-        'main_class': main_class,
         'filename': sub_file.filename,
         'filesize': file_size,
         'sha1sum': h.hexdigest(),

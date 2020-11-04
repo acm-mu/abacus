@@ -1,8 +1,8 @@
-{% extends 'admin/page.html' %}
+{% extends "admin/page.html" %}
 
 {% block head %}
 
-  <title>Abacus - Submission #{{submission.id}}</title>
+  <title>Abacus - Submission {{ submission.id }}</title>
 
   <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.2.0/build/styles/default.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/highlight.min.js"></script>
@@ -12,16 +12,16 @@
 
 {% block content %}
 
-  {% include 'countdown.html' %}
+  {% include "countdown.html" %}
 
-  <div class='xs-12 block'>
+  <div class="xs-12 block">
     <h1>Submission</h1>
     <form action="/api/submissions" method="DELETE" async onsuccess="redirect">
-      <a href='/admin/submissions/{{ submission.submission_id }}/invoke' class="ui button">Rerun</a>
+      <a href="/admin/submissions/{{ submission.submission_id }}/invoke" class="ui button">Rerun</a>
       <input style="display:none" name="submission_id" value="{{ submission.submission_id }}">
       <input type="submit" class="ui red button" value="Delete">
     </form>
-    <table class='ui table celled'>
+    <table class="ui table celled">
       <thead>
         <tr>
           <th rowspan="2">ID</th>
@@ -38,21 +38,21 @@
       </thead>
       <tbody>
         <tr>
-          <td rowspan="2"><a href='/admin/submissions/{{submission.submission_id}}'>{{(submission.submission_id|string)[:7]}}</a>
+          <td rowspan="2"><a href="/admin/submissions/{{ submission.submission_id }}">{{ (submission.submission_id|string)[:7] }}</a>
           </td>
-          <td fromNow="{{submission.date*1000}}"></td>
-          <td><a href='/admin/problems/{{submission.prob_id}}/edit'>{{submission.prob_name}}</a></td>
-          <td class='icn {{submission.status}}'></td>
-          <td>{{(submission.runtime|string)[:4]}}</td>
-          <td>{{submission.language}}</td>
-          <td>{{submission.score}}</td>
+          <td fromnow="{{ submission.date*1000 }}"></td>
+          <td><a href="/admin/problems/{{ submission.prob_id }}/edit">{{ submission.prob_name }}</a></td>
+          <td class="icn {{ submission.status }}"></td>
+          <td>{{ (submission.runtime|string)[:4] }}</td>
+          <td>{{ submission.language }}</td>
+          <td>{{ submission.score }}</td>
         </tr>
         <tr>
           <td colspan="6">
             {% for test in submission.tests %}
-              {% if test['result'] == 'accepted' %}
+              {% if test["result"] == "accepted" %}
               <span class="result icn accepted"></span>
-              {% elif test['result'] == 'rejected' %}
+              {% elif test["result"] == "rejected" %}
               <span class="result icn rejected"></span>
               {% else %}
               <span class="result"></span>
@@ -64,7 +64,7 @@
     </table>
   </div>
 
-  <div class='xs-12 block'>
+  <div class="xs-12 block">
     Submission contains 1 file:
     <table class="ui table celled">
       <thead>
@@ -76,16 +76,16 @@
       </thead>
       <tbody>
         <tr>
-          <td>{{submission.filename}}</td>
-          <td>{{submission.filesize}} bytes</td>
-          <td>{{submission.sha1sum}}</td>
+          <td>{{ submission.filename }}</td>
+          <td>{{ submission.filesize }} bytes</td>
+          <td>{{ submission.sha1sum }}</td>
         </tr>
       </tbody>
     </table>
 
-    <h3>{{submission.filename}}</h3>
+    <h3>{{ submission.filename }}</h3>
     <pre>
-      <code class='{{ submission.language }}'>{{ contents }}</code>
+      <code class="{{ submission.language }}">{{ contents }}</code>
     </pre>
   </div>
 

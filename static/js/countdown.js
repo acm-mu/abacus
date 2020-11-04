@@ -1,21 +1,21 @@
 let startDate, endDate;
 
-document.addEventListener('DOMContentLoaded', () => {
-  fetch('/api/contest')
+document.addEventListener("DOMContentLoaded", () => {
+  fetch("/api/contest")
     .then(res => res.json())
     .then(res => {
-      document.querySelector('#competition_name').innerText = res.competition_name
+      document.querySelector("#competition_name").innerText = res.competition_name
       startDate = new Date(res.start_date)
       endDate = new Date(res.end_date)
     })
 
-  const start = document.querySelector('#start_time')
-  const end = document.querySelector('#end_time')
+  const start = document.querySelector("#start_time")
+  const end = document.querySelector("#end_time")
 
-  const timeElapsed = document.querySelector('#timeElapsed')
-  const timeRemaining = document.querySelector('#timeRemaining')
+  const timeElapsed = document.querySelector("#timeElapsed")
+  const timeRemaining = document.querySelector("#timeRemaining")
 
-  const progressBar = document.querySelector('#progress-bar')
+  const progressBar = document.querySelector("#progress-bar")
 
   setInterval(() => {
     if (!startDate || !endDate) return

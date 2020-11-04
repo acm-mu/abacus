@@ -1,4 +1,4 @@
-{% extends 'page.html' %}
+{% extends "page.html" %}
 
 {% block navbar %}
 <div class="ui fixed inverted menu">
@@ -12,14 +12,14 @@
     <a href="/admin/submissions" class="item">Submissions</a>
     <a href="/admin/clarifications" class="item">Clarifications</a>
 
-    {% if 'user_id' in session %}
+    {% if "user_id" in session %}
     <div class="right menu">
       <a href="/admin/settings" class="right item"><i class="cog icon"></i></a>
-      <a href="/{{ session['division'] }}"><div class='item'>{{session['user_name']}}</div></a>
-      <a href='/logout' class="item">Log out</a>
+      <a href="/{{ session.division }}"><div class="item">{{ session.user_name }}</div></a>
+      <a href="/logout" class="item">Log out</a>
     </div>
     {% else %}
-    <a href='/login' class="right item">Log in</a>
+    <a href="/login" class="right item">Log in</a>
     {% endif %}
   </div>
 </div>

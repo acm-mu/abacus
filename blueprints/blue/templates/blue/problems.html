@@ -1,16 +1,12 @@
-{% extends 'blue/page.html' %}
+{% extends "blue/page.html" %}
 
 {% block head %}
-
   <title>Abacus - Problems</title>
-
 {% endblock %}
 
 {% block content %}
-
-  {% include 'countdown.html' %}
-
-  <div class='transparent xs-12 block'>
+  {% include "countdown.html" %}
+  <div class="transparent xs-12 block">
     <table class="ui celled table">
       <thead>
         <tr>
@@ -23,12 +19,11 @@
         {% for problem in problems %}
         <tr>
           <th class="collapsing">{{ problem.id }}</th>
-          <td><a href='/blue/problems/{{ problem.id }}'>{{ problem.problem_name }}</a></td>
+          <td><a href="/blue/problems/{{ problem.id }}">{{ problem.problem_name }}</a></td>
           <td>{{ problem.tests|length }}</td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
-
 {% endblock %}

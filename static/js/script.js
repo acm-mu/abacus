@@ -22,8 +22,8 @@ function formatTimes() {
     timeElement.innerText = formatTime(time)
   });
 
-  document.querySelectorAll("[fromNow]").forEach((timeElement) => {
-    const time = parseInt(timeElement.getAttribute("fromNow"), 10)
+  document.querySelectorAll("[fromnow]").forEach((timeElement) => {
+    const time = parseInt(timeElement.getAttribute("fromnow"), 10)
     timeElement.innerText = moment(time).fromNow()
   })
 }
@@ -31,7 +31,7 @@ function formatTimes() {
 // Any elements with the class `markdown` will convert to HTML.
 function convertMarkdown() {
   let converter = new showdown.Converter();
-  document.querySelectorAll('.markdown').forEach((e) => {
+  document.querySelectorAll(".markdown").forEach((e) => {
     let md = e.innerHTML;
     md = md.replaceAll("&gt;", ">");
     md = md.replaceAll("&lt;", "<");
@@ -42,28 +42,28 @@ function convertMarkdown() {
 // Any form groups that have a date attribute will fill the the child date and time inputs
 // With appropriate default values.
 function fillDateInputs() {
-  document.querySelectorAll('.date.fields').forEach((dateField) => {
-    if (!dateField.getAttribute('date')) return
-    let values = dateField.getAttribute('date').split(' ');
+  document.querySelectorAll(".date.fields").forEach((dateField) => {
+    if (!dateField.getAttribute("date")) return
+    let values = dateField.getAttribute("date").split(" ");
 
-    dateField.querySelector('input[type=date]').value = values[0];
-    dateField.querySelector('input[type=time]').value = values[1].substring(0, 5); // Cut of seconds
+    dateField.querySelector("input[type=date]").value = values[0];
+    dateField.querySelector("input[type=time]").value = values[1].substring(0, 5); // Cut of seconds
   })
 }
 
 function createElement(html) {
-  let temp = document.createElement('template')
+  let temp = document.createElement("template")
   temp.innerHTML = html.trim()
   return temp.content.firstChild
 }
 
 function highlightItem() {
-  document.querySelectorAll('a.item[href]').forEach((e) => {
-    if (e.classList.contains('header'))
+  document.querySelectorAll("a.item[href]").forEach((e) => {
+    if (e.classList.contains("header"))
       return
-    const href = e.getAttribute('href');
+    const href = e.getAttribute("href");
     if (window.location.pathname == href)
-      e.classList.add('active')
+      e.classList.add("active")
   })
 }
 
@@ -75,23 +75,23 @@ document.addEventListener("DOMContentLoaded", () => {
   highlightItem();
 });
 
-document.addEventListener('submit', function(e) {
+document.addEventListener("submit", function(e) {
   const form = e.target
-  if (!form.hasAttribute('async')) return
+  if (!form.hasAttribute("async")) return
 
   const event = this
 
   // Call asynchronously
   fetch(form.action, {
-    method: form.getAttribute('method'),
+    method: form.getAttribute("method"),
     body: new FormData(form)
   })
     .then(res => {
-      if (res.status == '200') {
-        let onSuccess = window[form.getAttribute('onsuccess')]
+      if (res.status == "200") {
+        let onSuccess = window[form.getAttribute("onsuccess")]
         onSuccess && onSuccess.call(this, form, event)
         res.json().then(res => {
-          let callback = window[form.getAttribute('callback')]
+          let callback = window[form.getAttribute("callback")]
           callback && callback.call(this, res)
         })
       }

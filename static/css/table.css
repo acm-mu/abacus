@@ -2,15 +2,15 @@
   padding: 0;
   color: #555;
   text-align: center;
-  font-family: 'Open Sans';
+  font-family: "Open Sans";
 }
 
 .ui.table td.team_problem_solve.solved {
-  background: var(--light-green) no-repeat center/32px url("images/standings/check.svg");
+  background: var(--light-green) no-repeat center/32px url("https://open.kattis.com/images/standings/check.svg");
 }
 
 .ui.table td.team_problem_solve.failed {
-  background: var(--light-red) no-repeat center/32px url("images/standings/cross.svg");
+  background: var(--light-red) no-repeat center/32px url("https://open.kattis.com/images/standings/cross.svg");
   color: #fff;
 }
 
@@ -43,7 +43,7 @@ tr>td:last-child {
 
 th {
   color: #898992 !important;
-  font-family: 'Open Sans', sans-serif;
+  font-family: "Open Sans", sans-serif;
   font-weight: 600 !important;
   font-size: 14px !important;
   padding: 14px 16px !important;

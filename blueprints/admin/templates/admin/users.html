@@ -1,8 +1,8 @@
-{% extends 'admin/page.html' %}
+{% extends "admin/page.html" %}
 
 {% block head %}
 
-<title>Abacus - Problems</title>
+<title>Abacus - Users</title>
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/submit.css') }}">
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/components/popup.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/components/popup.min.js"></script>
@@ -11,18 +11,18 @@
 
 {% block content %}
 
-  {% include 'countdown.html' %}
+  {% include "countdown.html" %}
 
-  <div class='transparent xs-12 block'>
+  <div class="transparent xs-12 block">
     <div class="ui buttons">
-      <div class="ui icon button" onclick=createTeam()  data-tooltip="Add User"><i class='plus icon'></i></div>
-      <div class="ui icon button" onclick=uploadCSV()   data-tooltip="Export to CSV"><i class='upload icon'></i></div>
-      <div class="ui icon button" onclick=downloadCSV() data-tooltip="Import from CSV"><i class='download icon'></i></div>
+      <div class="ui icon button" onclick="createTeam()" data-tooltip="Add User"><i class="plus icon"></i></div>
+      <div class="ui icon button" onclick="uploadCSV()" data-tooltip="Export to CSV"><i class="upload icon"></i></div>
+      <div class="ui icon button" onclick="downloadCSV()" data-tooltip="Import from CSV"><i class="download icon"></i></div>
     </div>
     <table class="ui celled table">
       <thead>
         <tr>
-          <th class='collapsing'>#</th>
+          <th class="collapsing">#</th>
           <th>Username</th>
           <th>Type</th>
           <th>Division</th>
@@ -31,9 +31,9 @@
       </thead>
       <tbody>
         {% for user in users %}
-        <tr uuid="{{ user['user_id'] }}">
+        <tr uuid="{{ user.user_id }}">
           <td>{{ loop.index }}</td>
-          <td><a href='#' onclick=editTeam(this)>{{ user.user_name }}</a></td>
+          <td><a href="#" onclick="editTeam(this)">{{ user.user_name }}</a></td>
           <td>{{ user.type }}</td>
           <td>{{ user.division }}</td>
           <td>{{ user.display_name }}</td>
@@ -45,7 +45,7 @@
 
   <form class="ui modal" id="userModal" method="POST" action="/api/users" onsuccess="refresh" async>
     <i class="close icon"></i>
-    <div class="header" id='modal_header'></div>
+    <div class="header" id="modal_header"></div>
     <div class="content">
       <div class="ui form">
         <input name="user-id" style="display: none"> 
@@ -81,7 +81,7 @@
     </div>
     <div class="actions">
       <div class="ui gray deny button">Cancel</div>
-      <div class="ui negative button" id='delete' onclick=deleteUser()>Delete</div>
+      <div class="ui negative button" id="delete" onclick="deleteUser()">Delete</div>
       <button type="submit" class="ui positive button">Create</button>
     </div>
   </form>

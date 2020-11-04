@@ -1,16 +1,16 @@
-{% extends 'admin/page.html' %}
+{% extends "admin/page.html" %}
 
 {% block head %}
 
-  <title>Submissions</title>
+  <title>Abacus - Submissions</title>
 
 {% endblock %}
 
 {% block content %}
 
-  {% include 'countdown.html' %}
+  {% include "countdown.html" %}
 
-  <div class='transparent xs-12 block'>
+  <div class="transparent xs-12 block">
     <table class="ui table">
       <thead>
         <tr>
@@ -28,20 +28,20 @@
       <tbody>
         {% if submissions|length == 0 %}
         <tr>
-          <td colspan=7 style='text-align: center'>No Submissions</td>
+          <td colspan="7" style="text-align: center">No Submissions</td>
         </tr>
         {% endif %}
         {% for submission in submissions %}
         <tr>
-          <td><a href='/admin/submissions/{{ submission.submission_id }}'>{{ (submission.submission_id|string)[:7] }}</a></td>
-          <td><a href='/admin/problems/{{ submission.problem_id }}/edit'>{{ submission.prob_name}} </a></td>
-          <td>{{submission.team_name}}</td>
-          <td>{{submission.sub_no}}</td>
-          <td>{{submission.language}}</td>
-          <td class='icn {{submission.status}}'></td>
-          <td>{{submission.runtime}}</td>
-          <td fromNow='{{submission.date*1000}}'></td>
-          <td>{{submission.score}}</td>
+          <td><a href="/admin/submissions/{{ submission.submission_id }}">{{ (submission.submission_id|string)[:7] }}</a></td>
+          <td><a href="/admin/problems/{{ submission.problem_id }}/edit">{{ submission.prob_name }} </a></td>
+          <td>{{ submission.team_name }}</td>
+          <td>{{ submission.sub_no }}</td>
+          <td>{{ submission.language }}</td>
+          <td class="icn {{ submission.status }}"></td>
+          <td>{{ submission.runtime }}</td>
+          <td fromnow="{{ submission.date*1000 }}"></td>
+          <td>{{ submission.score }}</td>
         </tr>
         {% endfor %}
       </tbody>

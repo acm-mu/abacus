@@ -1,4 +1,8 @@
-{% extends 'admin/page.html' %}
+{% extends "admin/page.html" %}
+
+{% block head %}
+  <title>Abacus - Edit Problem</title>
+{% endblock %}
 
 {% block content %}
 <div id="success-message" style="display:none" class="ui tiny icon message success">
@@ -11,83 +15,83 @@
   </div>
 </div>
 
-<form class="ui form" action='/api/problems/{{ problem.id }}' method='PUT' onsuccess="success" async>
-  <h1 style='margin: 0'>Edit Problem {{ problem.id }}</h1>
+<form class="ui form" action="/api/problems/{{ problem.id }}" method="PUT" onsuccess="success" async>
+  <h1 style="margin: 0">Edit Problem {{ problem.id }}</h1>
   <i>problem_id: {{ problem.problem_id }}</i>
   
   <!-- TAB BAR FOR PROBLEM PAGES -->
   <div class="ui top attached tabular menu">
-    <div class="active item" tabindex=1>Problem Info</div>
-    <div class="item" tabindex=2>Test Data</div>
-    <div class="item" tabindex=3>Description</div>
-    <div class="item" tabindex=4>Skeletons</div>
+    <div class="active item" tabindex="1">Problem Info</div>
+    <div class="item" tabindex="2">Test Data</div>
+    <div class="item" tabindex="3">Description</div>
+    <div class="item" tabindex="4">Skeletons</div>
   </div>
   <!------------------------------->
-  <!-- <input type="submit" value="Save" class="ui primary button" style="float: right">
-  <div class="ui negative button" onclick=deleteProblem() style='float: right'>Delete</div> -->
-  <input name='problem-id' style='display:none' value='{{ problem.problem_id }}'>
+  <input type="submit" value="Save" class="ui primary button" style="float: right">
+  <div class="ui negative button" onclick="deleteProblem()" style="float: right">Delete</div>
+  <input name="problem-id" style="display:none" value="{{ problem.problem_id }}">
   <br>
-    <section tabindex=1>
+    <section tabindex="1">
       <div class="field">
       <label>Problem ID</label>
-      <input name='id' value='{{ problem.id }}'>
+      <input name="id" value="{{ problem.id }}">
     </div>
 
     <div class="field">
       <label>Problem Name</label>
-      <input name='problem-name' value='{{ problem.problem_name }}'>
+      <input name="problem-name" value="{{ problem.problem_name }}">
     </div>
 
     <div class="two fields">
       <div class="field">
         <label>Memory Limit</label>
-        <input name='memory-limit' value='{{ problem.memory_limit }}'>
+        <input name="memory-limit" value="{{ problem.memory_limit }}">
       </div>
       <div class="field">
         <label>CPU Time Limit</label>
-        <input name='cpu-time-limit' value='{{ problem.cpu_time_limit }}'>
+        <input name="cpu-time-limit" value="{{ problem.cpu_time_limit }}">
       </div>
     </div>
   </section>
 
-  <section tabindex=2>
+  <section tabindex="2">
     <div class="field">
       <label>Tests</label>
       <div class="ui top attached tabular menu" id="tests">
         {% for test in problem.tests %}
-        <div class="item" onclick=makeActive(this)>{{ loop.index }}</div>
+        <div class="item" onclick="makeActive(this)">{{ loop.index }}</div>
         {% endfor %}
-        <div class="item" onclick=newTest(this)>+</div>
+        <div class="item" onclick="newTest(this)">+</div>
       </div>
       <div class="ui bottom attached active tab segment" id="tests_content">
         {% for test in problem.tests %}
         <div class="two fields" style="display: none">
           <div class="field">
             <label>Input</label>
-            <textarea name='{{ loop.index }}-in'>{{ test.in }}</textarea>
+            <textarea name="{{ loop.index }}-in">{{ test.in }}</textarea>
           </div>
           <div class="field">
             <label>Answer</label>
-            <textarea name='{{ loop.index }}-out'>{{ test.out }}</textarea>
+            <textarea name="{{ loop.index }}-out">{{ test.out }}</textarea>
           </div>
         </div>
         {% endfor %}
         <div class="field">
-          <div class="ui button negative" onclick=deleteActive(this)>Delete</div>
+          <div class="ui button negative" onclick="deleteActive(this)">Delete</div>
         </div>
       </div>
     </div>
   </section>
 
-  <section tabindex=3>
+  <section tabindex="3">
     <div class="two fields">
       <div class="field">
         <label>Problem Description</label>
-        <textarea name='description' rows id='input_desc'>{{ problem.description }}</textarea>
+        <textarea name="description" rows id="input_desc">{{ problem.description }}</textarea>
       </div>
       <div class="field">
         <label>Preview</label>
-        <div id='preview' class='markdown'>{{ problem.description }}</div>
+        <div id="preview" class="markdown">{{ problem.description }}</div>
       </div>
     </div>
   </section>

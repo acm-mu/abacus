@@ -1,20 +1,14 @@
-{% extends 'blue/page.html' %}
+{% extends "blue/page.html" %}
 
 {% block head %}
-
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/submit.css') }}">
-
   <title>Abacus - Submit </title>
-
   <script src="{{ url_for('static', filename='js/submit.js') }}"></script>
-
 {% endblock %}
 
 {% block content %}
-
-  {% include 'countdown.html' %}
-
-  <div class='xs-12 block'>
+  {% include "countdown.html" %}
+  <div class="xs-12 block">
     <h1>Submit a solution to - </h1>
 
     <form class="ui form" action="/api/submissions" method="POST" enctype="multipart/form-data" callback="submissionSuccess" async>
@@ -36,23 +30,17 @@
             <option value="C">C</option>
           </select>
         </div>
-
-        <div class="field" id="mainClass">
-          <label>Main class</label>
-          <input name="main-class" id="mainClass" type="text" class="ui input">
-        </div>
       </div>
       <div class="ui button">Cancel</div>
       <input class="ui button" type="submit" value="Submit">
     </form>
   </div>
-
 {% endblock %}
 
 {% block script %}
 <script>
   function submissionSuccess(res) {
-    window.location.href = `/blue/submissions/${res['submission_id']}`
+    window.location.href = `/blue/submissions/${res.submission_id}`
   }
 </script>
 {% endblock %}

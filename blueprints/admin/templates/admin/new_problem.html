@@ -1,37 +1,41 @@
-{% extends 'admin/page.html' %}
+{% extends "admin/page.html" %}
+
+{% block head %}
+  <title>Abacus - New Problem</title>
+{% endblock %}
 
 {% block content %}
-<form class="ui form" action='/api/problems' method='POST' onsuccess="success" async>
+<form class="ui form" action="/api/problems" method="POST" onsuccess="success" async>
   <input type="submit" value="Create" class="ui primary button" style="float: right">
   <h1>New Problem</h1>
   <div class="field">
     <label>Problem ID</label>
-    <input name='id'>
+    <input name="id">
   </div>
   <div class="field">
     <label>Problem Name</label>
-    <input name='problem-name'>
+    <input name="problem-name">
   </div>
 
   <div class="two fields">
     <div class="field">
       <label>Memory Limit</label>
-      <input name='memory-limit'>
+      <input name="memory-limit">
     </div>
     <div class="field">
       <label>CPU Time Limit</label>
-      <input name='cpu-time-limit'>
+      <input name="cpu-time-limit">
     </div>
   </div>
 
   <div class="field">
     <label>Tests</label>
     <div class="ui top attached tabular menu" id="tests">
-      <div class="item" onclick=newTest(this)>+</div>
+      <div class="item" onclick="newTest(this)">+</div>
     </div>
     <div class="ui bottom attached active tab segment" id="tests_content">
       <div class="field">
-        <div class="ui button negative" onclick=deleteActive(this)>Delete</div>
+        <div class="ui button negative" onclick="deleteActive(this)">Delete</div>
       </div>
     </div>
   </div>
@@ -39,11 +43,11 @@
   <div class="two fields">
     <div class="field">
       <label>Problem Description</label>
-      <textarea name='description' rows id='input_desc'></textarea>
+      <textarea name="description" rows id="input_desc"></textarea>
     </div>
     <div class="field">
       <label>Preview</label>
-      <div id='preview' class='markdown'></div>
+      <div id="preview" class="markdown"></div>
     </div>
   </div>
 </form>

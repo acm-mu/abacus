@@ -63,7 +63,7 @@
   font-style: italic;
   padding: .66001rem 1rem 1rem .66001rem;
   border-left: 3px solid #a0aabf;
-  font-feature-settings: 'kern'1, 'onum'1, 'liga'1;
+  font-feature-settings: "kern"1, "onum"1, "liga"1;
   margin-top: 0;
 }
 

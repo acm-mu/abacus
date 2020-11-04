@@ -1,8 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@300;400;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@300;400;600;700&display=swap");
 
 @font-face {
   font-family: "Icons";
-  src: url('https://semantic-ui.com/dist/themes/default/assets/fonts/icons.woff2');
+  src: url("https://semantic-ui.com/dist/themes/default/assets/fonts/icons.woff2");
 }
 
 :root {
@@ -27,14 +27,14 @@
 body {
   background: var(--bg-color);
   color: #555;
-  font-family: 'Open Sans', sans-serif;
+  font-family: "Open Sans", sans-serif;
   -moz-osx-font-smoothing: grayscale;
 }
 
 h1,h2,h3,h4,h5,h6{
   font-family: "Open Sans", sans-serif;
   color: #2A353A;
-  font-family: 'Open Sans', sans-serif;
+  font-family: "Open Sans", sans-serif;
   font-weight: normal;
 }
 
@@ -159,7 +159,7 @@ a.button {
 /* Icons:before */
 
 .icn.delete:before {
-  content: '\f1f8';
+  content: "\f1f8";
 }
 
 .icn.pending:before {

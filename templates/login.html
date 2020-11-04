@@ -1,8 +1,12 @@
-{% extends 'page.html' %}
+{% extends "page.html" %}
+
+{% block head %}
+  <title>Abacus - Login</title>
+{% endblock %}
 
 {% block content %}
-  <div class='block xs-6'>
-    {% if 'user_id' in session %}
+  <div class="block xs-6">
+    {% if "user_id" in session %}
     <h3>You are already logged in!</h3>
     {% else %}
     <form action="/login" method="POST" class="ui form">
@@ -15,7 +19,7 @@
         <label>Password</label>
         <input type="password" name="password" required>
       </div>
-      <input type='submit' class="ui blue button" value="Login">
+      <input type="submit" class="ui blue button" value="Login">
     </form>
     {% endif %}
   </div>

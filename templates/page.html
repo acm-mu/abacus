@@ -2,21 +2,17 @@
 <html lang="en">
 
 <head>
-
-<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
-
+  <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-
-  <link rel='stylesheet' type='text/css'
-    href='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css'>
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js'></script>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel='stylesheet' type='text/css' href="{{ url_for('static', filename='css/global.css') }}">
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/table.css') }}">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
   <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
-  <link rel='icon' type='image/png' href="{{ url_for('static', filename='images/logo.png') }}">
-  {% block head %} {% endblock %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/global.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/table.css') }}">
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {% block head %} <title>Abacus</title> {% endblock %}
   {% block script %} {% endblock %}
 </head>
 
@@ -28,13 +24,13 @@
         <img class="logo" src="{{ url_for('static', filename='images/fulllogoy.png') }}">
       </a>
 
-      {% if 'user_id' in session %}
+      {% if "user_id" in session %}
       <div class="right menu">
-        <a href="/{{ session['division'] }}"><div class='item'>{{session['user_name']}}</div></a>
-        <a href='/logout' class="item">Log out</a>
+        <a href="/{{ session.division }}"><div class="item">{{ session.user_name }}</div></a>
+        <a href="/logout" class="item">Log out</a>
       </div>
       {% else %}
-      <a href='/login' class="right item">Log in</a>
+      <a href="/login" class="right item">Log in</a>
       {% endif %}
     </div>
   </div>
