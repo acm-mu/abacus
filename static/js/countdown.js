@@ -5,8 +5,8 @@ document.addEventListener("DOMContentLoaded", () => {
     .then(res => res.json())
     .then(res => {
       document.querySelector("#competition_name").innerText = res.competition_name
-      startDate = new Date(res.start_date)
-      endDate = new Date(res.end_date)
+      startDate = new Date(parseInt(res.start_date) * 1000)
+      endDate = new Date(parseInt(res.end_date) * 1000)
     })
 
   const start = document.querySelector("#start_time")

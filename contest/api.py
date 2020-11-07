@@ -1,4 +1,5 @@
-import json, hashlib, uuid, decimal
+import json, hashlib, uuid, decimal, time
+from datetime import datetime
 from flask import Blueprint, request, session, redirect
 from contest import contest
 
@@ -11,10 +12,12 @@ def dumps(data):
 @api.route('/contest', methods=['GET', 'POST'])
 def settings():
   if request.method == "POST":
+    start_date = datetime.strptime(f"{ request.form['start-date'] } { request.form['start-time'] }", '%Y-%m-%d %H:%M')
+    end_date = datetime.strptime(f"{ request.form['end-date'] } { request.form['end-time'] }", '%Y-%m-%d %H:%M')
     contest.save_settings({
       'competition_name': request.form['competition-name'],
-      'start_date': f"{ request.form['start-date'] } { request.form['start-time'] }",
-      'end_date': f"{ request.form['end-date'] } { request.form['end-time'] }",
+      'start_date': int(start_date.timestamp())  + (6 * 60 * 60), # This is hardcoded right now, but should be changed.
+      'end_date': int(end_date.timestamp()) + (6 * 60 * 60), # this is hardcoded right now but should be changed.
       'points_per_yes': request.form['points-per-yes'],
       'points_per_no': request.form['points-per-no'],
       'points_per_compilation_error': request.form['points-per-compilation-error'],
@@ -27,6 +30,7 @@ def settings():
   return dumps(data)
 
 @api.route('/users', methods=['GET', 'PUT', 'POST', 'DELETE'])
+# TODO: Delete all submissions for user
 def users():
   if request.method == "DELETE":
     contest.db.Table('user').delete_item(
@@ -121,6 +125,7 @@ def problems():
   return dumps(contest.problems())
 
 @api.route('/problems/<prob_id>', methods=['GET', 'PUT', 'DELETE'])
+# TODO: Delete all submissions for problem
 def problem(prob_id):
   if request.method == "DELETE":
     contest.db.Table('problem').delete_item(
@@ -128,6 +133,7 @@ def problem(prob_id):
         'problem_id': request.form['problem-id']
       }
     )
+    contest.db.Table('submission').deletE_items()
     return redirect('/problems')
     
   if request.method == "PUT":
