@@ -4,8 +4,10 @@ To be written.
 
 ### Technology
 * [Flask](https://flask.palletsprojects.com/en/1.1.x/) (Python Package)
-* [MongoDB](https://www.mongodb.com/) (Database)
-* (Optional) [AWS S3](https://aws.amazon.com/s3/) (File Storage)
+* [AWS DynamoDB](https://aws.amazon.com/dynamodb/) (Database)
+* [AWS S3](https://aws.amazon.com/s3/) (File Storage)
+* [AWS EC2](https://aws.amazon.com/ec2/) (Hosting)
+* [AWS Lambda](https://aws.amazon.com/lambda/) (Event Driven Processes)
 
 ## How to run locally
 
