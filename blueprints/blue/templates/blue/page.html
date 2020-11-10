@@ -11,7 +11,7 @@
     <a href="/blue/standings" class="item">Standings</a>
     <a href="/blue/submissions" class="item">Submissions</a>
 
-    {% if "user_id" in session %}
+    {% if is_logged_in() %}
     <div class="right menu">
       <a href="/{{ session.division }}"><div class="item">{{ session["user_name"] }}</div></a>
       <a href="/logout" class="item">Log out</a>

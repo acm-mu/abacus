@@ -31,5 +31,8 @@ def logout():
   return redirect('/')
 
 if __name__ == "__main__":
+  app.jinja_env.globals.update(
+    is_logged_in=contest.is_logged_in
+  )
   app.secret_key = binascii.hexlify(os.urandom(24))
   app.run(debug=True, host='0.0.0.0', port=80)

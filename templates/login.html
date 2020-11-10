@@ -6,7 +6,7 @@
 
 {% block content %}
   <div class="block xs-6">
-    {% if "user_id" in session %}
+    {% if is_logged_in() %}
     <h3>You are already logged in!</h3>
     {% else %}
     <form action="/login" method="POST" class="ui form">

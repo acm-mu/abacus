@@ -1,5 +1,6 @@
 import os, hashlib, boto3, time, hashlib, uuid
 from flask import session
+from boto3.dynamodb.conditions import Attr
 
 class ContestService:
   def __init__(self):
@@ -26,15 +27,28 @@ class ContestService:
     m.update(form_data['password'].encode())
     password = m.hexdigest()
 
-    for user in self.users().values():
+    for user in self.get_users().values():
       if user['user_name'] == form_data['user-name']:
         if user['password'] == password:
           session['user_id'] = user['user_id']
           session['user_name'] = user['user_name']
           session['user_type'] = user['type']
           session['division'] = user['division']
+          session['session_token'] = uuid.uuid4().hex
+
+          self.db.Table('user').update_item(
+            Key={'user_id': user['user_id']},
+            UpdateExpression=f"SET session_token = :session_token",
+            ExpressionAttributeValues={':session_token': session['session_token']})
           return True
         
+    return False
+
+  def is_logged_in(self):
+    if 'user_id' in session:
+      user = self.db.Table('user').scan(FilterExpression=Attr('user_id').eq(session['user_id']))['Items']
+      if user and 'session_token' in user[0]:
+        return user[0]['session_token'] == session['session_token']
     return False
 
   def home(self):
@@ -68,8 +82,12 @@ class ContestService:
     submissions = self.db.Table('submission').scan()['Items']
     return {sub['submission_id']: sub for sub in submissions}
 
-  def users(self):
-    users = self.db.Table('user').scan()['Items']
+  def get_users(self, user_id=None):
+    users = []
+    if user_id:
+      users = self.db.Table('user').scan(Key={'user_id': user_id})['Items']
+    else:
+      users = self.db.Table('user').scan()['Items']
     return {user['user_id']: user for user in users}
 
   def submit(self, request):

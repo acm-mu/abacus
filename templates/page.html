@@ -24,7 +24,7 @@
         <img class="logo" src="{{ url_for('static', filename='images/fulllogoy.png') }}">
       </a>
 
-      {% if "user_id" in session %}
+      {% if is_logged_in() %}
       <div class="right menu">
         <a href="/{{ session.division }}"><div class="item">{{ session.user_name }}</div></a>
         <a href="/logout" class="item">Log out</a>
