@@ -15,7 +15,7 @@ def index():
 def teams():
   if 'user_id' not in session:
     return render_template('401.html')
-  return render_template('admin/users.html', users=contest.users().values())
+  return render_template('admin/users.html', users=contest.get_users().values())
 
 @admin.route('/settings')
 def settings():
@@ -29,8 +29,8 @@ def submissions():
     return render_template('401.html')
   submissions = list(contest.submissions().values())
   for submission in submissions:
-    submission['team_name'] = contest.users()[submission['team_id']]['user_name']
-    prob_id = [prob for prob in contest.problems().values() if prob['problem_id'] == submission['prob_id']][0]['id']
+    submission['team_name'] = contest.get_users()[submission['team_id']]['user_name']
+    prob_id = [prob for prob in contest.get_problems().values() if prob['problem_id'] == submission['prob_id']][0]['id']
     submission['problem_id'] = prob_id
     submission['prob_name'] = contest.problems()[prob_id]['problem_name']
   submissions = sorted(submissions, key= lambda obj:obj['date'], reverse=True)
