@@ -2,6 +2,13 @@
 
 {% block head %}
   <title>Abacus - New Problem</title>
+  
+  <style>
+    .item:hover {
+      cursor: pointer;
+      font-weight: bold !important;
+    }
+  </style>
 {% endblock %}
 
 {% block content %}
@@ -51,15 +58,6 @@
     </div>
   </div>
 </form>
-{% endblock %}
-
-{% block head %}
-<style>
-  .item:hover {
-    cursor: pointer;
-    font-weight: bold !important;
-  }
-</style>
 {% endblock %}
 
 {% block script %}
