@@ -16,9 +16,13 @@ def submissions():
   if not(contest.is_logged_in()):
     return render_template("401.html")
   submissions = list(contest.get_submissions().values())
-  submissions = sorted(submissions, key= lambda obj:obj['date'], reverse=True)
   if session['user_type'] == "team":
     submissions = [sub for sub in submissions if sub['team_id'] == session['user_id']]
+    for submission in submissions:
+      problem_id = [prob for prob in contest.get_problems().values() if prob['problem_id'] == submission['problem_id']][0]['id']
+      submission['problem_id'] = problem_id
+      submission['prob_name'] = contest.get_problems()[problem_id]['problem_name']
+  submissions = sorted(submissions, key= lambda obj:obj['date'], reverse=True)
   return render_template('blue/submissions.html', submissions=submissions)
 
 @blue.route('/submissions/<sid>')
