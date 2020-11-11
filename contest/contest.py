@@ -51,6 +51,16 @@ class ContestService:
         return user[0]['session_token'] == session['session_token']
     return False
 
+  def is_judge(self):
+    if self.is_logged_in():
+      return session['user_type'] == "judge"
+    return False
+
+  def is_admin(self):
+    if self.is_logged_in():
+      return session['user_type'] == "admin"
+    return False
+
   def home(self):
     if 'user_id' not in session or session['user_type'] == "team":
       return f"/{session['division']}"

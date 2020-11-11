@@ -7,25 +7,25 @@ admin = Blueprint('admin_bp', __name__, url_prefix='/admin',
 
 @admin.route('/')
 def index():
-  if 'user_id' not in session:
+  if not(contest.is_admin()):
     return render_template('401.html')
   return render_template('admin/index.html')
 
 @admin.route('/users')
 def teams():
-  if 'user_id' not in session:
+  if not(contest.is_admin()):
     return render_template('401.html')
   return render_template('admin/users.html', users=contest.get_users().values())
 
 @admin.route('/settings')
 def settings():
-  if 'user_id' not in session:
+  if not(contest.is_admin()):
     return render_template('401.html')
   return render_template('admin/settings.html', settings=contest.settings())
 
 @admin.route('/submissions')
 def submissions():
-  if 'user_id' not in session:
+  if not(contest.is_admin()):
     return render_template('401.html')
   submissions = list(contest.submissions().values())
   for submission in submissions:
@@ -38,8 +38,7 @@ def submissions():
 
 @admin.route('/submissions/<sid>')
 def submission(sid):
-  submissions = contest.submissions()
-  if 'user_id' not in session:
+  if not(contest.is_admin()):
     return render_template('401.html')
   if sid not in submissions:
     return render_template('404.html')
@@ -54,7 +53,9 @@ def submission(sid):
 
 @admin.route('/submissions/<sid>/invoke')
 def invoke_submission(sid):
-  submission = contest.submissions()[sid]
+  if not(contest.is_admin()):
+    return render_template('401.html')
+  submission = contest.get_submissions()[sid]
   filename = submission['filename'] if submission['language'] == "Python 3" else f"{submission['filename'][:-5]}.class"
   payload = {
     'Records': [
@@ -80,13 +81,13 @@ def invoke_submission(sid):
 
 @admin.route('/clarifications')
 def clarifications():
-  if 'user_id' not in session:
+  if not(contest.is_admin()):
     return render_template('401.html')
   return render_template('admin/clarifications.html')
 
 @admin.route('/problems')
 def problems():
-  if 'user_id' not in session:
+  if not(contest.is_admin()):
     return render_template('401.html')
   problems = contest.problems().values()
   problems = sorted(problems, key=lambda prob: prob['id'])
@@ -94,7 +95,7 @@ def problems():
 
 @admin.route('/problems/<pid>/edit')
 def edit_problem(pid):
-  if 'user_id' not in session:
+  if not(contest.is_admin()):
     return render_template('401.html')
   if pid not in contest.problems():
       return render_template('404.html')
@@ -102,6 +103,6 @@ def edit_problem(pid):
 
 @admin.route('/problems/new')
 def new_problem():
-  if 'user_id' not in session:
+  if not(contest.is_admin()):
     return render_template('401.html')
   return render_template('admin/new_problem.html')

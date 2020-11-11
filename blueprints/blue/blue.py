@@ -13,9 +13,9 @@ def standings():
 
 @blue.route('/submissions')
 def submissions():
-  if 'user_id' not in session:
-    return render_template('401.html')
-  submissions = list(contest.submissions().values())
+  if contest.is_logged_in():
+    return render_template("401.html")
+  submissions = list(contest.get_submissions().values())
   submissions = sorted(submissions, key= lambda obj:obj['date'], reverse=True)
   if session['user_type'] == "team":
     submissions = [sub for sub in submissions if sub['team_id'] == session['user_id']]
@@ -23,9 +23,9 @@ def submissions():
 
 @blue.route('/submissions/<sid>')
 def submission(sid):
-  submissions = contest.submissions()
-  if 'user_id' not in session:
-    return render_template('401.html')
+  submissions = contest.get_submissions()
+  if contest.is_logged_in():
+    return render_template("401.html")
   if sid not in submissions:
     return render_template('404.html')
   submission = submissions[sid]
@@ -50,7 +50,9 @@ def problem(pid):
 
 @blue.route('/problems/<pid>/submit')
 def submit(pid):
-  if pid not in contest.problems():
+  if contest.is_logged_in():
+    return render_template("401.html")
+  if pid not in contest.get_problems():
     return render_template("404.html")
   if 'user_id' not in session or session['user_type'] != "team":
     return render_template("401.html")
