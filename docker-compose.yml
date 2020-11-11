@@ -11,3 +11,10 @@ services:
       - 80:80
     volumes: 
       - .:/app
+    logging:
+      driver: awslogs
+      options:
+        awslogs-region: us-east-2
+        awslogs-group: ec2-abacus
+        awslogs-create-group: "true"
+        awslogs-datetime-format: '\[%b %d, %Y %H:%M:%S\]'
