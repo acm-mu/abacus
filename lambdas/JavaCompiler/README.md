@@ -4,4 +4,4 @@ A runtime is a program that runs a Lambda function's handler method when the fun
 
 **NOTE**: The runtime can be included in your function's deployment package, or in a [layer](https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html). If you later want to include a runtime layer on this function, make sure to delete the sample `bootstrap` file first.
 
-## LAMBDA ACTION WORKED!!!
+## LAMBDA ACTION Worked Hopefully.....
