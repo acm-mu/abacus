@@ -73,7 +73,7 @@ def invoke_submission(sid):
   }
 
   contest.lmbda.invoke(
-    FunctionName='PythonRunner' if submission['language'] == "Python 3" else 'JavaRunner',
+    FunctionName='Bluerunner',
     InvocationType='Event',
     Payload=json.dumps(payload)
   )
