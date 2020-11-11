@@ -4,7 +4,10 @@ This Open Source competition judging software is designed for the [Marquette ACM
 
 ### Technology
 * [Flask](https://flask.palletsprojects.com/en/1.1.x/) (Python Package)
-* AWS DynamoDB, S3, EC2, and Lambda
+* [AWS DynamoDB](https://aws.amazon.com/dynamodb/) (Database)
+* [AWS S3](https://aws.amazon.com/s3/) (File Storage)
+* [AWS EC2](https://aws.amazon.com/ec2/) (Hosting)
+* [AWS Lambda](https://aws.amazon.com/lambda/) (Event Driven Processes)
 
 ## How to run locally
 
