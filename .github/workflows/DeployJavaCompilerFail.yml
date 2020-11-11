@@ -2,7 +2,7 @@ name: Deploy JavaCompilerFail Lambda
 on: [push]
 jobs:
 
-  deploy_bluerunner:
+  deploy_javacompilerfail:
     name: deploy JavaCompilerFail
     runs-on: ubuntu-latest
     steps:
