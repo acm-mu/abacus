@@ -50,7 +50,7 @@ def problem(pid):
 
 @blue.route('/problems/<pid>/submit')
 def submit(pid):
-  if not(contest.is_logged_in():
+  if not(contest.is_logged_in()):
     return render_template("401.html")
   if pid not in contest.get_problems():
     return render_template("404.html")
