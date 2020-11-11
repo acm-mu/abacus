@@ -108,8 +108,8 @@ def submission(sub_id):
 @api.route('/problems', methods=['GET', 'POST'])
 def problems():
   if request.method == "POST":
-    tests = {k:v for k,v in request.form.items() if '-in' in k or '-out' in k}
-    tests = [{'in': tests[f"{n}-in"].replace('\r\n', '\n'), 'out': tests[f"{n}-out"].replace('\r\n', '\n')} for n in range(1, int(len(tests) / 2) + 1)]
+    tests = {k:v for k,v in request.form.items() if '-in' in k or '-out' in k or '-include' in k}
+    tests = [{'in': tests[f"{n}-in"].replace('\r\n', '\n'), 'out': tests[f"{n}-out"].replace('\r\n', '\n'), 'include': tests[f"{n}-include"]} for n in range(1, int(len(tests) / 2) + 1)]
 
     contest.db.Table('problem').put_item(
         Item={

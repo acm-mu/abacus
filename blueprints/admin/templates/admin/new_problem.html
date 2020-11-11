@@ -43,7 +43,6 @@
     <div class="ui bottom attached active tab segment" id="tests_content">
       <div class="field">
         <div class="ui button negative" onclick="deleteActive(this)">Delete</div>
-      </div>
     </div>
   </div>
 
@@ -92,6 +91,12 @@ let converter, textarea, preview;
           '<label>Answer</label>' +
           `<textarea name="${n}-out">TEST_OUT</textarea>` +
         '</div>' +
+        '<div class = "field">' +
+          '<div class="ui checkbox">' +
+            `<input type="checkbox" name="${n}-include">` + 
+            '<label>Make testcase public</label>' + 
+          '</div>' +
+        '</div>' + 
       '</div>'), document.querySelector('#tests_content .ui.button').parentNode)
 
     makeActive(newItem)
