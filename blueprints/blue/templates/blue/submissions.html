@@ -12,11 +12,11 @@
         <tr>
           <th>Submission ID</th>
           <th>Problem</th>
-          <th>Team</th>
           <th>Submission #</th>
           <th>Language</th>
           <th>Status</th>
           <th>Time</th>
+          <th>Score</th>
         </tr>
       </thead>
       <tbody>
@@ -28,12 +28,12 @@
         {% for submission in submissions %}
         <tr>
           <td><a href="/blue/submissions/{{ submission.submission_id }}">{{ (submission.submission_id|string)[:7] }}</a></td>
-          <td><a href="/blue/problems/{{ submission.prob_id }}">{{ submission.prob_name }} </a></td>
-          <td>{{ submission.team_name }}</td>
+          <td><a href="/blue/problems/{{ submission.problem_id }}">{{ submission.prob_name }} </a></td>
           <td>{{ submission.sub_no + 1 }}</td>
           <td>{{ submission.language }}</td>
           <td class="icn {{ submission.status }}"></td>
           <td fromnow="{{ submission.date*1000 }}"></td>
+          <td>{{ submission.score }}</td>
         </tr>
         {% endfor %}
       </tbody>
