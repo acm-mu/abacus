@@ -73,7 +73,7 @@ def invoke_submission(sid):
   }
 
   contest.lmbda.invoke(
-    FunctionName='Bluerunner',
+    FunctionName='BlueRunner',
     InvocationType='Event',
     Payload=json.dumps(payload)
   )
