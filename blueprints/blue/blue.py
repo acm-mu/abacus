@@ -13,7 +13,7 @@ def standings():
 
 @blue.route('/submissions')
 def submissions():
-  if contest.is_logged_in():
+  if not(contest.is_logged_in()):
     return render_template("401.html")
   submissions = list(contest.get_submissions().values())
   submissions = sorted(submissions, key= lambda obj:obj['date'], reverse=True)
@@ -24,7 +24,7 @@ def submissions():
 @blue.route('/submissions/<sid>')
 def submission(sid):
   submissions = contest.get_submissions()
-  if contest.is_logged_in():
+  if not(contest.is_logged_in()):
     return render_template("401.html")
   if sid not in submissions:
     return render_template('404.html')
@@ -50,7 +50,7 @@ def problem(pid):
 
 @blue.route('/problems/<pid>/submit')
 def submit(pid):
-  if contest.is_logged_in():
+  if not(contest.is_logged_in():
     return render_template("401.html")
   if pid not in contest.get_problems():
     return render_template("404.html")
