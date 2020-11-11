@@ -1,5 +1,8 @@
 name: Deploy JavaCompilerFail Lambda
-on: [push]
+on:
+  push:
+    paths:
+      - "lambdas/JavaCompilerFail/JavaCompilerFail.py"
 jobs:
 
   deploy_javacompilerfail:
