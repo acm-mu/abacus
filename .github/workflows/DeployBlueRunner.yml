@@ -1,7 +1,9 @@
 name: Deploy BlueRunner Lambda
-on: [push]
+on:
+  push:
+    paths:
+      - "lambdas/BlueRunner/BlueRunner.py"
 jobs:
-
   deploy_bluerunner:
     name: deploy BlueRunner
     runs-on: ubuntu-latest
