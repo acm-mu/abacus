@@ -1,7 +1,9 @@
 name: Deploy JavaCompiler Lambda
-on: [push]
+on:
+  push:
+    paths:
+      - "lambdas/JavaCompiler/*"
 jobs:
-
   deploy_zip:
     name: deploy lambda function
     runs-on: ubuntu-latest
