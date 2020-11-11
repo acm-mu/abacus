@@ -1,0 +1,195 @@
+{% extends "admin/page.html" %}
+
+{% block head %}
+
+<title>Abacus - Users</title>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/submit.css') }}">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/components/popup.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/components/popup.min.js"></script>
+
+{% endblock %}
+
+{% block content %}
+
+  {% include "countdown.html" %}
+
+  <div class="transparent xs-12 block">
+    <div class="ui buttons">
+      <div class="ui icon button" onclick="createTeam()" data-tooltip="Add User"><i class="plus icon"></i></div>
+      <div class="ui icon button" onclick="uploadCSV()" data-tooltip="Export to CSV"><i class="upload icon"></i></div>
+      <div class="ui icon button" onclick="downloadCSV()" data-tooltip="Import from CSV"><i class="download icon"></i></div>
+    </div>
+    <table class="ui celled table">
+      <thead>
+        <tr>
+          <th class="collapsing">#</th>
+          <th>Username</th>
+          <th>Type</th>
+          <th>Division</th>
+          <th>Displayname</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+        <tr uuid="{{ user.user_id }}">
+          <td>{{ loop.index }}</td>
+          <td><a href="#" onclick="editTeam(this)">{{ user.user_name }}</a></td>
+          <td>{{ user.type }}</td>
+          <td>{{ user.division }}</td>
+          <td>{{ user.display_name }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <form class="ui modal" id="userModal" method="POST" action="/api/users" onsuccess="refresh" async>
+    <i class="close icon"></i>
+    <div class="header" id="modal_header"></div>
+    <div class="content">
+      <div class="ui form">
+        <input name="user-id" style="display: none"> 
+        <div class="field">
+          <label>Username</label>
+          <input type="text" name="user-name" placeholder="User Name">
+        </div>
+        <div class="field">
+          <label>User Type</label>
+          <select name="type">
+            <option value="team">Team</option>
+            <option value="judge">Judge</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Division</label>
+          <select name="division">
+            <option value="blue">Blue</option>
+            <option value="gold">Gold</option>
+            <option value="na">N/A</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Display Name</label>
+          <input type="text" name="display-name" placeholder="Display Name">
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input type="text" name="password" placeholder="Password">
+        </div>
+      </div>
+    </div>
+    <div class="actions">
+      <div class="ui gray deny button">Cancel</div>
+      <div class="ui negative button" id="delete" onclick="deleteUser()">Delete</div>
+      <button type="submit" class="ui positive button">Create</button>
+    </div>
+  </form>
+
+  <form class="ui modal" id="uploadCSV" method="POST" action="/api/users" onsuccess="refresh" async>
+    <i class="close icon"></i>
+    <div class="header">Import from CSV</div>
+    <div class="content">
+      <div class="ui form">
+        <div id="file_dialog">
+          <div class="message">
+            <b>Drag & drop</b>&nbsp; a file here to upload<br />
+            <i>(Or click and choose file)</i>
+          </div>
+          <input id="sub_files_input" type="file" name="sub-file">
+        </div>
+        <div class="field">
+          <br>
+          <div class="ui checkbox">
+            <input type="checkbox" name="replace">
+            <label>Replace Existing Users</label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="actions">
+      <button type="submit" class="ui positive button">Upload</button>
+    </div>
+  </form>
+
+{% endblock %}
+
+{% block script %}
+  <script>
+    let form, modal_header
+    let uuid, type, username, division, displayname, password, submit, del
+
+    function uploadCSV() {
+      $('#uploadCSV').modal('show')
+    }
+
+    function createTeam() {
+      userForm.setAttribute('method', 'POST')
+      modal_header.innerText = "Create Team"
+      uuid.value = ""
+      type.value = "team"
+      username.value = ""
+      displayname.value = ""
+      division.value = "na"
+      password.value = ""
+      submit.innerText = "Create"
+      del.style.display = "none"
+
+      $('#userModal').modal('show')
+    }
+
+    function deleteUser() {
+      form.setAttribute('method', 'DELETE')
+      submit.click()
+    }
+
+    function editTeam(elem) {
+      const tr = elem.parentNode.parentNode
+
+      userForm.setAttribute('method', 'PUT')
+      modal_header.innerText = "Edit User"
+      uuid.value = tr.getAttribute('uuid')
+      username.value = tr.children[1].innerText
+      type.value = tr.children[2].innerText
+      division.value = tr.children[3].innerText
+      displayname.value = tr.children[4].innerText
+      password.value = ""
+      submit.innerText = "Save"
+      del.style.display = "inline-block"
+
+      $('#userModal').modal('show')
+    }
+
+    function refresh() {
+      window.location.reload()
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      userForm = document.querySelector('#userModal')
+      uuid = document.querySelector('input[name="user-id"]')
+      type = document.querySelector('select[name="type"]')
+      modal_header = document.querySelector('#modal_header')
+
+      division = document.querySelector('select[name="division"]')
+      username = document.querySelector('input[name="user-name"]')
+      displayname = document.querySelector('input[name="display-name"]')
+      password = document.querySelector('input[name="password"]')
+
+      del = document.querySelector('#delete')
+      submit = document.querySelector('button[type="submit"]')
+
+      const message = document.querySelector('#file_dialog .message');
+
+      document.querySelector('#sub_files_input').onchange = function () {
+        const list = document.createElement('ul');
+        Array.from(this.files).forEach((file) => {
+          const listItem = document.createElement('li');
+          listItem.innerText = file.name;
+          list.appendChild(listItem);
+        })
+        message.innerHTML = "<h3>Your import will include the following files:</h3>"
+        message.appendChild(list);
+      }
+    })
+  </script>
+{% endblock %}

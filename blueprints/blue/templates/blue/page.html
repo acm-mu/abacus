@@ -1,0 +1,24 @@
+{% extends "page.html" %}
+
+{% block navbar %}
+<div class="ui fixed inverted blue menu">
+  <div class="ui container">
+    <a href="/" class="header item">
+      <img class="logo" src="{{ url_for('static', filename='images/fulllogoy.png') }}">
+    </a>
+    <a href="/blue/" class="item">Home</a>
+    <a href="/blue/problems" class="item">Problems</a>
+    <a href="/blue/standings" class="item">Standings</a>
+    <a href="/blue/submissions" class="item">Submissions</a>
+
+    {% if is_logged_in() %}
+    <div class="right menu">
+      <a href="/{{ session.division }}"><div class="item">{{ session["user_name"] }}</div></a>
+      <a href="/logout" class="item">Log out</a>
+    </div>
+    {% else %}
+    <a href="/login" class="right item">Log in</a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

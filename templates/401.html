@@ -1,0 +1,16 @@
+{% extends "page.html" %}
+
+{% block head %}
+  <title>401 - Unauthorized</title>
+{% endblock %}
+
+{% block content %}
+
+  <div class="block">
+    <img src="{{ url_for('static', filename='images/401.png') }}" />
+
+    <h3>Error 401 - Unauthorized</h3>
+    <h5>You must be logged in to do that!</h5>
+  </div>
+
+{% endblock %}

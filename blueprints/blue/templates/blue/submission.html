@@ -1,0 +1,79 @@
+{% extends "blue/page.html" %}
+
+{% block head %}
+  <title>Abacus - Submission {{ submission.id }}</title>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.2.0/build/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/highlight.min.js"></script>
+  <script defer> hljs.initHighlightingOnLoad(); </script>
+{% endblock %}
+
+{% block content %}
+  {% include "countdown.html" %}
+  <div class="xs-12 block">
+    <h1>Submission</h1>
+    <table class="ui table celled">
+      <thead>
+        <tr>
+          <th rowspan="2">ID</th>
+          <th>DATE</th>
+          <th>PROBLEM</th>
+          <th>STATUS</th>
+          <th>CPU</th>
+          <th>LANG</th>
+        </tr>
+        <tr>
+          <th colspan="5">TEST CASES</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td rowspan="2"><a href="/blue/submissions/{{ submission.submission_id }}">{{ (submission.submission_id|string)[:7] }}</a>
+          </td>
+          <td fromnow="{{ submission.date*1000 }}"></td>
+          <td><a href="/blue/problems/{{ submission.prob_id }}">{{ submission.prob_name }}</a></td>
+          <td class="icn {{ submission.status }}"></td>
+          <td>{{ (submission.runtime|string)[:4] }}</td>
+          <td>{{ submission.language }}</td>
+        </tr>
+        <tr>
+          <td colspan="5">
+            {% for test in submission.tests %}
+              {% if test.result == "accepted" %}
+              <span class="result icn accepted"></span>
+              {% elif test.result == "rejected" %}
+              <span class="result icn rejected"></span>
+              {% else %}
+              <span class="result"></span>
+              {% endif %}
+            {% endfor %}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="xs-12 block">
+    Submission contains 1 file:
+    <table class="ui table celled">
+      <thead>
+        <tr>
+          <th>FILENAME</th>
+          <th>FILESIZE</th>
+          <th>SHA-1 SUM</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ submission.filename }}</td>
+          <td>{{ submission.filesize }} bytes</td>
+          <td>{{ submission.sha1sum }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>{{ submission.filename }}</h3>
+    <pre>
+      <code class="{{ submission.language }}">{{ contents }}</code>
+    </pre>
+  </div>
+{% endblock %}

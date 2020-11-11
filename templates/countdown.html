@@ -1,0 +1,19 @@
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/countdown.css') }}">
+<script src="{{ url_for('static', filename='js/countdown.js') }}"></script>
+
+<div class="xs-12 block">
+  <div class="upper">
+    <p><b>Start</b> <span id="start_time"></span></p>
+    <h1 id="competition_name"></h1>
+    <p><b>End</b> <span id="end_time"></span></p>
+  </div>
+
+  <div class="countdown">
+    <div id="progress-bar">&nbsp;</div>
+  </div>
+
+  <div class="lower">
+    <p><b>Time elapsed</b> <span id="timeElapsed"></span></p>
+    <p><b>Time remaining</b> <span id="timeRemaining"></span></p>
+  </div>
+</div>

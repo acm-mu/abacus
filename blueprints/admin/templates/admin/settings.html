@@ -1,0 +1,84 @@
+{% extends "admin/page.html" %}
+
+{% block head %}
+  <title>Abacus - Settings</title>
+{% endblock %}
+
+{% block content %}
+
+  <div class="block xs-6">
+
+    <div id="success-message" style="display:none" class="ui tiny icon message success">
+      <i class="check tiny icon"></i>
+      <div class="content">
+        <div class="header">
+          Success!
+        </div>
+        <p>Your changes have successfully been saved.</p>
+      </div>
+    </div>
+
+    <form class="ui form" action="/api/contest" method="POST" onsuccess="success" async>
+      <h1>Settings</h1>
+      <hr>
+    
+      <h3>Competition Settings</h3>
+      <div class="field">
+        <label>Competition Name</label>
+        <input type="text" name="competition-name" value="{{ settings.competition_name }}">
+      </div>
+
+      <label>Start Date</label>
+      <div class="date two fields" id="start_date" date="{{ settings.start_date }}">
+        <div class="field">
+          <input type="date" name="start-date">
+        </div>
+        <div class="field">
+          <input type="time" name="start-time">
+        </div>
+      </div>
+
+      <label>End Date</label>
+      <div class="date two fields" id="end_date" date="{{ settings.end_date }}">
+        <div class="field">
+          <input type="date" name="end-date">
+        </div>
+        <div class="field">
+          <input type="time" name="end-time">
+        </div>
+      </div>
+      <br />
+      
+      <h3>Scoring Settings</h3>
+      <div class="field">
+        <label>Points per Yes</label>
+        <input type="number" name="points-per-yes" value="{{ settings.points_per_yes }}">
+      </div>
+      
+      <div class="field">
+        <label>Points per No</label>
+        <input type="number" name="points-per-no" value="{{ settings.points_per_no }}">
+      </div>
+      
+      <div class="field">
+        <label>Points per Compilation Error</label>
+        <input type="number" name="points-per-compilation-error" value="{{ settings.points_per_compilation_error }}">
+      </div>
+      
+      <div class="field">
+        <label>Points per Minute (1st Yes)</label>
+        <input type="number" name="points-per-minute" value="{{ settings.points_per_minute }}">
+      </div>
+
+      <input class="ui primary button" type="submit" value="Save">
+    </form>
+  </div>
+{% endblock %}
+
+{% block script %}
+<script>
+  function success() {
+    document.querySelector("#success-message").style.display = "flex"
+  }
+</script>
+{% endblock %}
