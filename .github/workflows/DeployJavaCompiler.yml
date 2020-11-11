@@ -10,7 +10,7 @@ jobs:
         uses: actions/checkout@v1
       - name: Build Zip
         run: |
-          cd lambdas && zip -r JavaCompiler.zip JavaCompiler && cd ../
+          cd lambdas/JavaCompiler && zip -r ../JavaCompiler.zip . && cd ../../
       - name: default deploy
         uses: appleboy/lambda-action@master
         with:
