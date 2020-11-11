@@ -40,6 +40,7 @@ def submissions():
 def submission(sid):
   if not(contest.is_admin()):
     return render_template('401.html')
+  submissions = contest.get_submissions()
   if sid not in submissions:
     return render_template('404.html')
   submission = submissions[sid]
