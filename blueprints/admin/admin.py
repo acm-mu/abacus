@@ -21,7 +21,7 @@ def teams():
 def settings():
   if not(contest.is_admin()):
     return render_template('401.html')
-  return render_template('admin/settings.html', settings=contest.settings())
+  return render_template('admin/settings.html', settings=contest.get_settings())
 
 @admin.route('/submissions')
 def submissions():
