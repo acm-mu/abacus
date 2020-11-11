@@ -115,7 +115,7 @@ class ContestService:
     problem_id = request.form['problem-id']
     problem = [prob for prob in contest.get_problems().values() if prob['problem_id'] == problem_id][0]
 
-    sub_no = len([sub for sub in self.get_submissions().values() if sub['team_id'] == session['user_id'] and sub['problem_id'] == problem_id]) + 1
+    sub_no = len([sub for sub in self.get_submissions().values() if sub['team_id'] == session['user_id'] and sub['problem_id'] == problem_id])
 
     # Upload file to AWS S3 Bucket
     key = f"{ submission_id }/{ sub_file.filename }"
