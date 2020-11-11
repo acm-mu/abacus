@@ -27,12 +27,12 @@ def settings():
 def submissions():
   if not(contest.is_admin()):
     return render_template('401.html')
-  submissions = list(contest.submissions().values())
+  submissions = list(contest.get_submissions().values())
   for submission in submissions:
     submission['team_name'] = contest.get_users()[submission['team_id']]['user_name']
-    prob_id = [prob for prob in contest.get_problems().values() if prob['problem_id'] == submission['prob_id']][0]['id']
-    submission['problem_id'] = prob_id
-    submission['prob_name'] = contest.problems()[prob_id]['problem_name']
+    problem_id = [prob for prob in contest.get_problems().values() if prob['problem_id'] == submission['problem_id']][0]['id']
+    submission['problem_id'] = problem_id
+    submission['prob_name'] = contest.get_problems()[problem_id]['problem_name']
   submissions = sorted(submissions, key= lambda obj:obj['date'], reverse=True)
   return render_template('admin/submissions.html', submissions=submissions)
 
@@ -45,9 +45,8 @@ def submission(sid):
   submission = submissions[sid]
   contents = contest.s3.Bucket('abacus-submissions').Object(f"{ submission['submission_id'] }/{ submission['filename'] }").get()['Body'].read().decode()
   filename = submission['filename']
-  problem = [prob for prob in contest.problems().values() if prob['problem_id'] == submission['prob_id']][0]
+  problem = [prob for prob in contest.get_problems().values() if prob['problem_id'] == submission['problem_id']][0]
   submission['prob_id'] = problem['id']
-  submission['problem_id'] = problem['problem_id']
   submission['prob_name'] = problem['problem_name']
   return render_template('admin/submission.html', submission=submission, filename=filename, contents=contents)
 
@@ -89,7 +88,7 @@ def clarifications():
 def problems():
   if not(contest.is_admin()):
     return render_template('401.html')
-  problems = contest.problems().values()
+  problems = contest.get_problems().values()
   problems = sorted(problems, key=lambda prob: prob['id'])
   return render_template('admin/problems.html', problems=problems)
 
@@ -97,9 +96,9 @@ def problems():
 def edit_problem(pid):
   if not(contest.is_admin()):
     return render_template('401.html')
-  if pid not in contest.problems():
+  if pid not in contest.get_problems():
       return render_template('404.html')
-  return render_template('admin/edit_problem.html', problem=contest.problems()[pid])
+  return render_template('admin/edit_problem.html', problem=contest.get_problems()[pid])
 
 @admin.route('/problems/new')
 def new_problem():

@@ -23,7 +23,7 @@ def settings():
       'points_per_compilation_error': request.form['points-per-compilation-error'],
       'points_per_minute': request.form['points-per-minute']
     })
-  data = contest.settings()  
+  data = contest.get_settings()  
   if 'user_id' in session:
     data['current_user'] = session['user_id']
   
@@ -75,7 +75,7 @@ def users():
         }
       )
 
-  return dumps({K: V for K, V in contest.users().items() if V['type'] == "team"})
+  return dumps({K: V for K, V in contest.get_users().items() if V['type'] == "team"})
 
 @api.route('/submissions', methods=['GET', 'POST', 'DELETE'])
 def submissions():
@@ -96,11 +96,11 @@ def submissions():
   if request.method == "POST":
     return dumps(contest.submit(request))
 
-  return dumps(contest.submissions())
+  return dumps(contest.get_submissions())
 
 @api.route('/submissions/<sub_id>')
 def submission(sub_id):
-  submissions = contest.submissions()
+  submissions = contest.get_submissions()
   if sub_id not in submissions:
     return "Not Found"
   return dumps(submissions[sub_id])
@@ -122,7 +122,7 @@ def problems():
           'tests': tests
         }
       )
-  return dumps(contest.problems())
+  return dumps(contest.get_problems())
 
 @api.route('/problems/<prob_id>', methods=['GET', 'PUT', 'DELETE'])
 # TODO: Delete all submissions for problem
@@ -154,7 +154,7 @@ def problem(prob_id):
           ':tests': tests
       })
   
-  return dumps(contest.problems()[prob_id])
+  return dumps(contest.get_problems()[prob_id])
 
 class AbacusEncoder(json.JSONEncoder):
   def default(self, o):

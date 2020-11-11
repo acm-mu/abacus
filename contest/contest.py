@@ -71,11 +71,11 @@ class ContestService:
     if session['user_type'] == 'admin':
       return '/admin'
 
-  def problems(self):
+  def get_problems(self):
     problems = self.db.Table('problem').scan()['Items']
     return {problem['id']: problem for problem in problems}
     
-  def settings(self):
+  def get_settings(self):
     settings = self.db.Table('setting').scan()['Items']
     return {s['key']: s['value'] for s in settings}
 
@@ -88,8 +88,15 @@ class ContestService:
             'value': value
           })
   
-  def submissions(self):
-    submissions = self.db.Table('submission').scan()['Items']
+  def get_submissions(self, **filters):
+    filter_expression = " AND ".join(f"{key} = :{key}" for key in filters.keys())
+    values = {f":{key}": value for key,value in filters.items()}
+    
+    if filter_expression:
+      submissions = self.db.Table('submission').scan(FilterExpression=filter_expression, ExpressionAttributeValues=values)['Items']
+    else:
+      submissions = self.db.Table('submission').scan()['Items']
+      
     return {sub['submission_id']: sub for sub in submissions}
 
   def get_users(self, user_id=None):
@@ -106,9 +113,9 @@ class ContestService:
     submission_id = uuid.uuid4().hex
 
     problem_id = request.form['problem-id']
-    problem = [prob for prob in contest.problems().values() if prob['problem_id'] == problem_id][0]
+    problem = [prob for prob in contest.get_problems().values() if prob['problem_id'] == problem_id][0]
 
-    sub_no = len([sub for sub in self.submissions().values() if sub['team_id'] == session['user_id'] and sub['prob_id'] == problem_id]) + 1
+    sub_no = len([sub for sub in self.get_submissions().values() if sub['team_id'] == session['user_id'] and sub['problem_id'] == problem_id]) + 1
 
     # Upload file to AWS S3 Bucket
     key = f"{ submission_id }/{ sub_file.filename }"
@@ -133,7 +140,7 @@ class ContestService:
         'filesize': file_size,
         'sha1sum': h.hexdigest(),
         'team_id': session['user_id'],
-        'prob_id': problem_id,
+        'problem_id': problem_id,
         'tests': problem['tests']
       }
 
