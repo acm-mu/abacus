@@ -1,23 +1,14 @@
 # MU ACM Contest Software
 ## Overview
-To be written.
+This Open Source competition judging software is designed for the [Marquette ACM Programming Competition](https://mu.acm.org/competition). It was created my Marquette students, and modeled after [Kattis](https://www.kattis.com/), the judging software used for [ICPC](https://icpc.global/).
 
 ### Technology
 * [Flask](https://flask.palletsprojects.com/en/1.1.x/) (Python Package)
-* [MongoDB](https://www.mongodb.com/) (Database)
-* (Optional) [AWS S3](https://aws.amazon.com/s3/) (File Storage)
+* AWS DynamoDB, S3, EC2, and Lambda
 
 ## How to run locally
 
-#### Dependencies 
-* [Docker](https://docs.docker.com/get-started/overview/) w/ [Docker Compose](https://docs.docker.com/compose/)
-    
-All you need to do is run `docker-compose up -d` from the main directory. 
-      
-  * The `-d` flag will run the containers in the background.
-  * To view the output you can run `docker logs kattis_app` (`--follow` will continue streaming the new output).
-
-This command will spin up a flask container as well as a local mongo db container running in tandem. You can configure credentials from within the `docker-compose.yml` file. Just make sure you change the credentials in both places.
+Instructions need to be rewritten.
 
 # Asynchronous Forms
 Abacus takes advantage of submitting forms asynchronous rather than the default redirect behavior.
