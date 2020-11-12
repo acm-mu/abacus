@@ -1,85 +1,40 @@
 import boto3, os, subprocess, urllib.parse, time, re
+from datetime import datetime
 
 s3 = boto3.resource('s3')
 db = boto3.resource('dynamodb')
 
 def lambda_handler(event, context):
     bucket_name = event['Records'][0]['s3']['bucket']['name']
+    key = event['Records'][0]['s3']['object']['key']
     
     if not(bucket_name == "abacus-submissions"):
         return
     
     bucket = s3.Bucket("abacus-submissions")
-    key = urllib.parse.unquote_plus(event['Records'][0]['s3']['object']['key'], encoding='utf-8')
+    key = urllib.parse.unquote_plus(key, encoding='utf-8')
 
-    file_parts = re.findall(r'(.*)\/(.*)\.(.*)', key)[0]
+    submission_id, filename, file_ext = re.findall(r'(.*)\/(.*)\.(.*)', key)[0]
 
-    submission_id = file_parts[0]
-    filename = file_parts[1]
-    file_ext = file_parts[2]
+    settings = db.Table('setting').scan()['Items']
+    settings = {s['key']: s['value'] for s in settings}
     
-    start_d = db.Table('setting').get_item(
-        Key={
-            'key': 'start_date'
-        })['Item']
-    
-    submission = db.Table('submission').get_item(
-        Key={
-            'submission_id': submission_id
-        })['Item']
+    submission = get_item('submission', submission_id=submission_id)
+    problem = get_item('problem', problem_id=submission['problem_id'])
         
-    problem = db.Table('problem').get_item(
-        Key={
-            'problem_id': submission['problem_id']
-        })['Item']
-        
-    start_date = time.localtime(int(start_d['value']))
-    submission_time = time.localtime(submission['date'])
-
-    print("Start date: {}".format(start_date))
-    print("Sub time: {}".format(submission_time))
-
-    sd_hours = start_date.tm_hour
-    sd_mins = start_date.tm_min
-    sub_hours = submission_time.tm_hour
-    sub_mins = submission_time.tm_min
-
-    print("Start Time: {}:{}".format(sd_hours, sd_mins))
-    print("Submit Time: {}:{}".format(sub_hours, sub_mins))
-
-    if(sd_hours == 0):
-        sd_hours = 24
-    elif(sub_hours == 0):
-        sub_hours = 24
-
-    print("Start Time: {}:{}".format(sd_hours, sd_mins))
-    print("Submit Time: {}:{}".format(sub_hours, sub_mins))
-    
-    hours = 60 * abs(sub_hours - sd_hours)
-    minutes = sub_mins - sd_mins
-    general_score = hours + minutes
     submission['tests'] = problem['tests']
         
-    # Update database
-    db.Table('submission').update_item(
-        Key={
-            'submission_id': submission_id
-        },
-        UpdateExpression=f"SET tests = :tests, #state = :state",
-        ExpressionAttributeValues={
-            ':tests': submission['tests'],
-            ':state': "pending"
-        },
-        ExpressionAttributeNames={
-            "#state": "status"
-        })
+    # Update database to pending
+    update_submission(submission_id, 
+        status="pending", 
+        tests=submission['tests'])
         
     timeout = problem['cpu_time_limit']
     timeout = float(timeout) / 1000 if timeout != "" else None
     
     # Download File
     os.makedirs('/tmp', exist_ok=True)
-    bucket.download_file(key, f"/tmp/{ filename }.{ file_ext }") #concerned about what this is expecting
+    bucket.download_file(key, f"/tmp/{ filename }.{ file_ext }")
     
     # Run testcases
     status = "accepted"
@@ -126,38 +81,38 @@ def lambda_handler(event, context):
     # Calculate score
     score = 0
     if status == "accepted":
-        points_per_no = int(db.Table('setting').get_item(
-            Key={
-                'key': 'points_per_no'
-            })['Item']['value'])
+        start_date = datetime.fromtimestamp(int(settings['start_date']))
+        submission_time = datetime.fromtimestamp(submission['date'])
         
-        points_per_yes = int(db.Table('setting').get_item(
-            Key={
-                'key': 'points_per_yes'
-            })['Item']['value'])
-        
-        points_per_minute = int(db.Table('setting').get_item(
-            Key={
-                'key': 'points_per_minute'
-            })['Item']['value'])
+        minutes = int((submission_time - start_date).seconds / 60)
+
+        points_per_no = int(settings['points_per_no'])
+        points_per_yes = int(settings['points_per_yes'])
+        points_per_minute = int(settings['points_per_minute'])
         
         tries = int(submission['sub_no'])
-        score = (int(general_score) * points_per_minute) + (points_per_no * tries) + points_per_yes
-        print("hr: {}, min: {}, gs: {}, t: {}, score: {}".format(hours, minutes, general_score, tries, score))
+    
+        score = (int(minutes) * points_per_minute) + (points_per_no * tries) + points_per_yes
+
     # Update database
-    db.Table('submission').update_item(
-        Key={
-            'submission_id': submission_id
-        },
-        UpdateExpression=f"SET tests = :tests, #state = :state, runtime = :runtime, score = :score",
-        ExpressionAttributeValues={
-            ':tests': submission['tests'],
-            ':state': status,
-            ':runtime': int(runtime * 1000),
-            ':score': int(score)
-        },
-        ExpressionAttributeNames={
-            "#state": "status"
-        })
+    update_submission(submission_id, 
+        tests=submission['tests'], 
+        status=status, 
+        runtime=int(runtime * 1000), 
+        score=int(score))
     
     return True
+
+def get_item(table, **key):
+    return db.Table(table).get_item(Key=key)['Item']
+
+def update_submission(submission_id, **kwargs):
+      update_expression = ",".join(f"#{key} = :{key}" for key in kwargs.keys())
+      names = {f"#{key}": key for key in kwargs.keys()}
+      values = {f":{key}": value for key,value in kwargs.items()}
+
+      db.Table('submission').update_item(
+        Key={ 'submission_id': submission_id },
+        UpdateExpression=f"SET {update_expression}",
+        ExpressionAttributeValues=values,
+        ExpressionAttributeNames=names)
