@@ -35,9 +35,28 @@ def lambda_handler(event, context):
         
     start_date = time.localtime(int(start_d['value']))
     submission_time = time.localtime(submission['date'])
+
+    print("Start date: {}".format(start_date))
+    print("Sub time: {}".format(submission_time))
+
+    sd_hours = start_date.tm_hour
+    sd_mins = start_date.tm_min
+    sub_hours = submission_time.tm_hour
+    sub_mins = submission_time.tm_min
+
+    print("Start Time: {}:{}".format(sd_hours, sd_mins))
+    print("Submit Time: {}:{}".format(sub_hours, sub_mins))
+
+    if(sd_hours == 0):
+        sd_hours = 24
+    elif(sub_hours == 0):
+        sub_hours = 24
+
+    print("Start Time: {}:{}".format(sd_hours, sd_mins))
+    print("Submit Time: {}:{}".format(sub_hours, sub_mins))
     
-    hours = 60 * (submission_time.tm_hour - start_date.tm_hour)
-    minutes = submission_time.tm_min - start_date.tm_min
+    hours = 60 * abs(sub_hours - sd_hours)
+    minutes = sub_mins - sd_mins
     general_score = hours + minutes
     submission['tests'] = problem['tests']
         
@@ -124,7 +143,7 @@ def lambda_handler(event, context):
         
         tries = int(submission['sub_no'])
         score = (int(general_score) * points_per_minute) + (points_per_no * tries) + points_per_yes
-        
+        print("hr: {}, min: {}, gs: {}, t: {}, score: {}".format(hours, minutes, general_score, tries, score))
     # Update database
     db.Table('submission').update_item(
         Key={
