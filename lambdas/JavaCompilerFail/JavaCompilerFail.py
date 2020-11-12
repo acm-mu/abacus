@@ -10,19 +10,21 @@ def lambda_handler(event, context):
     
     submission_id = key.split("/")[-2]
     
-    db.Table('submission').update_item(
-        Key={
-            'submission_id': submission_id
-        },
-        UpdateExpression='SET #st = :val1',
-        ExpressionAttributeValues={
-            ':val1': "wrong_answer"
-        },
-        ExpressionAttributeNames={
-            '#st': "status"
-        })
+    update_submission(submission_id, status="wrong_answer")
         
     return {
         'statusCode': 200,
         'body': json.dumps('Database Updated!')
     }
+
+
+def update_submission(submission_id, **kwargs):
+      update_expression = ",".join(f"#{key} = :{key}" for key in kwargs.keys())
+      names = {f"#{key}": key for key in kwargs.keys()}
+      values = {f":{key}": value for key,value in kwargs.items()}
+
+      db.Table('submission').update_item(
+        Key={ 'submission_id': submission_id },
+        UpdateExpression=f"SET {update_expression}",
+        ExpressionAttributeValues=values,
+        ExpressionAttributeNames=names)
