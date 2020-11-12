@@ -11,18 +11,9 @@ def dumps(data):
 
 @api.route('/contest', methods=['GET', 'POST'])
 def settings():
-  if request.method == "POST":
-    start_date = datetime.strptime(f"{ request.form['start-date'] } { request.form['start-time'] }", '%Y-%m-%d %H:%M')
-    end_date = datetime.strptime(f"{ request.form['end-date'] } { request.form['end-time'] }", '%Y-%m-%d %H:%M')
-    contest.save_settings({
-      'competition_name': request.form['competition-name'],
-      'start_date': int(start_date.timestamp())  + (6 * 60 * 60), # This is hardcoded right now, but should be changed.
-      'end_date': int(end_date.timestamp()) + (6 * 60 * 60), # this is hardcoded right now but should be changed.
-      'points_per_yes': request.form['points-per-yes'],
-      'points_per_no': request.form['points-per-no'],
-      'points_per_compilation_error': request.form['points-per-compilation-error'],
-      'points_per_minute': request.form['points-per-minute']
-    })
+  if request.method == "POST" and contest.is_admin():
+    contest.save_settings(request.form)
+
   data = contest.get_settings()  
   if 'user_id' in session:
     data['current_user'] = session['user_id']
@@ -133,7 +124,6 @@ def problem(prob_id):
         'problem_id': request.form['problem-id']
       }
     )
-    contest.db.Table('submission').deletE_items()
     return redirect('/problems')
     
   if request.method == "PUT":

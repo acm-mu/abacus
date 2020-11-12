@@ -18,14 +18,14 @@
       </div>
     </div>
 
-    <form class="ui form" action="/api/contest" method="POST" onsuccess="success" async>
+    <form class="ui form" action="/api/contest" method="POST" id="save-settings">
       <h1>Settings</h1>
       <hr>
     
       <h3>Competition Settings</h3>
       <div class="field">
         <label>Competition Name</label>
-        <input type="text" name="competition-name" value="{{ settings.competition_name }}">
+        <input type="text" name="competition_name" value="{{ settings.competition_name }}">
       </div>
 
       <label>Start Date</label>
@@ -52,22 +52,22 @@
       <h3>Scoring Settings</h3>
       <div class="field">
         <label>Points per Yes</label>
-        <input type="number" name="points-per-yes" value="{{ settings.points_per_yes }}">
+        <input type="number" name="points_per_yes" value="{{ settings.points_per_yes }}">
       </div>
       
       <div class="field">
         <label>Points per No</label>
-        <input type="number" name="points-per-no" value="{{ settings.points_per_no }}">
+        <input type="number" name="points_per_no" value="{{ settings.points_per_no }}">
       </div>
       
       <div class="field">
         <label>Points per Compilation Error</label>
-        <input type="number" name="points-per-compilation-error" value="{{ settings.points_per_compilation_error }}">
+        <input type="number" name="points_per_compilation_error" value="{{ settings.points_per_compilation_error }}">
       </div>
       
       <div class="field">
         <label>Points per Minute (1st Yes)</label>
-        <input type="number" name="points-per-minute" value="{{ settings.points_per_minute }}">
+        <input type="number" name="points_per_minute" value="{{ settings.points_per_minute }}">
       </div>
 
       <input class="ui primary button" type="submit" value="Save">
@@ -77,8 +77,35 @@
 
 {% block script %}
 <script>
-  function success() {
-    document.querySelector("#success-message").style.display = "flex"
-  }
+  document.addEventListener('submit', function(e) {
+    const form = e.target
+    if (form.id !== "save-settings") return;
+    e.preventDefault()
+
+    const data = new FormData(form)
+
+    let start_date = new Date(`${data.get('start-date')} ${data.get('start-time')}`)
+    let end_date = new Date(`${data.get('end-date')} ${data.get('end-time')}`)
+
+    data.delete('start-date')
+    data.delete('start-time')
+    data.delete('end-date')
+    data.delete('end-time')
+
+    start_date = (start_date.getTime() / 1000) + (start_date.getTimezoneOffset() * 60)
+    end_date = (end_date.getTime() / 1000) + (end_date.getTimezoneOffset() * 60)
+
+    data.set('start_date', start_date)
+    data.set('end_date', end_date)
+
+    fetch(form.action, {
+      method: form.getAttribute('method'),
+      body: data
+    }).then(res => {
+      if (res.status == "200") {
+        document.querySelector("#success-message").style.display = "flex"
+      }
+    })
+  })
 </script>
 {% endblock %}

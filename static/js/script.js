@@ -44,7 +44,9 @@ function convertMarkdown() {
 function fillDateInputs() {
   document.querySelectorAll(".date.fields").forEach((dateField) => {
     if (!dateField.getAttribute("date")) return
-    let values = moment(parseInt(dateField.getAttribute("date")) * 1000).format().split("T");
+    let milliseconds = parseInt(dateField.getAttribute("date")) * 1000
+    milliseconds -= (new Date()).getTimezoneOffset() * 60000
+    let values = moment(milliseconds).format().split("T");
 
     dateField.querySelector("input[type=date]").value = values[0];
     dateField.querySelector("input[type=time]").value = values[1].substring(0, 5); // Cut of seconds
