@@ -39,12 +39,10 @@ function CountdownTracker(label, value) {
 const thirtyOneDays = [0, 2, 4, 6, 7, 9, 11] // January, March, May, July, August, October, December
 
 function getTimeRemaining(endtime) {
-  var t = Date.parse(endtime) - Date.parse(new Date())
-  console.log(t)
-  let months = undefined
-  if (t >= (1000 * 60 * 60 * 24 * 30)) { // More than (or equal to) a month
-    let d = moment(endtime).diff(moment())
-    months = Math.floor(moment.duration(d).as('months'))
+  let now = new Date()
+  var t = endtime - now
+  let months = ((endtime.getMonth() - now.getMonth()) + 12) % 12
+  if (months > 0) {
     let deltaDays = 0
     for(let i = 0; i < months; i++) {
       let month = ((new Date()).getMonth() + i) % 12
