@@ -42,6 +42,7 @@ function getTimeRemaining(endtime) {
   let now = new Date()
   var t = endtime - now
   let months = ((endtime.getMonth() - now.getMonth()) + 12) % 12
+  if (endtime.getDate() <= now.getDate()) months--
   if (months > 0) {
     let deltaDays = 0
     for(let i = 0; i < months; i++) {
