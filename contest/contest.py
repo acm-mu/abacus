@@ -34,6 +34,7 @@ class ContestService:
           session['user_name'] = user['user_name']
           session['user_type'] = user['type']
           session['division'] = user['division']
+          # TODO: Instead these should be retrieved from the /api/contest endpoint via the session_token variable. Do a database lookup for the user with that token.
           session['session_token'] = uuid.uuid4().hex
 
           self.db.Table('user').update_item(
@@ -70,10 +71,6 @@ class ContestService:
     
     if session['user_type'] == 'admin':
       return '/admin'
-
-  def get_problems(self):
-    problems = self.db.Table('problem').scan()['Items']
-    return {problem['id']: problem for problem in problems}
     
   def get_settings(self):
     settings = self.db.Table('setting').scan()['Items']
@@ -87,24 +84,50 @@ class ContestService:
             'key': key,
             'value': value
           })
-  
-  def get_submissions(self, **filters):
-    filter_expression = " AND ".join(f"{key} = :{key}" for key in filters.keys())
-    values = {f":{key}": value for key,value in filters.items()}
+
+  def get_problems(self, **kwargs):
+    filter_expression = " AND ".join(f"#{key} = :{key}" for key in kwargs.keys())
+    names = {f"#{key}": key for key in kwargs.keys()}
+    values = {f":{key}": value for key,value in kwargs.items()}
+
+    if kwargs:
+      problems = self.db.Table('problem').scan(
+        FilterExpression=filter_expression,
+        ExpressionAttributeValues=values,
+        ExpressionAttributeNames=names)['Items']
+    else:
+      problems = self.db.Table('problem').scan()['Items']
     
-    if filter_expression:
-      submissions = self.db.Table('submission').scan(FilterExpression=filter_expression, ExpressionAttributeValues=values)['Items']
+    return {problem['id']: problem for problem in problems}
+  
+  def get_submissions(self, **kwargs):
+    filter_expression = " AND ".join(f"#{key} = :{key}" for key in kwargs.keys())
+    names = {f"#{key}": key for key in kwargs.keys()}
+    values = {f":{key}": value for key,value in kwargs.items()}
+
+    if kwargs:
+      submissions = self.db.Table('submission').scan(
+        FilterExpression=filter_expression,
+        ExpressionAttributeValues=values,
+        ExpressionAttributeNames=names)['Items']
     else:
       submissions = self.db.Table('submission').scan()['Items']
       
     return {sub['submission_id']: sub for sub in submissions}
 
-  def get_users(self, user_id=None):
-    users = []
-    if user_id:
-      users = self.db.Table('user').scan(Key={'user_id': user_id})['Items']
+  def get_users(self, **kwargs):
+    filter_expression = " AND ".join(f"#{key} = :{key}" for key in kwargs.keys())
+    names = {f"#{key}": key for key in kwargs.keys()}
+    values = {f":{key}": value for key,value in kwargs.items()}
+
+    if kwargs:
+      users = self.db.Table('user').scan(
+        FilterExpression=filter_expression,
+        ExpressionAttributeValues=values,
+        ExpressionAttributeNames=names)['Items']
     else:
       users = self.db.Table('user').scan()['Items']
+
     return {user['user_id']: user for user in users}
 
   def submit(self, request):
