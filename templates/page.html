@@ -23,15 +23,20 @@
       <a href="/" class="header item">
         <img class="logo" src="{{ url_for('static', filename='images/fulllogoy.png') }}">
       </a>
-
-      {% if is_logged_in() %}
-      <div class="right menu">
-        <a href="/{{ session.division }}"><div class="item">{{ session.user_name }}</div></a>
-        <a href="/logout" class="item">Log out</a>
+      <a href="/" class="item">Home</a>
+      <div class="ui simple dropdown item">
+        Divisions
+        <i class="dropdown icon"></i>
+        <div class="menu">
+          <a class="item">Blue</a>
+          <a class="item">Gold</a>
+          <a class="item">Eagle</a>
+        </div>
       </div>
-      {% else %}
-      <a href="/login" class="right item">Log in</a>
-      {% endif %}
+      <a href="/about" class="item">About</a>
+      <a href="/help" class="item">Help</a>
+
+      {% include 'usernav.html' %}
     </div>
   </div>
   {% endblock %}
@@ -39,6 +44,10 @@
   <div class="ui main text container">
     {% block content %} {% endblock %}
   </div>
+
+  <footer>
+    Developed by members of <a href='mu.acm.org'>Marquette ACM</a>
+  </footer>
 </body>
 
 </html>
