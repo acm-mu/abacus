@@ -29,6 +29,16 @@ body {
   color: #555;
   font-family: "Open Sans", sans-serif;
   -moz-osx-font-smoothing: grayscale;
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 95fr 1fr;
+}
+
+footer {
+  background: #222;
+  margin-top: 15px;
+  padding: 20px 10px;
+  color: #eee;
 }
 
 h1,h2,h3,h4,h5,h6{
