@@ -19,9 +19,9 @@ def submissions():
   if session['user_type'] == "team":
     submissions = [sub for sub in submissions if sub['team_id'] == session['user_id']]
     for submission in submissions:
-      problem_id = [prob for prob in contest.get_problems().values() if prob['problem_id'] == submission['problem_id']][0]['id']
-      submission['problem_id'] = problem_id
-      submission['prob_name'] = contest.get_problems()[problem_id]['problem_name']
+      problem = list(contest.get_problems(problem_id = submission['problem_id']).values())[0]
+      submission['problem_id'] = problem['id']
+      submission['prob_name'] = problem['problem_name']
   submissions = sorted(submissions, key= lambda obj:obj['date'], reverse=True)
   return render_template('blue/submissions.html', submissions=submissions)
 
