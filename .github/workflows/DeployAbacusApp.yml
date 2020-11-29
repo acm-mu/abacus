@@ -1,4 +1,5 @@
 name: Deploy Abacus EC2
+on: push
 jobs:
   deploy_abacus:
     steps:
