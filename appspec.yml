@@ -3,3 +3,10 @@ os: linux
 files:
   - source: .
     destination: /app
+hooks:
+  BeforeInstall:
+    - location: /codedeploy-scripts/deleteAndKill.sh
+      runas: root
+  ApplicationStart:
+    - location: /codedeploy-scripts/applicationStart.sh
+      runas: root
