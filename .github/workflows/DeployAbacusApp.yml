@@ -1,0 +1,11 @@
+name: Deploy Abacus EC2
+jobs:
+  deploy_abacus:
+    steps:
+      - name: Trigger AWS CodePipeline
+        uses: zulhfreelancer/aws-codepipeline-action@vX.X.X
+        with:
+          aws-region: ${{ secrets.AWS_REGION }}
+          aws-access-key: ${{ secrets.AWS_PIPELINE_ACCESS_KEY }}
+          aws-secret-key: ${{ secrets.AWS_PIPELINE_SECRET_KEY }}
+          pipeline-name: "CodePipelineAbacus"
