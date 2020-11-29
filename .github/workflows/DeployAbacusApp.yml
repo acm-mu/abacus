@@ -8,6 +8,6 @@ jobs:
         uses: zulhfreelancer/aws-codepipeline-action@v1.0.7
         with:
           aws-region: ${{ secrets.AWS_REGION }}
-          aws-access-key: ${{ secrets.AWS_PIPELINE_ACCESS_KEY }}
-          aws-secret-key: ${{ secrets.AWS_PIPELINE_SECRET_KEY }}
+          aws-access-key: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           pipeline-name: "CodePipelineAbacus"
