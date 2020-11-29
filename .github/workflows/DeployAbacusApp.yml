@@ -2,12 +2,13 @@ name: Deploy Abacus EC2
 on: push
 jobs:
   deploy_abacus:
+    name: deploy Abacus
     runs-on: ubuntu-latest
     steps:
       - name: Trigger AWS CodePipeline
         uses: zulhfreelancer/aws-codepipeline-action@v1.0.7
         with:
-          aws-region: ${{ secrets.AWS_REGION }}
-          aws-access-key: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-access-key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
           pipeline-name: "CodePipelineAbacus"
