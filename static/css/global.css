@@ -50,12 +50,16 @@ h1,h2,h3,h4,h5,h6{
 
 /* header */
 
-.ui.fixed.menu.inverted.blue {
-  background: var(--blue);
+.ui.fixed.menu.inverted.blue-div {
+  border-bottom: 6px solid var(--blue);
 }
 
-.ui.fixed.menu.inverted.gold {
-  background: var(--gold);
+.ui.fixed.menu.inverted.gold-div {
+  border-bottom: 6px solid #FFCF40;
+}
+
+.ui.fixed.menu.inverted.admin-div {
+  border-bottom: 6px solid #AAA;
 }
 
 .header.item img.logo {

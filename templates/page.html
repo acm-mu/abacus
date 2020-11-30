@@ -18,7 +18,7 @@
 
 <body>
   {% block navbar %}
-  <div class="ui fixed inverted blue menu">
+  <div class="ui fixed inverted menu">
     <div class="ui container">
       <a href="/" class="header item">
         <img class="logo" src="{{ url_for('static', filename='images/fulllogoy.png') }}">
@@ -28,9 +28,9 @@
         Divisions
         <i class="dropdown icon"></i>
         <div class="menu">
-          <a class="item">Blue</a>
-          <a class="item">Gold</a>
-          <a class="item">Eagle</a>
+          <a href="/blue" class="item">Blue</a>
+          <a href="/gold" class="item">Gold</a>
+          <a href="/eagle" class="item">Eagle</a>
         </div>
       </div>
       <a href="/about" class="item">About</a>
