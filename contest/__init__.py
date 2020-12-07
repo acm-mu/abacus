@@ -1,2 +1,3 @@
 from .contest import contest
-from .api import api
+from .authlib import login_required
+from .authlib import auth_required
