@@ -15,20 +15,25 @@ function createElement(html) {
     return temp.content.firstChild
 }
 
-function notify(title, msg) {
-    styleTop = 3
+function updateNotifications() {
+    styleTop = 4
     document.querySelectorAll('.ui.message.notification').forEach((notification) => {
-        notification.style.top = `${styleTop += 6}em`
+        notification.style.top = `${styleTop}em`
+        styleTop += 6
     })
+}
 
+function notify(title, msg) {
     const message = createElement(`<div class="ui notification floating success message"><i class="close icon" onclick="dismiss(this)"></i><div class="header">${title}</div><p>${msg}</p></div>`)
     document.body.prepend(message)
+    updateNotifications()
 }
 
 function dismiss(elem) {
     elem.parentNode.classList.add('fade')
     setTimeout(function () {
         elem.parentNode.remove()
+        updateNotifications()
     }, 200)
 }
 

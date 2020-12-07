@@ -223,7 +223,6 @@ section[tabindex] {
 /* Notification */
 .ui.message.notification {
   position: fixed;  
-  top: 4em;
   right: 1%;
   animation: slide 500ms;
   transition: 200ms linear;
