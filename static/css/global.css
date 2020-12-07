@@ -219,3 +219,36 @@ td.accepted:after {
 section[tabindex] {
   display: none;
 }
+
+/* Notification */
+.ui.message.notification {
+  position: fixed;  
+  top: 4em;
+  right: 1%;
+  animation: slide 500ms;
+  transition: 200ms linear;
+}
+
+.ui.message.notification .close.icon {
+  cursor: pointer;
+}
+
+.ui.message.fade {
+  animation: fade 200ms;
+}
+
+@keyframes slide {
+  0% { right: -100% }
+  25% { right: -50% }
+  50% { right: -25% }
+  75% { right: -0% }
+  100% { right: 1% }
+}
+
+@keyframes fade {
+  0% { opacity: 1 }
+  25% { opacity: .75 }
+  50% { opacity: .5 }
+  75% { opacity: .25 }
+  100% { opacity: 0 }
+}

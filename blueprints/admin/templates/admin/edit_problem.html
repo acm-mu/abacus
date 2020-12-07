@@ -1,19 +1,10 @@
 {% extends "admin/page.html" %}
 
 {% block head %}
-  <title>Abacus - Edit Problem</title>
+<title>Abacus - Edit Problem</title>
 {% endblock %}
 
 {% block content %}
-<div id="success-message" style="display:none" class="ui tiny icon message success">
-  <i class="check tiny icon"></i>
-  <div class="content">
-    <div class="header">
-      Success!
-    </div>
-    <p>Your changes have successfully been saved.</p>
-  </div>
-</div>
 
 <form class="ui form" action="/api/problems/{{ problem.id }}" method="PUT" onsuccess="success" async>
   <h1 style="margin: 0">Edit Problem {{ problem.id }}</h1>
@@ -31,8 +22,10 @@
   <div class="ui negative button" onclick="deleteProblem()" style="float: right">Delete</div>
   <input name="problem-id" style="display:none" value="{{ problem.problem_id }}">
   <br>
-    <section tabindex="1">
-      <div class="field">
+
+  <!-- PROBLEM INFO -->
+  <section tabindex="1">
+    <div class="field">
       <label>Problem ID</label>
       <input name="id" value="{{ problem.id }}">
     </div>
@@ -54,6 +47,7 @@
     </div>
   </section>
 
+  <!-- TEST DATA -->
   <section tabindex="2">
     <div class="field">
       <label>Tests</label>
@@ -83,6 +77,7 @@
     </div>
   </section>
 
+  <!-- DESCRIPTION -->
   <section tabindex="3">
     <div class="two fields">
       <div class="field">
@@ -100,13 +95,13 @@
 
 {% block script %}
 <script>
-let converter, textarea, preview;
+  let converter, textarea, preview;
 
   function refreshPreview() {
-      let md = textarea.value;
-      md = md.replaceAll("&gt;", ">");
-      md = md.replaceAll("&lt;", "<");
-      preview.innerHTML = converter.makeHtml(md);
+    let md = textarea.value;
+    md = md.replaceAll("&gt;", ">");
+    md = md.replaceAll("&lt;", "<");
+    preview.innerHTML = converter.makeHtml(md);
   }
 
   function adjustHeight() {
@@ -122,14 +117,14 @@ let converter, textarea, preview;
 
     const tests_content = document.querySelector('#tests_content')
     tests_content.insertBefore(createElement('<div class="two fields" style="display: none">' +
-        '<div class="field">' +
-          '<label>Input</label>' +
-          `<textarea name="${n}-in">TEST_IN</textarea>` +
-        '</div>' +
-        '<div class="field">' +
-          '<label>Answer</label>' +
-          `<textarea name="${n}-out">TEST_OUT</textarea>` +
-        '</div>' +
+      '<div class="field">' +
+      '<label>Input</label>' +
+      `<textarea name="${n}-in">TEST_IN</textarea>` +
+      '</div>' +
+      '<div class="field">' +
+      '<label>Answer</label>' +
+      `<textarea name="${n}-out">TEST_OUT</textarea>` +
+      '</div>' +
       '</div>'), document.querySelector('#tests_content .ui.button').parentNode)
 
     makeActive(newItem)
@@ -140,7 +135,7 @@ let converter, textarea, preview;
     form.setAttribute('method', "DELETE")
     document.querySelector('.ui.form input[type="submit"]').click()
     setTimeout(() => {
-      window.location.href='/admin/problems'
+      window.location.href = '/admin/problems'
     }, 500)
   }
 
@@ -149,7 +144,7 @@ let converter, textarea, preview;
     const item = document.querySelector(`#tests .item:nth-child(${active_n})`)
 
     document.querySelector(`#tests_content .two.fields:nth-child(${active_n})`).remove()
-    
+
     if (item.classList.contains('active')) {
       $('#tests .item:first-child').click()
     }
@@ -173,13 +168,13 @@ let converter, textarea, preview;
     converter = new showdown.Converter();
     textarea = document.querySelector('#input_desc')
     preview = document.querySelector('#preview')
-    
-    textarea.addEventListener('keyup', () => {  
+
+    textarea.addEventListener('keyup', () => {
       refreshPreview()
       adjustHeight()
     })
 
-    $(document).on('click', '.item[tabindex]', function(e) {
+    $(document).on('click', '.item[tabindex]', function (e) {
       $('.item[tabindex].active').removeClass('active')
       $(this).addClass('active')
 
@@ -191,10 +186,10 @@ let converter, textarea, preview;
     adjustHeight()
     $('#tests .item:first-child').click()
     $('.item[tabindex]:first-child').click()
-})
+  })
 
-function success() {
-  document.querySelector('#success-message').style.display = 'flex'
-}
+  function success() {
+    notify('Success!', "Your changes have successfully been saved.")
+  }
 </script>
 {% endblock %}

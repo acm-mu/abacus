@@ -8,16 +8,6 @@
 
   <div class="block xs-6">
 
-    <div id="success-message" style="display:none" class="ui tiny icon message success">
-      <i class="check tiny icon"></i>
-      <div class="content">
-        <div class="header">
-          Success!
-        </div>
-        <p>Your changes have successfully been saved.</p>
-      </div>
-    </div>
-
     <form class="ui form" action="/api/contest" method="POST" id="save-settings">
       <h1>Settings</h1>
       <hr>
@@ -103,7 +93,7 @@
       body: data
     }).then(res => {
       if (res.status == "200") {
-        document.querySelector("#success-message").style.display = "flex"
+        notify('Success!', "Your changes have been saved!")
       }
     })
   })
