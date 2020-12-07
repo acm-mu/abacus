@@ -24,7 +24,7 @@
         <tr>
           <th class="collapsing">#</th>
           <th>Username</th>
-          <th>Type</th>
+          <th>Role</th>
           <th>Division</th>
           <th>Displayname</th>
         </tr>
@@ -34,7 +34,7 @@
         <tr uuid="{{ user.user_id }}">
           <td>{{ loop.index }}</td>
           <td><a href="#" onclick="editTeam(this)">{{ user.user_name }}</a></td>
-          <td>{{ user.type }}</td>
+          <td>{{ user.role }}</td>
           <td>{{ user.division }}</td>
           <td>{{ user.display_name }}</td>
         </tr>
@@ -54,8 +54,8 @@
           <input type="text" name="user-name" placeholder="User Name">
         </div>
         <div class="field">
-          <label>User Type</label>
-          <select name="type">
+          <label>User Role</label>
+          <select name="role">
             <option value="team">Team</option>
             <option value="judge">Judge</option>
             <option value="admin">Admin</option>
@@ -117,7 +117,7 @@
 {% block script %}
   <script>
     let form, modal_header
-    let uuid, type, username, division, displayname, password, submit, del
+    let uuid, role, username, division, displayname, password, submit, del
 
     function uploadCSV() {
       $('#uploadCSV').modal('show')
@@ -127,7 +127,7 @@
       userForm.setAttribute('method', 'POST')
       modal_header.innerText = "Create Team"
       uuid.value = ""
-      type.value = "team"
+      role.value = "team"
       username.value = ""
       displayname.value = ""
       division.value = "na"
@@ -150,7 +150,7 @@
       modal_header.innerText = "Edit User"
       uuid.value = tr.getAttribute('uuid')
       username.value = tr.children[1].innerText
-      type.value = tr.children[2].innerText
+      role.value = tr.children[2].innerText
       division.value = tr.children[3].innerText
       displayname.value = tr.children[4].innerText
       password.value = ""
@@ -167,7 +167,7 @@
     document.addEventListener('DOMContentLoaded', () => {
       userForm = document.querySelector('#userModal')
       uuid = document.querySelector('input[name="user-id"]')
-      type = document.querySelector('select[name="type"]')
+      role = document.querySelector('select[name="role"]')
       modal_header = document.querySelector('#modal_header')
 
       division = document.querySelector('select[name="division"]')

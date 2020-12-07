@@ -5,7 +5,7 @@
       {{ session.user_name }}
       </a>
       <div class="menu">
-        {% if session.user_type == 'admin' %}
+        {% if session.user_role == 'admin' %}
           <a href="/admin/settings" class="right item">Settings</a>
         {% endif %}
         <a href="/logout" class="item">Log out</a>
