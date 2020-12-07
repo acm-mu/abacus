@@ -51,7 +51,7 @@ def submission(sid):
 
 @blue.route('/problems')
 def problems():
-    problems = contest.get_problems()
+    problems = contest.get_problems(division='blue')
     problems = sorted(problems, key=lambda prob: prob['id'])
     return render_template('blue/problems.html', problems=problems)
 
