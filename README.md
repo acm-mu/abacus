@@ -9,6 +9,77 @@ This Open Source competition judging software is designed for the [Marquette ACM
 * [AWS EC2](https://aws.amazon.com/ec2/) (Hosting)
 * [AWS Lambda](https://aws.amazon.com/lambda/) (Event Driven Processes)
 
+## TODO
+ ### Admin
+- [ ] Admin dashboard
+- [x] View users
+- [x] Create users (team, judge & admin)
+- [ ] Delete users
+- [x] Update users
+- [ ] Export users to a file
+- [ ] Import users from a file
+- [ ] Delete user submissions when user is deleted
+- [x] View problems
+- [x] Create new problems
+- [x] Delete problems
+- [ ] Delete problem submissions when problem is deleted
+- [x] Update problems
+- [x] Upload solution for problems (either DynamoDB or S3 bucket)
+- [x] Upload sample files (sample runs, skeletons) for problems (either DynamoDB or S3 bucket)
+- [ ] Delete submissions
+- [ ] View clarifications
+- [ ] Close clarifications (no more replies)
+- [ ] Delete clarifications
+- [ ] Respond to clarifications
+- [ ] Re-grade submissions
+
+ ### Blue
+- [ ] View problems
+- [ ] Download sample files
+- [x] Submit problems
+- [ ] Disable submitting problems before and after competition
+- [ ] Prevent resubmitting solved problems
+- [ ] View submissions
+- [ ] View standings
+- [ ] View private & public clarifications 
+- [ ] Submit private clarifications
+- [ ] Reply to private clarifications
+- [ ] Get notified when clarification has been answered `(STRETCH)`
+- [ ] Get notified when submission has been graded `(STRETCH)`
+- [ ] Notifications for clarifications (async global javascript) `(STRETCH)`
+- [ ] Notifications for results (async global javascript) `(STRETCH)`
+
+ ### Gold
+- [ ] Connect scratch username to user
+- [ ] View problems
+- [ ] Submit problems (from scrath url)
+- [ ] View submissions
+- [ ] View clarifications
+- [ ] View standings
+- [ ] Submit private clarifications
+- [ ] Reply to private clarifications
+- [ ] Get notified when clarification has been answered `(STRETCH)`
+- [ ] Get notified when submission has been graded `(STRETCH)`
+
+ ### Judge
+- [x] View problems
+- [ ] View solutions to problems
+- [ ] View sample files for problems (skeletons, testdata)
+- [ ] View unclaimed submissions
+- [ ] Claim unclaimed submission
+- [ ] Read-only claimed submissions
+- [ ] Unclaim submissions
+- [ ] View run output for submissions
+- [ ] View clarifications
+- [ ] Respond to clarifications
+- [ ] Delete clarifications
+- [ ] Close clarifications
+- [ ] Reopen clarifications
+- [ ] Submit public clarifications
+- [ ] regrade submissions (only notify team if it has changed.) `(STRETCH)`
+
+
+
 ## How to run locally
 
 Instructions need to be rewritten.
