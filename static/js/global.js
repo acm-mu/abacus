@@ -29,7 +29,7 @@ function dismiss(elem) {
     elem.parentNode.classList.add('fade')
     setTimeout(function () {
         elem.parentNode.remove()
-    }, 250)
+    }, 200)
 }
 
 function showMessage(status, msg) {
