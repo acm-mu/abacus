@@ -1,0 +1,4 @@
+install:
+- pip install -r requirements.yml
+sciprt:
+- python -m pytest -v
