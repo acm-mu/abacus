@@ -1,8 +1,10 @@
 version: 0.0
 os: linux 
 files:
-  - source: .
+  - source: index.py
     destination: /app
+  - source: abacus
+    destination: /app/abacus
 hooks:
   BeforeInstall:
     - location: .aws/codedeploy-scripts/deleteAndKill.sh

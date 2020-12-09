@@ -1,29 +1,29 @@
-from contest import contest
+from .contest import contest
 from functools import wraps
 from flask import request, session, render_template
+from typing import Any, Callable
 
-
-def auth_required(fn: any):
+def auth_required(fn: Any):
     if callable(fn):
         return decorate_auth(fn)
     role = fn
 
-    def func(fn: callable):
+    def func(fn: Callable):
         return decorate_auth(fn, role)
     return func
 
 
-def login_required(fn: any):
+def login_required(fn: Any):
     if callable(fn):
         return decorate_login(fn)
     role = fn
 
-    def func(fn: callable):
+    def func(fn: Callable):
         return decorate_login(fn, role)
     return func
 
 
-def decorate_auth(fn: callable, role: str = None) -> callable:
+def decorate_auth(fn: Callable, role: str = None) -> Callable:
     def auth(*args, **kwargs):
         auth_token = request.headers.get('X-PA-AUTH-TOKEN', None)
 
@@ -39,7 +39,7 @@ def decorate_auth(fn: callable, role: str = None) -> callable:
     return auth
 
 
-def decorate_login(fn: callable, role: str = None) -> callable:
+def decorate_login(fn: Callable, role: str = None) -> Callable:
     @wraps(fn)
     def is_loggedin(*args, **kwargs):
         auth_token = session['session_token'] if 'session_token' in session else None

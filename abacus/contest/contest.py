@@ -1,15 +1,16 @@
 import os
 import hashlib
-import boto3
 import time
 import hashlib
 import uuid
 from flask import session
-from boto3.dynamodb.conditions import Attr
-from .utils import split_csv
+from boto3.session import Session
+from mypy_boto3_dynamodb import DynamoDBServiceResource
 
 
 class ContestService:
+    db: DynamoDBServiceResource
+
     def __init__(self):
         self.init_aws()
 
@@ -18,10 +19,10 @@ class ContestService:
         aws_access_key = os.environ.get('AWS_ACCESS_KEY', None)
         aws_secret_key = os.environ.get('AWS_SECRET_KEY', None)
 
-        if not aws_access_key or not aws_secret_key:
-            self.db = self.s3 = None
+        # if not aws_access_key or not aws_secret_key:
+        #     self.db = self.s3 = None
 
-        self.aws = boto3.Session(
+        self.aws = Session(
             aws_access_key_id=aws_access_key,
             aws_secret_access_key=aws_secret_key,
             region_name="us-east-2")
@@ -55,8 +56,14 @@ class ContestService:
 
     def is_logged_in(self) -> bool:
         if 'user_id' in session:
-            user = self.db.Table('user').scan(FilterExpression=Attr(
-                'user_id').eq(session['user_id']))['Items']
+            user = self.db.Table('user').query(
+                KeyConditionExpression = "user_id = :user_id",
+                ExpressionAttributeValues = {
+                    ':user_id': session['user_id']
+                }
+            )['Items']
+            # user = self.db.Table('user').scan(FilterExpression = Attr(
+            #     'user_id').eq(session['user_id']))['Items']
             if user and 'session_token' in user[0]:
                 return user[0]['session_token'] == session['session_token']
         return False
@@ -81,6 +88,8 @@ class ContestService:
         if session['user_role'] == 'admin':
             return '/admin'
 
+        return '/'
+
     def get_settings(self) -> dict:
         settings = self.db.Table('setting').scan()['Items']
         return {s['key']: s['value'] for s in settings}
@@ -101,7 +110,7 @@ class ContestService:
 
     def get_problems(self, **filters) -> list:
         r"""Retrieves problems from DynamoDB.
-        
+
         Args:
             filters: Arbitrary kword arguments to use as filters for database scan.
 
@@ -121,7 +130,6 @@ class ContestService:
             ExpressionAttributeValues=values,
             ExpressionAttributeNames=names)['Items']
 
-
     def get_submissions(self, **filters) -> list:
         r"""Retrieves submissions from DynamoDB.
 
@@ -129,7 +137,7 @@ class ContestService:
             filters: Arbitrary kword arguments to use as filters for database scan.
 
         Returns:
-            A list of submission object dictionaries or an empty list if no submissions match filters. 
+            A list of submission object dictionaries or an empty list if no submissions match filters.
         """
         if not filters:
             return self.db.Table('submission').scan()['Items']
@@ -175,15 +183,13 @@ class ContestService:
         # for i in range(len(lines)):
         #     items = split_csv(lines[i])
 
-    def submit(self, request: dict) -> dict:
+    def submit(self, request) -> dict:
         language = request.form['language']
         sub_file = request.files['sub-file']
         submission_id = uuid.uuid4().hex
 
         problem_id = request.form['problem-id']
-        problem = contest.get_problems()
-        problem = [prob for prob in contest.get_problems(
-        ) if prob['problem_id'] == problem_id][0]
+        problem = contest.get_problems(problem_id=problem_id)[0]
 
         sub_no = len([sub for sub in self.get_submissions(
         ) if sub['team_id'] == session['user_id'] and sub['problem_id'] == problem_id])
@@ -222,4 +228,4 @@ class ContestService:
         return item
 
 
-contest = ContestService()
+contest: ContestService = ContestService()

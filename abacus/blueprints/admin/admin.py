@@ -1,6 +1,6 @@
-from flask import Blueprint, render_template, session, redirect
+from flask import Blueprint, render_template, redirect
 import json
-from contest import contest, login_required
+from abacus.contest import contest, login_required
 
 admin = Blueprint('admin_bp', __name__, url_prefix='/admin',
                   template_folder='templates')
@@ -82,7 +82,7 @@ def invoke_submission(sid):
     contest.lmbda.invoke(
         FunctionName='BlueRunner',
         InvocationType='Event',
-        Payload=json.dumps(payload)
+        Payload=json.dumps(payload).encode()
     )
     return redirect(f"/admin/submissions/{sid}")
 

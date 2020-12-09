@@ -7,20 +7,23 @@
 {% block content %}
 
 <form class="ui form" action="/api/problems/{{ problem.id }}" method="PUT" onsuccess="success" async>
-  <h1 style="margin: 0">Edit Problem {{ problem.id }}</h1>
-  <i>problem_id: {{ problem.problem_id }}</i>
-  
+  <input name="problem-id" style="display:none" value="{{ problem.problem_id }}">
+
+  <div class="edit-problem-header">
+    <h1>Edit Problem {{ problem.id }}</h1>
+    <div class="ui negative icon button" onclick="deleteProblem()"><i class="trash icon"></i></div>
+    <button type="submit" value="Save" class="ui primary icon button"><i class="icon save"></i></button>
+    <span style="display: inline-block"><i>problem_id: {{ problem.problem_id }}</i></span>
+  </div>
+
   <!-- TAB BAR FOR PROBLEM PAGES -->
   <div class="ui top attached tabular menu">
     <div class="active item" tabindex="1">Problem Info</div>
     <div class="item" tabindex="2">Test Data</div>
     <div class="item" tabindex="3">Description</div>
-    <div class="item" tabindex="4">Skeletons</div>
+    <div class="item" tabindex="4">Sample Files</div>
   </div>
   <!------------------------------->
-  <input type="submit" value="Save" class="ui primary button" style="float: right">
-  <div class="ui negative button" onclick="deleteProblem()" style="float: right">Delete</div>
-  <input name="problem-id" style="display:none" value="{{ problem.problem_id }}">
   <br>
 
   <!-- PROBLEM INFO -->
@@ -90,7 +93,22 @@
       </div>
     </div>
   </section>
+
+  <!-- SAMPLE FILES -->
+  <section tabindex="4">
+    <h3>Sample Files</h3>
+  </section>
 </form>
+{% endblock %}
+
+{% block style %}
+<style>
+  .edit-problem-header {
+    display: grid;
+    grid-template: "h1 delete save" 30px
+                   "id" 1fr;
+  }
+</style>
 {% endblock %}
 
 {% block script %}

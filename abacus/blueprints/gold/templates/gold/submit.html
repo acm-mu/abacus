@@ -1,0 +1,47 @@
+{% extends 'gold/page.html' %}
+
+{% block content %}
+<div class="xs-12 block">
+  <div class="ui form">
+    <label>Scratch Username</label>
+    <input id='scratchInput'>
+  </div>
+
+  <table id="projects">
+    <thead>
+      <tr> <th>Project ID</th> <th>Project Title</th> <th>Visibility</th> <th>Public</th> <th>Published</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script>
+  let scratchInput;
+
+  function fillProjects(projects) {
+    let tbody = document.querySelector('#projects tbody')
+    tbody.innerHTML = ""
+    projects.forEach((proj) => {
+      let row = document.createElement("tr")
+      console.log(proj)
+      row.innerHTML = `<td>${proj.id}</td> <td>${proj.title}</td> <td>${proj.visibility}</td> <td>${proj.public}</td> <td>${proj.is_published}</td>`
+      tbody.appendChild(row)
+    })
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    scratchInput = document.querySelector('#scratchInput')
+    scratchInput.addEventListener('keyup', function() { 
+      let scratchUsername = scratchInput.value
+      fetch(`https://api.scratch.mit.edu/users/${scratchUsername}/projects`)
+        .then(res => res.json())
+        .then(res => {
+          fillProjects(res)
+        })
+    })
+  })
+</script>
+{% endblock %}

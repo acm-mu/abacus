@@ -1,0 +1,23 @@
+{% extends 'gold/page.html' %}
+
+{% block content %}
+  {% include "countdown.html" %}
+  <div class="transparent xs-12 block">
+    <table class="ui celled table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Problem Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for problem in problems %}
+          <tr>
+            <td class="collapsing">{{ problem.id }}</td>
+            <td><a href="/gold/problems/{{ problem.id }}">{{ problem.problem_name }}</a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

@@ -18,11 +18,12 @@
       <div class="ui icon button" onclick="createTeam()" data-tooltip="Add User"><i class="plus icon"></i></div>
       <div class="ui icon button" onclick="uploadCSV()" data-tooltip="Import from CSV"><i class="upload icon"></i></div>
       <div class="ui icon button" onclick="downloadCSV()" data-tooltip="Export to CSV"><i class="download icon"></i></div>
+      <div class="ui red icon button" onclick="deleteSelected()" data-tooltip="Delete Selected" id="delete_selected" style="display: none"><i class="trash icon"></i></div>
     </div>
     <table class="ui celled table">
       <thead>
         <tr>
-          <th class="collapsing">#</th>
+          <th class="collapsing"><input type='checkbox' id='select_all'></th>
           <th>Username</th>
           <th>Role</th>
           <th>Division</th>
@@ -32,7 +33,7 @@
       <tbody>
         {% for user in users %}
         <tr uuid="{{ user.user_id }}">
-          <td>{{ loop.index }}</td>
+          <td><input type='checkbox'></td>
           <td><a href="#" onclick="editTeam(this)">{{ user.user_name }}</a></td>
           <td>{{ user.role }}</td>
           <td>{{ user.division }}</td>
@@ -160,11 +161,7 @@
       $('#userModal').modal('show')
     }
 
-    function refresh() {
-      window.location.reload()
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
+    function cacheElements() {
       userForm = document.querySelector('#userModal')
       uuid = document.querySelector('input[name="user-id"]')
       role = document.querySelector('select[name="role"]')
@@ -177,6 +174,56 @@
 
       del = document.querySelector('#delete')
       submit = document.querySelector('button[type="submit"]')
+
+      delete_selected = document.querySelector('#delete_selected')
+    }
+
+    function refresh() {
+      window.location.reload()
+    }
+
+    function updateDeleteButton() {
+      let anyOn = false;
+      document.querySelectorAll("td input[type='checkbox']").forEach((checkbox) => {
+        if (checkbox.checked) anyOn = true
+      })
+
+      delete_selected.style.display = (anyOn) ? 'block' : 'none'
+    }
+
+    function deleteSelected() {
+      document.querySelectorAll("td input[type='checkbox']:checked").forEach((checkbox) => {
+        row = checkbox.parentNode.parentNode
+        uuid = row.getAttribute('uuid')
+
+        fetch('/api/users', {
+          method: "DELETE",
+          body: uuid
+        }).then(res => {
+          if (res.status == "200") {
+            showMessage('success', "Message deleted successfully!")
+          }
+        })
+      })
+    }
+
+    function setupCheckboxes() {      
+      document.querySelector('#select_all').onchange = function(e) {
+        document.querySelectorAll("td input[type='checkbox']").forEach((checkbox) => {
+          checkbox.checked = e.target.checked
+        })
+        updateDeleteButton()
+      }
+
+      document.querySelectorAll("td input[type='checkbox']").forEach((checkbox) => {
+        checkbox.onchange = updateDeleteButton
+      })
+
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      cacheElements()
+      setupCheckboxes()
 
       const message = document.querySelector('#file_dialog .message');
 

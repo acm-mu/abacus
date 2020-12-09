@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, session
-from contest import contest, login_required
+from abacus.contest import contest, login_required
 
 blue = Blueprint('blue_bp', __name__, url_prefix='/blue',
                  template_folder='templates')

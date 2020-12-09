@@ -4,7 +4,7 @@ import uuid
 import decimal
 from flask import request, redirect, session
 from flask_restful import Resource, Api
-from contest import contest, auth_required
+from . import contest, auth_required
 
 
 def dumps(data):
@@ -111,10 +111,11 @@ class Problems(Resource):
         return dumps(problems)
 
     def post(self):
-        tests = {k: v for k, v in request.form.items(
-        ) if '-in' in k or '-out' in k or '-include' in k}
-        tests = [{'in': tests[f"{n}-in"].replace('\r\n', '\n'), 'out': tests[f"{n}-out"].replace(
-            '\r\n', '\n'), 'include': tests[f"{n}-include"]} for n in range(1, int(len(tests) / 2) + 1)]
+        tests = [{k: v for k, v in request.form.items(
+        ) if '-in' in k or '-out' in k or '-include' in k}]
+        # TODO: test this line
+        tests = [{'in': tests[n][f"{n}-in"].replace('\r\n', '\n'), 'out': tests[n][f"{n}-out"].replace(
+            '\r\n', '\n'), 'include': tests[n][f"{n}-include"]} for n in range(1, int(len(tests) / 2) + 1)]
 
         contest.db.Table('problem').put_item(
             Item={
@@ -142,9 +143,10 @@ class Problem(Resource):
         return redirect('/problems')
 
     def put(self, pid):
-        tests = {k: v for k, v in request.form.items()
-                 if '-in' in k or '-out' in k}
-        tests = [{'in': tests[f"{n}-in"].replace('\r\n', '\n'), 'out': tests[f"{n}-out"].replace(
+        tests = [{k: v for k, v in request.form.items()
+                 if '-in' in k or '-out' in k}]
+        # TODO: test this line
+        tests = [{'in': tests[n][f"{n}-in"].replace('\r\n', '\n'), 'out': tests[n][f"{n}-out"].replace(
             '\r\n', '\n')} for n in range(1, int(len(tests) / 2) + 1)]
 
         contest.db.Table('problem').update_item(
