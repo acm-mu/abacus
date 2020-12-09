@@ -5,11 +5,9 @@ import hashlib
 import uuid
 from flask import session
 from boto3.session import Session
-from mypy_boto3_dynamodb import DynamoDBServiceResource
 
 
 class ContestService:
-    db: DynamoDBServiceResource
 
     def __init__(self):
         self.init_aws()

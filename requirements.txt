@@ -1,6 +1,6 @@
+boto3>=1.16.31
 Flask>=1.1.2
-flask_restful>=0.3.8
-boto3>=1.14.59
-python-dotenv>=0.14.0
-pytest>=6.1.2
+Flask-RESTful>=0.3.8
 moto>=1.3.16
+pytest>=6.1.2
+python-dotenv>=0.15.0
