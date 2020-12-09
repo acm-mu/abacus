@@ -78,11 +78,30 @@ This Open Source competition judging software is designed for the [Marquette ACM
 - [ ] Submit public clarifications
 - [ ] regrade submissions (only notify team if it has changed.) `(STRETCH)`
 
+### Stretch Goal
+Create aws_setup.py script to create DynamoDB tables, S3 buckets, and maybe lambda handlers to project can run out of the box with just aws credentials.
 
+## Installation
 
-## How to run locally
+1. Clone repository to your machine.
 
-Instructions need to be rewritten.
+    `$ git clone git@github.com:acm-mu/abacus`
+
+2. Configure environment variables in .env
+  - `FLASK_APP`, `AWS_ACCESS_KEY`, `AWS_SECRET_KEY`
+3. Create & activate virtualenv in repository. (Optional, but recommended)
+
+    `$ virtualenv venv && source venv/bin/activate`
+
+4. Install python dependencies.
+
+    `$ pip install -r requirements.txt`
+
+5. Start application.
+ 
+   `$ flask run`
+
+6. Navigate to `localhost:5000`
 
 # Asynchronous Forms
 Abacus takes advantage of submitting forms asynchronous rather than the default redirect behavior.
