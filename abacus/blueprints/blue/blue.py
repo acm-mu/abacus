@@ -37,10 +37,11 @@ def submissions():
 @blue.route('/submissions/<sid>')
 @login_required
 def submission(sid):
-    submissions = contest.get_submissions()
-    if sid not in submissions:
+    submissions = contest.get_submissions(submission_id=sid)
+    print(submissions, flush=True)
+    if not submissions:
         return render_template('404.html')
-    submission = submissions[sid]
+    submission = submissions[0]
     if session['user_role'] == "team" and submission['team_id'] != session['user_id']:
         return render_template('401.html')
     contents = contest.s3.Bucket('abacus-submissions').Object(
@@ -58,17 +59,16 @@ def problems():
 
 @blue.route('/problems/<pid>')
 def problem(pid):
-    problems = contest.get_problems()
-    if pid not in problems:
+    problem = contest.get_problems(division='blue', id=pid)
+    if not problem:
         return render_template("404.html")
-    return render_template(f'blue/problem.html', problem=problems[pid])
+    return render_template(f'blue/problem.html', problem=problem[0])
 
 
 @blue.route('/problems/<pid>/submit')
 @login_required
 def submit(pid):
-    problems = contest.get_problems(division="blue")
-    if pid not in problems:
+    problem = contest.get_problems(division='blue', id=pid)
+    if not problem:
         return render_template("404.html")
-    problem_id = problems[pid]['problem_id']
-    return render_template(f'blue/submit.html', problem_id=problem_id)
+    return render_template(f'blue/submit.html', problem_id=problem['problem_id'])

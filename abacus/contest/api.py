@@ -98,10 +98,7 @@ class Submissions(Resource):
 
 class Submission(Resource):
     def get(self, sid):
-        submissions = contest.get_submissions()
-        if sid not in submissions:
-            return "Not Found"
-        return dumps(submissions[sid])
+        return dumps(contest.get_submissions(submission_id = sid))
 
 
 class Problems(Resource):
