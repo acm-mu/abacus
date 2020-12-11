@@ -1,3 +1,4 @@
+from re import sub
 from flask import Blueprint, render_template, session
 from abacus.contest import contest, login_required
 
@@ -62,7 +63,14 @@ def problem(pid):
     problem = contest.get_problems(division='blue', id=pid)
     if not problem:
         return render_template("404.html")
-    return render_template(f'blue/problem.html', problem=problem[0])
+
+    submissions = contest.get_submissions(team_id = session['user_id'], problem_id = problem[0]['problem_id'])
+    submissions.sort(key = lambda e: e['date'])
+
+    if not submissions:
+        return render_template('blue/problem.html', problem=problem[0], submissions = None)
+    
+    return render_template('blue/problem.html', problem = problem[0], submissions = submissions[-1])
 
 
 @blue.route('/problems/<pid>/submit')
@@ -71,4 +79,4 @@ def submit(pid):
     problem = contest.get_problems(division='blue', id=pid)
     if not problem:
         return render_template("404.html")
-    return render_template(f'blue/submit.html', problem_id=problem['problem_id'])
+    return render_template(f'blue/submit.html', problem_id=problem[0]['problem_id'])
