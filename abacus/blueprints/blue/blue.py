@@ -64,6 +64,9 @@ def problem(pid):
     if not problem:
         return render_template("404.html")
 
+    if not contest.is_logged_in():
+        return render_template('blue/problem.html', problem=problem[0], submissions = None)
+
     submissions = contest.get_submissions(team_id = session['user_id'], problem_id = problem[0]['problem_id'])
     submissions.sort(key = lambda e: e['date'])
 

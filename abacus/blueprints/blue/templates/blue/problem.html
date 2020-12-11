@@ -18,10 +18,10 @@
     <div style="display: flex; justify-content: space-evenly">
       
       <a 
-      {% if not(submissions['status'] == "accepted" or submissions['status'] == "pending") %}
-      href="/blue/problems/{{ problem.id }}/submit"  id="submit" class = "icon button ui"
-      {% else %}
+      {% if submissions['status'] == "accepted" or submissions['status'] == "pending" or not(is_logged_in()) %}
       class="icon button ui disabled"
+      {% else %}
+      href="/blue/problems/{{ problem.id }}/submit"  id="submit" class = "icon button ui"
       {% endif %} 
       data-tooltip="Submit" data-position="top center" data-inverted="">
         <i class="upload icon"></i>
