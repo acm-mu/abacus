@@ -41,7 +41,9 @@ This Open Source competition judging software is designed for the [Marquette ACM
 - [ ] Download sample files
 - [x] Submit problems
 - [ ] Disable submitting problems before and after competition
-- [ ] Prevent resubmitting solved problems
+- [x] Prevent resubmitting solved problems or problems pending approval
+- [ ] Add submission "cooldown"
+- [ ] Show most recent submission statistics on problem page
 - [ ] View submissions
 - [ ] View standings
 - [ ] View private & public clarifications 
