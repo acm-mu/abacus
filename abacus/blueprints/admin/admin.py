@@ -32,7 +32,6 @@ def submissions():
         submission['team_name'] = contest.get_users(
             user_id=submission['team_id'])[0]['user_name']
         problem = contest.get_problems(problem_id=submission['problem_id'])[0]
-        submission['problem_id'] = problem['id']
         submission['prob_name'] = problem['problem_name']
 
     submissions = sorted(
