@@ -102,7 +102,7 @@ def problems():
 @admin.route('/problems/<pid>/edit')
 @login_required('admin')
 def edit_problem(pid):
-    problems = contest.get_problems(id = pid)
+    problems = contest.get_problems(problem_id = pid)
     if not problems:
         return render_template('404.html')
     return render_template('admin/edit_problem.html', problem=problems[0])
