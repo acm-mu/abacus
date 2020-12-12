@@ -25,30 +25,31 @@
       <thead>
         <tr>
           <th rowspan="2">ID</th>
+          <th>TEAM</th>
           <th>DATE</th>
           <th>PROBLEM</th>
           <th>STATUS</th>
           <th>CPU</th>
-          <th>LANG</th>
-          <th>SCORE</th>
+          <th>LANGUAGE</th>
         </tr>
         <tr>
-          <th colspan="6">TEST CASES</th>
+          <th colspan="3">TEST CASES</th>
+          <th colspan="3">SCORE</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td rowspan="2"><a href="/admin/submissions/{{ submission.submission_id }}">{{ (submission.submission_id|string)[:7] }}</a>
           </td>
+          <td>{{ submission.team_name }}</td>
           <td fromnow="{{ submission.date*1000 }}"></td>
           <td><a href="/admin/problems/{{ submission.prob_id }}/edit">{{ submission.prob_name }}</a></td>
           <td class="icn {{ submission.status }}"></td>
           <td>{{ (submission.runtime|string)[:4] }}</td>
           <td>{{ submission.language }}</td>
-          <td>{{ submission.score }}</td>
         </tr>
         <tr>
-          <td colspan="6">
+          <td colspan="3">
             {% for test in submission.tests %}
               {% if test["result"] == "accepted" %}
               <span class="result icn accepted"></span>
@@ -59,6 +60,7 @@
               {% endif %}
             {% endfor %}
           </td>
+          <td colspan="3">{{ submission.score }}</td>
         </tr>
       </tbody>
     </table>

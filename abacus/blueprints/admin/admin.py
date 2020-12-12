@@ -52,6 +52,8 @@ def submission(sid):
     problem = contest.get_problems(problem_id = submission['problem_id'])[0]
     submission['prob_id'] = problem['id']
     submission['prob_name'] = problem['problem_name']
+    submission['team_name'] = contest.get_users(
+            user_id=submission['team_id'])[0]['user_name']
     return render_template('admin/submission.html', submission=submission, filename=filename, contents=contents)
 
 
