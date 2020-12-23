@@ -2,4 +2,9 @@
 
 {% block head %}
   <title>Abacus - Gold</title>
+
+  <p>Save this bookmark to your toolbar to easily submit your scratch projects.</p>
+
+  <a href='javascript:(function(){const regex = /https:\/\/scratch\.mit\.edu\/projects\/(.*)/;
+    const project_id = window.location.href.match(regex)[1]; window.open(`http://localhost:5000/gold/submit/${project_id}}`)}())'>Submit to Abacus</a>
 {% endblock %}
