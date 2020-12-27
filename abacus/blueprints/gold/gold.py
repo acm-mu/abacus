@@ -9,6 +9,23 @@ gold = Blueprint('gold_bp', __name__, url_prefix='/gold',
 def index():
     return render_template('gold/index.html')
 
+
+@gold.route('/connect', methods=['GET', 'POST'])
+@login_required
+def connect():
+    if request.method == "POST":
+        contest.db.Table('user').update_item(
+                    Key={
+                        'user_id': session['user_id']
+                    },
+                    UpdateExpression=f"SET scratch_username = :scratch_username",
+                    ExpressionAttributeValues={
+                        ':scratch_username': request.form['scratch_username']
+                    })
+                    
+    return render_template('gold/connect_scratch.html')
+
+
 @gold.route('/submit')
 def submit():
     return render_template('gold/submit.html', scratch_url=request.args.get('scratch_url', default = ''))

@@ -1,0 +1,45 @@
+{% extends 'page.html' %}
+
+{% block content %}
+<div class='xs12 block'>
+  <h3>In order to submit Scratch projects you need to connect your Scratch account.</h3>
+  <form class="ui form" action="" method="POST">
+    <div class="three fields">
+      <div class="field">
+        <label>Scratch Username</label>
+        <div class="ui input icon">
+          <input type="text" name="scratch_username" />
+          <i class="icon"></i>
+        </div>
+      </div>
+    </div>
+    <input type="submit" class="ui button" value="Submit">
+  </form>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    input = document.querySelector('input[name="scratch_username"]')
+    icon = input.parentNode.querySelector('i.icon');
+    input.addEventListener('keyup', function () {
+      fetch(`https://api.scratch.mit.edu/users/${input.value}`)
+        .then(res => {
+          switch (res.status) {
+            case 200:
+              input.parentNode.classList = "ui icon input success"
+              icon.classList = ['check icon'];
+              icon.style.color = 'green';
+              break;
+            case 404:
+              input.parentNode.classList = "ui icon input error"
+              icon.classList = ['x icon']
+              icon.style.color = 'red'
+          }
+          console.log(res)
+        })
+    })
+  })
+</script>
+{% endblock %}
