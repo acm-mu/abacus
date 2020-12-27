@@ -14,74 +14,74 @@ This Open Source competition judging software is designed for the [Marquette ACM
 
 ## TODO
  ### Admin
-- [ ] Admin dashboard
-- [x] View users
-- [x] Create users (team, judge & admin)
-- [ ] Delete users
-- [x] Update users
-- [ ] Export users to a file
-- [ ] Import users from a file
-- [ ] Delete user submissions when user is deleted
-- [x] View problems
-- [x] Create new problems
-- [x] Delete problems
-- [ ] Delete problem submissions when problem is deleted
-- [x] Update problems
-- [x] Upload solution for problems (either DynamoDB or S3 bucket)
-- [x] Upload sample files (sample runs, skeletons) for problems (either DynamoDB or S3 bucket)
-- [ ] Delete submissions
-- [ ] View clarifications
-- [ ] Close clarifications (no more replies)
-- [ ] Delete clarifications
-- [ ] Respond to clarifications
-- [ ] Re-grade submissions
+- **STRETCH** Admin dashboard
+- View users~~
+- ~~Create users (team, judge & admin)~~
+- Delete users
+- ~~Update users~~
+- Export users to a file
+- Import users from a file
+- Delete user submissions when user is deleted
+- ~~View problems~~
+- ~~Create new problems~~
+- ~~Delete problems~~
+- Delete problem submissions when problem is deleted
+- ~~Update problems~~
+- ~~Upload solution for problems (either DynamoDB or S3 bucket)~~
+- ~~Upload sample files (sample runs, skeletons) for problems (either DynamoDB or S3 bucket)~~
+- Delete submissions
+- View clarifications
+- Close clarifications (no more replies)
+- Delete clarifications
+- Respond to clarifications
+- Re-grade submissions
 
  ### Blue
-- [ ] View problems
-- [ ] Download sample files
-- [x] Submit problems
-- [ ] Disable submitting problems before and after competition
-- [x] Prevent resubmitting solved problems or problems pending approval
-- [ ] Add submission "cooldown"
-- [ ] Show most recent submission statistics on problem page
-- [ ] View submissions
-- [ ] View standings
-- [ ] View private & public clarifications 
-- [ ] Submit private clarifications
-- [ ] Reply to private clarifications
-- [ ] Get notified when clarification has been answered `(STRETCH)`
-- [ ] Get notified when submission has been graded `(STRETCH)`
-- [ ] Notifications for clarifications (async global javascript) `(STRETCH)`
-- [ ] Notifications for results (async global javascript) `(STRETCH)`
+- View problems
+- Download sample files
+- ~~Submit problems~~
+- Disable submitting problems before and after competition
+- ~~Prevent resubmitting solved problems or problems pending approval~~
+- Add submission "cooldown"
+- Show most recent submission statistics on problem page
+- View submissions
+- View standings
+- View private & public clarifications 
+- Submit private clarifications
+- Reply to private clarifications
+- Get notified when clarification has been answered `(STRETCH)`
+- Get notified when submission has been graded `(STRETCH)`
+- Notifications for clarifications (async global javascript) `(STRETCH)`
+- Notifications for results (async global javascript) `(STRETCH)`
 
  ### Gold
-- [ ] Connect scratch username to user
-- [ ] View problems
-- [ ] Submit problems (from scrath url)
-- [ ] View submissions
-- [ ] View clarifications
-- [ ] View standings
-- [ ] Submit private clarifications
-- [ ] Reply to private clarifications
-- [ ] Get notified when clarification has been answered `(STRETCH)`
-- [ ] Get notified when submission has been graded `(STRETCH)`
+- Connect scratch username to user
+- View problems
+- Submit problems (from scrath url)
+- View submissions
+- View clarifications
+- View standings
+- Submit private clarifications
+- Reply to private clarifications
+- Get notified when clarification has been answered `(STRETCH)`
+- Get notified when submission has been graded `(STRETCH)`
 
  ### Judge
-- [x] View problems
-- [ ] View solutions to problems
-- [ ] View sample files for problems (skeletons, testdata)
-- [ ] View unclaimed submissions
-- [ ] Claim unclaimed submission
-- [ ] Read-only claimed submissions
-- [ ] Unclaim submissions
-- [ ] View run output for submissions
-- [ ] View clarifications
-- [ ] Respond to clarifications
-- [ ] Delete clarifications
-- [ ] Close clarifications
-- [ ] Reopen clarifications
-- [ ] Submit public clarifications
-- [ ] regrade submissions (only notify team if it has changed.) `(STRETCH)`
+- ~~View problems~~
+- View solutions to problems
+- View sample files for problems (skeletons, testdata)
+- View unclaimed submissions
+- Claim unclaimed submission
+- Read-only claimed submissions
+- Unclaim submissions
+- View run output for submissions
+- View clarifications
+- Respond to clarifications
+- Delete clarifications
+- Close clarifications
+- Reopen clarifications
+- Submit public clarifications
+- regrade submissions (only notify team if it has changed.) `(STRETCH)`
 
 ### Stretch Goal
 Create aws_setup.py script to create DynamoDB tables, S3 buckets, and maybe lambda handlers to project can run out of the box with just aws credentials.
