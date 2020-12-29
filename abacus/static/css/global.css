@@ -72,7 +72,7 @@ h1,h2,h3,h4,h5,h6{
 .main.container {
   /* account for header */
   margin-top: 4em;
-  display: flex;
+  /* display: flex; */
   justify-content: center;
   flex-wrap: wrap;
   align-items: flex-start;
