@@ -3,6 +3,8 @@ on:
   push:
     paths:
       - "lambdas/JavaCompiler/*"
+    branches:
+      - "master"
 jobs:
   deploy_zip:
     name: deploy lambda function

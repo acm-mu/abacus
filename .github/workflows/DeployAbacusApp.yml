@@ -1,5 +1,10 @@
 name: Deploy Abacus EC2
-on: push
+on:
+  push:
+    paths:
+      - "abacus/*"
+    branches:
+      - "master"
 jobs:
   deploy_abacus:
     name: deploy Abacus
