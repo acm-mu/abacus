@@ -15,20 +15,10 @@ This Open Source competition judging software is designed for the [Marquette ACM
 ## TODO
  ### Admin
 - **STRETCH** Admin dashboard
-- View users~~
-- ~~Create users (team, judge & admin)~~
 - Delete users
-- ~~Update users~~
 - Export users to a file
 - Import users from a file
 - Delete user submissions when user is deleted
-- ~~View problems~~
-- ~~Create new problems~~
-- ~~Delete problems~~
-- Delete problem submissions when problem is deleted
-- ~~Update problems~~
-- ~~Upload solution for problems (either DynamoDB or S3 bucket)~~
-- ~~Upload sample files (sample runs, skeletons) for problems (either DynamoDB or S3 bucket)~~
 - Delete submissions
 - View clarifications
 - Close clarifications (no more replies)
@@ -39,9 +29,7 @@ This Open Source competition judging software is designed for the [Marquette ACM
  ### Blue
 - View problems
 - Download sample files
-- ~~Submit problems~~
 - Disable submitting problems before and after competition
-- ~~Prevent resubmitting solved problems or problems pending approval~~
 - Add submission "cooldown"
 - Show most recent submission statistics on problem page
 - View submissions
@@ -55,10 +43,6 @@ This Open Source competition judging software is designed for the [Marquette ACM
 - Notifications for results (async global javascript) `(STRETCH)`
 
  ### Gold
-- Connect scratch username to user
-- View problems
-- Submit problems (from scrath url)
-- View submissions
 - View clarifications
 - View standings
 - Submit private clarifications
@@ -67,7 +51,6 @@ This Open Source competition judging software is designed for the [Marquette ACM
 - Get notified when submission has been graded `(STRETCH)`
 
  ### Judge
-- ~~View problems~~
 - View solutions to problems
 - View sample files for problems (skeletons, testdata)
 - View unclaimed submissions
