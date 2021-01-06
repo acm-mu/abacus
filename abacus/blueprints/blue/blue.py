@@ -46,8 +46,11 @@ def submission(sid):
         return render_template('401.html')
     contents = contest.s3.Bucket('abacus-submissions').Object(
         f"{ submission['submission_id'] }/{ submission['filename'] }").get()['Body'].read().decode()
-    filename = submission['filename']
-    return render_template('blue/submission.html', submission=submission, filename=filename, contents=contents)
+
+    problem = contest.get_problems(problem_id = submission['problem_id'])[0]
+    submission['prob_id'] = problem['id']
+    submission['prob_name'] = problem['problem_name']
+    return render_template('blue/submission.html', submission=submission, contents=contents)
 
 
 @blue.route('/problems')
