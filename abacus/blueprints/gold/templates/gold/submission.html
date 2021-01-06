@@ -1,0 +1,46 @@
+{% extends "blue/page.html" %}
+
+{% block head %}
+<title>Abacus - Submission {{ submission.id }}</title>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.2.0/build/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/highlight.min.js"></script>
+<script defer>
+  hljs.initHighlightingOnLoad();
+</script>
+{% endblock %}
+
+{% block content %}
+{% include "countdown.html" %}
+<div class="xs-12 block">
+  <h1>Submission</h1>
+  <table class="ui table celled">
+    <thead>
+      <tr>
+        <th rowspan="2">ID</th>
+        <th>DATE</th>
+        <th>PROBLEM</th>
+        <th>STATUS</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td rowspan="2"><a
+            href="/gold/submissions/{{ submission.submission_id }}">{{ (submission.submission_id|string)[:7] }}</a>
+        </td>
+        <td fromnow="{{ submission.date*1000 }}"></td>
+        <td><a href="/gold/problems/{{ submission.prob_id }}">{{ submission.prob_name }}</a></td>
+        <td class="icn {{ submission.status }}"></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="xs-12 block">
+  <h3>Scratch Live Preview</h3>
+  <a class="ui label" target='_blank' href='{{ submission.filename }}'><i class="linkify icon"></i> Link to
+    Project</a>
+  <br /><br />
+  <iframe id='scratch_embedded' src="{{ submission.filename }}/embed" allowtransparency="true" width="603" height="500"
+    frameborder="0" scrolling="no" allowfullscreen></iframe>
+</div>
+{% endblock %}

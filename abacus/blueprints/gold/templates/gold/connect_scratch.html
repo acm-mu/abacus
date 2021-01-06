@@ -1,41 +1,31 @@
-{% extends 'page.html' %}
 
-{% block content %}
-<div class='xs12 block'>
-  <h3>In order to submit Scratch projects you need to connect your Scratch account.</h3>
-  <form class="ui form" action="" method="POST">
-    <div class="three fields">
-      <div class="field">
-        <label>Scratch Username</label>
-        <div class="ui input icon">
-          <input type="text" name="scratch_username" />
-          <i class="icon"></i>
-        </div>
-      </div>
-    </div>
-    <input type="submit" class="ui button" value="Submit">
+<div class="xs-12 block">
+  <p>You have not yet attached your Scratch® account to your profile. Please enter it below.</p>
+  <form action="/gold/connect" method="POST" class="ui action input">
+    <input type="text" placeholder="Scratch Username" name="scratch_username">
+    <button type="submit" class="ui right button" disabled>
+      Connect
+    </button>
   </form>
 </div>
-{% endblock %}
 
 {% block script %}
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     input = document.querySelector('input[name="scratch_username"]')
-    icon = input.parentNode.querySelector('i.icon');
+    button = input.parentNode.querySelector('button');
+
     input.addEventListener('keyup', function () {
       fetch(`https://api.scratch.mit.edu/users/${input.value}`)
         .then(res => {
           switch (res.status) {
             case 200:
-              input.parentNode.classList = "ui icon input success"
-              icon.classList = ['check icon'];
-              icon.style.color = 'green';
+              button.classList.add('teal');
+              button.disabled = false;
               break;
             case 404:
-              input.parentNode.classList = "ui icon input error"
-              icon.classList = ['x icon']
-              icon.style.color = 'red'
+              button.classList.remove('teal');
+              button.disabled = true;
           }
           console.log(res)
         })
