@@ -3,6 +3,8 @@ on:
   push:
     paths:
       - "lambdas/JavaCompilerFail/JavaCompilerFail.py"
+    branches:
+      - "master"
 jobs:
 
   deploy_javacompilerfail:

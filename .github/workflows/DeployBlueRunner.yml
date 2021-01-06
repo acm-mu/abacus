@@ -3,6 +3,8 @@ on:
   push:
     paths:
       - "lambdas/BlueRunner/BlueRunner.py"
+    branches:
+      - "master"
 jobs:
   deploy_bluerunner:
     name: deploy BlueRunner
