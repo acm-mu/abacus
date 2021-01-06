@@ -1,5 +1,5 @@
 from re import sub
-from flask import Blueprint, render_template, session
+from flask import Blueprint, render_template
 from abacus.contest import contest, login_required
 
 blue = Blueprint('blue_bp', __name__, url_prefix='/blue',
@@ -20,8 +20,8 @@ def standings():
 @login_required
 def submissions():
     submissions = []
-    if session['user_role'] == "team":
-        submissions = contest.get_submissions(team_id=session['user_id'])
+    if contest.getuserinfo('role') == "team":
+        submissions = contest.get_submissions(team_id=contest.getuserinfo('user_id'))
         for submission in submissions:
             problem = contest.get_problems(
                 problem_id=submission['problem_id'])[0]
@@ -39,11 +39,10 @@ def submissions():
 @login_required
 def submission(sid):
     submissions = contest.get_submissions(submission_id=sid)
-    print(submissions, flush=True)
     if not submissions:
         return render_template('404.html')
     submission = submissions[0]
-    if session['user_role'] == "team" and submission['team_id'] != session['user_id']:
+    if contest.getuserinfo('role') == "team" and submission['team_id'] != contest.getuserinfo('user_id'):
         return render_template('401.html')
     contents = contest.s3.Bucket('abacus-submissions').Object(
         f"{ submission['submission_id'] }/{ submission['filename'] }").get()['Body'].read().decode()
@@ -67,7 +66,7 @@ def problem(pid):
     if not contest.is_logged_in():
         return render_template('blue/problem.html', problem=problem[0], submissions = None)
 
-    submissions = contest.get_submissions(team_id = session['user_id'], problem_id = problem[0]['problem_id'])
+    submissions = contest.get_submissions(team_id = contest.getuserinfo('user_id'), problem_id = problem[0]['problem_id'])
     submissions.sort(key = lambda e: e['date'])
 
     if not submissions:

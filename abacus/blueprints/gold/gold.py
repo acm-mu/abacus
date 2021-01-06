@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template, request
-from abacus.contest import contest
+from flask import Blueprint, render_template, request, session
+from abacus.contest import contest, login_required
 
 gold = Blueprint('gold_bp', __name__, url_prefix='/gold',
                  template_folder='templates')
@@ -16,7 +16,7 @@ def connect():
     if request.method == "POST":
         contest.db.Table('user').update_item(
                     Key={
-                        'user_id': session['user_id']
+                        'user_id': contest.getuserinfo('user_id')
                     },
                     UpdateExpression=f"SET scratch_username = :scratch_username",
                     ExpressionAttributeValues={

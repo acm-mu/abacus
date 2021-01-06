@@ -15,7 +15,8 @@ def create_app(config_filename=None):
     app.jinja_env.globals.update(
         is_logged_in=contest.is_logged_in,
         is_judge=contest.is_judge,
-        is_admin=contest.is_admin)
+        is_admin=contest.is_admin,
+        getuserinfo=contest.getuserinfo)
 
     app.secret_key = binascii.hexlify(os.urandom(24))
 
@@ -47,9 +48,5 @@ def route_endpoints(app):
 
     @app.route('/logout')
     def logout():
-        del session['user_id']
-        del session['user_name']
         del session['session_token']
-        if 'admin' in session:
-            del session['admin']
         return redirect('/')

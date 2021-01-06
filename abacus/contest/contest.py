@@ -5,6 +5,7 @@ import hashlib
 import uuid
 from flask import session
 from boto3.session import Session
+from boto3.dynamodb.conditions import Attr
 
 
 class ContestService:
@@ -37,11 +38,6 @@ class ContestService:
         for user in self.get_users():
             if user['user_name'] == form_data['user-name']:
                 if user['password'] == password:
-                    session['user_id'] = user['user_id']
-                    session['user_name'] = user['user_name']
-                    session['user_role'] = user['role']
-                    session['division'] = user['division']
-                    # TODO: Instead these should be retrieved from the /api/contest endpoint via the session_token variable. Do a database lookup for the user with that token.
                     session['session_token'] = uuid.uuid4().hex
 
                     self.db.Table('user').update_item(
@@ -53,37 +49,29 @@ class ContestService:
         return False
 
     def is_logged_in(self) -> bool:
-        if 'user_id' in session:
-            user = self.db.Table('user').query(
-                KeyConditionExpression = "user_id = :user_id",
-                ExpressionAttributeValues = {
-                    ':user_id': session['user_id']
-                }
+        if 'session_token' in session:
+            user = self.db.Table('user').scan(
+                FilterExpression = Attr('session_token').eq(session['session_token'])
             )['Items']
-            # user = self.db.Table('user').scan(FilterExpression = Attr(
-            #     'user_id').eq(session['user_id']))['Items']
-            if user and 'session_token' in user[0]:
-                return user[0]['session_token'] == session['session_token']
+            if user:
+                return True
         return False
 
     def is_judge(self) -> bool:
         if self.is_logged_in():
-            return session['user_role'] == "judge"
+            return self.getuserinfo('role') == "judge"
         return False
 
     def is_admin(self) -> bool:
         if self.is_logged_in():
-            return session['user_role'] == "admin"
+            return self.getuserinfo('role') == 'admin'
         return False
 
     def home(self) -> str:
-        if 'user_id' not in session or session['user_role'] == "team":
-            return f"/{session['division']}"
+        if self.is_logged_in():
+            return f"/{self.getuserinfo('division')}"
 
-        if session['user_role'] == 'judge':
-            return '/'
-
-        if session['user_role'] == 'admin':
+        if self.getuserinfo('role') == 'admin':
             return '/admin'
 
         return '/'
@@ -150,6 +138,12 @@ class ContestService:
             ExpressionAttributeValues=values,
             ExpressionAttributeNames=names)['Items']
 
+    def getuserinfo(self, attr) -> object:
+        users = self.get_users(session_token=session['session_token'])
+        if users and attr in users[0]:
+            return users[0][attr]
+        return None
+
     def get_users(self, **filters) -> list:
         r"""Retrieves users from DynamoDB.
 
@@ -183,41 +177,47 @@ class ContestService:
 
     def submit(self, request) -> dict:
         language = request.form['language']
-        sub_file = request.files['sub-file']
         submission_id = uuid.uuid4().hex
 
         problem_id = request.form['problem-id']
-        problem = contest.get_problems(problem_id=problem_id)[0]
+        print(problem_id, flush=True)
+        
+        problem = self.get_problems(problem_id=problem_id)[0]
 
-        sub_no = len([sub for sub in self.get_submissions(
-        ) if sub['team_id'] == session['user_id'] and sub['problem_id'] == problem_id])
-
-        # Upload file to AWS S3 Bucket
-        key = f"{ submission_id }/{ sub_file.filename }"
-        self.s3.Bucket('abacus-submissions').upload_fileobj(sub_file, key)
-        obj = self.s3.Bucket('abacus-submissions').Object(key).get()['Body']
-
-        # Generate sha1 hash for file
-        h = hashlib.sha1()
-        h.update(obj.read())
-
-        file_size = self.s3.ObjectSummary('abacus-submissions', key).size
+        sub_no = len([sub for sub in self.get_submissions(team_id=self.getuserinfo('user_id'), problem_id=problem_id)])
 
         item = {
             'submission_id': submission_id,
             'sub_no': sub_no,
             'status': "pending",
-            'runtime': 0,
             'score': 0,
             'date': int(time.time()),
             'language': language,
-            'filename': sub_file.filename,
-            'filesize': file_size,
-            'sha1sum': h.hexdigest(),
-            'team_id': session['user_id'],
             'problem_id': problem_id,
-            'tests': problem['tests']
+            'team_id': self.getuserinfo('user_id')
         }
+
+        if language == "scratch":
+            item['filename'] = request.form['scratch_url']
+        else:
+            sub_file = request.files['sub-file']
+
+            # Upload file to AWS S3 Bucket
+            key = f"{ submission_id }/{ sub_file.filename }"
+            self.s3.Bucket('abacus-submissions').upload_fileobj(sub_file, key)
+            obj = self.s3.Bucket('abacus-submissions').Object(key).get()['Body']
+
+            # Generate sha1 hash for file
+            h = hashlib.sha1()
+            h.update(obj.read())
+
+            file_size = self.s3.ObjectSummary('abacus-submissions', key).size
+
+            item['filename'] = sub_file.filename
+            item['runtime'] = 0
+            item['filesize'] = file_size
+            item['sha1sum'] = h.hexdigest()
+            item['tests'] = problem['tests']
 
         self.db.Table('submission').put_item(
             Item=item

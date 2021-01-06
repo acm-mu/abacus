@@ -15,8 +15,8 @@ class Contest(Resource):
 
     def get(self):
         data = contest.get_settings()
-        if 'user_id' in session:
-            data['current_user'] = session['user_id']
+        if contest.is_logged_in():
+            data['current_user'] = contest.getuserinfo('user_id')
         return dumps(data)
 
     def post(self):
