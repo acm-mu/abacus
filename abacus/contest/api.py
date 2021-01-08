@@ -160,6 +160,10 @@ class Problem(Resource):
                 ':tests': tests
             })
 
+class Standings(Resource):
+    def get(self):
+        return dumps(contest.get_standings('blue'))
+
 
 def register_api(app):
     api = Api(app)
@@ -170,6 +174,7 @@ def register_api(app):
     api.add_resource(Submission, '/api/submissions/<sid>')
     api.add_resource(Problems, '/api/problems')
     api.add_resource(Problem, '/api/problems/<pid>')
+    api.add_resource(Standings, '/api/standings')
 
 
 class AbacusEncoder(json.JSONEncoder):

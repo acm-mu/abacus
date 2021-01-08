@@ -106,7 +106,7 @@ class ContestService:
                         'value': value
                     })
 
-    def get_problems(self, **filters) -> list:
+    def get_problems(self, sort_key = 'id', **filters) -> list:
         r"""Retrieves problems from DynamoDB.
 
         Args:
@@ -123,10 +123,12 @@ class ContestService:
         if not filters:
             return self.db.Table('problem').scan()['Items']
 
-        return self.db.Table('problem').scan(
+        problems = self.db.Table('problem').scan(
             FilterExpression=filter_expression,
             ExpressionAttributeValues=values,
             ExpressionAttributeNames=names)['Items']
+        
+        return sorted(problems, key = lambda row: row[sort_key])
 
     def get_submissions(self, **filters) -> list:
         r"""Retrieves submissions from DynamoDB.
@@ -224,6 +226,35 @@ class ContestService:
         )
 
         return item
+    
+    def get_standings(self, division):
+        standings = self.get_users(division=division, role='team')
+        problems = self.get_problems(division=division)
+        for team in standings:
+            del team['session_token']
+            team['problems'] = {}
+            total_score = 0
+            solved = 0
+            for problem in problems:
+                problem_score = 0
+                submissions = contest.get_submissions(team_id = team['user_id'], problem_id = problem['problem_id'])
+                for submission in submissions:
+                    if submission['score'] != 0:
+                        problem_score = submission['score']
+                        total_score += submission['score']
+                        break
+                team['problems'][problem['id']] = {
+                    'solved': problem_score != 0,
+                    'problem_score': problem_score,
+                    'num_submissions': len(submissions),
+                    'submissions': submissions
+                }
+                if problem_score != 0:
+                    solved += 1
+
+            team['solved'] = solved
+            team['time'] = total_score
+        return sorted(standings, key = lambda team: team['solved'], reverse=True)
 
 
 contest: ContestService = ContestService()

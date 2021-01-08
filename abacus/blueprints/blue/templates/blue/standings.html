@@ -6,16 +6,33 @@
 
 {% block content %}
   {% include "countdown.html" %}
+  
   <div class="transparent xs-12 block">
-    <table class="ui table celled">
+    
+    <div class="table-legend">
+      <div>
+        <span class="legend-solved legend-status"></span>
+        <p class="legend-label">Full score</p>
+      </div>
+      <div>
+        <span class="legend-attempted legend-status"></span>
+        <p class="legend-label">Attempted problem</p>
+      </div>
+      <div>
+        <span class="legend-pending legend-status"></span>
+        <p class="legend-label">Pending judgement</p>
+      </div>
+    </div>
+
+    <table class="ui table celled" id='standings'>
       <thead>
         <tr>
-          <th>RK</th>
+          <th class="collapsing">RK</th>
           <th>TEAM</th>
-          <th>SLV.</th>
-          <th>TIME</th>
+          <th class='collapsing'>SLV.</th>
+          <th class='collapsing'>TIME</th>
           {% for problem in problems %}
-          <th>{{ problem.id }}</th>
+          <th class='collapsing'><a href='/blue/problems/{{ problem.id }}'>{{ problem.id }}</a></th>
           {% endfor %}
         </tr>
       </thead>
@@ -34,4 +51,113 @@
       </tbody>
     </table>
   </div>
+{% endblock %}
+
+{% block script %}
+<script>
+
+  let cachedResult = undefined
+
+  function updateTable(teams) {
+    const table = document.querySelector('#standings tbody')
+    table.innerHTML = ""
+    teams.forEach((team, index) => {
+      const problems = team.problems
+      let row = `<tr><td>${index + 1}</td> <td><a hef=''>${team.display_name}</a></td> <td>${team.solved}</td> <td>${team.time}</td>`;
+
+      Object.values(problems).forEach((problem) => {
+
+        if (problem.solved) {
+          row += `<td class='solved'>${problem.problem_score}<br>${problem.submissions.length}</td>`
+        } else if (problem.submissions.length > 0) {
+          row += `<td class='attempted'>--<br>${problem.submissions.length}</td>`
+        } else {
+          row += `<td> </td>`
+        }
+      })
+
+      table.appendChild(createElement(`${row}</tr>`))
+    })
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    /*setInterval(() => {*/
+      fetch(`/api/standings`)
+        .then(res => res.json())
+        .then(res => {
+          if (cachedResult != res) {
+            cachedResult = res
+            updateTable(res)
+          }
+        })
+    /*}, 1000);*/
+  })
+</script>
+{% endblock %}
+
+{% block style %}
+<style>
+  .legend-status {
+    width: 23px;
+    height: 23px;
+    border-radius: 2px;
+  }
+
+  .table-legend {
+    float: right;
+    background: white;
+    border: 1px solid #CBCBCB;
+    padding: 4px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    color: #82868b;
+    line-height: 1.4;
+  }
+
+  .table-legend div {
+    padding-left: 14px;
+  }
+
+  .table-legend div:first-child {
+    padding: 0;
+  }
+
+  .table-legend div, .table-legend span, .table-legend p {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .legend-status.legend-solved {
+    background: #AAE2AB no-repeat center/75% url('/static/images/standings/check.svg');
+  }
+
+  .legend-status.legend-attempted {
+    background: #F67B51 no-repeat center/75% url("/static/images/standings/cross.svg");
+  }
+
+  .legend-status.legend-pending {
+    background: #dcdcdc no-repeat center/50% url("/static/images/standings/question.svg");
+  }
+
+  .ui.table td.solved {
+    background: #AAE2AB no-repeat center/32px url('/static/images/standings/check.svg');
+    font-size: 14px;
+    vertical-align: middle;
+    text-align: center;
+  }
+  .ui.table td.attempted {
+    text-align: center;
+    background: #F67B51 no-repeat center/32px url("/static/images/standings/cross.svg");
+    font-size: 14px;
+    vertical-align: middle;
+    color: white;
+  }
+  .ui.table td.pending {
+    text-align: center;
+    background: #dcdcdc no-repeat center/50% url("/static/images/standings/question.svg");
+    vertical-align: middle;
+    font-size: 14px;
+    text-align: center;
+  }
+</style>
 {% endblock %}

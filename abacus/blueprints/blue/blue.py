@@ -13,7 +13,7 @@ def index():
 
 @blue.route('/standings')
 def standings():
-    return render_template('blue/standings.html')
+    return render_template('blue/standings.html', problems=contest.get_problems(division='blue'))
 
 
 @blue.route('/submissions')
