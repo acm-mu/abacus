@@ -117,7 +117,7 @@
 
 {% block script %}
   <script>
-    let form, modal_header
+    let userForm, modal_header
     let uuid, role, username, division, displayname, password, submit, del
 
     function uploadCSV() {
@@ -140,7 +140,7 @@
     }
 
     function deleteUser() {
-      form.setAttribute('method', 'DELETE')
+      userForm.setAttribute('method', 'DELETE')
       submit.click()
     }
 
