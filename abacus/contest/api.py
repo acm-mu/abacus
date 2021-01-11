@@ -10,13 +10,19 @@ from . import contest, auth_required
 def dumps(data):
     return json.loads(json.dumps(data, sort_keys=True, cls=AbacusEncoder))
 
+def success(message):
+    return { "status": 200, "message": message }
+    
+def not_found(message):
+    return { "status": 404, "message": message }
+
 
 class Contest(Resource):
 
     def get(self):
         data = contest.get_settings()
-        if 'user_id' in session:
-            data['current_user'] = session['user_id']
+        if contest.is_logged_in():
+            data['current_user'] = contest.getuserinfo('user_id')
         return dumps(data)
 
     def post(self):
@@ -34,8 +40,16 @@ class Users(Resource):
     @auth_required
     def delete(self):
         # TODO: Delete all users submissions
+        print("DELETE", flush=True)
+        user_id = request.form['user-id']
+        print(user_id, flush=True)
+        if not(contest.get_users(user_id = user_id)):
+            return not_found(f"Could not find user with id: {user_id}")
+
         contest.db.Table('user').delete_item(
-            Key={'user_id': request.form['user-id']})
+            Key={'user_id': user_id})
+
+        return success("User deleted successfully!")
 
     def post(self):
         if 'csv-file' in request.files:

@@ -72,7 +72,7 @@ h1,h2,h3,h4,h5,h6{
 .main.container {
   /* account for header */
   margin-top: 4em;
-  display: flex;
+  /* display: flex; */
   justify-content: center;
   flex-wrap: wrap;
   align-items: flex-start;
@@ -91,6 +91,11 @@ h1,h2,h3,h4,h5,h6{
      background creates a psuedo-margin. The border unlike the 
      margin will resize the block proportionally */
   border: .5rem solid var(--bg-color);
+}
+
+.center {
+  margin: 0 auto;
+  text-align: center;
 }
 
 .transparent.block {

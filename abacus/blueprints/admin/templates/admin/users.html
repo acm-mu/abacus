@@ -33,7 +33,7 @@
       <tbody>
         {% for user in users %}
         <tr uuid="{{ user.user_id }}">
-          <td><input type='checkbox'></td>
+          <td><input type='checkbox' autocomplete="off"></td>
           <td><a href="#" onclick="editTeam(this)">{{ user.user_name }}</a></td>
           <td>{{ user.role }}</td>
           <td>{{ user.division }}</td>
@@ -194,15 +194,20 @@
     function deleteSelected() {
       document.querySelectorAll("td input[type='checkbox']:checked").forEach((checkbox) => {
         row = checkbox.parentNode.parentNode
-        uuid = row.getAttribute('uuid')
+        
+        const formData = new FormData();
+        formData.append('user-id', row.getAttribute('uuid'))
 
         fetch('/api/users', {
           method: "DELETE",
-          body: uuid
+          body: formData
         }).then(res => {
-          if (res.status == "200") {
-            showMessage('success', "Message deleted successfully!")
-          }
+          if (res.status == 200) {
+            row.parentNode.removeChild(row);
+            showMessage('success', "User deleted successfully!");
+          } else {
+            showMessage('error', "An error has occurred!" + (res.status == 404 ? `("${res.message}")` : ""));
+          } 
         })
       })
     }
