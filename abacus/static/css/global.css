@@ -69,17 +69,17 @@ h1,h2,h3,h4,h5,h6{
 
 /* Block System */
 
-.main.container {
+.ui.main.text.container {
   /* account for header */
   margin-top: 4em;
-  /* display: flex; */
-  justify-content: center;
+  display: flex;
   flex-wrap: wrap;
-  align-items: flex-start;
+  align-content: flex-start;
 }
 
+/* Stretch the navigation container, and the main container */
 .ui.text.container,
-.ui.container {
+.ui.container { 
   max-width: none !important;
   width: 75vw;
 }
@@ -91,6 +91,7 @@ h1,h2,h3,h4,h5,h6{
      background creates a psuedo-margin. The border unlike the 
      margin will resize the block proportionally */
   border: .5rem solid var(--bg-color);
+  height: max-content;
 }
 
 .center {
