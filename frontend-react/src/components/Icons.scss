@@ -1,0 +1,93 @@
+
+
+/* Icon */
+
+.icn:before {
+  font-family: Icons;
+  font-weight: 900;
+  content: "";
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  margin: 0 5px;
+}
+
+/* Icons */
+
+.icn.delete {
+  color: var(--red);
+}
+
+.icn.pending {
+  color: #555;
+  font-weight: bold;
+}
+
+.icn.wrong_answer, 
+.icn.run_time_error, 
+.icn.timeout_error {
+  color: red;
+  font-weight: bold;
+}
+
+.icn.accepted {
+  color: #84CD64;
+  font-weight: bold
+}
+
+.icn.rejected {
+  color: var(--red);
+  font-weight: bold;
+}
+
+/* Icons:before */
+
+.icn.delete:before {
+  content: "\f1f8";
+}
+
+.icn.pending:before {
+  content: "\f128";
+}
+
+.icn.rejected:before {
+  content: "\f00d";
+}
+
+.icn.accepted:before {
+  content: "\f00c";
+}
+
+.icn.wrong_answer:before, 
+.icn.run_time_error:before,
+.icn.timeout_error:before {
+  content: "\f00d";
+}
+
+/* Icons:after */
+
+td.pending:after {
+  content: "Pending";
+}
+
+td.wrong_answer:after, td.rejected:after {
+  content: "Wrong Answer";
+}
+
+td.run_time_error:after {
+  content: "Run Time Error";
+}
+
+td.timeout_error:after {
+  content: "Time Limit Expired";
+}
+
+td.accepted:after {
+  content: "Accepted";
+}
+
+section[tabindex] {
+  display: none;
+}
