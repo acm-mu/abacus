@@ -1,5 +1,6 @@
 from flask import Flask, render_template, session, request, redirect
-from .contest import contest, api
+from contest import contest
+import api
 import os
 import binascii
 
@@ -23,11 +24,13 @@ def create_app(config_filename=None):
     return app
 
 def register_blueprints(app):
-    from .blueprints import admin, blue, gold
+  from admin import admin
+  from blue import blue
+  from gold import gold
 
-    app.register_blueprint(admin)
-    app.register_blueprint(blue)
-    app.register_blueprint(gold)
+  app.register_blueprint(admin)
+  app.register_blueprint(blue)
+  app.register_blueprint(gold)
 
 def route_endpoints(app):
     @app.route('/')
@@ -50,3 +53,6 @@ def route_endpoints(app):
     def logout():
         del session['session_token']
         return redirect('/')
+
+app = create_app()
+app.run()

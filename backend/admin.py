@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, redirect
 import json
-from abacus.contest import contest, login_required
+from contest import contest
+from authlib import login_required
 
 admin = Blueprint('admin_bp', __name__, url_prefix='/admin',
                   template_folder='templates')

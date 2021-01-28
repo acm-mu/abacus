@@ -1,4 +1,4 @@
-from .contest import contest
+from contest import contest
 from functools import wraps
 from flask import request, session, render_template
 from typing import Any, Callable

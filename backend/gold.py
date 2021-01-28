@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request
-from abacus.contest import contest, login_required
+from contest import contest
+from authlib import login_required
 
 gold = Blueprint('gold_bp', __name__, url_prefix='/gold',
                  template_folder='templates')

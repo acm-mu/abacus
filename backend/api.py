@@ -3,8 +3,9 @@ import hashlib
 import uuid
 import decimal
 from flask import request, redirect, session
-from flask_restful import Resource, Api
-from . import contest, auth_required
+from flask_restful import Resource, Api, reqparse
+from contest import contest
+from authlib import auth_required
 
 
 def dumps(data):
@@ -90,7 +91,14 @@ class Users(Resource):
 
 class Submissions(Resource):
     def get(self):
-        return dumps(contest.get_submissions())
+        submissions = contest.get_submissions()
+        for submission in submissions:
+            problem = contest.get_problems(
+                problem_id=submission['problem_id'])[0]
+            submission['problem_id'] = problem['id']
+            submission['prob_name'] = problem['problem_name']
+
+        return dumps(submissions)
 
     def delete(self):
         submission_id = request.form['submission_id']
@@ -116,10 +124,15 @@ class Submission(Resource):
 
 
 class Problems(Resource):
-    @auth_required
+    # @auth_required
     def get(self):
-        problems = contest.get_problems()
-        return dumps(problems)
+        parser = reqparse.RequestParser()
+        parser.add_argument('division')
+        args = parser.parse_args()
+        if args['division']:
+            return dumps(contest.get_problems(division=args['division']))
+
+        return dumps(contest.get_problems())
 
     def post(self):
         tests = [{k: v for k, v in request.form.items(
