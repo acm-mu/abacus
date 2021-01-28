@@ -1,1 +1,0 @@
-from .gold import gold

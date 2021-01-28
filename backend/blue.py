@@ -1,6 +1,7 @@
 from re import sub
 from flask import Blueprint, render_template
-from abacus.contest import contest, login_required
+from contest import contest
+from authlib import login_required
 
 blue = Blueprint('blue_bp', __name__, url_prefix='/blue',
                  template_folder='templates')
@@ -14,6 +15,10 @@ def index():
 @blue.route('/standings')
 def standings():
     return render_template('blue/standings.html', problems=contest.get_problems(division='blue'))
+
+@blue.route('/clarifications')
+def clarifications():
+    return render_template('clarifications.html')
 
 
 @blue.route('/submissions')
