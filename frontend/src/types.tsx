@@ -36,7 +36,7 @@ type ProblemType = {
   tests: TestType[];
 }
 
-type TeamType = {
+type UserType = {
   user_id: string;
   role: string;
   user_name: string;
@@ -45,4 +45,4 @@ type TeamType = {
   scratch_username?: string
 }
 
-export type { TestType, SubmissionType, ProblemType, TeamType, ProblemScoreType }
+export type { TestType, SubmissionType, ProblemType, UserType, ProblemScoreType }

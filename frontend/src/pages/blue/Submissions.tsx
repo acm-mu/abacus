@@ -6,12 +6,13 @@ import Moment from "react-moment";
 
 import "../../components/Icons.scss";
 import { Table } from "semantic-ui-react";
+import { Link } from "react-router-dom";
 
 const Submissions = (): JSX.Element => {
   const [submissions, setSubmissions] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/submissions")
+    fetch("https://localhost/api/submissions")
       .then((res) => res.json())
       .then((subs) => setSubmissions(subs));
   }, []);
@@ -43,14 +44,14 @@ const Submissions = (): JSX.Element => {
               submissions.map((submission: SubmissionType, index) => (
                 <Table.Row key={index}>
                   <Table.Cell>
-                    <a href={`/blue/submissions/${submission.submission_id}`}>
+                    <Link to={`/blue/submissions/${submission.submission_id}`}>
                       {submission.submission_id.substring(0, 7)}
-                    </a>
+                    </Link>
                   </Table.Cell>
                   <Table.Cell>
-                    <a href={`/blue/problems/${submission.problem_id}`}>
+                    <Link to={`/blue/problems/${submission.problem_id}`}>
                       {submission.prob_name}
-                    </a>
+                    </Link>
                   </Table.Cell>
                   <Table.Cell> {submission.sub_no + 1} </Table.Cell>
                   <Table.Cell> {submission.language} </Table.Cell>
