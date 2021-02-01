@@ -1,6 +1,6 @@
 import React from "react";
 
-import { NavLink, Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { Menu } from "semantic-ui-react";
 import { Navigation } from "../../components";
 
@@ -26,11 +26,6 @@ const BlueNavigation = (): JSX.Element => (
       Clarifications
     </Menu.Item>
 
-    <Menu.Menu position="right">
-      <Menu.Item as={Link} to="/login">
-        Log in
-      </Menu.Item>
-    </Menu.Menu>
   </Navigation>
 );
 

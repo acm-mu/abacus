@@ -26,6 +26,4 @@ const Index = (): JSX.Element => (
   </>
 );
 
-export { Index };
-export { default as Blue } from "./Blue";
-export { default as Gold } from "./Gold";
+export default Index

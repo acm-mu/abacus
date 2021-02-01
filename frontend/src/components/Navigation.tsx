@@ -7,16 +7,24 @@ type Props = {
   children: React.ReactNode;
 };
 
-const Navigation: React.FunctionComponent<Props> = (props: Props) => (
-  <Menu className="fixed" inverted>
-    <Container>
-      <Menu.Item as={Link} to="/" header>
-        <img className="logo" src="/images/fulllogoy.png" alt="Abacus" />
-      </Menu.Item>
+const Navigation: React.FunctionComponent<Props> = (props: Props) => {
+  return (
+    <Menu className="fixed" inverted>
+      <Container>
+        <Menu.Item as={Link} to="/" header>
+          <img className="logo" src="/images/fulllogoy.png" alt="Abacus" />
+        </Menu.Item>
 
-      {props.children}
-    </Container>
-  </Menu>
-);
+        {props.children}
+
+        <Menu.Menu position="right">
+          <Menu.Item as={Link} to="/login">
+            Log in
+          </Menu.Item>
+        </Menu.Menu>
+      </Container>
+    </Menu>
+  );
+};
 
 export default Navigation;

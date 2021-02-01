@@ -4,13 +4,14 @@ import { Block, Countdown } from "../../components";
 import { ProblemType } from '../../types'
 
 import '../../components/Table.scss'
+import { Link } from "react-router-dom";
 
 
 const Problems = (): JSX.Element => {
   const [problems, setProblems] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/problems?division=blue")
+    fetch("https://localhost/api/problems?division=blue")
       .then((res) => res.json())
       .then((probs) => setProblems(probs));
   }, []);
@@ -32,7 +33,7 @@ const Problems = (): JSX.Element => {
               <Table.Row key={index}>
                 <Table.HeaderCell collapsing>{problem.id}</Table.HeaderCell>
                 <Table.Cell>
-                  <a href={`/blue/problems/${problem.id}`}>{problem.problem_name}</a>
+                  <Link to={`/blue/problems/${problem.id}`}>{problem.problem_name}</Link>
                 </Table.Cell>
                 <Table.Cell>{problem?.tests?.length}</Table.Cell>
               </Table.Row>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Block, Countdown } from "../../components";
+import { Link } from 'react-router-dom'
 import { Table } from "semantic-ui-react";
 import { ProblemType } from "../../types";
 
@@ -10,11 +11,11 @@ const Standings = (): JSX.Element => {
   const [standings, setStandings] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/problems?division=blue")
+    fetch("https://localhost/api/problems?division=blue")
       .then((res) => res.json())
       .then((problems) => setProblems(problems));
 
-    fetch("http://localhost:5000/api/standings")
+    fetch("https://localhost/api/standings")
       .then((res) => res.json())
       .then((standings) => setStandings(standings));
   }, []);
@@ -45,24 +46,24 @@ const Standings = (): JSX.Element => {
               <Table.HeaderCell>Team</Table.HeaderCell>
               <Table.HeaderCell collapsing>SLV.</Table.HeaderCell>
               <Table.HeaderCell collapsing>TIME</Table.HeaderCell>
-              {problems.map((problem: ProblemType, index) => (
+              {problems.map((problem: ProblemType, index: number) => (
                 <Table.HeaderCell key={index} collapsing>
-                  <a href={`/blue/problems/${problem.id}`}>{problem.id}</a>
+                  <Link to={`/blue/problems/${problem.id}`}>{problem.id}</Link>
                 </Table.HeaderCell>
               ))}
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {standings.map((team: any, index) => (
+            {standings.map((team: any, index: number) => (
               <Table.Row key={index}>
                 <Table.Cell collapsing>{index + 1}</Table.Cell>
                 <Table.Cell>
-                  <a href="">{team.display_name}</a>
+                  <Link to="#">{team.display_name}</Link>
                 </Table.Cell>
                 <Table.Cell>{team.solved}</Table.Cell>
                 <Table.Cell>{team.time}</Table.Cell>
                 {Object.values(team.problems).map(
-                  (problem: any, index: any) => {
+                  (problem: any, index: number) => {
                     if (problem.solved) {
                       return (
                         <Table.Cell key={index} className="solved">

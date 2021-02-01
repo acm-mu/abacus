@@ -10,7 +10,7 @@ const Problem: React.FunctionComponent = () => {
   const [problem, setProblem] = useState<ProblemType>();
 
   useEffect(() => {
-    fetch("http://codeabac.us/api/problems/48ffb0999c0d4a179ac6aa65c299ccf4")
+    fetch("http://localhost/api/problems/48ffb0999c0d4a179ac6aa65c299ccf4")
       .then((res) => res.json())
       .then((res) => {
         if (res) setProblem(res[0]);
@@ -58,7 +58,7 @@ const Problem: React.FunctionComponent = () => {
           <b>Memory limit:</b> {problem?.memory_limit}
         </p>
         <p>
-          <b>Download:</b> <a>Sample data files</a>
+          <b>Download:</b> <Link to='#'>Sample data files</Link>
         </p>
       </Block>
     </>

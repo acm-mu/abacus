@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
 import {Block, Countdown } from '../../components'
 
@@ -23,10 +24,10 @@ const Submission = (): JSX.Element => (
       </Table.Header>
       <Table.Body>
         <Table.Row>
-          <Table.Cell rowspan="2"><a href="/blue/submissions/{{ submission.submission_id }}">submission.submission_id|string)[:7]</a>
+          <Table.Cell rowspan="2"><Link to="/blue/submissions/{{ submission.submission_id }}">submission.submission_id|string)[:7]</Link>
           </Table.Cell>
           <Table.Cell fromnow="{{ submission.date*1000 }}"></Table.Cell>
-          <Table.Cell><a href="/blue/problems/{{ submission.prob_id }}"> submission.prob_name </a></Table.Cell>
+          <Table.Cell><Link to="/blue/problems/{{ submission.prob_id }}"> submission.prob_name </Link></Table.Cell>
           <Table.Cell class="icn {{ submission.status }}"></Table.Cell>
           <Table.Cell> (submission.runtime|string)[:4] </Table.Cell>
           <Table.Cell> submission.language </Table.Cell>

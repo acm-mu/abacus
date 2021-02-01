@@ -31,7 +31,7 @@ const Countdown = (): JSX.Element => {
   const diff = (date1: Date, date2: Date) => date1.getTime() - date2.getTime();
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/contest")
+    fetch("http://localhost/api/contest")
       .then((res) => res.json())
       .then((res) => {
         setCompName(res.competition_name);
