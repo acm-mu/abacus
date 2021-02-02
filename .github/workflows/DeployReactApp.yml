@@ -31,7 +31,7 @@ jobs:
         run: npm test
 
       - name: Build
-        run: npm run build
+        run: cat package.json && npm run build
 
       - name: copy files to s3
         run: aws s3 sync ./build s3://codeabac.us
