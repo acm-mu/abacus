@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Table, Button } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { Block } from '../../components'
+import { ProblemType } from '../../types'
 
 const Problems = (): JSX.Element => {
   const [problems, setProblems] = useState([])
@@ -26,7 +27,7 @@ const Problems = (): JSX.Element => {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-        {problems.map((problem: any, index: number) => (
+        {problems.map((problem: ProblemType, index: number) => (
             <Table.Row key={index}>
               <Table.HeaderCell class="collapsing">{problem.id}</Table.HeaderCell>
               <Table.Cell><Link to={`/admin/problems/${problem.problem_id}/edit`}>{problem.problem_name}</Link></Table.Cell>

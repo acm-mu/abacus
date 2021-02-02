@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Block, Countdown } from "../../components";
 import { Link } from 'react-router-dom'
 import { Table } from "semantic-ui-react";
-import { ProblemType } from "../../types";
+import { ProblemScoreType, ProblemType, StandingsUser } from "../../types";
 
 import "./Standings.scss";
 
@@ -54,7 +54,7 @@ const Standings = (): JSX.Element => {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {standings.map((team: any, index: number) => (
+            {standings.map((team: StandingsUser, index: number) => (
               <Table.Row key={index}>
                 <Table.Cell collapsing>{index + 1}</Table.Cell>
                 <Table.Cell>
@@ -63,7 +63,7 @@ const Standings = (): JSX.Element => {
                 <Table.Cell>{team.solved}</Table.Cell>
                 <Table.Cell>{team.time}</Table.Cell>
                 {Object.values(team.problems).map(
-                  (problem: any, index: number) => {
+                  (problem: ProblemScoreType, index: number) => {
                     if (problem.solved) {
                       return (
                         <Table.Cell key={index} className="solved">

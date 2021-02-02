@@ -15,6 +15,10 @@ import NewProblem from './NewProblem'
 import Settings from './Settings'
 import NotFound from "../NotFound";
 
+/* Flask Endpoints to be moved to backend
+  * /submissions/<sid>/invoke
+*/
+
 const Admin = (): JSX.Element => (
   <>
     <AdminNavigation />

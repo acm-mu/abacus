@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Table } from 'semantic-ui-react'
 import { Block } from '../../components'
+import { SubmissionType } from '../../types'
 
 const Submissions = (): JSX.Element => {
   const [submissions] = useState([])
@@ -20,7 +21,7 @@ const Submissions = (): JSX.Element => {
         </Table.Header>
         <Table.Body>
           {submissions.length > 0 ?
-            (submissions.map((submission: any, index: number) => (
+            (submissions.map((submission: SubmissionType, index: number) => (
               <Table.Row key={index}>
                 <Table.Cell><a href={`/gold/submissions/${submission.submission_id}`}>{submission.submission_id.substring(0, 7)}</a></Table.Cell>
                 <Table.Cell><a href={`/gold/problems/${submission.problem_id}`}>{submission.prob_name} </a></Table.Cell>

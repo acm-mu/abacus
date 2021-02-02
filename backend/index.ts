@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import path from 'path'
 import api from './api'
 
@@ -9,7 +9,7 @@ app.use('/api', api)
 app.use(express.static("../frontend/build"));
 
 // Everywhere else, but '/api'
-app.get(/^(?!\/api).*/, (_req: any, res: any) =>
+app.get(/^(?!\/api).*/, (_req: Request, res: Response) =>
   res.sendFile(path.join(__dirname, "/../frontend/build/index.html"))
 );
 

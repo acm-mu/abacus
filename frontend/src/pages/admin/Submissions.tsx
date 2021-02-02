@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Block, Countdown } from '../../components'
 import { Table } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
+import { SubmissionType } from '../../types'
 
 const Submissions = (): JSX.Element => {
 
@@ -13,7 +14,6 @@ const Submissions = (): JSX.Element => {
         .then(res => res.json())
         .then(data => {
           data = Object.values(data)
-          // data.sort((a: any, b: any) => a.date.localeCompare(b.date))
           setSubmissions(data)
         })
 
@@ -38,7 +38,7 @@ const Submissions = (): JSX.Element => {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {submissions.length > 0 ? (submissions.map((submission: any, index: number) =>
+            {submissions.length > 0 ? (submissions.map((submission: SubmissionType, index: number) =>
             (<Table.Row key={index}>
               <Table.Cell><Link to={`/admin/submissions/${submission.submission_id}`}>{submission.submission_id.substring(0, 7)}</Link></Table.Cell>
               <Table.Cell><Link to={`/admin/problems/${submission.problem_id}/edit`}>{submission.prob_name} </Link></Table.Cell>

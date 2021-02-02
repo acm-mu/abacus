@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import { Form, Button, Input, Table } from 'semantic-ui-react'
 import { Block } from '../../components'
+import { TestType } from '../../types'
 
 const Submission = (): JSX.Element => {
+  const { submission_id } = useParams<{ submission_id: string }>()
   const [submission, setSubmission] = useState({
     submission_id: '',
     team_name: '',
@@ -15,6 +18,15 @@ const Submission = (): JSX.Element => {
     tests: [],
     date: 0,
   })
+
+  useEffect(() => {
+    fetch(`http://localhost/api/submission?submission_id=${submission_id}`)
+      .then(res => res.json())
+      .then(data => {
+        data = Object.values(data)[0]
+        setSubmission(data)
+      })
+  }, [])
 
   return (
     <>
@@ -56,7 +68,7 @@ const Submission = (): JSX.Element => {
             </Table.Row>
             <Table.Row>
               <Table.Cell colspan={3}>
-                {submission.tests.map((test: any) => {
+                {submission.tests.map((test: TestType) => {
                   switch (test.result) {
                     case 'accepted':
                       return <span className='result icn accepted' />

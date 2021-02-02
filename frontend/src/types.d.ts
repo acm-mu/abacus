@@ -1,6 +1,7 @@
 type TestType = {
   in: string;
   out: string;
+  result: string;
 }
 
 type SubmissionType = {
@@ -17,6 +18,7 @@ type SubmissionType = {
   sub_no: number;
   submission_id: string;
   team_id: string;
+  team_name: string;
   tests: TestType[];
 }
 
@@ -28,6 +30,7 @@ type ProblemScoreType = {
 }
 
 type ProblemType = {
+  problem_id: string;
   id: string;
   problem_name: string;
   description: string;
@@ -45,4 +48,16 @@ type UserType = {
   scratch_username?: string
 }
 
-export type { TestType, SubmissionType, ProblemType, UserType, ProblemScoreType }
+type StandingsUser = {
+  user_id: string;
+  role: string;
+  user_name: string;
+  display_name: string;
+  division: string;
+  scratch_username?: string;
+  solved: number;
+  time: number;
+  problems: [ProblemScoreType];
+}
+
+export type {StandingsUser, TestType, SubmissionType, ProblemType, UserType, ProblemScoreType }
