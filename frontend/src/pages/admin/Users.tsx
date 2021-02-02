@@ -2,10 +2,15 @@ import { Table, Button, Popup, Modal, Form, Input, Select } from 'semantic-ui-re
 import { Block, Countdown } from '../../components'
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { UserType } from '../../types'
 
-const EditUser = (props?: any) => {
+interface EditUserProps {
+  user?: UserType;
+  trigger: JSX.Element;
+}
+
+const EditUser = ({user, trigger}: EditUserProps) => {
   const [open, setOpen] = useState(false)
-  const { user } = props
 
   const roles = [
     { key: 'team', text: 'Team', value: 'team' },
@@ -24,10 +29,10 @@ const EditUser = (props?: any) => {
       onClose={() => setOpen(false)}
       onOpen={() => setOpen(true)}
       open={open}
-      trigger={props.trigger}
+      trigger={trigger}
     // trigger={}
     >
-      <Modal.Header>{props.user ? 'Edit User' : 'Create User'}</Modal.Header>
+      <Modal.Header>{user ? 'Edit User' : 'Create User'}</Modal.Header>
       <Modal.Content>
         <Modal.Description>
           <Form>
@@ -121,7 +126,7 @@ const Users = (): JSX.Element => {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {users.map((user: any, index: number) =>
+            {users.map((user: UserType, index: number) =>
               <Table.Row key={index} uuid={`${user.user_id}`}>
                 <Table.Cell><input type='checkbox' autoComplete="off" /></Table.Cell>
                 <Table.Cell><EditUser user={user} trigger={<Link to='#'>{user.user_name}</Link>} /></Table.Cell>

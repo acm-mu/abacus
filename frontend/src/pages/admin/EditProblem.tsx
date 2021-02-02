@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
-// import { RouteComponentProps } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { Form, Input, Menu, Button, TextArea, MenuItemProps } from 'semantic-ui-react'
+import { TestType } from '../../types'
 
 const InitialProblem = {
   problem_name: '',
@@ -12,14 +13,16 @@ const InitialProblem = {
   tests: []
 }
 
-const EditProblems = (props: any): JSX.Element => {
+const EditProblems = (): JSX.Element => {
   const [problem, setProblem] = useState(InitialProblem)
 
   const [activeItem, setActiveItem] = useState('problem-info')
-  const handleItemClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, data: MenuItemProps) => setActiveItem(data.tab!)
+  const handleItemClick = (event: React.MouseEvent, data: MenuItemProps) => setActiveItem(data.tab)
+
+  const { problem_id } = useParams<{ problem_id: string }>()
 
   useEffect(() => {
-    fetch(`http://localhost/api/problems?id=${props.match.params.problem_id}`)
+    fetch(`http://localhost/api/problems?id=${problem_id}`)
       .then(res => res.json())
       .then(data => {
         data = Object.values(data)[0]
@@ -61,13 +64,13 @@ const EditProblems = (props: any): JSX.Element => {
               <Form.Field label='Tests'>
                 <label>Tests</label>
                 <Menu attached='top' tabular>
-                  {problem?.tests.map((test: any, index: number) =>
+                  {problem?.tests.map((test: TestType, index: number) =>
                     <Menu.Item key={index} name={`${index}`} /> //onClick={setActive} />
                   )}
                   <Menu.Item name='+' /> {/*onClick={newItem}/>*/}
                 </Menu>
                 {/* <div className="ui bottom attached active tab segment" id="tests_content">
-                  {problem?.tests.map((test: any, index: number) =>
+                  {problem?.tests.map((test: TestType, index: number) =>
                     <div key={index} className="two fields" style={{ display: "none" }}>
                       <div className="field">
                         <label>Input</label>

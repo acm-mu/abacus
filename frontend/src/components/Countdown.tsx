@@ -5,28 +5,28 @@ import { Block } from "./";
 import "./Countdown.scss";
 import "./FlipClock.scss";
 
+function formatTime(obj: Date | number) {
+  let milliseconds = obj instanceof Date ? obj.getTime() : Number(obj);
+
+  const hours = Math.floor(milliseconds / (1000 * 60 * 60));
+  milliseconds %= 1000 * 60 * 60;
+
+  const minutes = Math.floor(milliseconds / (1000 * 60));
+  milliseconds %= 1000 * 60;
+
+  const seconds = Math.floor(milliseconds / 1000);
+
+  return `${hours < 10 ? `0${hours}` : `${hours}`}:${
+    minutes < 10 ? `0${minutes}` : `${minutes}`
+  }:${seconds < 10 ? `0${seconds}` : `${seconds}`}`;
+}
+
 const Countdown = (): JSX.Element => {
   const [compName, setCompName] = useState();
 
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
   const [time, setTime] = useState<Date>();
-
-  function formatTime(obj: Date | number) {
-    let milliseconds = obj instanceof Date ? obj.getTime() : Number(obj);
-
-    const hours = Math.floor(milliseconds / (1000 * 60 * 60));
-    milliseconds %= 1000 * 60 * 60;
-
-    const minutes = Math.floor(milliseconds / (1000 * 60));
-    milliseconds %= 1000 * 60;
-
-    const seconds = Math.floor(milliseconds / 1000);
-
-    return `${hours < 10 ? `0${hours}` : `${hours}`}:${
-      minutes < 10 ? `0${minutes}` : `${minutes}`
-    }:${seconds < 10 ? `0${seconds}` : `${seconds}`}`;
-  }
 
   const diff = (date1: Date, date2: Date) => date1.getTime() - date2.getTime();
 

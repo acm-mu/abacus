@@ -11,6 +11,10 @@ import {Switch, Route} from 'react-router-dom'
 import { Container } from "semantic-ui-react";
 import NotFound from '../NotFound'
 
+/* Flask endpoints to move to backend
+  * /problems/<pid>/submit
+*/
+
 const Blue = (): JSX.Element => (
   <>
     <BlueNavigation />
@@ -19,9 +23,10 @@ const Blue = (): JSX.Element => (
         <Route exact path='/blue/' component={Home} />
         <Route path='/blue/problem/' component={Problem} />
         <Route path='/blue/problems' component={Problems} />
+        <Route path='/blue/problems/:problem_id' component={Problem} />
         <Route path='/blue/standings' component={Standings} />
         <Route path='/blue/submissions' component={Submissions} />
-        <Route path='/blue/submission/' component={Submission} />
+        <Route path='/blue/submissions/:submission_id' component={Submission} />
         <Route default component={NotFound} />
       </Switch>
     </Container>
