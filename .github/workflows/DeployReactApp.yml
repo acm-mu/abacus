@@ -9,9 +9,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: open frontend source
-        run: cd frontend && pwd
-
       - name: Set up Node.js
         uses: actions/setup-node@v1
         with:
@@ -25,18 +22,23 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Install dependencies
+        working-directory: ./frontend
         run: npm install
 
       - name: Run the tests
+        working-directory: ./frontend
         run: npm test
 
       - name: Build
+        working-directory: ./frontend
         run: cat package.json && npm run build
 
       - name: copy files to s3
+        working-directory: ./frontend
         run: aws s3 sync ./build s3://codeabac.us
 
       - name: Invalidate cache
+        working-directory: ./frontend
         run: |
           aws cloudfront create-invalidation \
             --distribution-id ${{ secrets.DISTRIBUTION_ID }} \
