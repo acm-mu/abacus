@@ -1,1 +1,1 @@
-# service abacus start
+service abacus start
