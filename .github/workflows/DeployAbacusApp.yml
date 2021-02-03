@@ -32,6 +32,11 @@ jobs:
         working-directory: backend
         run: npm run build
 
-      - name: Deploy project
+      - name: Upload project
         working-directory: backend
         run: aws s3 sync ./dist s3://codeabac.us-backend
+
+      - name: Deploy project
+        uses: aws-actions/aws-codebuild-run-build@v1.0.3
+        with:
+          project-name: CodeAbacus-Backend
