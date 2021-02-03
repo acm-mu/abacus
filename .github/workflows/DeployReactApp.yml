@@ -1,6 +1,8 @@
 name: CI/CD
 on:
   push:
+    paths:
+      - "frontend/*"
     branches: [react]
 jobs:
   build:
@@ -31,15 +33,8 @@ jobs:
 
       - name: Build
         working-directory: ./frontend
-        run: cat package.json && npm run build
+        run: npm run build
 
       - name: copy files to s3
         working-directory: ./frontend
         run: aws s3 sync ./build s3://codeabac.us
-
-      - name: Invalidate cache
-        working-directory: ./frontend
-        run: |
-          aws cloudfront create-invalidation \
-            --distribution-id ${{ secrets.DISTRIBUTION_ID }} \
-            --paths "/*"
