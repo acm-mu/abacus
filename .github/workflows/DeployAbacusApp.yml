@@ -6,7 +6,8 @@ on:
     branches:
       - "react"
 jobs:
-  build:
+  buildAndDeploy:
+    name: CI Pipeline
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -15,14 +16,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: 12
-
-      - name: Configure AWS
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          node-version: 12.x
 
       - name: Install dependencies
         working-directory: backend
@@ -31,10 +25,59 @@ jobs:
       - name: Build project
         working-directory: backend
         run: npm run build
+  deploy:
+    name: CD Pipeline
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.8]
+        node-version: ["12.x"]
+        appname: ["codeabac.us"]
+        deploy-group: ["backend"]
+        s3-bucket: ["codeabac.us-codedeploy"]
+        s3-filename: ["codeabac.us-backend-${{ github.sha }}"]
 
-      - name: Compress project
+    needs: buildAndDeploy
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Node.js 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+
+      - name: Install dependencies
+        run: npm install
         working-directory: backend
-        run: tar -cvf "./backend$(date '+%Y%m%d%H%M%S').tar" ./dist
+
+      - name: Build project
+        run: npm run build
+        working-directory: backend
+
+      - name: Configure AWS
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: AWS Deploy push
+        run: |
+          aws deploy push \
+          --application-name ${{ matrix.appname }} \
+          --description "This revision for the ${{ matrix.appname }}-${{ github.sha }}" \
+          --ignore-hidden-files \
+          --s3-location s3://${{ matrix.s3-bucket }}/${{ matrix.s3-filename }}.zip \
+          --source .
+
+      - name: AWS Create Deployment
+        run: |
+          aws deploy create-deployment \
+          --application-name ${{ matrix.appname }} \
+          --deployment-config-name CodeDeployDefault.OneAtATime \
+          --deployment-group-name ${{ matrix.deploy-group }} \
+          --file-exists-behavior OVERWRITE \
+          --s3-location bucket=${{ matrix.s3-bucket }},key=${{ matrix.s3-filename }}.zip,bundleType=zip \
 
       - name: Upload project
         working-directory: backend
