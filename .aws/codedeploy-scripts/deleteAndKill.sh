@@ -1,2 +1,0 @@
-cd /app
-rm -rf *
