@@ -5,8 +5,11 @@ files:
     destination: /app
 hooks:
   ApplicationStop:
-    - location: ./stop.sh
+    - location: ./scripts/stop.sh
+      runas: root
+  BeforeInstall:
+    - location: ./scripts/install.sh
       runas: root
   ApplicationStart:
-    - location: ./start.sh
+    - location: ./scripts/start.sh
       runas: root
