@@ -1,8 +1,8 @@
 name: Deploy Abacus Backend EC2
 on:
   push:
-    paths:
-      - "backend/*"
+    # paths:
+    #   - "backend/*"
     branches:
       - "react"
 jobs:
@@ -21,7 +21,6 @@ jobs:
         working-directory: backend
         run: npm install
 
-      - name: tsc
-        uses: icrawl/action-tsc@v1
-        with:
-          project: backend
+      - name: Build
+        working-directory: backend
+        run: npm run build
