@@ -78,7 +78,3 @@ jobs:
           --deployment-group-name ${{ matrix.deploy-group }} \
           --file-exists-behavior OVERWRITE \
           --s3-location bucket=${{ matrix.s3-bucket }},key=${{ matrix.s3-filename }}.zip,bundleType=zip \
-
-      - name: Upload project
-        working-directory: backend
-        run: aws s3 cp ./backend* s3://codeabac.us-backend
