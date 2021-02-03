@@ -4,6 +4,9 @@ files:
   - source: ./
     destination: /app
 hooks:
+  ApplicationStop:
+    - location: .aws/codedeploy-scripts/applicationStop.sh
+      runas: root
   BeforeInstall:
     - location: .aws/codedeploy-scripts/deleteAndKill.sh
       runas: root
