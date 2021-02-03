@@ -1,8 +1,8 @@
 {
   "scripts": {
     "dev": "nodemon server.ts",
-    "copy": "cp appspec.yml dist/ && cp package.json dist/ && cp *.sh /dist",
-    "build": "tsc -p . && npm run copy",
+    "copy": "cp appspec.yml dist/ && cp package.json dist/ && cp *.sh dist/",
+    "build": "tsc -p .",
     "start": "ts-node dist/server.js"
   },
   "dependencies": {
