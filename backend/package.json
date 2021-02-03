@@ -11,7 +11,6 @@
     "express-fileupload": "^1.2.1",
     "express-validator": "^6.9.2",
     "morgan": "^1.10.0",
-    "path": "^0.12.7",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
