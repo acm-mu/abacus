@@ -1,5 +1,4 @@
 {
-  "main": "server.ts",
   "scripts": {
     "dev": "nodemon server.ts",
     "build": "tsc -p .",

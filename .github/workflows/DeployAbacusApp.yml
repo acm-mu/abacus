@@ -3,7 +3,8 @@ on:
   push:
     paths:
       - "backend/*"
-    branches: [react]
+    branches:
+      - "react"
 jobs:
   build:
     runs-on: ubuntu-latest
