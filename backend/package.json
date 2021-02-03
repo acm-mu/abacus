@@ -3,7 +3,7 @@
     "dev": "nodemon server.ts",
     "copy": "cp appspec.yml dist/ && cp package.json dist/ && cp -r scripts dist/",
     "build": "tsc -p . && npm run copy",
-    "start": "ts-node dist/server.js"
+    "start": "node server.js"
   },
   "dependencies": {
     "aws-sdk": "^2.833.0",
