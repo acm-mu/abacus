@@ -34,7 +34,7 @@ jobs:
 
       - name: Compress project
         working-directory: backend
-        run: tar -czvf "./backend$(date '+%Y%m%d-%H%M%S').tar.gz" ./dist
+        run: tar -cvf "./backend$(date '+%Y%m%d%H%M%S').tar.gz" ./dist
 
       - name: Upload project
         working-directory: backend
