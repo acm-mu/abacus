@@ -1,9 +1,9 @@
-import { Router, Request, Response } from "express";
+import { Router, Response } from 'express';
 import contest from "../contest";
 
 const router = Router();
 
-router.get("/", async (_req: Request, res: Response) => {
+router.get("/", async (_, res: Response) => {
   res.send(await contest.get_settings())
 });
 
