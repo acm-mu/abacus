@@ -7,9 +7,6 @@ hooks:
   ApplicationStop:
     - location: .aws/codedeploy-scripts/applicationStop.sh
       runas: root
-  BeforeInstall:
-    - location: .aws/codedeploy-scripts/deleteAndKill.sh
-      runas: root
   ApplicationStart:
     - location: .aws/codedeploy-scripts/applicationStart.sh
       runas: root
