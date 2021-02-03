@@ -16,12 +16,12 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12
-      - name: yarn install
-        run: yarn install
+
+      - name: Install dependencies
+        working-directory: backend
+        run: npm install
 
       - name: tsc
         uses: icrawl/action-tsc@v1
-
-      - name: build
-        working-directory: ./backend
-        run: npm run build
+        with:
+          project: backend
