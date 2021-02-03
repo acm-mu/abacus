@@ -34,13 +34,8 @@ jobs:
 
       - name: Compress project
         working-directory: backend
-        run: tar -czvf ./backend.tar.gz ./dist
+        run: tar -czvf "./backend$(date '+%Y%m%d-%H%M%S').tar.gz" ./dist
 
       - name: Upload project
         working-directory: backend
-        run: aws s3 cp ./backend.tar.gz s3://codeabac.us-backend
-
-      - name: Deploy project
-        uses: aws-actions/aws-codebuild-run-build@v1.0.3
-        with:
-          project-name: CodeAbacus-Backend
+        run: aws s3 cp ./backend* s3://codeabac.us-backend
