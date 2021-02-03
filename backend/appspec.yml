@@ -5,8 +5,8 @@ files:
     destination: /app
 hooks:
   ApplicationStop:
-    - location: .aws/codedeploy-scripts/applicationStop.sh
+    - location: ./stop.sh
       runas: root
   ApplicationStart:
-    - location: .aws/codedeploy-scripts/applicationStart.sh
+    - location: ./start.sh
       runas: root
