@@ -1,8 +1,8 @@
-name: CI/CD
+name: Build and deploy frontend
 on:
   push:
-    # paths:
-    #   - "frontend/*"
+    paths:
+      - "frontend/*"
     branches:
       - "react"
 jobs:
