@@ -1,19 +1,26 @@
-name: Deploy Abacus EC2
+name: Deploy Abacus Backend EC2
 on:
   push:
     paths:
-      - "abacus/*"
-    branches:
-      - master
+      - "backend/*"
+    branches: [react]
 jobs:
-  deploy_abacus:
-    name: deploy Abacus
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger AWS CodePipeline
-        uses: zulhfreelancer/aws-codepipeline-action@v1.0.7
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v1
         with:
-          aws-access-key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-          pipeline-name: "CodePipelineAbacus"
+          node-version: 12
+      - name: yarn install
+        run: yarn install
+
+      - name: tsc
+        uses: icrawl/action-tsc@v1
+
+      - name: build
+        working-directory: ./backend
+        run: npm run build
