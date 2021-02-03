@@ -1,8 +1,8 @@
 name: CI/CD
 on:
   push:
-    paths:
-      - "frontend/*"
+    # paths:
+    #   - "frontend/*"
     branches:
       - "react"
 jobs:
@@ -25,17 +25,17 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Install dependencies
-        working-directory: ./frontend
+        working-directory: frontend
         run: npm install
 
-      - name: Run the tests
-        working-directory: ./frontend
+      - name: Perform tests
+        working-directory: frontend
         run: npm test
 
-      - name: Build
-        working-directory: ./frontend
+      - name: Build project
+        working-directory: frontend
         run: npm run build
 
-      - name: copy files to s3
-        working-directory: ./frontend
+      - name: Deploy project
+        working-directory: frontend
         run: aws s3 sync ./build s3://codeabac.us
