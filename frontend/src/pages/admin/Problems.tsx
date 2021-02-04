@@ -8,7 +8,7 @@ const Problems = (): JSX.Element => {
   const [problems, setProblems] = useState([])
 
   useEffect(() => {
-    fetch('http://api.codeabac.us/v1/problems?division=blue')
+    fetch('https://api.codeabac.us/v1/problems?division=blue')
       .then(res => res.json())
       .then(data => setProblems(data))
   }, [])

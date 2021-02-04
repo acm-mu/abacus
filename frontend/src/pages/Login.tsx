@@ -7,7 +7,7 @@ const loginUser = async (credentials: { [key: string]: string }) => {
   formData.append("user-name", credentials.username);
   formData.append("password", credentials.password);
 
-  return fetch("http://api.codeabac.us/v1/login", {
+  return fetch("https://api.codeabac.us/v1/login", {
     method: "POST",
     body: formData,
   }).then((data) => data.json());

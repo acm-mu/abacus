@@ -95,7 +95,7 @@ const Users = (): JSX.Element => {
   const [users, setUsers] = useState([])
 
   useEffect((): void => {
-    fetch('http://api.codeabac.us/v1/users')
+    fetch('https://api.codeabac.us/v1/users')
       .then(res => res.json())
       .then(data => setUsers(Object.values(data)))
   }, [])

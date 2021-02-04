@@ -10,7 +10,7 @@ const Submissions = (): JSX.Element => {
 
   useEffect((): void => {
 
-    fetch('http://api.codeabac.us/v1/submissions')
+    fetch('https://api.codeabac.us/v1/submissions')
       .then(res => res.json())
       .then(data => {
         data = Object.values(data)

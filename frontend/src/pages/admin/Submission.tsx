@@ -20,7 +20,7 @@ const Submission = (): JSX.Element => {
   })
 
   useEffect(() => {
-    fetch(`http://api.codeabac.us/v1/submission?submission_id=${submission_id}`)
+    fetch(`https://api.codeabac.us/v1/submission?submission_id=${submission_id}`)
       .then(res => res.json())
       .then(data => {
         data = Object.values(data)[0]

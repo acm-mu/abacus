@@ -11,11 +11,11 @@ const Standings = (): JSX.Element => {
   const [standings, setStandings] = useState([]);
 
   useEffect(() => {
-    fetch("http://api.codeabac.us/v1/problems?division=blue")
+    fetch("https://api.codeabac.us/v1/problems?division=blue")
       .then((res) => res.json())
       .then((problems) => setProblems(problems));
 
-    fetch("http://api.codeabac.us/v1/standings")
+    fetch("https://api.codeabac.us/v1/standings")
       .then((res) => res.json())
       .then((standings) => setStandings(standings));
   }, []);

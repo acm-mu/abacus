@@ -10,7 +10,7 @@ const Problem: React.FunctionComponent = () => {
   const [problem, setProblem] = useState<ProblemType>();
 
   useEffect(() => {
-    fetch("http://api.codeabac.us/v1/problems/48ffb0999c0d4a179ac6aa65c299ccf4")
+    fetch("https://api.codeabac.us/v1/problems/48ffb0999c0d4a179ac6aa65c299ccf4")
       .then((res) => res.json())
       .then((res) => {
         if (res) setProblem(res[0]);

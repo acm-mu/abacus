@@ -22,7 +22,7 @@ const EditProblems = (): JSX.Element => {
   const { problem_id } = useParams<{ problem_id: string }>()
 
   useEffect(() => {
-    fetch(`http://api.codeabac.us/v1/problems?id=${problem_id}`)
+    fetch(`https://api.codeabac.us/v1/problems?id=${problem_id}`)
       .then(res => res.json())
       .then(data => {
         data = Object.values(data)[0]
