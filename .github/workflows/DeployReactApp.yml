@@ -7,7 +7,7 @@ on:
       - "react"
 jobs:
   test:
-    name: CI Pipeline
+    name: CI/CD Pipeline
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -21,31 +21,6 @@ jobs:
       - name: Install dependencies
         working-directory: frontend
         run: npm install
-
-      - name: Build project
-        working-directory: frontend
-        run: npm run build
-
-  deploy:
-    name: CD Pipeline
-    runs-on: ubuntu-latest
-    needs: test
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Set up Node.js 12.x
-        uses: actions/setup-node@v1
-        with:
-          node-version: 12.x
-
-      - name: Install dependencies
-        working-directory: frontend
-        run: npm install
-
-      - name: Perform tests
-        working-directory: frontend
-        run: npm test
 
       - name: Build project
         working-directory: frontend

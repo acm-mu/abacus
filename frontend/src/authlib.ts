@@ -11,7 +11,7 @@ const isAuthenticated = (): boolean => {
   formData.set('username', username)
   formData.set('session_token', session_token)
 
-  fetch('http://localhost/auth', {
+  fetch('http://api.codeabac.us/auth', {
     method: 'POST',
     body: formData
   })
