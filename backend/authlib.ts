@@ -19,14 +19,11 @@ authlib.post('/', async (req: Request, res: Response) => {
 
     if (users.length == 1) {
       const user = users[0]
-      console.log("Login successful!")
       if (!session_token) {
         session_token = uuidv4().replace(/-/g, '')
-        console.log(`New session_token: ${session_token}`)
         await contest.updateItem('user', { user_id: user.user_id }, { session_token })
         user.session_token = session_token
       }
-      console.log(`Session Token: ${user.session_token}`)
       delete user.password
 
       res.send(user)
