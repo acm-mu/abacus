@@ -2,11 +2,13 @@ import express from "express";
 import morgan from 'morgan';
 import fileUpload from 'express-fileupload';
 import api from './v1'
+import cors from 'cors'
 import authlib from './authlib'
 
 const app = express();
 const PORT = process.env.PORT || 80;
 
+app.use(cors())
 app.use(fileUpload())
 app.use(morgan('dev'))
 
