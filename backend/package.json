@@ -1,8 +1,11 @@
 {
+  "engines": {
+    "node": "12.16.1"
+  },
   "scripts": {
     "dev": "nodemon server.ts",
-    "copy": "cp appspec.yml dist/ && cp package.json dist/ && cp -r scripts dist/",
-    "build": "tsc -p . && npm run copy",
+    "zip": "cp package.json dist/ && cd dist && zip -r backend .",
+    "build": "tsc -p .",
     "start": "node server.js"
   },
   "dependencies": {

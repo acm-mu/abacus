@@ -1,8 +1,8 @@
 name: Build and deploy backend
 on:
   push:
-    # paths:
-    #   - "backend/*"
+    paths:
+      - "backend/*"
     branches:
       - "react"
 jobs:
@@ -54,6 +54,10 @@ jobs:
         run: npm run build
         working-directory: backend
 
+      - name: Zip project
+        run: npm run zip
+        working-directory: backend
+
       - name: Configure AWS
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -61,21 +65,17 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: AWS Deploy push
-        run: |
-          aws deploy push \
-          --application-name ${{ matrix.appname }} \
-          --description "This revision for the ${{ matrix.appname }}-${{ github.sha }}" \
-          --ignore-hidden-files \
-          --s3-location s3://${{ matrix.s3-bucket }}/${{ matrix.s3-filename }}.zip \
-          --source ./backend/dist
+      - name: Upload package to S3 bucket
+        run: aws s3 cp dist/backend.zip "s3://codeabac.us-codedeploy/{{ github.sha }}.zip"
+        working-directory: backend
 
-      - name: AWS Create Deployment
+      - name: AWS Create new ElasticBeanstalk application version
         run: |
-          aws deploy create-deployment \
-          --application-name ${{ matrix.appname }} \
-          --deployment-config-name CodeDeployDefault.OneAtATime \
-          --deployment-group-name ${{ matrix.deploy-group }} \
-          --ignore-application-stop-failures \
-          --file-exists-behavior OVERWRITE \
-          --s3-location bucket=${{ matrix.s3-bucket }},key=${{ matrix.s3-filename }}.zip,bundleType=zip \
+          aws elasticbeanstalk create-application-version \
+          --application-name abacus-backend \
+          --source-bundle S3Bucket="codeabac.us-codedeploy",S3Key="{{ github.sha }}.zip"
+          --version-label "ver-${{ github.sha }}" \
+          --description "commit-sha-${{ github.sha }}"
+
+      - name: Deploy new ElasticBeanstalk application version
+        run: aws elasticbeanstalk update-environment --environment-name Abacusbackend-env-1 --version-label "ver-${{ github.sha }}"
