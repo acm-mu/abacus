@@ -31,7 +31,7 @@ const authenticate = async (username: string, password: string): Promise<boolean
   formData.set('username', username)
   formData.set('password', password)
 
-  const res = await fetch('http://localhost/auth', {
+  const res = await fetch('https://api.codeabac.us/auth', {
     method: 'POST',
     body: formData
   })
