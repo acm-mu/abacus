@@ -12,7 +12,7 @@ const Submissions = (): JSX.Element => {
   const [submissions, setSubmissions] = useState([]);
 
   useEffect(() => {
-    fetch("http://api.codeabac.us/v1/submissions")
+    fetch("https://api.codeabac.us/v1/submissions")
       .then((res) => res.json())
       .then((subs) => setSubmissions(Object.values(subs)));
   }, []);

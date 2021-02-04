@@ -14,7 +14,7 @@ const Settings = (): JSX.Element => {
   })
 
   useEffect(() => {
-    fetch('http://api.codeabac.us/v1/contest')
+    fetch('https://api.codeabac.us/v1/contest')
       .then(res => res.json())
       .then(data => setSettings(data))
   }, [])
