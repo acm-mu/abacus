@@ -9,7 +9,7 @@ const Login = (): JSX.Element => {
   const formData: { [any: string]: string } = {}
   const history = useHistory()
 
-  const handleChange = (event: any) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     formData[event.target.name] = event.target.value
   }
 
