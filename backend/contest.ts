@@ -12,11 +12,11 @@ class ContestService {
   }
 
   init_aws() {
-    const credentials = new AWS.SharedIniFileCredentials({
-      profile: "default",
-    });
+    // const credentials = new AWS.SharedIniFileCredentials({
+    //   profile: "default",
+    // });
 
-    AWS.config.credentials = credentials;
+    // AWS.config.credentials = credentials;
     AWS.config.region = 'us-east-2'
 
     this.db = new AWS.DynamoDB.DocumentClient();
