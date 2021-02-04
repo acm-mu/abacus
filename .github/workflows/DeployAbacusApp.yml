@@ -66,14 +66,14 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Upload package to S3 bucket
-        run: aws s3 cp dist/backend.zip "s3://codeabac.us-codedeploy/{{ github.sha }}.zip"
+        run: aws s3 cp dist/backend.zip "s3://codeabac.us-codedeploy/${{ github.sha }}.zip"
         working-directory: backend
 
       - name: AWS Create new ElasticBeanstalk application version
         run: |
           aws elasticbeanstalk create-application-version \
           --application-name abacus-backend \
-          --source-bundle S3Bucket="codeabac.us-codedeploy",S3Key="{{ github.sha }}.zip" \
+          --source-bundle S3Bucket="codeabac.us-codedeploy",S3Key="${{ github.sha }}.zip" \
           --version-label "ver-${{ github.sha }}" \
           --description "commit-sha-${{ github.sha }}"
 
