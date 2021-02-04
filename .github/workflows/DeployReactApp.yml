@@ -6,7 +6,7 @@ on:
     branches:
       - "react"
 jobs:
-  test:
+  deploy:
     name: CI/CD Pipeline
     runs-on: ubuntu-latest
     steps:
