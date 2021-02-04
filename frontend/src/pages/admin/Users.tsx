@@ -39,7 +39,7 @@ const EditUser = ({ user, trigger }: EditUserProps) => {
             <Form.Field
               control={Input}
               label='Username'
-              value={user?.user_name}
+              value={user?.username}
               placeholder='User Name'
               required
             />
@@ -129,7 +129,7 @@ const Users = (): JSX.Element => {
             {users.map((user: UserType, index: number) =>
               <Table.Row key={index} uuid={`${user.user_id}`}>
                 <Table.Cell><input type='checkbox' autoComplete="off" /></Table.Cell>
-                <Table.Cell><EditUser user={user} trigger={<Link to='#'>{user.user_name}</Link>} /></Table.Cell>
+                <Table.Cell><EditUser user={user} trigger={<Link to='#'>{user.username}</Link>} /></Table.Cell>
                 <Table.Cell>{user.role}</Table.Cell>
                 <Table.Cell>{user.division}</Table.Cell>
                 <Table.Cell>{user.display_name}</Table.Cell>

@@ -42,7 +42,7 @@ type ProblemType = {
 type UserType = {
   user_id: string;
   role: string;
-  user_name: string;
+  username: string;
   display_name: string;
   division: string;
   scratch_username?: string;
@@ -51,7 +51,7 @@ type UserType = {
 type StandingsUser = {
   user_id: string;
   role: string;
-  user_name: string;
+  username: string;
   display_name: string;
   division: string;
   scratch_username?: string;
