@@ -45,7 +45,7 @@ type UserType = {
   user_name: string;
   display_name: string;
   division: string;
-  scratch_username?: string
+  scratch_username?: string;
 }
 
 type StandingsUser = {
@@ -60,4 +60,4 @@ type StandingsUser = {
   problems: [ProblemScoreType];
 }
 
-export type {StandingsUser, TestType, SubmissionType, ProblemType, UserType, ProblemScoreType }
+export type { StandingsUser, TestType, SubmissionType, ProblemType, UserType, ProblemScoreType }
