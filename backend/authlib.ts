@@ -31,6 +31,7 @@ authlib.post('/', async (req: Request, res: Response) => {
     }
   } catch (err) {
     res.status(500).send(err)
+    return
   }
 
   res.status(204).send({ error: "Could not authenticate!" })
