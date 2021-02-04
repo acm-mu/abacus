@@ -36,13 +36,17 @@ class ContestService {
 
   updateItem(TableName: string, Key: { [key: string]: string }, args: { [key: string]: string }) {
     const entries = Object.entries(args)
-    this.db.update({
-      TableName,
-      Key,
-      UpdateExpression: entries.map((e) => "SET  " + (`#${e[0]} = :${e[0]}`)).join(","),
-      ExpressionAttributeNames: Object.assign({}, ...entries.map((x) => ({ [`#${x[0]}`]: x[0] }))),
-      ExpressionAttributeValues: Object.assign({}, ...entries.map((x) => ({ [`:${x[0]}`]: x[1] })))
-    })
+    try {
+      this.db.update({
+        TableName,
+        Key,
+        UpdateExpression: entries.map((e) => "SET  " + (`#${e[0]} = :${e[0]}`)).join(","),
+        ExpressionAttributeNames: Object.assign({}, ...entries.map((x) => ({ [`#${x[0]}`]: x[0] }))),
+        ExpressionAttributeValues: Object.assign({}, ...entries.map((x) => ({ [`:${x[0]}`]: x[1] })))
+      })
+    } catch (err) {
+      throw (err)
+    }
   }
 
   dumps(res: ScanOutput, key: string): {} {
@@ -50,49 +54,66 @@ class ContestService {
   }
 
   async get_settings() {
-    const res = await this.db.scan({ TableName: 'setting' }).promise()
-    return res.Items ? Object.assign({}, ...res.Items.map((x) => ({ [x.key]: x.value }))) : []
+    try {
+      const res = await this.db.scan({ TableName: 'setting' }).promise()
+      return res.Items ? Object.assign({}, ...res.Items.map((x) => ({ [x.key]: x.value }))) : []
+    } catch (err) {
+      throw (err)
+    }
   }
 
   save_settings() {
     const item = {
 
     }
-
-    this.db.put(
-      {
+    try {
+      this.db.put({
         TableName: 'setting',
         Item: item
-      },
-      (_err: any, _data: any) => { }
-    )
-    return item
+      }, (_err: any, _data: any) => { }
+      )
+      return item
+    } catch (err) {
+      throw (err)
+    }
   }
 
   async get_problems(args?: { [key: string]: string }): Promise<{ [key: string]: any }> {
     const params = { TableName: 'problem', ...this.makeParams(args) }
-    const res = await this.db.scan(params).promise()
-    return this.dumps(res, 'problem_id')
+    try {
+      const res = await this.db.scan(params).promise()
+      return this.dumps(res, 'problem_id')
+    } catch (err) {
+      throw (err)
+    }
   }
 
   async get_submissions(args?: { [key: string]: string }): Promise<{}> {
     const params = { TableName: 'submission', ...this.makeParams(args) }
-    const res = await this.db.scan(params).promise()
+    try {
+      const res = await this.db.scan(params).promise()
 
-    if (res && res.Items) {
-      for (const submission of res.Items) {
-        submission.team_name = (await this.get_users({ user_id: submission.team_id }))[submission.team_id].user_name
-        submission.prob_name = (await this.get_problems({ problem_id: submission.problem_id }))[submission.problem_id].problem_name
+      if (res && res.Items) {
+        for (const submission of res.Items) {
+          submission.team_name = (await this.get_users({ user_id: submission.team_id }))[submission.team_id].user_name
+          submission.prob_name = (await this.get_problems({ problem_id: submission.problem_id }))[submission.problem_id].problem_name
+        }
       }
-    }
 
-    return this.dumps(res, 'submission_id')
+      return this.dumps(res, 'submission_id')
+    } catch (err) {
+      throw (err)
+    }
   }
 
   async get_users(args?: { [key: string]: string }): Promise<{ [key: string]: any }> {
     const params = { TableName: 'user', ...this.makeParams(args) }
-    const res = await this.db.scan(params).promise()
-    return this.dumps(res, 'user_id')
+    try {
+      const res = await this.db.scan(params).promise()
+      return this.dumps(res, 'user_id')
+    } catch (err) {
+      throw (err)
+    }
   }
 
   async submit(req: any) {
@@ -100,39 +121,43 @@ class ContestService {
     const { language, problem_id, team_id } = req.body
     const submission_id = uuidv4().replace(/-/g, '')
 
-    const { tests } = (await this.get_problems({ problem_id }))[problem_id]
+    try {
+      const { tests } = (await this.get_problems({ problem_id }))[problem_id]
 
-    const item = {
-      submission_id,
-      sub_no: 0,
-      status: 'pending',
-      score: 0,
-      date: Date.now(),
-      language,
-      problem_id,
-      team_id,
-      filename,
-      runtime: 0,
-      filesize,
-      sha1sum,
-      tests
+      const item = {
+        submission_id,
+        sub_no: 0,
+        status: 'pending',
+        score: 0,
+        date: Date.now(),
+        language,
+        problem_id,
+        team_id,
+        filename,
+        runtime: 0,
+        filesize,
+        sha1sum,
+        tests
+      }
+
+      const params = {
+        Bucket: 'abacus-submissions',
+        Key: `${submission_id}/${filename}`,
+        Body: req.files.file.data
+      }
+      this.s3.upload(params, (_err: any, _data: any) => { })
+
+      this.db.put(
+        {
+          TableName: 'submission',
+          Item: item
+        },
+        (_err: any, _data: any) => { }
+      )
+      return item
+    } catch (err) {
+      throw (err)
     }
-
-    const params = {
-      Bucket: 'abacus-submissions',
-      Key: `${submission_id}/${filename}`,
-      Body: req.files.file.data
-    }
-    this.s3.upload(params, (_err: any, _data: any) => { })
-
-    this.db.put(
-      {
-        TableName: 'submission',
-        Item: item
-      },
-      (_err: any, _data: any) => { }
-    )
-    return item
   }
 }
 

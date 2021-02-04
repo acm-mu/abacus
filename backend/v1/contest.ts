@@ -4,7 +4,12 @@ import contest from "../contest";
 const router = Router();
 
 router.get("/", async (_, res: Response) => {
-  res.send(await contest.get_settings())
+  try {
+    const data = await contest.get_settings()
+    res.send(data)
+  } catch (err) {
+    res.status(500).send(err)
+  }
 });
 
 export default router;
