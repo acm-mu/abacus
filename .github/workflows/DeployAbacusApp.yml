@@ -6,7 +6,7 @@ on:
     branches:
       - "react"
 jobs:
-  buildAndDeploy:
+  test:
     name: CI Pipeline
     runs-on: ubuntu-latest
     steps:
@@ -28,10 +28,10 @@ jobs:
   deploy:
     name: CD Pipeline
     runs-on: ubuntu-latest
-
-    needs: buildAndDeploy
+    needs: test
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
       - name: Install Node.js 12.x
         uses: actions/setup-node@v1
