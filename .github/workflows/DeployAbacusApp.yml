@@ -9,7 +9,6 @@ jobs:
   deploy:
     name: CI/CD Pipeline
     runs-on: ubuntu-latest
-    needs: test
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
