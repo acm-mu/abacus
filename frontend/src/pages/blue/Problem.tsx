@@ -10,7 +10,7 @@ const Problem: React.FunctionComponent = () => {
   const [problem, setProblem] = useState<ProblemType>();
 
   useEffect(() => {
-    fetch("http://localhost/api/problems/48ffb0999c0d4a179ac6aa65c299ccf4")
+    fetch("http://api.codeabac.us/v1/problems/48ffb0999c0d4a179ac6aa65c299ccf4")
       .then((res) => res.json())
       .then((res) => {
         if (res) setProblem(res[0]);
@@ -19,7 +19,7 @@ const Problem: React.FunctionComponent = () => {
 
   return (
     <>
-    <Countdown />
+      <Countdown />
       <Block size='xs-9' className='problem'>
         <h1>
           Problem {problem?.id}

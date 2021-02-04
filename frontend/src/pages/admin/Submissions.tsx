@@ -10,12 +10,12 @@ const Submissions = (): JSX.Element => {
 
   useEffect((): void => {
 
-      fetch('http://localhost/api/submissions')
-        .then(res => res.json())
-        .then(data => {
-          data = Object.values(data)
-          setSubmissions(data)
-        })
+    fetch('http://api.codeabac.us/v1/submissions')
+      .then(res => res.json())
+      .then(data => {
+        data = Object.values(data)
+        setSubmissions(data)
+      })
 
   }, [])
 

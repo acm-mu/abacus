@@ -14,9 +14,9 @@ const Settings = (): JSX.Element => {
   })
 
   useEffect(() => {
-    fetch('http://localhost/api/contest')
-    .then(res => res.json())
-    .then(data => setSettings(data))
+    fetch('http://api.codeabac.us/v1/contest')
+      .then(res => res.json())
+      .then(data => setSettings(data))
   }, [])
 
   return (
@@ -27,17 +27,17 @@ const Settings = (): JSX.Element => {
 
         <h3>Competition Settings</h3>
         <Form.Field label='Competition Name' control={Input} value={settings.competition_name} />
-        
+
         <label>Start Date</label>
         <Form.Group widths='equal' date={settings.start_date}>
-          <Form.Field control={Input} type='date'/>
-          <Form.Field control={Input} type='time'/>
+          <Form.Field control={Input} type='date' />
+          <Form.Field control={Input} type='time' />
         </Form.Group>
 
         <label>End Date</label>
         <Form.Group widths='equal' date={settings.end_date}>
-          <Form.Field control={Input} type='date'/>
-          <Form.Field control={Input} type='time'/>
+          <Form.Field control={Input} type='date' />
+          <Form.Field control={Input} type='time' />
         </Form.Group>
 
         <h3>Scoring System</h3>

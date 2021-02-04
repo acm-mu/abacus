@@ -29,8 +29,6 @@ class ContestService {
     return hash
   }
 
-  home() { }
-
   makeParams(args?: { [key: string]: string } | QueryString) {
     if (!args) return {}
     const entries = Object.entries(args)
@@ -51,7 +49,20 @@ class ContestService {
     return res.Items ? Object.assign({}, ...res.Items.map((x) => ({ [x.key]: x.value }))) : []
   }
 
-  save_settings() { }
+  save_settings() {
+    const item = {
+
+    }
+
+    this.db.put(
+      {
+        TableName: 'setting',
+        Item: item
+      },
+      (_err: any, _data: any) => { }
+    )
+    return item
+  }
 
   async get_problems(args?: { [key: string]: string }): Promise<{ [key: string]: any }> {
     const params = { TableName: 'problem', ...this.makeParams(args) }
@@ -78,10 +89,6 @@ class ContestService {
     const res = await this.db.scan(params).promise()
     return this.dumps(res, 'user_id')
   }
-
-  get_user_info() { }
-
-  import_users() { }
 
   async submit(req: any) {
     const { name: filename, size: filesize, md5: sha1sum } = req.files.file

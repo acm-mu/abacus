@@ -16,9 +16,8 @@ function formatTime(obj: Date | number) {
 
   const seconds = Math.floor(milliseconds / 1000);
 
-  return `${hours < 10 ? `0${hours}` : `${hours}`}:${
-    minutes < 10 ? `0${minutes}` : `${minutes}`
-  }:${seconds < 10 ? `0${seconds}` : `${seconds}`}`;
+  return `${hours < 10 ? `0${hours}` : `${hours}`}:${minutes < 10 ? `0${minutes}` : `${minutes}`
+    }:${seconds < 10 ? `0${seconds}` : `${seconds}`}`;
 }
 
 const Countdown = (): JSX.Element => {
@@ -31,7 +30,7 @@ const Countdown = (): JSX.Element => {
   const diff = (date1: Date, date2: Date) => date1.getTime() - date2.getTime();
 
   useEffect(() => {
-    fetch("http://localhost/api/contest")
+    fetch("http://api.codeabac.us/v1/contest")
       .then((res) => res.json())
       .then((res) => {
         setCompName(res.competition_name);
@@ -39,14 +38,14 @@ const Countdown = (): JSX.Element => {
         setStartDate(
           new Date(
             parseInt(res.start_date) * 1000 -
-              new Date().getTimezoneOffset() * 60000
+            new Date().getTimezoneOffset() * 60000
           )
         );
 
         setEndDate(
           new Date(
             parseInt(res.end_date) * 1000 -
-              new Date().getTimezoneOffset() * 60000
+            new Date().getTimezoneOffset() * 60000
           )
         );
       });
@@ -80,7 +79,7 @@ const Countdown = (): JSX.Element => {
                       diff(time, startDate) / diff(endDate, startDate),
                       1
                     ) *
-                      100 +
+                    100 +
                     "%",
                 }}
               >
@@ -103,13 +102,13 @@ const Countdown = (): JSX.Element => {
           </div>
         </Block>
       ) : (
-        <Message
-          warning
-          icon="warning sign"
-          header="Could not initialize countdown!"
-          content="We are having problems communicating with our server!"
-        />
-      )}
+          <Message
+            warning
+            icon="warning sign"
+            header="Could not initialize countdown!"
+            content="We are having problems communicating with our server!"
+          />
+        )}
     </>
   );
 };
