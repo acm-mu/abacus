@@ -91,7 +91,7 @@ class ContestService {
 
       if (res && res.Items) {
         for (const submission of res.Items) {
-          submission.team_name = (await this.get_users({ user_id: submission.team_id }))[submission.team_id].user_name
+          submission.team_name = (await this.get_users({ user_id: submission.team_id }))[submission.team_id].display_name
           submission.prob_name = (await this.get_problems({ problem_id: submission.problem_id }))[submission.problem_id].problem_name
         }
       }

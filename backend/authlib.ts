@@ -12,9 +12,9 @@ authlib.post('/', async (req: Request, res: Response) => {
   try {
     if (username && password) {
       const hash = createHash('sha256').update(password).digest('hex')
-      users = Object.values(await contest.get_users({ user_name: username, password: hash }))
+      users = Object.values(await contest.get_users({ username, password: hash }))
     } else if (username && session_token) {
-      users = Object.values(await contest.get_users({ user_name: username, session_token }))
+      users = Object.values(await contest.get_users({ username, session_token }))
     }
 
     if (users.length == 1) {

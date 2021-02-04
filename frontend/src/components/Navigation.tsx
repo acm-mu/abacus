@@ -27,7 +27,7 @@ const Navigation: React.FunctionComponent<Props> = (props: Props) => {
 
         <Menu.Menu position="right">
           {isAuthenticated() ?
-            <Dropdown item text={getuserinfo('user_name')} simple>
+            <Dropdown item text={getuserinfo('username')} simple>
               <Dropdown.Menu>
                 <Dropdown.Item onClick={handleLogout} text="Log out" />
               </Dropdown.Menu>
