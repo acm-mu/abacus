@@ -1,13 +1,21 @@
 import React from "react";
 
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { Container, Menu } from "semantic-ui-react";
+import { isAuthenticated, logout } from "../authlib";
 
 type Props = {
   children: React.ReactNode;
 };
 
 const Navigation: React.FunctionComponent<Props> = (props: Props) => {
+  const history = useHistory()
+
+  const handleLogout = () => {
+    logout();
+    history.push('/')
+  }
+
   return (
     <Menu className="fixed" inverted>
       <Container>
@@ -18,9 +26,10 @@ const Navigation: React.FunctionComponent<Props> = (props: Props) => {
         {props.children}
 
         <Menu.Menu position="right">
-          <Menu.Item as={Link} to="/login">
-            Log in
-          </Menu.Item>
+          {isAuthenticated() ?
+            <Menu.Item onClick={handleLogout} content="Log out" /> :
+            <Menu.Item as={Link} to="/login" content="Log in" />
+          }
         </Menu.Menu>
       </Container>
     </Menu>

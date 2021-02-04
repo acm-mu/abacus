@@ -1,66 +1,61 @@
-import React from "react";
-import { Button, Form } from "semantic-ui-react";
+import React, { useState } from "react";
+import { Button, Form, Message } from "semantic-ui-react";
 import { Block } from "../components";
+import { isAuthenticated, authenticate } from '../authlib'
+import { useHistory } from "react-router-dom";
 
-const loginUser = async (credentials: { [key: string]: string }) => {
-  const formData = new FormData();
-  formData.append("user-name", credentials.username);
-  formData.append("password", credentials.password);
+const Login = (): JSX.Element => {
+  const [error, setError] = useState(false)
+  const formData: { [any: string]: string } = {}
+  const history = useHistory()
 
-  return fetch("https://api.codeabac.us/v1/login", {
-    method: "POST",
-    body: formData,
-  }).then((data) => data.json());
-};
+  const handleChange = (event: any) => {
+    formData[event.target.name] = event.target.value
+  }
 
-/* My hunch for how hooks work, like the useToken we created. `setToken` will only
-initiate a repaint for the corresponding `token` variable that was returned with it. 
-
-Call 1: [tokenA, setTokenA] = useToken()
-Call 2: [tokenB, setTokenB] = useToken()
-
-calling the first setToken will repaint everywhere tokenA is used, but not tokenB.
-*/
-
-const Login = (
-  setToken: (userToken?: { token: string }) => void
-): JSX.Element => {
-  const state: { [key: string]: string } = { username: "", password: "" };
-
-  const handleChange = (e: React.FormEvent<HTMLInputElement>): void => {
-    state[e.currentTarget.name] = e.currentTarget.value;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const token = await loginUser(state);
-    setToken(token);
-  };
+  const handleSubmit = async () => {
+    const { username, password } = formData
+    const result = await authenticate(username, password)
+    if (result)
+      history.push('/')
+    else
+      setError(true)
+  }
 
   return (
-    <Block center size="xs-6">
-      <Form id="loginForm" onSubmit={handleSubmit}>
-        <img src="/images/fulllogo.png" width="300px" alt="Logo" />
-        <Form.Input
-          label="Username"
-          type="text"
-          required
-          name="username"
-          onChange={handleChange}
-        />
-        <Form.Input
-          label="Password"
-          type="password"
-          required
-          name="password"
-          onChange={handleChange}
-        />
-        <Button type="submit" primary>
-          Login
-        </Button>
-      </Form>
-    </Block>
-  );
+    <Block transparent center size="xs-6">
+      {isAuthenticated() ?
+        (<h3> You are already logged in!</h3 >) :
+        (
+          <>
+            {error && <Message attached
+              error
+              icon="warning sign"
+              content="Could not log in given provided credentials!"
+            />}
+            <Form className='attached fluid segment' id="loginForm" onSubmit={handleSubmit}>
+              <img src="/images/fulllogo.png" width="300px" alt="Logo" />
+
+              <Form.Input
+                label="Username"
+                type="text"
+                required
+                onChange={handleChange}
+                name="username"
+              />
+              <Form.Input
+                label="Password"
+                type="password"
+                required
+                name="password"
+                onChange={handleChange}
+              />
+              <Button type="submit" primary> Login</Button>
+            </Form>
+          </>
+        )
+      }
+    </Block>)
 };
 
 export default Login;

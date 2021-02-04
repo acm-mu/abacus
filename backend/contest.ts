@@ -1,7 +1,6 @@
 import AWS from "aws-sdk";
 import { QueryString } from "aws-sdk/clients/cloudwatchlogs";
 import { ScanOutput } from "aws-sdk/clients/dynamodb";
-import { createHash } from 'crypto';
 import { v4 as uuidv4 } from 'uuid'
 
 class ContestService {
@@ -24,11 +23,6 @@ class ContestService {
     this.s3 = new AWS.S3();
   }
 
-  auth_login(form_data: { password: string }) {
-    const hash = createHash('sha256').update(form_data.password).digest('hex')
-    return hash
-  }
-
   makeParams(args?: { [key: string]: string } | QueryString) {
     if (!args) return {}
     const entries = Object.entries(args)
@@ -38,6 +32,17 @@ class ContestService {
       ExpressionAttributeNames: Object.assign({}, ...entries.map((x) => ({ [`#${x[0]}`]: x[0] }))),
       ExpressionAttributeValues: Object.assign({}, ...entries.map((x) => ({ [`:${x[0]}`]: x[1] })))
     }
+  }
+
+  updateItem(TableName: string, Key: { [key: string]: string }, args: { [key: string]: string }) {
+    const entries = Object.entries(args)
+    this.db.update({
+      TableName,
+      Key,
+      UpdateExpression: entries.map((e) => "SET  " + (`#${e[0]} = :${e[0]}`)).join(","),
+      ExpressionAttributeNames: Object.assign({}, ...entries.map((x) => ({ [`#${x[0]}`]: x[0] }))),
+      ExpressionAttributeValues: Object.assign({}, ...entries.map((x) => ({ [`:${x[0]}`]: x[1] })))
+    })
   }
 
   dumps(res: ScanOutput, key: string): {} {
