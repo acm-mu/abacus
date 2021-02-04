@@ -11,7 +11,7 @@ const Problems = (): JSX.Element => {
   const [problems, setProblems] = useState([]);
 
   useEffect(() => {
-    fetch("https://localhost/api/problems?division=blue")
+    fetch("http://api.codeabac.us/v1/problems?division=blue")
       .then((res) => res.json())
       .then((probs) => setProblems(probs));
   }, []);
@@ -29,15 +29,17 @@ const Problems = (): JSX.Element => {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {problems.map((problem: ProblemType, index) =>{console.log(problem.problem_name, problem.tests); return (
-              <Table.Row key={index}>
-                <Table.HeaderCell collapsing>{problem.id}</Table.HeaderCell>
-                <Table.Cell>
-                  <Link to={`/blue/problems/${problem.id}`}>{problem.problem_name}</Link>
-                </Table.Cell>
-                <Table.Cell>{problem?.tests?.length}</Table.Cell>
-              </Table.Row>
-            )})}
+            {problems.map((problem: ProblemType, index) => {
+              console.log(problem.problem_name, problem.tests); return (
+                <Table.Row key={index}>
+                  <Table.HeaderCell collapsing>{problem.id}</Table.HeaderCell>
+                  <Table.Cell>
+                    <Link to={`/blue/problems/${problem.id}`}>{problem.problem_name}</Link>
+                  </Table.Cell>
+                  <Table.Cell>{problem?.tests?.length}</Table.Cell>
+                </Table.Row>
+              )
+            })}
           </Table.Body>
         </Table>
       </Block>

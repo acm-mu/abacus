@@ -9,7 +9,7 @@ interface EditUserProps {
   trigger: JSX.Element;
 }
 
-const EditUser = ({user, trigger}: EditUserProps) => {
+const EditUser = ({ user, trigger }: EditUserProps) => {
   const [open, setOpen] = useState(false)
 
   const roles = [
@@ -95,14 +95,14 @@ const Users = (): JSX.Element => {
   const [users, setUsers] = useState([])
 
   useEffect((): void => {
-    fetch('http://localhost/api/users')
+    fetch('http://api.codeabac.us/v1/users')
       .then(res => res.json())
       .then(data => setUsers(Object.values(data)))
   }, [])
 
   return (
     <>
-    <Countdown />
+      <Countdown />
       <Block size='xs-12' transparent>
         <div className="ui buttons">
           <Popup content="Add User" trigger={<EditUser trigger={<Button icon="plus" />} />} />

@@ -8,7 +8,7 @@ const Problems = (): JSX.Element => {
   const [problems, setProblems] = useState([])
 
   useEffect(() => {
-    fetch('http://localhost/api/problems?division=blue')
+    fetch('http://api.codeabac.us/v1/problems?division=blue')
       .then(res => res.json())
       .then(data => setProblems(data))
   }, [])
@@ -27,11 +27,11 @@ const Problems = (): JSX.Element => {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-        {problems.map((problem: ProblemType, index: number) => (
+          {problems.map((problem: ProblemType, index: number) => (
             <Table.Row key={index}>
               <Table.HeaderCell class="collapsing">{problem.id}</Table.HeaderCell>
               <Table.Cell><Link to={`/admin/problems/${problem.problem_id}/edit`}>{problem.problem_name}</Link></Table.Cell>
-              <Table.Cell>{ problem.tests.length }</Table.Cell>
+              <Table.Cell>{problem.tests.length}</Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>
