@@ -29,17 +29,15 @@ const Problems = (): JSX.Element => {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {problems.map((problem: ProblemType, index) => {
-              console.log(problem.problem_name, problem.tests); return (
-                <Table.Row key={index}>
-                  <Table.HeaderCell collapsing>{problem.id}</Table.HeaderCell>
-                  <Table.Cell>
-                    <Link to={`/blue/problems/${problem.id}`}>{problem.problem_name}</Link>
-                  </Table.Cell>
-                  <Table.Cell>{problem?.tests?.length}</Table.Cell>
-                </Table.Row>
-              )
-            })}
+            {problems.map((problem: ProblemType, index) =>
+              <Table.Row key={index}>
+                <Table.HeaderCell collapsing>{problem.id}</Table.HeaderCell>
+                <Table.Cell>
+                  <Link to={`/blue/problems/${problem.id}`}>{problem.problem_name}</Link>
+                </Table.Cell>
+                <Table.Cell>{problem?.tests?.length}</Table.Cell>
+              </Table.Row>
+            )}
           </Table.Body>
         </Table>
       </Block>
