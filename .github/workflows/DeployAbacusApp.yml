@@ -50,4 +50,4 @@ jobs:
           --description "commit-sha-${{ github.sha }}"
 
       - name: Deploy new ElasticBeanstalk application version
-        run: aws elasticbeanstalk update-environment --environment-name Abacusbackend-env-1 --version-label "ver-${{ github.sha }}"
+        run: aws elasticbeanstalk update-environment --environment-name abacus-backend-prod --version-label "ver-${{ github.sha }}"
