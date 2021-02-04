@@ -32,13 +32,15 @@ class ContestService {
   updateItem(TableName: string, Key: { [key: string]: string }, args: { [key: string]: string }) {
     const entries = Object.entries(args)
     try {
-      this.db.update({
+      const params = {
         TableName,
         Key,
         UpdateExpression: entries.map((e) => "SET  " + (`#${e[0]} = :${e[0]}`)).join(","),
         ExpressionAttributeNames: Object.assign({}, ...entries.map((x) => ({ [`#${x[0]}`]: x[0] }))),
         ExpressionAttributeValues: Object.assign({}, ...entries.map((x) => ({ [`:${x[0]}`]: x[1] })))
-      })
+      }
+      console.log(params)
+      this.db.update(params)
     } catch (err) {
       throw (err)
     }
