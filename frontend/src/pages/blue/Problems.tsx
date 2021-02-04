@@ -13,7 +13,7 @@ const Problems = (): JSX.Element => {
   useEffect(() => {
     fetch("https://api.codeabac.us/v1/problems?division=blue")
       .then((res) => res.json())
-      .then((probs) => setProblems(probs));
+      .then((probs) => setProblems(Object.values(probs)));
   }, []);
 
   return (
