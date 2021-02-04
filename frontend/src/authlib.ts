@@ -39,11 +39,13 @@ const authenticate = async (username: string, password: string): Promise<boolean
 
   const user = await res.json()
 
-  localStorage.username = user.user_name
-  localStorage.session_token = user.session_token
-  localStorage.user = JSON.stringify(user)
+  Object.keys(user).forEach(key => localStorage.setItem(key, user[key]))
 
   return true
 }
 
-export { isAuthenticated, authenticate, logout }
+const getuserinfo = (key: string): string => {
+  return localStorage.getItem(key) || ''
+}
+
+export { isAuthenticated, authenticate, logout, getuserinfo }
