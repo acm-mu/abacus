@@ -110,7 +110,7 @@ class ContestService {
       runtime: 0,
       filesize,
       sha1sum,
-      tests,
+      tests
     }
 
     const params = {
