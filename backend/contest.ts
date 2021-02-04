@@ -39,13 +39,7 @@ class ContestService {
         ExpressionAttributeNames: Object.assign({}, ...entries.map((x) => ({ [`#${x[0]}`]: x[0] }))),
         ExpressionAttributeValues: Object.assign({}, ...entries.map((x) => ({ [`:${x[0]}`]: x[1] })))
       }
-      console.log(params)
-      this.db.update(params, (err, data) => {
-        console.log("Error")
-        console.log(err)
-        console.log("Data")
-        console.log(data)
-      })
+      this.db.update(params, (_err, _data) => { })
     } catch (err) {
       throw (err)
     }
