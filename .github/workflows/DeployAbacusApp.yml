@@ -28,14 +28,6 @@ jobs:
   deploy:
     name: CD Pipeline
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [3.8]
-        node-version: ["12.x"]
-        appname: ["codeabac.us"]
-        deploy-group: ["backend"]
-        s3-bucket: ["codeabac.us-codedeploy"]
-        s3-filename: ["codeabac.us-backend-${{ github.sha }}"]
 
     needs: buildAndDeploy
     steps:

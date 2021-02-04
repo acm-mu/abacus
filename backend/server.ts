@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 80;
 app.use(fileUpload())
 app.use(morgan('dev'))
 
-app.get('/', (_, res) => res.status(200))
+app.get('/', (_, res) => res.status(200).send(' '))
 app.use('/v1', api)
 
 app.listen(PORT, () => {
