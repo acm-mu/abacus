@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-const isAuthenticated = () => {
+const isAuthenticated = (): boolean => {
   const { username, session_token } = localStorage
   // If any of them are undefined
   if (!(username && session_token)) return false
