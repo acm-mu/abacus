@@ -89,10 +89,13 @@ class ContestService {
     try {
       const res = await this.db.scan(params).promise()
 
+      const users = await this.get_users()
+      const problems = await this.get_problems()
+
       if (res && res.Items) {
         for (const submission of res.Items) {
-          submission.team_name = (await this.get_users({ user_id: submission.team_id }))[submission.team_id].display_name
-          submission.prob_name = (await this.get_problems({ problem_id: submission.problem_id }))[submission.problem_id].problem_name
+          submission.team_name = users[submission.team_id].display_name
+          submission.prob_name = problems[submission.problem_id].problem_name
         }
       }
 

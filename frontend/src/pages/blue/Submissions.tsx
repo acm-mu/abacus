@@ -1,48 +1,52 @@
 import React, { useEffect, useState } from "react";
+import Moment from "react-moment";
+import { Dimmer, Loader, Segment, Table, Image } from "semantic-ui-react";
+import { Link } from "react-router-dom";
 import { Block, Countdown } from "../../components";
 import { SubmissionType } from "../../types";
-
-import Moment from "react-moment";
-
-import "../../components/Icons.scss";
-import { Table } from "semantic-ui-react";
-import { Link } from "react-router-dom";
 import config from '../../environment'
+import "../../components/Icons.scss";
 
 const Submissions = (): JSX.Element => {
+  const [isLoading, setLoading] = useState(true)
   const [submissions, setSubmissions] = useState([]);
 
   useEffect(() => {
     fetch(`${config.API_URL}/v1/submissions`)
       .then((res) => res.json())
-      .then((subs) => setSubmissions(Object.values(subs)));
+      .then((subs) => {
+        setLoading(false)
+        setSubmissions(Object.values(subs))
+      });
   }, []);
 
   return (
     <>
       <Countdown />
       <Block transparent size="xs-12">
-        <Table>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell>Submission ID</Table.HeaderCell>
-              <Table.HeaderCell>Problem</Table.HeaderCell>
-              <Table.HeaderCell>Submission #</Table.HeaderCell>
-              <Table.HeaderCell>Language</Table.HeaderCell>
-              <Table.HeaderCell>Status</Table.HeaderCell>
-              <Table.HeaderCell>Time</Table.HeaderCell>
-              <Table.HeaderCell>Score</Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {submissions.length == 0 ? (
+        {isLoading ?
+          <Loader active inline='centered' content="Loading" />
+          :
+          <Table>
+            <Table.Header>
               <Table.Row>
-                <Table.Cell colspan="7" style={{ textAlign: "center" }}>
-                  No Submissions
-                </Table.Cell>
+                <Table.HeaderCell>Submission ID</Table.HeaderCell>
+                <Table.HeaderCell>Problem</Table.HeaderCell>
+                <Table.HeaderCell>Submission #</Table.HeaderCell>
+                <Table.HeaderCell>Language</Table.HeaderCell>
+                <Table.HeaderCell>Status</Table.HeaderCell>
+                <Table.HeaderCell>Time</Table.HeaderCell>
+                <Table.HeaderCell>Score</Table.HeaderCell>
               </Table.Row>
-            ) : (
-                submissions.map((submission: SubmissionType, index) => (
+            </Table.Header>
+            <Table.Body>
+              {submissions.length == 0 ?
+                (<Table.Row>
+                  <Table.Cell colspan="7" style={{ textAlign: "center" }}>
+                    No Submissions
+                    </Table.Cell>
+                </Table.Row>)
+                : (submissions.map((submission: SubmissionType, index) => (
                   <Table.Row key={index}>
                     <Table.Cell>
                       <Link to={`/blue/submissions/${submission.submission_id}`}>
@@ -64,10 +68,9 @@ const Submissions = (): JSX.Element => {
                     </Table.Cell>
                     <Table.Cell> {submission.score} </Table.Cell>
                   </Table.Row>
-                ))
-              )}
-          </Table.Body>
-        </Table>
+                )))}
+            </Table.Body>
+          </Table>}
       </Block>
     </>
   );
