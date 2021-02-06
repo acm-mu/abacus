@@ -3,7 +3,7 @@ import contest from "../contest";
 
 const router = Router();
 
-router.get("/", async (_, res: Response) => {
+router.get("/contest", async (_, res: Response) => {
   try {
     const data = await contest.get_settings()
     res.send(data)

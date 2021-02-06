@@ -3,7 +3,7 @@ import contest from "../contest";
 
 const submissions = Router();
 
-submissions.get("/", async (req: Request, res: Response) => {
+submissions.get("/submissions", async (req: Request, res: Response) => {
   try {
     const submissions = await contest.get_submissions(req.query as ({ [key: string]: string }))
     res.send(submissions)

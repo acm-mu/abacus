@@ -5,7 +5,7 @@ import { Router, Request, Response } from "express";
 
 const authlib = Router();
 
-authlib.post('/', async (req: Request, res: Response) => {
+authlib.post('/authlib', async (req: Request, res: Response) => {
   let { username, password, session_token } = req.body
 
   let users = [];

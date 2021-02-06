@@ -4,7 +4,7 @@ import contest from "../contest";
 
 const standings = Router();
 
-standings.get("/", async (_, res: Response) => {
+standings.get("/standings", async (_, res: Response) => {
   const standings = Object.values(await contest.get_users({ role: 'team', division: 'blue' }))
   const submissions: SubmissionType[] = Object.values(await contest.get_submissions({ division: 'blue' }))
   const problems = Object.values(await contest.get_problems({ division: 'blue' }))

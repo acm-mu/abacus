@@ -13,8 +13,8 @@ app.use(fileUpload())
 app.use(morgan('dev'))
 
 app.get('/', (_, res) => res.status(200).send(' '))
-app.use('/v1', api)
-app.use('/auth', authlib)
+app.use(api)
+app.use(authlib)
 
 app.listen(PORT, () => {
   console.log(`🚀 Server is running at :${PORT}`);
