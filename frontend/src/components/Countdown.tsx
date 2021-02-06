@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Message } from "semantic-ui-react";
+import { Loader, Message } from "semantic-ui-react";
 import { Block } from "./";
 import config from '../environment'
 
@@ -23,6 +23,7 @@ function formatTime(obj: Date | number) {
 
 const Countdown = (): JSX.Element => {
   const [compName, setCompName] = useState();
+  const [isLoading, setLoading] = useState(true)
 
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
@@ -49,8 +50,9 @@ const Countdown = (): JSX.Element => {
             new Date().getTimezoneOffset() * 60000
           )
         );
+        setLoading(false)
       });
-  }, []);
+  }, [])
 
   setInterval(() => {
     setTime(new Date());
@@ -58,58 +60,63 @@ const Countdown = (): JSX.Element => {
 
   return (
     <>
-      {startDate && endDate && time ? (
-        <Block size='xs-12'>
-          <div id="countdown_during">
-            <div className="upper">
-              <p>
-                <b>Start</b> {startDate.toLocaleString()}
-              </p>
-              <h1>{compName}</h1>
-              <p>
-                <b>End</b> {endDate.toLocaleString()}
-              </p>
-            </div>
+      {isLoading ?
+        <Loader active inline='centered' content="Loading" /> :
+        <>
+          {startDate && endDate && time ? (
+            <Block size='xs-12'>
+              <div id="countdown_during">
+                <div className="upper">
+                  <p>
+                    <b>Start</b> {startDate.toLocaleString()}
+                  </p>
+                  <h1>{compName}</h1>
+                  <p>
+                    <b>End</b> {endDate.toLocaleString()}
+                  </p>
+                </div>
 
-            <div className="countdown">
-              <div
-                className="progress_bar"
-                style={{
-                  width:
-                    Math.min(
-                      diff(time, startDate) / diff(endDate, startDate),
-                      1
-                    ) *
-                    100 +
-                    "%",
-                }}
-              >
-                &nbsp;
+                <div className="countdown">
+                  <div
+                    className="progress_bar"
+                    style={{
+                      width:
+                        Math.min(
+                          diff(time, startDate) / diff(endDate, startDate),
+                          1
+                        ) *
+                        100 +
+                        "%",
+                    }}
+                  >
+                    &nbsp;
               </div>
-            </div>
+                </div>
 
-            <div className="lower">
-              <p>
-                <b>Time elapsed</b>{" "}
-                {endDate > time
-                  ? formatTime(diff(time, startDate))
-                  : diff(endDate, startDate)}
-              </p>
-              <p>
-                <b>Time remaining</b>{" "}
-                {endDate > time ? formatTime(diff(endDate, time)) : "Finished"}
-              </p>
-            </div>
-          </div>
-        </Block>
-      ) : (
-          <Message
-            warning
-            icon="warning sign"
-            header="Could not initialize countdown!"
-            content="We are having problems communicating with our server!"
-          />
-        )}
+                <div className="lower">
+                  <p>
+                    <b>Time elapsed</b>{" "}
+                    {endDate > time
+                      ? formatTime(diff(time, startDate))
+                      : diff(endDate, startDate)}
+                  </p>
+                  <p>
+                    <b>Time remaining</b>{" "}
+                    {endDate > time ? formatTime(diff(endDate, time)) : "Finished"}
+                  </p>
+                </div>
+              </div>
+            </Block>
+          ) : (
+              <Message
+                warning
+                icon="warning sign"
+                header="Could not initialize countdown!"
+                content="We are having problems communicating with our server!"
+              />
+            )}
+        </>
+      }
     </>
   );
 };

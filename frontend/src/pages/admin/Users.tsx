@@ -1,4 +1,4 @@
-import { Table, Button, Popup, Modal, Form, Input, Select } from 'semantic-ui-react'
+import { Table, Button, Popup, Modal, Form, Input, Select, Loader } from 'semantic-ui-react'
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Block, Countdown } from '../../components'
@@ -94,11 +94,15 @@ const EditUser = ({ user, trigger }: EditUserProps) => {
 
 const Users = (): JSX.Element => {
   const [users, setUsers] = useState([])
+  const [isLoading, setLoading] = useState(true)
 
   useEffect((): void => {
     fetch(`${config.API_URL}/v1/users`)
       .then(res => res.json())
-      .then(data => setUsers(Object.values(data)))
+      .then(data => {
+        setUsers(Object.values(data))
+        setLoading(false)
+      })
   }, [])
 
   return (
@@ -116,27 +120,30 @@ const Users = (): JSX.Element => {
         <div class="ui icon button" onclick="downloadCSV()" data-tooltip="Export to CSV"><i className="download icon"></i></div>
         <div class="ui red icon button" onclick="deleteSelected()" data-tooltip="Delete Selected" id="delete_selected" style={{display: "none"}}><i className="trash icon"></i></div> */}
         </div>
-        <Table celled>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell collapsing><input type='checkbox' id='select_all' /></Table.HeaderCell>
-              <Table.HeaderCell>Username</Table.HeaderCell>
-              <Table.HeaderCell>Role</Table.HeaderCell>
-              <Table.HeaderCell>Division</Table.HeaderCell>
-              <Table.HeaderCell>Displayname</Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {users.map((user: UserType, index: number) =>
-              <Table.Row key={index} uuid={`${user.user_id}`}>
-                <Table.Cell><input type='checkbox' autoComplete="off" /></Table.Cell>
-                <Table.Cell><EditUser user={user} trigger={<Link to='#'>{user.username}</Link>} /></Table.Cell>
-                <Table.Cell>{user.role}</Table.Cell>
-                <Table.Cell>{user.division}</Table.Cell>
-                <Table.Cell>{user.display_name}</Table.Cell>
-              </Table.Row>)}
-          </Table.Body>
-        </Table>
+        {isLoading ?
+          <Loader active inline='centered' content="Loading" /> :
+          <Table celled>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell collapsing><input type='checkbox' id='select_all' /></Table.HeaderCell>
+                <Table.HeaderCell>Username</Table.HeaderCell>
+                <Table.HeaderCell>Role</Table.HeaderCell>
+                <Table.HeaderCell>Division</Table.HeaderCell>
+                <Table.HeaderCell>Displayname</Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {users.map((user: UserType, index: number) =>
+                <Table.Row key={index} uuid={`${user.user_id}`}>
+                  <Table.Cell><input type='checkbox' autoComplete="off" /></Table.Cell>
+                  <Table.Cell><EditUser user={user} trigger={<Link to='#'>{user.username}</Link>} /></Table.Cell>
+                  <Table.Cell>{user.role}</Table.Cell>
+                  <Table.Cell>{user.division}</Table.Cell>
+                  <Table.Cell>{user.display_name}</Table.Cell>
+                </Table.Row>)}
+            </Table.Body>
+          </Table>
+        }
       </Block>
     </>
   )
