@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Moment from "react-moment";
-import { Dimmer, Loader, Segment, Table, Image } from "semantic-ui-react";
+import { Loader, Table } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { Block, Countdown } from "../../components";
 import { SubmissionType } from "../../types";
