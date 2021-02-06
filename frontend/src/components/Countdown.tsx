@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Message } from "semantic-ui-react";
 import { Block } from "./";
+import config from '../environment'
 
 import "./Countdown.scss";
 import "./FlipClock.scss";
@@ -30,7 +31,7 @@ const Countdown = (): JSX.Element => {
   const diff = (date1: Date, date2: Date) => date1.getTime() - date2.getTime();
 
   useEffect(() => {
-    fetch("https://api.codeabac.us/v1/contest")
+    fetch(`${config.API_URL}/v1/contest`)
       .then((res) => res.json())
       .then((res) => {
         setCompName(res.competition_name);

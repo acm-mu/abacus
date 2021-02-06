@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Block, Countdown } from "../../components";
 import { Link } from 'react-router-dom'
 import { Table } from "semantic-ui-react";
+import { Block, Countdown } from "../../components";
 import { ProblemScoreType, ProblemType, StandingsUser } from "../../types";
+import config from '../../environment'
 
 import "./Standings.scss";
 
@@ -11,11 +12,11 @@ const Standings = (): JSX.Element => {
   const [standings, setStandings] = useState([]);
 
   useEffect(() => {
-    fetch("https://api.codeabac.us/v1/problems?division=blue")
+    fetch(`${config.API_URL}/v1/problems?division=blue`)
       .then((res) => res.json())
       .then((problems) => setProblems(problems));
 
-    fetch("https://api.codeabac.us/v1/standings")
+    fetch(`${config.API_URL}/v1/standings`)
       .then((res) => res.json())
       .then((standings) => setStandings(standings));
   }, []);

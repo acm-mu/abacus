@@ -3,14 +3,15 @@ import { Link } from "react-router-dom";
 import MarkdownView from "react-showdown";
 import { Button, Popup } from "semantic-ui-react";
 import { Block, Countdown } from '../../components'
-import "./Problem.scss";
 import { ProblemType } from '../../types'
+import config from '../../environment'
+import "./Problem.scss";
 
 const Problem: React.FunctionComponent = () => {
   const [problem, setProblem] = useState<ProblemType>();
 
   useEffect(() => {
-    fetch("https://api.codeabac.us/v1/problems/48ffb0999c0d4a179ac6aa65c299ccf4")
+    fetch(`${config.API_URL}/v1/problems/48ffb0999c0d4a179ac6aa65c299ccf4`)
       .then((res) => res.json())
       .then((res) => {
         if (res) setProblem(res[0]);

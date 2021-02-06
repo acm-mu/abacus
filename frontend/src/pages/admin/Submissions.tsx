@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { Block, Countdown } from '../../components'
 import { Table } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { SubmissionType } from '../../types'
+import { Block, Countdown } from '../../components'
+import config from '../../environment'
 
 const Submissions = (): JSX.Element => {
 
@@ -10,7 +11,7 @@ const Submissions = (): JSX.Element => {
 
   useEffect((): void => {
 
-    fetch('https://api.codeabac.us/v1/submissions')
+    fetch(`${config.API_URL}/v1/submissions`)
       .then(res => res.json())
       .then(data => {
         data = Object.values(data)

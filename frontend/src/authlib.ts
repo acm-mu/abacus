@@ -1,4 +1,5 @@
 import { useState } from "react"
+import config from './environment'
 
 const isAuthenticated = (): boolean => {
   const { username, session_token } = localStorage
@@ -11,7 +12,7 @@ const isAuthenticated = (): boolean => {
   formData.set('username', username)
   formData.set('session_token', session_token)
 
-  fetch('https://api.codeabac.us/auth', {
+  fetch(`${config.API_URL}/auth`, {
     method: 'POST',
     body: formData
   })
@@ -31,7 +32,7 @@ const authenticate = async (username: string, password: string): Promise<boolean
   formData.set('username', username)
   formData.set('password', password)
 
-  const res = await fetch('https://api.codeabac.us/auth', {
+  const res = await fetch(`${config.API_URL}/auth`, {
     method: 'POST',
     body: formData
   })

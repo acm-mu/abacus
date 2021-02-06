@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Table } from "semantic-ui-react";
+import { Link } from "react-router-dom";
 import { Block, Countdown } from "../../components";
 import { ProblemType } from '../../types'
-
 import '../../components/Table.scss'
-import { Link } from "react-router-dom";
+import config from '../../environment'
 
 
 const Problems = (): JSX.Element => {
   const [problems, setProblems] = useState([]);
 
   useEffect(() => {
-    fetch("https://api.codeabac.us/v1/problems?division=blue")
+    fetch(`${config.API_URL}/v1/problems?division=blue`)
       .then((res) => res.json())
       .then((probs) => setProblems(Object.values(probs)));
   }, []);

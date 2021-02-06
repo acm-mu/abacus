@@ -7,12 +7,13 @@ import Moment from "react-moment";
 import "../../components/Icons.scss";
 import { Table } from "semantic-ui-react";
 import { Link } from "react-router-dom";
+import config from '../../environment'
 
 const Submissions = (): JSX.Element => {
   const [submissions, setSubmissions] = useState([]);
 
   useEffect(() => {
-    fetch("https://api.codeabac.us/v1/submissions")
+    fetch(`${config.API_URL}/v1/submissions`)
       .then((res) => res.json())
       .then((subs) => setSubmissions(Object.values(subs)));
   }, []);

@@ -1,8 +1,9 @@
 import { Table, Button, Popup, Modal, Form, Input, Select } from 'semantic-ui-react'
-import { Block, Countdown } from '../../components'
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { Block, Countdown } from '../../components'
 import { UserType } from '../../types'
+import config from '../../environment'
 
 interface EditUserProps {
   user?: UserType;
@@ -95,7 +96,7 @@ const Users = (): JSX.Element => {
   const [users, setUsers] = useState([])
 
   useEffect((): void => {
-    fetch('https://api.codeabac.us/v1/users')
+    fetch(`${config.API_URL}/v1/users`)
       .then(res => res.json())
       .then(data => setUsers(Object.values(data)))
   }, [])
