@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, Form, Message } from "semantic-ui-react";
 import { Block } from "../components";
-import { isAuthenticated, authenticate } from '../authlib'
+import { isAuthenticated, authenticate, hasRole } from '../authlib'
 import { useHistory } from "react-router-dom";
 
 const Login = (): JSX.Element => {
@@ -17,7 +17,10 @@ const Login = (): JSX.Element => {
     const { username, password } = formData
     const result = await authenticate(username, password)
     if (result)
-      history.push('/')
+      if (hasRole('admin'))
+        history.push('/admin')
+      else
+        history.push('/')
     else
       setError(true)
   }
