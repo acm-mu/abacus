@@ -12,7 +12,7 @@ const Submissions = (): JSX.Element => {
   const [submissions, setSubmissions] = useState([]);
 
   useEffect(() => {
-    fetch(`${config.API_URL}/v1/submissions`)
+    fetch(`${config.API_URL}/v1/submissions?division=blue`)
       .then((res) => res.json())
       .then((subs) => {
         setLoading(false)
