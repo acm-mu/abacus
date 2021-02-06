@@ -7,7 +7,7 @@ import Home from './Home'
 import BlueNavigation from './BlueNavigation'
 
 import React from "react";
-import {Switch, Route} from 'react-router-dom'
+import { Switch, Route } from 'react-router-dom'
 import { Container } from "semantic-ui-react";
 import NotFound from '../NotFound'
 
@@ -22,11 +22,11 @@ const Blue = (): JSX.Element => (
       <Switch>
         <Route exact path='/blue/' component={Home} />
         <Route path='/blue/problem/' component={Problem} />
-        <Route path='/blue/problems' component={Problems} />
         <Route path='/blue/problems/:problem_id' component={Problem} />
+        <Route path='/blue/problems' component={Problems} />
         <Route path='/blue/standings' component={Standings} />
-        <Route path='/blue/submissions' component={Submissions} />
         <Route path='/blue/submissions/:submission_id' component={Submission} />
+        <Route path='/blue/submissions' component={Submissions} />
         <Route default component={NotFound} />
       </Switch>
     </Container>

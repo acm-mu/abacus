@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import MarkdownView from "react-showdown";
 import { Button, Popup } from "semantic-ui-react";
 import { Block, Countdown } from '../../components'
@@ -9,12 +9,13 @@ import "./Problem.scss";
 
 const Problem: React.FunctionComponent = () => {
   const [problem, setProblem] = useState<ProblemType>();
+  const { problem_id } = useParams<{ problem_id: string }>()
 
   useEffect(() => {
-    fetch(`${config.API_URL}/v1/problems/48ffb0999c0d4a179ac6aa65c299ccf4`)
+    fetch(`${config.API_URL}/v1/problems?division=blue&id=${problem_id}`)
       .then((res) => res.json())
       .then((res) => {
-        if (res) setProblem(res[0]);
+        if (res) setProblem(Object.values(res)[0] as ProblemType);
       });
   }, []);
 

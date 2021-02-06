@@ -6,14 +6,17 @@ import { ProblemType } from '../../types'
 import '../../components/Table.scss'
 import config from '../../environment'
 
-
 const Problems = (): JSX.Element => {
   const [problems, setProblems] = useState([]);
 
   useEffect(() => {
     fetch(`${config.API_URL}/v1/problems?division=blue`)
       .then((res) => res.json())
-      .then((probs) => setProblems(Object.values(probs)));
+      .then((probs) => {
+        probs = Object.values(probs)
+        probs.sort((a: ProblemType, b: ProblemType) => a.id.localeCompare(b.id))
+        setProblems(probs)
+      })
   }, []);
 
   return (
