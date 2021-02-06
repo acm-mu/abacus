@@ -3,7 +3,7 @@ import contest from "../contest";
 
 const users = Router();
 
-users.get("/", async (req: Request, res: Response) => {
+users.get("/users", async (req: Request, res: Response) => {
   try {
     const users = await contest.get_users(req.query as ({ [key: string]: string }))
     res.send(users)

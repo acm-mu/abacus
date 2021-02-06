@@ -6,11 +6,6 @@ import standings from './standings'
 import { Router } from "express";
 
 const api = Router();
-
-api.use('/contest', contest)
-api.use('/users/', users)
-api.use('/submissions', submissions)
-api.use('/problems', problems)
-api.use('/standings', standings)
+api.use(contest, users, submissions, problems, standings)
 
 export default api
