@@ -57,4 +57,13 @@ const userhome = (): string => {
   return `/${getuserinfo('division')}`
 }
 
-export { isAuthenticated, authenticate, logout, getuserinfo, hasRole, userhome }
+const hasAccess = (permission: string): boolean => {
+  switch (permission) {
+    case 'blue':
+      if (hasRole('admin') || hasRole('judge')) return true
+      return getuserinfo('division') == 'blue'
+    default: return false;
+  }
+}
+
+export { isAuthenticated, authenticate, logout, getuserinfo, hasRole, userhome, hasAccess }

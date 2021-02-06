@@ -36,19 +36,22 @@ const Problem: React.FunctionComponent = () => {
       <Block size='xs-3'>
         <div style={{ display: "flex", justifyContent: "space-evenly" }}>
           <Popup
-            as={Link}
-            to={`/blue/problems/${problem?.id}/submit`}
-            trigger={<Button content="Submit" icon="upload" />}
+            trigger={
+              <Button
+                as={Link}
+                to={`/blue/problems/${problem?.id}/submit`}
+                content="Submit"
+                icon="upload" />
+            }
             content="Submit"
             position="top center"
-            inverted
-          />
-          <Popup
+            inverted />
+          {/* <Popup
             trigger={<Button content="Stats" icon="chart bar" />}
             content="Stats"
             position="top center"
             inverted
-          />
+          /> */}
         </div>
         <p>
           <b>Problem ID:</b> {problem?.id}
