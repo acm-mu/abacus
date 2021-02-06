@@ -22,9 +22,8 @@ const isAuthenticated = (): boolean => {
 }
 
 const logout = (): void => {
-  localStorage.removeItem('user')
-  localStorage.removeItem('username')
-  localStorage.removeItem('session_token')
+  for (const key of ['username', 'session_token', 'division', 'role', 'user_id', 'scratch_username', 'display_name'])
+    localStorage.removeItem(key)
 }
 
 const authenticate = async (username: string, password: string): Promise<boolean> => {
@@ -49,4 +48,8 @@ const getuserinfo = (key: string): string => {
   return localStorage.getItem(key) || ''
 }
 
-export { isAuthenticated, authenticate, logout, getuserinfo }
+const hasRole = (role: string): boolean => {
+  return localStorage.getItem('role') == role
+}
+
+export { isAuthenticated, authenticate, logout, getuserinfo, hasRole }

@@ -52,7 +52,7 @@ const Submissions = (): JSX.Element => {
               <Table.Cell>{submission.score}</Table.Cell>
             </Table.Row>)
             )) : (
-                <Table.Cell colspan="7" style={{ textAlign: "center" }}>No Submissions</Table.Cell>)
+                <Table.Cell colSpan="7" style={{ textAlign: "center" }}>No Submissions</Table.Cell>)
             }
           </Table.Body>
         </Table>

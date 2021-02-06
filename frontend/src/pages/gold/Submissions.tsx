@@ -32,7 +32,7 @@ const Submissions = (): JSX.Element => {
               </Table.Row>
             ))) : (
               <Table.Row>
-                <Table.Cell colspan="7" style="text-align: center">No Submissions</Table.Cell>
+                <Table.Cell colSpan={7} style="text-align: center">No Submissions</Table.Cell>
               </Table.Row>
             )}
         </Table.Body>

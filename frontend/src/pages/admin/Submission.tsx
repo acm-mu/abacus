@@ -51,8 +51,8 @@ const Submission = (): JSX.Element => {
               <Table.HeaderCell>LANGUAGE</Table.HeaderCell>
             </Table.Row>
             <Table.Row>
-              <Table.HeaderCell colspan={3}>TEST CASES</Table.HeaderCell>
-              <Table.HeaderCell colspan={3}>SCORE</Table.HeaderCell>
+              <Table.HeaderCell colSpan={3}>TEST CASES</Table.HeaderCell>
+              <Table.HeaderCell colSpan={3}>SCORE</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           <Table.Body>
@@ -68,7 +68,7 @@ const Submission = (): JSX.Element => {
               <Table.Cell>{submission.language}</Table.Cell>
             </Table.Row>
             <Table.Row>
-              <Table.Cell colspan={3}>
+              <Table.Cell colSpan={3}>
                 {submission.tests.map((test: TestType) => {
                   switch (test.result) {
                     case 'accepted':
@@ -80,7 +80,7 @@ const Submission = (): JSX.Element => {
                   }
                 })}
               </Table.Cell>
-              <Table.Cell colspan={3}>{submission.score}</Table.Cell>
+              <Table.Cell colSpan={3}>{submission.score}</Table.Cell>
             </Table.Row>
           </Table.Body>
         </Table>
