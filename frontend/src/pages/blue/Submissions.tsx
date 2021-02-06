@@ -6,16 +6,16 @@ import { Block, Countdown, Unauthorized } from "../../components";
 import { SubmissionType } from "../../types";
 import config from '../../environment'
 import "../../components/Icons.scss";
-import { getuserinfo, isAuthenticated } from "../../authlib";
+import { getuserinfo, hasRole, isAuthenticated } from "../../authlib";
 
 const Submissions = (): JSX.Element => {
   const [isLoading, setLoading] = useState(true)
   const [submissions, setSubmissions] = useState([]);
 
-  const user_id = getuserinfo('user_id')
+  const filter = hasRole('judge') || hasRole('admin') ? '' : `&team_id=${getuserinfo('user_id')}`
 
   useEffect(() => {
-    fetch(`${config.API_URL}/v1/submissions?division=blue&team_id=${user_id}`)
+    fetch(`${config.API_URL}/v1/submissions?division=blue${filter}`)
       .then((res) => res.json())
       .then((subs) => {
         setLoading(false)
