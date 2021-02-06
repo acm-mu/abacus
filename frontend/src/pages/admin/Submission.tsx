@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import { Form, Button, Input, Table } from 'semantic-ui-react'
 import { Block } from '../../components'
 import { TestType } from '../../types'
+import config from '../../environment'
 
 const Submission = (): JSX.Element => {
   const { submission_id } = useParams<{ submission_id: string }>()
@@ -20,7 +21,7 @@ const Submission = (): JSX.Element => {
   })
 
   useEffect(() => {
-    fetch(`https://api.codeabac.us/v1/submission?submission_id=${submission_id}`)
+    fetch(`${config.API_URL}/v1/submission?submission_id=${submission_id}`)
       .then(res => res.json())
       .then(data => {
         data = Object.values(data)[0]

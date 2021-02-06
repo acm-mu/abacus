@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Form, Input, Menu, Button, TextArea, MenuItemProps } from 'semantic-ui-react'
 import { TestType } from '../../types'
+import config from '../../environment'
 
 const InitialProblem = {
   problem_name: '',
@@ -22,7 +23,7 @@ const EditProblems = (): JSX.Element => {
   const { problem_id } = useParams<{ problem_id: string }>()
 
   useEffect(() => {
-    fetch(`https://api.codeabac.us/v1/problems?id=${problem_id}`)
+    fetch(`${config.API_URL}/v1/problems?id=${problem_id}`)
       .then(res => res.json())
       .then(data => {
         data = Object.values(data)[0]

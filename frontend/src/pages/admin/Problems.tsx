@@ -3,12 +3,13 @@ import { Table, Button } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { Block } from '../../components'
 import { ProblemType } from '../../types'
+import config from '../../environment'
 
 const Problems = (): JSX.Element => {
   const [problems, setProblems] = useState([])
 
   useEffect(() => {
-    fetch('https://api.codeabac.us/v1/problems?division=blue')
+    fetch(`${config.API_URL}/v1/problems?division=blue`)
       .then(res => res.json())
       .then(data => setProblems(data))
   }, [])

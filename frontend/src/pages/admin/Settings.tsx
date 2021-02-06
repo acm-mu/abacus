@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Form, Input } from 'semantic-ui-react'
 import { Block } from '../../components'
+import config from '../../environment'
 
 const Settings = (): JSX.Element => {
   const [settings, setSettings] = useState({
@@ -14,7 +15,7 @@ const Settings = (): JSX.Element => {
   })
 
   useEffect(() => {
-    fetch('https://api.codeabac.us/v1/contest')
+    fetch(`${config.API_URL}/v1/contest`)
       .then(res => res.json())
       .then(data => setSettings(data))
   }, [])
