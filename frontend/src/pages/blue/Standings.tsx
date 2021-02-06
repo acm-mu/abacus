@@ -14,11 +14,19 @@ const Standings = (): JSX.Element => {
   useEffect(() => {
     fetch(`${config.API_URL}/v1/problems?division=blue`)
       .then((res) => res.json())
-      .then((problems) => setProblems(problems));
+      .then((problems) => {
+        problems = Object.values(problems)
+        problems.sort((a: ProblemType, b: ProblemType) => a.id.localeCompare(b.id))
+        setProblems(problems)
+      });
 
     fetch(`${config.API_URL}/v1/standings`)
       .then((res) => res.json())
-      .then((standings) => setStandings(standings));
+      .then((standings) => {
+        standings = Object.values(standings)
+        standings.sort((a: StandingsUser, b: StandingsUser) => b.solved - a.solved)
+        setStandings(standings)
+      });
   }, []);
 
   return (

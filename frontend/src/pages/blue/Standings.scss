@@ -1,78 +1,82 @@
 .legend-status {
-  width: 23px;
-  height: 23px;
-  border-radius: 2px;
+    width: 23px;
+    height: 23px;
+    border-radius: 2px;
 }
 
 .table-legend {
-  float: right;
-  background: white;
-  border: 1px solid #cbcbcb;
-  padding: 4px;
-  border-radius: 4px;
-  margin-bottom: 15px;
-  color: #82868b;
-  line-height: 1.4;
+    float: right;
+    background: white;
+    border: 1px solid #cbcbcb;
+    padding: 4px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    color: #82868b;
+    line-height: 1.4;
 
-  div,
-  span,
-  p {
-    display: inline-block;
-    vertical-align: middle;
-  }
-
-  div {
-    padding-left: 14px;
-
-    &:first-child {
-      padding: 0;
+    div,
+    span.legend-status,
+    p.legend-label {
+        display: inline-block;
+        vertical-align: middle;
     }
-  }
+
+    span.legend-status {
+        margin-right: 5px;
+    }
+
+    div {
+        padding-left: 14px;
+
+        &:first-child {
+            padding: 0;
+        }
+    }
 }
 
 .legend-status.legend-solved {
-  background: #aae2ab no-repeat center/50% url(https://open.kattis.com/images/standings/check.svg);
-//   background: #aae2ab no-repeat center/75%
-//     url(/images/standings/check.svg);
+    background: #aae2ab no-repeat center/50% url(https://open.kattis.com/images/standings/check.svg);
+    //   background: #aae2ab no-repeat center/75%
+    //     url(/images/standings/check.svg);
 }
 
 .legend-status.legend-attempted {
-  background: #f67b51 no-repeat center/50% url(https://open.kattis.com/images/standings/cross.svg);
-//   background: #f67b51 no-repeat center/75%
-//     url(/images/standings/cross.svg);
+    background: #f67b51 no-repeat center/50% url(https://open.kattis.com/images/standings/cross.svg);
+    //   background: #f67b51 no-repeat center/75%
+    //     url(/images/standings/cross.svg);
 }
 
 .legend-status.legend-pending {
-  background: #dcdcdc no-repeat center/50% url(https://open.kattis.com/images/standings/question.svg);
-//   background: #dcdcdc no-repeat center/50%
-//     url(/images/standings/question.svg);
+    background: #dcdcdc no-repeat center/50% url(https://open.kattis.com/images/standings/question.svg);
+    //   background: #dcdcdc no-repeat center/50%
+    //     url(/images/standings/question.svg);
 }
 
 .ui.table {
-  td.solved,
-  td.attempted,
-  td.pending {
-    font-size: 14px;
-    vertical-align: middle;
-  }
-  td.solved {
-    // background: #aae2ab no-repeat center/32px
-    //   url(/images/standings/check.svg);
-    background: #aae2ab no-repeat center/32px url(https://open.kattis.com/images/standings/check.svg);
-    text-align: center;
-  }
-  td.attempted {
-    text-align: center;
-    background: #f67b51 no-repeat center/32px url(https://open.kattis.com/images/standings/cross.svg);
-    // background: #f67b51 no-repeat center/32px
-    //   url(/images/standings/cross.svg);
-    color: white;
-  }
-  #standings td.pending {
-    text-align: center;
-    // background: #dcdcdc no-repeat center/50%
-    //   url(/images/standings/question.svg);
-    background: #dcdcdc no-repeat center/50% url(https://open.kattis.com/images/standings/question.svg);
-    text-align: center;
-  }
+    td.solved,
+    td.attempted,
+    td.pending {
+        font-size: 14px;
+        vertical-align: middle;
+    }
+    td.solved {
+        // background: #aae2ab no-repeat center/32px
+        //   url(/images/standings/check.svg);
+        background: #aae2ab no-repeat center/32px url(https://open.kattis.com/images/standings/check.svg);
+        text-align: center;
+    }
+    td.attempted {
+        text-align: center;
+        background: #f67b51 no-repeat center/32px url(https://open.kattis.com/images/standings/cross.svg);
+        // background: #f67b51 no-repeat center/32px
+        //   url(/images/standings/cross.svg);
+        color: white;
+    }
+    #standings td.pending {
+        text-align: center;
+        // background: #dcdcdc no-repeat center/50%
+        //   url(/images/standings/question.svg);
+        background: #dcdcdc no-repeat center/50% url(https://open.kattis.com/images/standings/question.svg);
+        text-align: center;
+    }
 }
