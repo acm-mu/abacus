@@ -52,4 +52,9 @@ const hasRole = (role: string): boolean => {
   return localStorage.getItem('role') == role
 }
 
-export { isAuthenticated, authenticate, logout, getuserinfo, hasRole }
+const userhome = (): string => {
+  if (hasRole('admin')) return '/admin'
+  return `/${getuserinfo('division')}`
+}
+
+export { isAuthenticated, authenticate, logout, getuserinfo, hasRole, userhome }

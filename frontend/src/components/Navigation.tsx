@@ -2,7 +2,7 @@ import React from "react";
 
 import { Link, useHistory } from "react-router-dom";
 import { Container, Dropdown, Menu } from "semantic-ui-react";
-import { isAuthenticated, logout, getuserinfo } from "../authlib";
+import { isAuthenticated, logout, getuserinfo, hasRole, userhome } from "../authlib";
 
 type Props = {
   children: React.ReactNode;
@@ -27,8 +27,9 @@ const Navigation: React.FunctionComponent<Props> = (props: Props) => {
 
         <Menu.Menu position="right">
           {isAuthenticated() ?
-            <Dropdown item text={getuserinfo('username')} simple>
+            <Dropdown item as={Link} to={userhome()} text={getuserinfo('username')} simple>
               <Dropdown.Menu>
+                {hasRole('admin') && <Menu.Item as={Link} to='/admin/settings'>Settings</Menu.Item>}
                 <Dropdown.Item onClick={handleLogout} text="Log out" />
               </Dropdown.Menu>
             </Dropdown> :
