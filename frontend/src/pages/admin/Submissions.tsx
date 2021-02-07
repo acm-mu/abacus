@@ -12,7 +12,7 @@ const Submissions = (): JSX.Element => {
 
   useEffect((): void => {
 
-    fetch(`${config.API_URL}/v1/submissions`)
+    fetch(`${config.API_URL}/submissions`)
       .then(res => res.json())
       .then(data => {
         data = Object.values(data)

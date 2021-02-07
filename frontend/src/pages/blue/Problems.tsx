@@ -11,7 +11,7 @@ const Problems = (): JSX.Element => {
   const [problems, setProblems] = useState([]);
 
   useEffect(() => {
-    fetch(`${config.API_URL}/v1/problems?division=blue`)
+    fetch(`${config.API_URL}/problems?division=blue`)
       .then((res) => res.json())
       .then((probs) => {
         probs = Object.values(probs)

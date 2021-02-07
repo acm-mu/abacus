@@ -11,7 +11,7 @@ const Submission = (): JSX.Element => {
   const { submission_id } = useParams<{ submission_id: string }>()
 
   useEffect(() => {
-    fetch(`${config.API_URL}/v1/submissions?submission_id=${submission_id}`)
+    fetch(`${config.API_URL}/submissions?submission_id=${submission_id}`)
       .then(res => res.json())
       .then(res => {
         if (res) setSubmission(Object.values(res)[0] as SubmissionType);
@@ -26,7 +26,7 @@ const Submission = (): JSX.Element => {
         <Table celled>
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell rowspan="2">ID</Table.HeaderCell>
+              <Table.HeaderCell rowSpan={2}>ID</Table.HeaderCell>
               <Table.HeaderCell>DATE</Table.HeaderCell>
               <Table.HeaderCell>PROBLEM</Table.HeaderCell>
               <Table.HeaderCell>STATUS</Table.HeaderCell>
@@ -39,25 +39,24 @@ const Submission = (): JSX.Element => {
           </Table.Header>
           <Table.Body>
             <Table.Row>
-              <Table.Cell rowspan="2"><Link to={`/blue/submissions/${submission?.submission_id}`}>{submission?.submission_id.substring(0, 7)}</Link>
+              <Table.Cell rowSpan={2}><Link to={`/blue/submissions/${submission?.submission_id}`}>{submission?.submission_id.substring(0, 7)}</Link>
               </Table.Cell>
-              <Table.Cell>{submission && <Moment fromNow>{submission.date * 1000}</Moment>}</Table.Cell>
+              <Table.Cell>{submission && <Moment fromNow>{submission.date}</Moment>}</Table.Cell>
               <Table.Cell><Link to={`/blue/problems/${submission?.problem_id}`}> {submission?.prob_name}</Link></Table.Cell>
-              <Table.Cell class={`icn ${submission?.status}`}></Table.Cell>
+              <Table.Cell className={`icn ${submission?.status}`}></Table.Cell>
               <Table.Cell> {`${submission?.runtime}`.substring(0, 4)} </Table.Cell>
               <Table.Cell> {submission?.language} </Table.Cell>
             </Table.Row>
             <Table.Row>
-              <Table.Cell colspan="5">
-                {submission?.tests.map((test) => {
-                  console.log(test.result)
+              <Table.Cell colSpan="5">
+                {submission?.tests.map((test, index) => {
                   switch (test.result) {
                     case 'accepted':
-                      return (<span className='result icn accepted' />)
+                      return (<span key={index} className='result icn accepted' />)
                     case 'rejected':
-                      return (<span className='result icn rejected' />)
+                      return (<span key={index} className='result icn rejected' />)
                     default:
-                      return (<span className='result' />)
+                      return (<span key={index} className='result' />)
                   }
                 })}
               </Table.Cell>

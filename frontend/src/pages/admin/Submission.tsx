@@ -21,7 +21,7 @@ const Submission = (): JSX.Element => {
   })
 
   useEffect(() => {
-    fetch(`${config.API_URL}/v1/submission?submission_id=${submission_id}`)
+    fetch(`${config.API_URL}/submission?submission_id=${submission_id}`)
       .then(res => res.json())
       .then(data => {
         data = Object.values(data)[0]

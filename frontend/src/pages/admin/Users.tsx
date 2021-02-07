@@ -97,7 +97,7 @@ const Users = (): JSX.Element => {
   const [isLoading, setLoading] = useState(true)
 
   useEffect((): void => {
-    fetch(`${config.API_URL}/v1/users`)
+    fetch(`${config.API_URL}/users`)
       .then(res => res.json())
       .then(data => {
         setUsers(Object.values(data))
