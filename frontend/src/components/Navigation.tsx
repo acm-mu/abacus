@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import { Link, useHistory } from "react-router-dom";
 import { Container, Dropdown, Menu } from "semantic-ui-react";
-import { isAuthenticated, logout, getuserinfo, hasRole, userhome } from "../authlib";
+import { UserContext } from "../context/user";
 
 type Props = {
   children: React.ReactNode;
@@ -10,9 +10,10 @@ type Props = {
 
 const Navigation: React.FunctionComponent<Props> = (props: Props) => {
   const history = useHistory()
+  const { user, setUser } = useContext(UserContext)
 
   const handleLogout = () => {
-    logout();
+    setUser(undefined)
     history.push('/')
   }
 
@@ -26,10 +27,10 @@ const Navigation: React.FunctionComponent<Props> = (props: Props) => {
         {props.children}
 
         <Menu.Menu position="right">
-          {isAuthenticated() ?
-            <Dropdown item as={Link} to={userhome()} text={getuserinfo('username')} simple>
+          {user ?
+            <Dropdown item as={Link} /*to={userhome()}*/ text={user.username} simple>
               <Dropdown.Menu>
-                {hasRole('admin') && <Menu.Item as={Link} to='/admin/settings'>Settings</Menu.Item>}
+                {user.role == 'admin' && <Menu.Item as={Link} to='/admin/settings'>Settings</Menu.Item>}
                 <Dropdown.Item onClick={handleLogout} text="Log out" />
               </Dropdown.Menu>
             </Dropdown> :

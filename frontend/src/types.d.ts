@@ -46,6 +46,7 @@ type UserType = {
   display_name: string;
   division: string;
   scratch_username?: string;
+  session_token: string;
 }
 
 type StandingsUser = {

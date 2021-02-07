@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Moment from "react-moment";
 import { Loader, Table } from "semantic-ui-react";
 import { Link } from "react-router-dom";
@@ -6,13 +6,18 @@ import { Block, Countdown, Unauthorized } from "../../components";
 import { SubmissionType } from "../../types";
 import config from '../../environment'
 import "../../components/Icons.scss";
-import { getuserinfo, hasRole, isAuthenticated } from "../../authlib";
+import { isAuthenticated } from "../../authlib";
+import { UserContext } from "../../context/user";
 
 const Submissions = (): JSX.Element => {
+  const { user } = useContext(UserContext);
   const [isLoading, setLoading] = useState(true)
   const [submissions, setSubmissions] = useState([]);
 
-  const filter = hasRole('judge') || hasRole('admin') ? '' : `&team_id=${getuserinfo('user_id')}`
+  let filter = ''
+  if (user && ['judge', 'admin'].includes(user.role)) {
+    filter = `&team_id=${user.user_id}`
+  }
 
   useEffect(() => {
     fetch(`${config.API_URL}/submissions?division=blue${filter}`)
