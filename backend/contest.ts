@@ -115,10 +115,19 @@ class ContestService {
     }
   }
 
+  /*
+  Don't accept if missing in request (file_ext, problem_id, file, language, team_id)
+  */
   async submit(req: any) {
-    const { name: filename, size: filesize, md5: sha1sum } = req.files.file
+    const { name: filename, size: filesize, md5 } = req.files.file
     const { language, problem_id, team_id } = req.body
     const submission_id = uuidv4().replace(/-/g, '')
+
+    if (!(language && problem_id && team_id)) {
+      console.log("Invalid submission!")
+      console.log("Must include `language`, `problem_id`, and `team_id`")
+      return
+    }
 
     try {
       const { tests } = (await this.get_problems({ problem_id }))[problem_id]
@@ -128,6 +137,7 @@ class ContestService {
         sub_no: 0,
         status: 'pending',
         score: 0,
+        division: 'blue',
         date: Date.now(),
         language,
         problem_id,
@@ -135,7 +145,7 @@ class ContestService {
         filename,
         runtime: 0,
         filesize,
-        sha1sum,
+        md5,
         tests,
       }
 
@@ -144,14 +154,14 @@ class ContestService {
         Key: `${submission_id}/${filename}`,
         Body: req.files.file.data
       }
-      this.s3.upload(params, (_err: any, _data: any) => { })
+      this.s3.upload(params, (_err: any, _data: any) => { console.log(_err) })
 
       this.db.put(
         {
           TableName: 'submission',
           Item: item
         },
-        (_err: any, _data: any) => { }
+        (_err: any, _data: any) => { console.log(_err) }
       )
       return item
     } catch (err) {
