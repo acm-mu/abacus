@@ -15,7 +15,7 @@ const Settings = (): JSX.Element => {
   })
 
   useEffect(() => {
-    fetch(`${config.API_URL}/v1/contest`)
+    fetch(`${config.API_URL}/contest`)
       .then(res => res.json())
       .then(data => setSettings(data))
   }, [])

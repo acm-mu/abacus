@@ -11,7 +11,7 @@ const Problems = (): JSX.Element => {
   const [submissions, setSubmissions] = useState<{ [key: string]: SubmissionType[] }>()
 
   useEffect(() => {
-    fetch(`${config.API_URL}/v1/problems?division=blue`)
+    fetch(`${config.API_URL}/problems?division=blue`)
       .then(res => res.json())
       .then(probs => {
         probs = Object.values(probs)
@@ -20,7 +20,7 @@ const Problems = (): JSX.Element => {
         setLoading(false)
       })
 
-    fetch(`${config.API_URL}/v1/submissions?division=blue`)
+    fetch(`${config.API_URL}/submissions?division=blue`)
       .then(res => res.json())
       .then(data => {
         const submissions: SubmissionType[] = Object.values(data)

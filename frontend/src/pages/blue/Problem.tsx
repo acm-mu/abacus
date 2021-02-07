@@ -12,7 +12,7 @@ const Problem: React.FunctionComponent = () => {
   const { problem_id } = useParams<{ problem_id: string }>()
 
   useEffect(() => {
-    fetch(`${config.API_URL}/v1/problems?division=blue&id=${problem_id}`)
+    fetch(`${config.API_URL}/problems?division=blue&id=${problem_id}`)
       .then((res) => res.json())
       .then((res) => {
         if (res) setProblem(Object.values(res)[0] as ProblemType);

@@ -12,7 +12,7 @@ const Standings = (): JSX.Element => {
   const [standings, setStandings] = useState([]);
 
   useEffect(() => {
-    fetch(`${config.API_URL}/v1/problems?division=blue`)
+    fetch(`${config.API_URL}/problems?division=blue`)
       .then((res) => res.json())
       .then((problems) => {
         problems = Object.values(problems)
@@ -20,7 +20,7 @@ const Standings = (): JSX.Element => {
         setProblems(problems)
       });
 
-    fetch(`${config.API_URL}/v1/standings`)
+    fetch(`${config.API_URL}/standings`)
       .then((res) => res.json())
       .then((standings) => {
         standings = Object.values(standings)

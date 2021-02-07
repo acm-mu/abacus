@@ -15,7 +15,7 @@ const Submissions = (): JSX.Element => {
   const filter = hasRole('judge') || hasRole('admin') ? '' : `&team_id=${getuserinfo('user_id')}`
 
   useEffect(() => {
-    fetch(`${config.API_URL}/v1/submissions?division=blue${filter}`)
+    fetch(`${config.API_URL}/submissions?division=blue${filter}`)
       .then((res) => res.json())
       .then((subs) => {
         setLoading(false)

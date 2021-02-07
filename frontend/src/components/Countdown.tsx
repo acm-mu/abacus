@@ -1,38 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { Loader, Message } from "semantic-ui-react";
+import Moment from "react-moment";
+
 import { Block } from "./";
 import config from '../environment'
-
 import "./Countdown.scss";
 import "./FlipClock.scss";
 
-function formatTime(obj: Date | number) {
-  let milliseconds = obj instanceof Date ? obj.getTime() : Number(obj);
-
-  const hours = Math.floor(milliseconds / (1000 * 60 * 60));
-  milliseconds %= 1000 * 60 * 60;
-
-  const minutes = Math.floor(milliseconds / (1000 * 60));
-  milliseconds %= 1000 * 60;
-
-  const seconds = Math.floor(milliseconds / 1000);
-
-  return `${hours < 10 ? `0${hours}` : `${hours}`}:${minutes < 10 ? `0${minutes}` : `${minutes}`
-    }:${seconds < 10 ? `0${seconds}` : `${seconds}`}`;
-}
 
 const Countdown = (): JSX.Element => {
-  const [compName, setCompName] = useState();
-  const [isLoading, setLoading] = useState(true)
+  const [compName, setCompName] = useState('Loading Competition Info...');
 
-  const [startDate, setStartDate] = useState<Date>();
-  const [endDate, setEndDate] = useState<Date>();
-  const [time, setTime] = useState<Date>();
+  const now = new Date()
+
+  const [startDate, setStartDate] = useState<Date>(now);
+  const [endDate, setEndDate] = useState<Date>(now);
+  const [time, setTime] = useState<Date>(now);
 
   const diff = (date1: Date, date2: Date) => date1.getTime() - date2.getTime();
 
   useEffect(() => {
-    fetch(`${config.API_URL}/v1/contest`)
+    fetch(`${config.API_URL}/contest`)
       .then((res) => res.json())
       .then((res) => {
         setCompName(res.competition_name);
@@ -50,7 +37,6 @@ const Countdown = (): JSX.Element => {
             new Date().getTimezoneOffset() * 60000
           )
         );
-        setLoading(false)
       });
   }, [])
 
@@ -59,65 +45,43 @@ const Countdown = (): JSX.Element => {
   }, 200);
 
   return (
-    <>
-      {isLoading ?
-        <Loader active inline='centered' content="Loading" /> :
-        <>
-          {startDate && endDate && time ? (
-            <Block size='xs-12'>
-              <div id="countdown_during">
-                <div className="upper">
-                  <p>
-                    <b>Start</b> {startDate.toLocaleString()}
-                  </p>
-                  <h1>{compName}</h1>
-                  <p>
-                    <b>End</b> {endDate.toLocaleString()}
-                  </p>
-                </div>
+    <Block size='xs-12'>
+      <div id="countdown_during">
+        <div className="upper">
+          <p>
+            <b>Start</b> {startDate.toLocaleString()}
+          </p>
+          <h1>{compName}</h1>
+          <p>
+            <b>End</b> {endDate.toLocaleString()}
+          </p>
+        </div>
 
-                <div className="countdown">
-                  <div
-                    className="progress_bar"
-                    style={{
-                      width:
-                        Math.min(
-                          diff(time, startDate) / diff(endDate, startDate),
-                          1
-                        ) *
-                        100 +
-                        "%",
-                    }}
-                  >
-                    &nbsp;
-              </div>
-                </div>
+        <div className="countdown">
+          <div
+            className="progress_bar"
+            style={{
+              width: `${Math.min(diff(time, startDate) / diff(endDate, startDate), 1) * 100}%`
+            }}
+          />
+        </div>
 
-                <div className="lower">
-                  <p>
-                    <b>Time elapsed</b>{" "}
-                    {endDate > time
-                      ? formatTime(diff(time, startDate))
-                      : diff(endDate, startDate)}
-                  </p>
-                  <p>
-                    <b>Time remaining</b>{" "}
-                    {endDate > time ? formatTime(diff(endDate, time)) : "Finished"}
-                  </p>
-                </div>
-              </div>
-            </Block>
-          ) : (
-              <Message
-                warning
-                icon="warning sign"
-                header="Could not initialize countdown!"
-                content="We are having problems communicating with our server!"
-              />
-            )}
-        </>
-      }
-    </>
+        <div className="lower">
+          <p>
+            <b>Time elapsed </b>
+            {endDate > time ?
+              <Moment format="H:mm:ss" date={startDate} durationFromNow />
+              : <Moment format="H:mm:ss" duration={startDate} date={endDate} />}
+          </p>
+          <p>
+            <b>Time remaining </b>
+            {endDate > time ?
+              <Moment format="H:mm:ss" duration={time} date={endDate} />
+              : "Finished"}
+          </p>
+        </div>
+      </div>
+    </Block>
   );
 };
 
