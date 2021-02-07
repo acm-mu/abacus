@@ -1,6 +1,6 @@
 
 
-import React from "react";
+import React, { useContext } from "react";
 import { Switch, Route } from 'react-router-dom'
 import { Container } from "semantic-ui-react";
 
@@ -14,40 +14,43 @@ import EditProblem from './EditProblem'
 import NewProblem from './NewProblem'
 import Settings from './Settings'
 import NotFound from "../NotFound";
-import { hasRole } from "../../authlib";
 import { Unauthorized } from "../../components";
 import DefaultNavigation from "../DefaultNavigation";
+import { UserContext } from "../../context/user";
 
 /* Flask Endpoints to be moved to backend
   * /submissions/<sid>/invoke
 */
 
-const Admin = (): JSX.Element => (
-  <>
-    {!hasRole('admin') ?
-      <>
-        <DefaultNavigation />
-        <Container text className="main">
-          <Unauthorized />
-        </Container>
-      </> : <>
-        <AdminNavigation />
-        <Container text className="main">
-          <Switch>
-            <Route exact path='/admin/' component={Home} />
-            <Route path='/admin/settings' component={Settings} />
-            <Route path='/admin/problems/:problem_id/edit' component={EditProblem} />
-            <Route path='/admin/problems/new' component={NewProblem} />
-            <Route path='/admin/problems' component={Problems} />
-            <Route path='/admin/users' component={Users} />
-            <Route path='/admin/submissions' component={Submissions} />
-            <Route path='/admin/submissions/:submission_id' component={Submission} />
-            <Route default component={NotFound} />
-          </Switch>
-        </Container>
-      </>
-    }
-  </>
-);
+const Admin = (): JSX.Element => {
+  const { user } = useContext(UserContext);
+  return (
+    <>
+      {user && user.role != 'admin' ?
+        <>
+          <DefaultNavigation />
+          <Container text className="main">
+            <Unauthorized />
+          </Container>
+        </> : <>
+          <AdminNavigation />
+          <Container text className="main">
+            <Switch>
+              <Route exact path='/admin/' component={Home} />
+              <Route path='/admin/settings' component={Settings} />
+              <Route path='/admin/problems/:problem_id/edit' component={EditProblem} />
+              <Route path='/admin/problems/new' component={NewProblem} />
+              <Route path='/admin/problems' component={Problems} />
+              <Route path='/admin/users' component={Users} />
+              <Route path='/admin/submissions' component={Submissions} />
+              <Route path='/admin/submissions/:submission_id' component={Submission} />
+              <Route default component={NotFound} />
+            </Switch>
+          </Container>
+        </>
+      }
+    </>
+  )
+}
 
 export default Admin;

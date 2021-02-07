@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Button, Form, Message } from "semantic-ui-react";
 import { Block } from "../components";
-import { isAuthenticated, authenticate, hasRole } from '../authlib'
-import { useHistory } from "react-router-dom";
+import { authenticate } from '../authlib'
+import { UserContext } from "../context/user";
 
 const Login = (): JSX.Element => {
+  const { user, setUser } = useContext(UserContext)
   const [error, setError] = useState(false)
   const formData: { [any: string]: string } = {}
-  const history = useHistory()
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     formData[event.target.name] = event.target.value
@@ -15,19 +15,17 @@ const Login = (): JSX.Element => {
 
   const handleSubmit = async () => {
     const { username, password } = formData
-    const result = await authenticate(username, password)
-    if (result)
-      if (hasRole('admin'))
-        history.push('/admin')
-      else
-        history.push('/')
-    else
+    const authenticatedUser = await authenticate(username, password)
+    if (authenticatedUser) {
+      setUser(authenticatedUser)
+    } else {
       setError(true)
+    }
   }
 
   return (
     <Block transparent center size="xs-6">
-      {isAuthenticated() ?
+      {user ?
         (<h3> You are already logged in!</h3 >) :
         (
           <>

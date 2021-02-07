@@ -1,5 +1,6 @@
 import { useState } from "react"
 import config from './environment'
+import { UserType } from "./types"
 
 const isAuthenticated = (): boolean => {
   const { username, session_token } = localStorage
@@ -21,12 +22,7 @@ const isAuthenticated = (): boolean => {
   return state
 }
 
-const logout = (): void => {
-  for (const key of ['username', 'session_token', 'division', 'role', 'user_id', 'scratch_username', 'display_name'])
-    localStorage.removeItem(key)
-}
-
-const authenticate = async (username: string, password: string): Promise<boolean> => {
+const authenticate = async (username: string, password: string): Promise<UserType | null> => {
   const formData = new FormData()
   formData.set('username', username)
   formData.set('password', password)
@@ -35,35 +31,13 @@ const authenticate = async (username: string, password: string): Promise<boolean
     method: 'POST',
     body: formData
   })
-  if (res.status != 200) return false
+  if (res.status != 200) return null
 
-  const user = await res.json()
+  const user: UserType = await res.json()
+  localStorage.setItem('username', user.username)
+  localStorage.setItem('session_token', user.session_token)
+  return user
 
-  Object.keys(user).forEach(key => localStorage.setItem(key, user[key]))
-
-  return true
 }
 
-const getuserinfo = (key: string): string => {
-  return localStorage.getItem(key) || ''
-}
-
-const hasRole = (role: string): boolean => {
-  return localStorage.getItem('role') == role
-}
-
-const userhome = (): string => {
-  if (hasRole('admin')) return '/admin'
-  return `/${getuserinfo('division')}`
-}
-
-const hasAccess = (permission: string): boolean => {
-  switch (permission) {
-    case 'blue':
-      if (hasRole('admin') || hasRole('judge')) return true
-      return getuserinfo('division') == 'blue'
-    default: return false;
-  }
-}
-
-export { isAuthenticated, authenticate, logout, getuserinfo, hasRole, userhome, hasAccess }
+export { isAuthenticated, authenticate }
