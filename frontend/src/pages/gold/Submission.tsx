@@ -28,7 +28,7 @@ const Submission = (): JSX.Element => {
                 href={`/gold/submissions/${submission.submission_id}`}>{submission.submission_id.substring(0, 7)}</a>
               </Table.Cell>
               <Table.Cell fromnow="{{ submission.date*1000 }}"></Table.Cell>
-              <Table.Cell><a href={`/gold/problems/${ submission.prob_id }`}>{ submission.prob_name }</a></Table.Cell>
+              <Table.Cell><a href={`/gold/problems/${submission.prob_id}`}>{submission.prob_name}</a></Table.Cell>
               <Table.Cell className={`icn ${submission.status}`}></Table.Cell>
             </Table.Row>
           </Table.Body>
