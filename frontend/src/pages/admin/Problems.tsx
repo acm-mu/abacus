@@ -57,8 +57,8 @@ const Problems = (): JSX.Element => {
                 <Table.Cell>{problem.tests.length}</Table.Cell>
                 {submissions &&
                   <>
-                    <Table.Cell>{submissions[problem.problem_id].filter((p) => p.score > 0).length}</Table.Cell>
-                    <Table.Cell>{submissions[problem.problem_id].length}</Table.Cell>
+                    <Table.Cell>{problem.problem_id in submissions ? submissions[problem.problem_id].filter((p) => p.score > 0).length : 0}</Table.Cell>
+                    <Table.Cell>{problem.problem_id in submissions ? submissions[problem.problem_id].length : 0}</Table.Cell>
                   </>
                 }
               </Table.Row>
