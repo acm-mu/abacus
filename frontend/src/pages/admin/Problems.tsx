@@ -52,7 +52,7 @@ const Problems = (): JSX.Element => {
           <Table.Body>
             {problems.map((problem: ProblemType, index: number) => (
               <Table.Row key={index}>
-                <Table.HeaderCell class="collapsing">{problem.id}</Table.HeaderCell>
+                <Table.HeaderCell className="collapsing">{problem.id}</Table.HeaderCell>
                 <Table.Cell><Link to={`/admin/problems/${problem.problem_id}/edit`}>{problem.problem_name}</Link></Table.Cell>
                 <Table.Cell>{problem.tests.length}</Table.Cell>
                 {submissions &&

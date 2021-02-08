@@ -9,8 +9,8 @@ import BlueNavigation from './BlueNavigation'
 import React from "react";
 import { Switch, Route } from 'react-router-dom'
 import { Container } from "semantic-ui-react";
-import NotFound from '../NotFound'
 import Submit from './Submit'
+import { NotFound } from '../../components'
 
 /* Flask endpoints to move to backend
   * /problems/<pid>/submit
