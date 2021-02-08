@@ -6,7 +6,6 @@ import config from '../environment'
 import "./Countdown.scss";
 import "./FlipClock.scss";
 
-
 const Countdown = (): JSX.Element => {
   const [compName, setCompName] = useState('Loading Competition Info...');
 
@@ -18,7 +17,9 @@ const Countdown = (): JSX.Element => {
 
   const diff = (date1: Date, date2: Date) => date1.getTime() - date2.getTime();
 
+  let isMounted = false
   useEffect(() => {
+    isMounted = true
     fetch(`${config.API_URL}/contest`)
       .then((res) => res.json())
       .then((res) => {
@@ -26,10 +27,12 @@ const Countdown = (): JSX.Element => {
         setStartDate(new Date(parseInt(res.start_date) * 1000))
         setEndDate(new Date(parseInt(res.end_date) * 1000))
       });
+    return () => { isMounted = false }
   }, [])
 
   setInterval(() => {
-    setTime(new Date());
+    if (isMounted)
+      setTime(new Date());
   }, 200);
 
   return (
