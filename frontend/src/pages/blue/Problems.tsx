@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Table } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { Block, Countdown, Unauthorized } from "../../components";
 import { ProblemType } from '../../types'
 import '../../components/Table.scss'
 import config from '../../environment'
-import { isAuthenticated } from "../../authlib";
+import { UserContext } from "../../context/user";
+import { useAuth } from "../../authlib";
 
 const Problems = (): JSX.Element => {
+  const { user } = useContext(UserContext)
+  const [isAuthenticated] = useAuth(user)
   const [problems, setProblems] = useState([]);
 
   useEffect(() => {
@@ -22,7 +25,7 @@ const Problems = (): JSX.Element => {
 
   return (
     <>
-      {!isAuthenticated() ? <Unauthorized /> :
+      {isAuthenticated ?
         <>
           <Countdown />
           <Block size="xs-12" transparent>
@@ -47,7 +50,8 @@ const Problems = (): JSX.Element => {
               </Table.Body>
             </Table>
           </Block>
-        </>
+        </> :
+        <Unauthorized />
       }
     </>
   );

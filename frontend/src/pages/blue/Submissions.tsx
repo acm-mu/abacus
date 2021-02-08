@@ -6,11 +6,12 @@ import { Block, Countdown, Unauthorized } from "../../components";
 import { SubmissionType } from "../../types";
 import config from '../../environment'
 import "../../components/Icons.scss";
-import { isAuthenticated } from "../../authlib";
 import { UserContext } from "../../context/user";
+import { useAuth } from "../../authlib";
 
 const Submissions = (): JSX.Element => {
   const { user } = useContext(UserContext);
+  const [isAuthenticated] = useAuth(user)
   const [isLoading, setLoading] = useState(true)
   const [submissions, setSubmissions] = useState([]);
 
@@ -20,17 +21,18 @@ const Submissions = (): JSX.Element => {
   }
 
   useEffect(() => {
-    fetch(`${config.API_URL}/submissions?division=blue${filter}`)
-      .then((res) => res.json())
-      .then((subs) => {
-        setLoading(false)
-        setSubmissions(Object.values(subs))
-      });
+    if (isAuthenticated)
+      fetch(`${config.API_URL}/submissions?division=blue${filter}`)
+        .then((res) => res.json())
+        .then((subs) => {
+          setLoading(false)
+          setSubmissions(Object.values(subs))
+        });
   }, []);
 
   return (
     <>
-      {!isAuthenticated() ? <Unauthorized /> :
+      {isAuthenticated ?
         <>
           <Countdown />
           <Block transparent size="xs-12">
@@ -81,7 +83,8 @@ const Submissions = (): JSX.Element => {
                 </Table.Body>
               </Table>}
           </Block>
-        </>}
+        </> :
+        <Unauthorized />}
     </>
   );
 };
