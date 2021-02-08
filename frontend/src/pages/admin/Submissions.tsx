@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { SubmissionType } from '../../types'
 import { Block, Countdown } from '../../components'
 import config from '../../environment'
+import Moment from 'react-moment'
 
 const Submissions = (): JSX.Element => {
 
@@ -55,7 +56,7 @@ const Submissions = (): JSX.Element => {
                 <Table.Cell>{submission.language}</Table.Cell>
                 <Table.Cell className={`icn ${submission.status}`} />
                 <Table.Cell>{submission.runtime}</Table.Cell>
-                <Table.Cell fromnow={submission.date * 1000} />
+                <Table.Cell><Moment fromNow date={submission.date * 1000} /> </Table.Cell>
                 <Table.Cell>{submission.score}</Table.Cell>
               </Table.Row>)
               )) : (
