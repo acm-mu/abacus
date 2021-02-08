@@ -23,8 +23,8 @@ const Countdown = (): JSX.Element => {
       .then((res) => res.json())
       .then((res) => {
         setCompName(res.competition_name);
-        setStartDate(new Date(parseInt(res.start_date)))
-        setEndDate(new Date(parseInt(res.end_date)))
+        setStartDate(new Date(parseInt(res.start_date) * 1000))
+        setEndDate(new Date(parseInt(res.end_date) * 1000))
       });
   }, [])
 

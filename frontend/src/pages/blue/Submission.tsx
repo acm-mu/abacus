@@ -4,17 +4,24 @@ import { Link, useParams } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
 import { Block, Countdown } from '../../components'
 import config from '../../environment'
-import { SubmissionType } from '../../types'
+import { ProblemType, SubmissionType } from '../../types'
 
 const Submission = (): JSX.Element => {
   const [submission, setSubmission] = useState<SubmissionType>()
+  const [problem, setProblem] = useState<ProblemType>()
   const { submission_id } = useParams<{ submission_id: string }>()
 
   useEffect(() => {
     fetch(`${config.API_URL}/submissions?submission_id=${submission_id}`)
       .then(res => res.json())
       .then(res => {
-        if (res) setSubmission(Object.values(res)[0] as SubmissionType);
+        if (res) {
+          const submission = Object.values(res)[0] as SubmissionType
+          setSubmission(submission);
+          fetch(`${config.API_URL}/problems?problem_id=${submission.problem_id}`)
+            .then(res => res.json())
+            .then(prob => setProblem(Object.values(prob)[0] as ProblemType))
+        }
       })
   }, [])
 
@@ -42,7 +49,7 @@ const Submission = (): JSX.Element => {
               <Table.Cell rowSpan={2}><Link to={`/blue/submissions/${submission?.submission_id}`}>{submission?.submission_id.substring(0, 7)}</Link>
               </Table.Cell>
               <Table.Cell>{submission && <Moment fromNow>{submission.date}</Moment>}</Table.Cell>
-              <Table.Cell><Link to={`/blue/problems/${submission?.problem_id}`}> {submission?.prob_name}</Link></Table.Cell>
+              <Table.Cell><Link to={`/blue/problems/${problem?.id}`}> {submission?.prob_name}</Link></Table.Cell>
               <Table.Cell className={`icn ${submission?.status}`}></Table.Cell>
               <Table.Cell> {`${submission?.runtime}`.substring(0, 4)} </Table.Cell>
               <Table.Cell> {submission?.language} </Table.Cell>
@@ -72,14 +79,14 @@ const Submission = (): JSX.Element => {
             <Table.Row>
               <Table.HeaderCell>FILENAME</Table.HeaderCell>
               <Table.HeaderCell>FILESIZE</Table.HeaderCell>
-              <Table.HeaderCell>SHA-1 SUM</Table.HeaderCell>
+              <Table.HeaderCell>MD5</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           <Table.Body>
             <Table.Row>
               <Table.Cell> {submission?.filename}</Table.Cell>
               <Table.Cell> {submission?.filesize}  bytes</Table.Cell>
-              <Table.Cell> {submission?.sha1sum} </Table.Cell>
+              <Table.Cell> {submission?.md5} </Table.Cell>
             </Table.Row>
           </Table.Body>
         </Table>

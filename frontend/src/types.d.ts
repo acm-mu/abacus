@@ -13,7 +13,7 @@ type SubmissionType = {
   problem_id: string;
   runtime: number;
   score: number;
-  sha1sum: string;
+  md5: string;
   status: string;
   sub_no: number;
   submission_id: string;
