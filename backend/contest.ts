@@ -58,17 +58,15 @@ class ContestService {
     }
   }
 
-  save_settings() {
-    const item = {
-
+  save_settings(req: any): boolean {
+    const params = {
+      RequestItems: {
+        'setting': Object.entries(req.body).map((e) => ({ PutRequest: { Item: { "key": e[0], "value": e[1] } } }))
+      }
     }
     try {
-      this.db.put({
-        TableName: 'setting',
-        Item: item
-      }, (_err: any, _data: any) => { }
-      )
-      return item
+      this.db.batchWrite(params, (_err, _data) => { });
+      return true
     } catch (err) {
       throw (err)
     }
