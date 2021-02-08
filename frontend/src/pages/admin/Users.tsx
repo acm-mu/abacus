@@ -31,7 +31,6 @@ const EditUser = ({ user, trigger }: EditUserProps) => {
       onOpen={() => setOpen(true)}
       open={open}
       trigger={trigger}
-    // trigger={}
     >
       <Modal.Header>{user ? 'Edit User' : 'Create User'}</Modal.Header>
       <Modal.Content>
