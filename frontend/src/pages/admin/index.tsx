@@ -13,26 +13,16 @@ import Submission from './Submission'
 import EditProblem from './EditProblem'
 import NewProblem from './NewProblem'
 import Settings from './Settings'
-import NotFound from "../NotFound";
-import { Unauthorized } from "../../components";
+import { NotFound, Unauthorized } from "../../components";
 import DefaultNavigation from "../DefaultNavigation";
 import { UserContext } from "../../context/user";
-
-/* Flask Endpoints to be moved to backend
-  * /submissions/<sid>/invoke
-*/
 
 const Admin = (): JSX.Element => {
   const { user } = useContext(UserContext);
   return (
     <>
-      {user && user.role != 'admin' ?
+      {user?.role == 'admin' ?
         <>
-          <DefaultNavigation />
-          <Container text className="main">
-            <Unauthorized />
-          </Container>
-        </> : <>
           <AdminNavigation />
           <Container text className="main">
             <Switch>
@@ -46,6 +36,12 @@ const Admin = (): JSX.Element => {
               <Route path='/admin/submissions/:submission_id' component={Submission} />
               <Route default component={NotFound} />
             </Switch>
+          </Container>
+        </> :
+        <>
+          <DefaultNavigation />
+          <Container text className="main">
+            <Unauthorized />
           </Container>
         </>
       }

@@ -113,11 +113,6 @@ const Users = (): JSX.Element => {
           <Popup content="Import from CSV" trigger={<Button icon="upload" />} />
           <Popup content="Export to CSV" trigger={<Button icon="download" />} />
           <Popup content="Delete Selected" trigger={<Button icon="trash" />} />
-
-          {/* <div class="ui icon button" onclick="createTeam()" data-tooltip="Add User"><i className="plus icon"></i></div>
-        <div class="ui icon button" onclick="uploadCSV()" data-tooltip="Import from CSV"><i className="upload icon"></i></div>
-        <div class="ui icon button" onclick="downloadCSV()" data-tooltip="Export to CSV"><i className="download icon"></i></div>
-        <div class="ui red icon button" onclick="deleteSelected()" data-tooltip="Delete Selected" id="delete_selected" style={{display: "none"}}><i className="trash icon"></i></div> */}
         </div>
         {isLoading ?
           <Loader active inline='centered' content="Loading" /> :
