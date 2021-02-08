@@ -5,16 +5,16 @@ import config from '../../environment'
 import { toLocalDateString, toLocalTimeString } from '../../util/date'
 
 const Settings = (): JSX.Element => {
-  const [settings, setSettings] = useState<{ [key: string]: any }>({
+  const [settings, setSettings] = useState<{ [key: string]: string }>({
     competition_name: '',
-    start_date: Date.now(),
-    start_time: Date.now(),
-    end_date: Date.now(),
-    end_time: Date.now(),
-    points_per_yes: 0,
-    points_per_no: 0,
-    points_per_compilation_error: 0,
-    points_per_minute: 0
+    start_date: `${Date.now()}`,
+    start_time: `${Date.now()}`,
+    end_date: `${Date.now()}`,
+    end_time: `${Date.now()}`,
+    points_per_yes: '0',
+    points_per_no: '0',
+    points_per_compilation_error: '0',
+    points_per_minute: '0'
   })
 
   useEffect(() => {
