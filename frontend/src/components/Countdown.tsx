@@ -23,20 +23,8 @@ const Countdown = (): JSX.Element => {
       .then((res) => res.json())
       .then((res) => {
         setCompName(res.competition_name);
-
-        setStartDate(
-          new Date(
-            parseInt(res.start_date) * 1000 -
-            new Date().getTimezoneOffset() * 60000
-          )
-        );
-
-        setEndDate(
-          new Date(
-            parseInt(res.end_date) * 1000 -
-            new Date().getTimezoneOffset() * 60000
-          )
-        );
+        setStartDate(new Date(parseInt(res.start_date)))
+        setEndDate(new Date(parseInt(res.end_date)))
       });
   }, [])
 
@@ -49,11 +37,11 @@ const Countdown = (): JSX.Element => {
       <div id="countdown_during">
         <div className="upper">
           <p>
-            <b>Start</b> {startDate.toLocaleString()}
+            <b>Start</b> <Moment date={startDate} format="MM/DD/YYYY, HH:mm:ss A" />
           </p>
           <h1>{compName}</h1>
           <p>
-            <b>End</b> {endDate.toLocaleString()}
+            <b>End</b> <Moment date={endDate} format="MM/DD/YYYY, HH:mm:ss A" />
           </p>
         </div>
 
