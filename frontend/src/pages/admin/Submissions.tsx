@@ -10,15 +10,19 @@ const Submissions = (): JSX.Element => {
   const [isLoading, setLoading] = useState(true)
   const [submissions, setSubmissions] = useState([])
 
-  useEffect((): void => {
-
+  let isMounted = false
+  useEffect(() => {
+    isMounted = true
     fetch(`${config.API_URL}/submissions`)
       .then(res => res.json())
       .then(data => {
         data = Object.values(data)
-        setSubmissions(data)
-        setLoading(false)
+        if (isMounted) {
+          setSubmissions(data)
+          setLoading(false)
+        }
       })
+    return () => { isMounted = false }
   }, [])
 
   return (

@@ -11,13 +11,16 @@ const Standings = (): JSX.Element => {
   const [problems, setProblems] = useState([]);
   const [standings, setStandings] = useState([]);
 
+  let isMounted = false
   useEffect(() => {
+    isMounted = true
     fetch(`${config.API_URL}/problems?division=blue`)
       .then((res) => res.json())
       .then((problems) => {
         problems = Object.values(problems)
         problems.sort((a: ProblemType, b: ProblemType) => a.id.localeCompare(b.id))
-        setProblems(problems)
+        if (isMounted)
+          setProblems(problems)
       });
 
     fetch(`${config.API_URL}/standings`)
@@ -25,8 +28,10 @@ const Standings = (): JSX.Element => {
       .then((standings) => {
         standings = Object.values(standings)
         standings.sort((a: StandingsUser, b: StandingsUser) => b.solved - a.solved)
-        setStandings(standings)
+        if (isMounted)
+          setStandings(standings)
       });
+    return () => { isMounted = false }
   }, []);
 
   return (
