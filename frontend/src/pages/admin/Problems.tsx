@@ -10,28 +10,35 @@ const Problems = (): JSX.Element => {
   const [problems, setProblems] = useState([])
   const [submissions, setSubmissions] = useState<{ [key: string]: SubmissionType[] }>()
 
+  let isMounted = false
   useEffect(() => {
+    isMounted = true
     fetch(`${config.API_URL}/problems?division=blue`)
       .then(res => res.json())
       .then(probs => {
-        probs = Object.values(probs)
-        probs.sort((a: ProblemType, b: ProblemType) => a.id.localeCompare(b.id))
-        setProblems(probs)
-        setLoading(false)
+        if (isMounted) {
+          probs = Object.values(probs)
+          probs.sort((a: ProblemType, b: ProblemType) => a.id.localeCompare(b.id))
+          setProblems(probs)
+          setLoading(false)
+        }
       })
 
     fetch(`${config.API_URL}/submissions?division=blue`)
       .then(res => res.json())
       .then(data => {
-        const submissions: SubmissionType[] = Object.values(data)
-        const subs: { [key: string]: SubmissionType[] } = {}
-        submissions.forEach((sub: SubmissionType) => {
-          const { problem_id } = sub;
-          if (!(problem_id in subs)) subs[problem_id] = []
-          subs[problem_id].push(sub)
-        })
-        setSubmissions(subs)
+        if (isMounted) {
+          const submissions: SubmissionType[] = Object.values(data)
+          const subs: { [key: string]: SubmissionType[] } = {}
+          submissions.forEach((sub: SubmissionType) => {
+            const { problem_id } = sub;
+            if (!(problem_id in subs)) subs[problem_id] = []
+            subs[problem_id].push(sub)
+          })
+          setSubmissions(subs)
+        }
       })
+    return () => { isMounted = false }
   }, [])
 
   return (
