@@ -28,7 +28,7 @@ const Navigation: React.FunctionComponent<Props> = (props: Props) => {
 
         <Menu.Menu position="right">
           {user ?
-            <Dropdown item as={Link} /*to={userhome()}*/ text={user.username} simple>
+            <Dropdown item text={user.username} simple>
               <Dropdown.Menu>
                 {user.role == 'admin' && <Menu.Item as={Link} to='/admin/settings'>Settings</Menu.Item>}
                 <Dropdown.Item onClick={handleLogout} text="Log out" />

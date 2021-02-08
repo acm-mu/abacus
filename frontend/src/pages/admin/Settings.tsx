@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Form, Input } from 'semantic-ui-react'
-import { Block, Countdown } from '../../components'
+import { Block } from '../../components'
 import config from '../../environment'
 
 const timezoneOffset = () => (new Date()).getTimezoneOffset() * 60 * 1000
