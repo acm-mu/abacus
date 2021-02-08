@@ -95,13 +95,18 @@ const Users = (): JSX.Element => {
   const [users, setUsers] = useState([])
   const [isLoading, setLoading] = useState(true)
 
-  useEffect((): void => {
+  let isMounted = false
+  useEffect(() => {
+    isMounted = true
     fetch(`${config.API_URL}/users`)
       .then(res => res.json())
       .then(data => {
-        setUsers(Object.values(data))
-        setLoading(false)
+        if (isMounted) {
+          setUsers(Object.values(data))
+          setLoading(false)
+        }
       })
+    return () => { isMounted = false }
   }, [])
 
   return (
