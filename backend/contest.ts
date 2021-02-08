@@ -136,7 +136,7 @@ class ContestService {
         status: 'pending',
         score: 0,
         division: 'blue',
-        date: Date.now(),
+        date: Date.now() / 1000,
         language,
         problem_id,
         team_id,
