@@ -13,8 +13,7 @@ const useAuth = (user: UserType | undefined): [_: boolean, _: Dispatch<SetStateA
     fetch(`${config.API_URL}/auth`, {
       method: 'POST',
       body: formData
-    })
-      .then(res => setState(res.status == 200))
+    }).then(res => { setState(res.status == 200) })
   }
 
   return [state, setState]

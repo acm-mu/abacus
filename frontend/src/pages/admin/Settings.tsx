@@ -5,10 +5,10 @@ import config from '../../environment'
 
 const timezoneOffset = () => (new Date()).getTimezoneOffset() * 60 * 1000
 
-const toLocal = (date: string): Date => new Date((typeof (date) === 'string' ? parseInt(date) * 1000 : date) - timezoneOffset())
+const toLocal = (date: number): Date => new Date((date * 1000) - timezoneOffset())
 
-const toLocalDateString = (date: string): string => toLocal(date).toISOString().substring(0, 10)
-const toLocalTimeString = (date: string): string => toLocal(date).toISOString().substring(11, 16)
+const toLocalDateString = (date: number): string => toLocal(date).toISOString().substring(0, 10)
+const toLocalTimeString = (date: number): string => toLocal(date).toISOString().substring(11, 16)
 
 const Settings = (): JSX.Element => {
   const [settings, setSettings] = useState<{ [key: string]: string }>({
@@ -38,7 +38,6 @@ const Settings = (): JSX.Element => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const name = event.target.name
     const value = event.target.value
-    console.log({ ...settings, [name]: value })
     setSettings({ ...settings, [name]: value })
   }
 
@@ -52,12 +51,10 @@ const Settings = (): JSX.Element => {
     formData.set('start_date', `${Date.parse(`${settings.start_date} ${settings.start_time}`) / 1000.0}`)
     formData.set('end_date', `${Date.parse(`${settings.end_date} ${settings.end_time}`) / 1000.0}`)
 
-    const res = await fetch(`${config.API_URL}/contest`, {
+    await fetch(`${config.API_URL}/contest`, {
       method: 'POST',
       body: formData
     })
-
-    console.log(res)
   }
 
   return (

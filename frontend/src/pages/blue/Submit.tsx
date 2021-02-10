@@ -40,13 +40,14 @@ const Submit = (): JSX.Element => {
   const handleSubmit = async () => {
     if (!(language && file && problem && user)) return
     const formData = new FormData()
-    formData.set('file_ext', language.file_extension)
+    // formData.set('file_ext', language.file_extension)
     formData.set('problem_id', problem.problem_id)
     formData.set('file', file, file.name)
     formData.set('language', language.key)
     formData.set('team_id', user.user_id)
+    formData.set('division', user.division)
 
-    const res = await fetch(`${config.API_URL}/problems/${problem.problem_id}/submit`, {
+    const res = await fetch(`${config.API_URL}/submissions`, {
       method: 'POST',
       body: formData
     })
