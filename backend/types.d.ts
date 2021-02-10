@@ -9,16 +9,14 @@ type SubmissionType = {
   filename: string;
   filesize: number;
   language: string;
-  prob_name: string;
   problem_id: string;
   runtime: number;
   score: number;
-  sha1sum: string;
+  md5: string;
   status: string;
   sub_no: number;
   submission_id: string;
   team_id: string;
-  team_name: string;
   tests: TestType[];
 }
 
@@ -43,9 +41,11 @@ type UserType = {
   user_id: string;
   role: string;
   username: string;
+  password: string;
   display_name: string;
   division: string;
   scratch_username?: string;
+  session_token: string;
 }
 
 type StandingsUser = {
@@ -60,4 +60,15 @@ type StandingsUser = {
   problems: [ProblemScoreType];
 }
 
-export type { StandingsUser, TestType, SubmissionType, ProblemType, UserType, ProblemScoreType }
+type CompetitionSettings = {
+  competition_name: string;
+  points_per_yes: number;
+  points_per_no: number;
+  points_per_compilation_error: number;
+  points_per_minute: number;
+  start_date: number;
+  end_date: number
+}
+type ArgsType = { [key: string]: any }
+
+export type { StandingsUser, TestType, SubmissionType, ProblemType, UserType, ProblemScoreType, CompetitionSettings, ArgsType }

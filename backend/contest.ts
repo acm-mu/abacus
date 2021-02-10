@@ -1,170 +1,122 @@
-import AWS from "aws-sdk";
-import { QueryString } from "aws-sdk/clients/cloudwatchlogs";
-import { ScanOutput } from "aws-sdk/clients/dynamodb";
-import { v4 as uuidv4 } from 'uuid'
+import AWS, { AWSError, S3 } from "aws-sdk";
+import { AttributeMap, BatchWriteItemOutput, DeleteItemOutput, DocumentClient, GetItemOutput, ItemList, PutItemOutput, ScanInput, ScanOutput, UpdateItemOutput } from "aws-sdk/clients/dynamodb";
+import { ArgsType, CompetitionSettings } from "types";
 
 class ContestService {
-  db: AWS.DynamoDB.DocumentClient;
-  s3: AWS.S3
+  db: DocumentClient;
+  s3: S3;
 
   constructor() {
     this.init_aws();
   }
 
   init_aws() {
-    AWS.config.region = 'us-east-2'
+    AWS.config.region = 'us-east-2';
 
-    this.db = new AWS.DynamoDB.DocumentClient();
-    this.s3 = new AWS.S3();
+    this.db = new DocumentClient();
+    this.s3 = new S3();
   }
 
-  makeParams(args?: { [key: string]: string } | QueryString) {
-    if (!args) return {}
-    const entries = Object.entries(args)
-    if (entries.length == 0) return {}
-    return {
-      FilterExpression: entries.map((e) => (`#${e[0]} = :${e[0]}`)).join(" AND "),
-      ExpressionAttributeNames: Object.assign({}, ...entries.map((x) => ({ [`#${x[0]}`]: x[0] }))),
-      ExpressionAttributeValues: Object.assign({}, ...entries.map((x) => ({ [`:${x[0]}`]: x[1] })))
-    }
+  async get_settings(): Promise<CompetitionSettings> {
+    return new Promise((resolve, reject) => {
+      this.scanItems('setting')
+        .then((itemList?: ItemList) => {
+          if (itemList)
+            resolve(Object.assign({}, ...itemList.map(((x: any) => ({ [x.key]: x.value })))))
+          else
+            reject()
+        })
+        .catch(err => reject(err))
+    })
   }
 
-  updateItem(TableName: string, Key: { [key: string]: string }, args: { [key: string]: string }) {
-    const entries = Object.entries(args)
-    try {
-      const params = {
-        TableName,
-        Key,
-        UpdateExpression: entries.map((e) => "SET  " + (`#${e[0]} = :${e[0]}`)).join(","),
-        ExpressionAttributeNames: Object.assign({}, ...entries.map((x) => ({ [`#${x[0]}`]: x[0] }))),
-        ExpressionAttributeValues: Object.assign({}, ...entries.map((x) => ({ [`:${x[0]}`]: x[1] })))
+  save_settings(settings: CompetitionSettings): Promise<BatchWriteItemOutput> {
+    return new Promise((resolve, reject) => {
+      this.db.batchWrite({
+        RequestItems: {
+          'setting': Object.entries(settings).map((e) => ({ PutRequest: { Item: { "key": e[0], "value": e[1] } } }))
+        }
+      }, (err: AWSError, data: BatchWriteItemOutput) => {
+        if (err) reject(err)
+        else resolve(data)
+      })
+    })
+  }
+
+  transpose(itemList: ItemList, key: string): { [key: string]: any } {
+    return Object.assign({}, ...itemList.map((obj: any) => ({ [obj[key]]: obj })))
+  }
+
+  scanItems(tableName: string, args?: ArgsType): Promise<ItemList | undefined> {
+    return new Promise((resolve, reject) => {
+      let params: ScanInput = {
+        TableName: tableName
       }
-      this.db.update(params, (_err, _data) => { })
-    } catch (err) {
-      throw (err)
-    }
-  }
-
-  dumps(res: ScanOutput, key: string): {} {
-    return res.Items ? Object.assign({}, ...res.Items.map((obj: any) => ({ [obj[key]]: obj }))) : {}
-  }
-
-  async get_settings() {
-    try {
-      const res = await this.db.scan({ TableName: 'setting' }).promise()
-      return res.Items ? Object.assign({}, ...res.Items.map((x) => ({ [x.key]: x.value }))) : []
-    } catch (err) {
-      throw (err)
-    }
-  }
-
-  save_settings(req: any): boolean {
-    const params = {
-      RequestItems: {
-        'setting': Object.entries(req.body).map((e) => ({ PutRequest: { Item: { "key": e[0], "value": e[1] } } }))
-      }
-    }
-    try {
-      this.db.batchWrite(params, (_err, _data) => { });
-      return true
-    } catch (err) {
-      throw (err)
-    }
-  }
-
-  async get_problems(args?: { [key: string]: string }): Promise<{ [key: string]: any }> {
-    const params = { TableName: 'problem', ...this.makeParams(args) }
-    try {
-      const res = await this.db.scan(params).promise()
-      return this.dumps(res, 'problem_id')
-    } catch (err) {
-      throw (err)
-    }
-  }
-
-  async get_submissions(args?: { [key: string]: string }): Promise<{}> {
-    const params = { TableName: 'submission', ...this.makeParams(args) }
-    try {
-      const res = await this.db.scan(params).promise()
-
-      const users = await this.get_users()
-      const problems = await this.get_problems()
-
-      if (res && res.Items) {
-        for (const submission of res.Items) {
-          submission.team_name = users[submission.team_id].display_name
-          submission.prob_name = problems[submission.problem_id].problem_name
+      if (args) {
+        const entries = Object.entries(args)
+        if (entries.length > 0) {
+          params.FilterExpression = entries.map((e) => (`#${e[0]} = :${e[0]}`)).join(" AND ")
+          params.ExpressionAttributeNames = Object.assign({}, ...entries.map((x) => ({ [`#${x[0]}`]: x[0] })))
+          params.ExpressionAttributeValues = Object.assign({}, ...entries.map((x) => ({ [`:${x[0]}`]: x[1] })))
         }
       }
-
-      return this.dumps(res, 'submission_id')
-    } catch (err) {
-      throw (err)
-    }
+      this.db.scan(params, (err: AWSError, data: ScanOutput) => {
+        if (err) reject(err)
+        else resolve(data.Items)
+      })
+    })
   }
 
-  async get_users(args?: { [key: string]: string }): Promise<{ [key: string]: any }> {
-    const params = { TableName: 'user', ...this.makeParams(args) }
-    try {
-      const res = await this.db.scan(params).promise()
-      return this.dumps(res, 'user_id')
-    } catch (err) {
-      throw (err)
-    }
+  getItem(tableName: string, key: ArgsType): Promise<AttributeMap | undefined> {
+    return new Promise((resolve, reject) => {
+      this.db.get({
+        TableName: tableName,
+        Key: key
+      }, (err: AWSError, data: GetItemOutput) => {
+        if (err) reject(err)
+        else resolve(data.Item)
+      })
+    })
   }
 
-  /*
-  Don't accept if missing in request (file_ext, problem_id, file, language, team_id)
-  */
-  async submit(req: any) {
-    const { name: filename, size: filesize, md5 } = req.files.file
-    const { language, problem_id, team_id } = req.body
-    const submission_id = uuidv4().replace(/-/g, '')
+  putItem(tableName: string, item: ArgsType): Promise<PutItemOutput> {
+    return new Promise((resolve, reject) => {
+      this.db.put({
+        TableName: tableName,
+        Item: item
+      }, (err: AWSError, data: PutItemOutput) => {
+        if (err) reject(err)
+        else resolve(data)
+      })
+    })
+  }
 
-    if (!(language && problem_id && team_id)) {
-      console.log("Invalid submission!")
-      console.log("Must include `language`, `problem_id`, and `team_id`")
-      return
-    }
+  updateItem(tableName: string, key: ArgsType, args: ArgsType): Promise<UpdateItemOutput> {
+    return new Promise((resolve, reject) => {
+      const entries = Object.entries(args).filter(entry => !Object.keys(key).includes(entry[0]))
+      this.db.update({
+        TableName: tableName,
+        Key: key,
+        UpdateExpression: "SET " + (entries.map((e) => (`#${e[0]} = :${e[0]}`)).join(", ")),
+        ExpressionAttributeNames: Object.assign({}, ...entries.map((x) => ({ [`#${x[0]}`]: x[0] }))),
+        ExpressionAttributeValues: Object.assign({}, ...entries.map((x) => ({ [`:${x[0]}`]: x[1] })))
+      }, (err: AWSError, data: UpdateItemOutput) => {
+        if (err) reject(err)
+        else resolve(data)
+      })
+    })
+  }
 
-    try {
-      const { tests } = (await this.get_problems({ problem_id }))[problem_id]
-
-      const item = {
-        submission_id,
-        sub_no: 0,
-        status: 'pending',
-        score: 0,
-        division: 'blue',
-        date: Date.now() / 1000,
-        language,
-        problem_id,
-        team_id,
-        filename,
-        runtime: 0,
-        filesize,
-        md5,
-        tests,
-      }
-
-      const params = {
-        Bucket: 'abacus-submissions',
-        Key: `${submission_id}/${filename}`,
-        Body: req.files.file.data
-      }
-      this.s3.upload(params, (_err: any, _data: any) => { console.log(_err) })
-
-      this.db.put(
-        {
-          TableName: 'submission',
-          Item: item
-        },
-        (_err: any, _data: any) => { console.log(_err) }
-      )
-      return item
-    } catch (err) {
-      throw (err)
-    }
+  deleteItem(tableName: string, key: ArgsType): Promise<DeleteItemOutput> {
+    return new Promise((resolve, reject) => {
+      this.db.delete({
+        TableName: tableName,
+        Key: key
+      }, (err: AWSError, data: DeleteItemOutput) => {
+        if (err) reject(err)
+        else resolve(data)
+      })
+    })
   }
 }
 
