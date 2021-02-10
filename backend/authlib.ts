@@ -3,7 +3,7 @@ import { Router, Request, Response } from "express";
 import { checkSchema, matchedData } from 'express-validator';
 import { ArgsType, UserType } from 'types';
 import { v4 as uuidv4 } from 'uuid'
-import contest from "./contest";
+import { contest } from "./contest";
 
 const authlib = Router();
 

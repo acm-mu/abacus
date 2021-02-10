@@ -1,7 +1,7 @@
 import { Router, Request, Response } from "express";
 import { checkSchema, matchedData, validationResult } from "express-validator";
 import { v4 as uuidv4 } from 'uuid'
-import contest from "../contest";
+import { contest, transpose } from "../contest";
 
 const users = Router();
 
@@ -52,7 +52,7 @@ users.get(
     }
     const item = matchedData(req)
     contest.scanItems('user', item)
-      .then(response => res.send(response))
+      .then(response => res.send(transpose(response, 'user_id')))
       .catch(err => res.status(500).send(err))
   }
 );

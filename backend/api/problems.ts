@@ -1,4 +1,4 @@
-import contest from '../contest';
+import { contest, transpose } from '../contest';
 import { Router, Request, Response } from 'express'
 import { v4 as uuidv4 } from 'uuid'
 import { checkSchema, matchedData, validationResult } from 'express-validator';
@@ -58,7 +58,7 @@ problems.get(
     }
     const data = matchedData(req)
     contest.scanItems('problem', data)
-      .then(response => res.send(response))
+      .then(response => res.send(transpose(response, 'problem_id')))
       .catch(err => res.status(400).send(err))
   })
 

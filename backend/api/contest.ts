@@ -1,7 +1,7 @@
 import { Router, Response, Request } from 'express';
 import { checkSchema, matchedData, validationResult } from 'express-validator';
 import { CompetitionSettings } from 'types';
-import contest from "../contest";
+import { contest } from "../contest";
 
 const router = Router();
 
