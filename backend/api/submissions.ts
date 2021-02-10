@@ -2,7 +2,7 @@ import { Router, Request, Response } from "express";
 import { UploadedFile } from "express-fileupload";
 import { v4 as uuidv4 } from 'uuid'
 import { checkSchema, matchedData, validationResult } from "express-validator";
-import contest from "../contest";
+import { contest, transpose } from "../contest";
 
 const submissions = Router();
 
@@ -69,7 +69,7 @@ submissions.get(
     }
     const query = matchedData(req)
     contest.scanItems('submission', query)
-      .then(response => res.send(response))
+      .then(response => res.send(transpose(response, 'submission_id')))
       .catch(err => res.status(400).send(err))
   });
 

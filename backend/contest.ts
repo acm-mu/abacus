@@ -43,10 +43,6 @@ class ContestService {
     })
   }
 
-  transpose(itemList: ItemList, key: string): { [key: string]: any } {
-    return Object.assign({}, ...itemList.map((obj: any) => ({ [obj[key]]: obj })))
-  }
-
   scanItems(tableName: string, args?: ArgsType): Promise<ItemList | undefined> {
     return new Promise((resolve, reject) => {
       let params: ScanInput = {
@@ -121,4 +117,7 @@ class ContestService {
 }
 
 const contest = new ContestService();
-export default contest;
+
+const transpose = (itemList: ItemList | undefined, key: string): { [key: string]: any } => itemList ? Object.assign({}, ...itemList.map((obj: any) => ({ [obj[key]]: obj }))) : {}
+
+export { contest, transpose };
