@@ -15,20 +15,18 @@ const Submissions = (): JSX.Element => {
   const [isLoading, setLoading] = useState(true)
   const [submissions, setSubmissions] = useState([]);
 
-  let filter = ''
-  if (user && ['judge', 'admin'].includes(user.role)) {
-    filter = `&team_id=${user.user_id}`
-  }
-
   useEffect(() => {
-    if (isAuthenticated)
+    if (isAuthenticated) {
+      const filter = (user && !['judge', 'admin'].includes(user.role)) ? `&team_id=${user.user_id}` : ''
+
       fetch(`${config.API_URL}/submissions?division=blue${filter}`)
         .then((res) => res.json())
         .then((subs) => {
           setLoading(false)
           setSubmissions(Object.values(subs))
         });
-  }, []);
+    }
+  }, [isAuthenticated]);
 
   return (
     <>
