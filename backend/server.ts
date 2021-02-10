@@ -5,12 +5,13 @@ import bodyParser from 'body-parser'
 import cors from 'cors'
 import { createServer } from 'http'
 import { Server } from 'socket.io'
+
 import authlib from './authlib'
-import contest from "api/contest";
-import problems from "api/problems";
-import standings from "api/standings";
-import submissions from "api/submissions";
-import users from "api/users";
+import contest from "./api/contest";
+import problems from "./api/problems";
+import standings from "./api/standings";
+import submissions from "./api/submissions";
+import users from "./api/users";
 
 const PORT = process.env.PORT || 80;
 
