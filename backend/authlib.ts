@@ -1,40 +1,63 @@
 import { createHash } from 'crypto';
+import { Router, Request, Response } from "express";
+import { checkSchema, matchedData } from 'express-validator';
+import { ArgsType, UserType } from 'types';
 import { v4 as uuidv4 } from 'uuid'
 import contest from "./contest";
-import { Router, Request, Response } from "express";
 
 const authlib = Router();
 
-authlib.post('/auth', async (req: Request, res: Response) => {
-  let { username, password, session_token } = req.body
+authlib.post(
+  '/auth',
+  checkSchema({
+    username: {
+      in: 'body',
+      isString: true,
+      notEmpty: true,
+      errorMessage: 'username is not supplied'
+    },
+    password: {
+      in: 'body',
+      isString: true,
+      notEmpty: true,
+      optional: true,
+      errorMessage: 'String password is not supplied'
+    },
+    session_token: {
+      in: 'body',
+      isString: true,
+      notEmpty: true,
+      optional: true,
+      errorMessage: 'String session_token is not supplied'
+    }
+  }),
+  async (req: Request, res: Response) => {
+    let { username, password, session_token } = matchedData(req, { includeOptionals: true })
 
-  let users = [];
-  try {
-    if (username && password) {
+    let args: ArgsType = { username, session_token }
+    if (password) {
       const hash = createHash('sha256').update(password).digest('hex')
-      users = Object.values(await contest.get_users({ username, password: hash }))
-    } else if (username && session_token) {
-      users = Object.values(await contest.get_users({ username, session_token }))
+      args = { username, password: hash }
     }
 
-    if (users.length == 1) {
-      const user = users[0]
-      if (!session_token) {
-        session_token = uuidv4().replace(/-/g, '')
-        await contest.updateItem('user', { user_id: user.user_id }, { session_token })
-        user.session_token = session_token
-      }
-      delete user.password
-
-      res.send(user)
-      return
-    }
-  } catch (err) {
-    res.status(500).send(err)
-    return
-  }
-
-  res.status(204).send({ error: "Could not authenticate!" })
-})
+    contest.scanItems('user', args)
+      .then(users => {
+        if (users?.length == 1) {
+          const user = users[0] as UserType
+          if (!session_token) {
+            session_token = uuidv4().replace(/-/g, '')
+            contest.updateItem('user', { user_id: user.user_id }, { session_token })
+              .catch(err => res.status(400).send(err))
+            user.session_token = session_token
+          }
+          res.send(user)
+        } else {
+          res.status(400).send({
+            message: "User not found"
+          })
+        }
+      })
+      .catch(err => res.status(400).send(err))
+  })
 
 export default authlib
