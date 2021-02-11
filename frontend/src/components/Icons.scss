@@ -4,12 +4,20 @@
     font-family: Icons;
     font-weight: 900;
     content: '';
-    display: inline-block;
-    font-style: normal;
-    font-variant: normal;
-    text-rendering: auto;
-    -webkit-font-smoothing: antialiased;
+    margin: 0 2px;
+    width: 23px;
+    height: 23px;
+}
+.result.icn:before {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.status.icn:before {
     margin: 0 5px;
+}
+.icn {
+    display: inline-block;
 }
 
 /* Icons */
@@ -66,24 +74,24 @@
 
 /* Icons:after */
 
-td.pending:after {
+.status.pending:after {
     content: 'Pending';
 }
 
-td.wrong_answer:after,
-td.rejected:after {
+.status.wrong_answer:after,
+.status.rejected:after {
     content: 'Wrong Answer';
 }
 
-td.run_time_error:after {
+.status.run_time_error:after {
     content: 'Run Time Error';
 }
 
-td.timeout_error:after {
+.status.timeout_error:after {
     content: 'Time Limit Expired';
 }
 
-td.accepted:after {
+.status.accepted:after {
     content: 'Accepted';
 }
 

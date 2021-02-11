@@ -3,7 +3,7 @@ import Moment from "react-moment";
 import { Loader, Table } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { Block, Countdown, Unauthorized } from "../../components";
-import { SubmissionType } from "../../types";
+import { ProblemType, SubmissionType } from "../../types";
 import config from '../../environment'
 import "../../components/Icons.scss";
 import { UserContext } from "../../context/user";
@@ -14,17 +14,25 @@ const Submissions = (): JSX.Element => {
   const [isAuthenticated] = useAuth(user)
   const [isLoading, setLoading] = useState(true)
   const [submissions, setSubmissions] = useState([]);
+  const [problems, setProblems] = useState<{ [key: string]: ProblemType }>({})
 
   useEffect(() => {
     if (isAuthenticated) {
       const filter = (user && !['judge', 'admin'].includes(user.role)) ? `&team_id=${user.user_id}` : ''
 
       fetch(`${config.API_URL}/submissions?division=blue${filter}`)
-        .then((res) => res.json())
+        .then(res => res.json())
         .then((subs) => {
           setLoading(false)
           setSubmissions(Object.values(subs))
         });
+
+      fetch(`${config.API_URL}/problems?division=blue`)
+        .then(res => res.json())
+        .then((probs) => {
+          console.log(probs)
+          setProblems(probs)
+        })
     }
   }, [isAuthenticated]);
 
@@ -64,14 +72,14 @@ const Submissions = (): JSX.Element => {
                         </Table.Cell>
                         <Table.Cell>
                           <Link to={`/blue/problems/${submission.problem_id}`}>
-                            {submission.prob_name}
+                            {problems[submission.problem_id]?.problem_name}
                           </Link>
                         </Table.Cell>
                         <Table.Cell> {submission.sub_no + 1} </Table.Cell>
                         <Table.Cell> {submission.language} </Table.Cell>
-                        <Table.Cell
-                          className={`icn ${submission.status}`}
-                        ></Table.Cell>
+                        <Table.Cell>
+                          <span className={`status icn ${submission.status}`} />
+                        </Table.Cell>
                         <Table.Cell>
                           <Moment fromNow>{submission.date * 1000}</Moment>
                         </Table.Cell>

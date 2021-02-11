@@ -7,6 +7,7 @@ import { Block, Countdown, NotFound, Unauthorized } from '../../components'
 import { UserContext } from '../../context/user'
 import config from '../../environment'
 import { ProblemType, SubmissionType } from '../../types'
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 
 const Submission = (): JSX.Element => {
   const { user } = useContext(UserContext)
@@ -14,30 +15,32 @@ const Submission = (): JSX.Element => {
   const [submission, setSubmission] = useState<SubmissionType>()
   const [problem, setProblem] = useState<ProblemType>()
   const { submission_id } = useParams<{ submission_id: string }>()
-  const [error, setError] = useState(false)
 
+  let isMounted = false
   useEffect(() => {
-    if (submission_id)
+    isMounted = true
+    if (isMounted && submission_id)
       fetch(`${config.API_URL}/submissions?submission_id=${submission_id}`)
         .then(res => res.json())
         .then(res => {
-          if (res) {
-            const submission = Object.values(res)[0] as SubmissionType
+          const submission = Object.values(res)[0] as SubmissionType
+          if (submission) {
             setSubmission(submission);
             fetch(`${config.API_URL}/problems?problem_id=${submission.problem_id}`)
               .then(res => res.json())
-              .then(prob => setProblem(Object.values(prob)[0] as ProblemType))
-          } else {
-            setError(true)
+              .then(prob => {
+                setProblem(Object.values(prob)[0] as ProblemType)
+              })
           }
         })
+    return () => { isMounted = false }
   }, [])
 
   return (
     <>
       {isAuthenticated ?
         <>
-          {submission_id && !error ?
+          {submission_id ?
             <>
               <Countdown />
               <Block size="xs-12">
@@ -58,24 +61,23 @@ const Submission = (): JSX.Element => {
                   </Table.Header>
                   <Table.Body>
                     <Table.Row>
-                      <Table.Cell rowSpan={2}><Link to={`/blue/submissions/${submission?.submission_id}`}>{submission?.submission_id.substring(0, 7)}</Link>
-                      </Table.Cell>
-                      <Table.Cell>{submission && <Moment fromNow>{submission.date}</Moment>}</Table.Cell>
-                      <Table.Cell><Link to={`/blue/problems/${problem?.id}`}> {submission?.prob_name}</Link></Table.Cell>
-                      <Table.Cell className={`icn ${submission?.status}`}></Table.Cell>
-                      <Table.Cell> {`${submission?.runtime}`.substring(0, 4)} </Table.Cell>
-                      <Table.Cell> {submission?.language} </Table.Cell>
+                      <Table.Cell rowSpan={2}><Link to={`/blue/submissions/${submission?.submission_id}`}>{submission?.submission_id.substring(0, 7)}</Link></Table.Cell>
+                      <Table.Cell>{submission && <Moment fromNow date={submission.date * 1000} />}</Table.Cell>
+                      <Table.Cell><Link to={`/blue/problems/${problem?.id}`}>{problem?.problem_name}</Link></Table.Cell>
+                      <Table.Cell><span className={`status icn ${submission?.status}`} /></Table.Cell>
+                      <Table.Cell>{submission?.runtime.toString().substring(0, 4)}</Table.Cell>
+                      <Table.Cell>{submission?.language}</Table.Cell>
                     </Table.Row>
                     <Table.Row>
                       <Table.Cell colSpan="5">
                         {submission?.tests.map((test, index) => {
                           switch (test.result) {
                             case 'accepted':
-                              return (<span key={index} className='result icn accepted' />)
+                              return <span key={index} className='result icn accepted' />
                             case 'rejected':
-                              return (<span key={index} className='result icn rejected' />)
+                              return <span key={index} className='result icn rejected' />
                             default:
-                              return (<span key={index} className='result' />)
+                              return <span key={index} className='result icn' />
                           }
                         })}
                       </Table.Cell>
@@ -96,27 +98,26 @@ const Submission = (): JSX.Element => {
                   </Table.Header>
                   <Table.Body>
                     <Table.Row>
-                      <Table.Cell> {submission?.filename}</Table.Cell>
-                      <Table.Cell> {submission?.filesize}  bytes</Table.Cell>
-                      <Table.Cell> {submission?.md5} </Table.Cell>
+                      <Table.Cell>{submission?.filename}</Table.Cell>
+                      <Table.Cell>{submission?.filesize} bytes</Table.Cell>
+                      <Table.Cell>{submission?.md5}</Table.Cell>
                     </Table.Row>
                   </Table.Body>
                 </Table>
 
-                <h3> {submission?.filename} </h3>
+                <h3>{submission?.filename}</h3>
                 <pre>
-                  <code className={`${submission?.language}`}> contents </code>
+                  {submission &&
+                    <SyntaxHighlighter language={submission.language}>{submission.source}</SyntaxHighlighter>
+                  }
                 </pre>
               </Block>
-            </>
-            :
+            </> :
             <NotFound />
-          }
-        </> :
+          } </> :
         <Unauthorized />
       }
     </>
-
   )
 }
 
