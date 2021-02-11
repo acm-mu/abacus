@@ -1,7 +1,7 @@
-import { Table, Button, Popup, Modal, Form, Input, Select, Loader } from 'semantic-ui-react'
+import { Table, Button, Popup, Modal, Form, Input, Select, Loader, ButtonGroup } from 'semantic-ui-react'
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Block, Countdown } from '../../components'
+import { Block } from '../../components'
 import { UserType } from '../../types'
 import config from '../../environment'
 
@@ -91,8 +91,12 @@ const EditUser = ({ user, trigger }: EditUserProps) => {
   )
 }
 
+interface UserItem extends UserType {
+  checked: boolean
+}
+
 const Users = (): JSX.Element => {
-  const [users, setUsers] = useState([])
+  const [users, setUsers] = useState<UserItem[]>([])
   const [isLoading, setLoading] = useState(true)
 
   let isMounted = false
@@ -102,29 +106,53 @@ const Users = (): JSX.Element => {
       .then(res => res.json())
       .then(data => {
         if (isMounted) {
-          setUsers(Object.values(data))
+          const users: UserType[] = Object.values(data)
+          setUsers(users.map(user => ({ ...user, checked: false })))
           setLoading(false)
         }
       })
     return () => { isMounted = false }
   }, [])
 
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUsers(users.map(user => user.user_id == event.target.id ? { ...user, checked: !user.checked } : user))
+  }
+
+  const checkAll = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUsers(users.map(user => ({ ...user, checked: event.target.checked })))
+  }
+
+  const deleteSelected = () => {
+    const usersToDelete = users.filter(user => user.checked).map(user => user.user_id)
+    fetch(`${config.API_URL}/users`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ user_id: usersToDelete })
+    }).then(res => {
+      if (res.status == 200) {
+        setUsers(users.filter(user => !usersToDelete.includes(user.user_id)))
+      }
+    })
+  }
+
   return (
     <>
-      <Countdown />
       <Block size='xs-12' transparent>
-        <div className="ui buttons">
+        <ButtonGroup>
           <Popup content="Add User" trigger={<EditUser trigger={<Button icon="plus" />} />} />
           <Popup content="Import from CSV" trigger={<Button icon="upload" />} />
           <Popup content="Export to CSV" trigger={<Button icon="download" />} />
-          <Popup content="Delete Selected" trigger={<Button icon="trash" />} />
-        </div>
+          {users.filter(user => user.checked).length > 0 ?
+            <Popup content="Delete Selected" trigger={<Button icon="trash" negative onClick={deleteSelected} />} /> : <></>}
+        </ButtonGroup>
         {isLoading ?
           <Loader active inline='centered' content="Loading" /> :
           <Table celled>
             <Table.Header>
               <Table.Row>
-                <Table.HeaderCell collapsing><input type='checkbox' id='select_all' /></Table.HeaderCell>
+                <Table.HeaderCell collapsing><input type='checkbox' onChange={checkAll} /></Table.HeaderCell>
                 <Table.HeaderCell>Username</Table.HeaderCell>
                 <Table.HeaderCell>Role</Table.HeaderCell>
                 <Table.HeaderCell>Division</Table.HeaderCell>
@@ -132,9 +160,15 @@ const Users = (): JSX.Element => {
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {users.map((user: UserType, index: number) =>
+              {users.map((user: UserItem, index: number) =>
                 <Table.Row key={index} uuid={`${user.user_id}`}>
-                  <Table.Cell><input type='checkbox' autoComplete="off" /></Table.Cell>
+                  <Table.Cell>
+                    <input
+                      type='checkbox'
+                      checked={user.checked}
+                      id={user.user_id}
+                      onChange={handleChange} />
+                  </Table.Cell>
                   <Table.Cell><EditUser user={user} trigger={<Link to='#'>{user.username}</Link>} /></Table.Cell>
                   <Table.Cell>{user.role}</Table.Cell>
                   <Table.Cell>{user.division}</Table.Cell>

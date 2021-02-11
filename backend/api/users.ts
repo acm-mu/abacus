@@ -69,16 +69,19 @@ users.put(
     display_name: {
       in: 'body',
       isString: true,
+      notEmpty: true,
       optional: true
     },
     division: {
       in: 'body',
       isString: true,
+      notEmpty: true,
       optional: true
     },
     password: {
       in: 'body',
       isString: true,
+      notEmpty: true,
       optional: true
     },
     role: {
@@ -121,7 +124,6 @@ users.delete(
     user_id: {
       in: 'body',
       notEmpty: true,
-      isString: true,
       errorMessage: 'No user_id supplied',
     }
   }),
@@ -133,9 +135,20 @@ users.delete(
       })
       return
     }
-    contest.deleteItem('user', { user_id: req.body.user_id })
-      .then(_ => res.json({ message: "User successfully deleted!" }))
-      .catch(err => res.status(500).send(err))
+    if (req.body.user_id instanceof Array) {
+      let success = 0
+      let failed = 0
+      for (const user_id of req.body.user_id) {
+        contest.deleteItem('user', { user_id })
+          .then(_ => { success++ })
+          .catch(_ => { failed++ })
+      }
+      res.json({ message: `${success} user(s) succesfully deleted. ${failed} failed to delete.` })
+    } else {
+      contest.deleteItem('user', { user_id: req.body.user_id })
+        .then(_ => res.json({ message: "User successfully deleted!" }))
+        .catch(err => res.status(500).send(err))
+    }
   }
 )
 
