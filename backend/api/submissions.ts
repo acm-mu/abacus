@@ -71,7 +71,107 @@ submissions.get(
     contest.scanItems('submission', query)
       .then(response => res.send(transpose(response, 'submission_id')))
       .catch(err => res.status(400).send(err))
-  });
+  }
+)
+
+submissions.put(
+  '/submissions',
+  checkSchema({
+    submission_id: {
+      in: 'body',
+      isString: true,
+      notEmpty: true,
+      errorMessage: 'submission_id is not supplied'
+    },
+    division: {
+      in: 'body',
+      isString: true,
+      notEmpty: true,
+      optional: true,
+      errorMessage: 'division is invalid'
+    },
+    language: {
+      in: 'body',
+      isString: true,
+      notEmpty: true,
+      optional: true,
+      errorMessage: 'language is invalid'
+    },
+    problem_id: {
+      in: 'body',
+      isString: true,
+      notEmpty: true,
+      optional: true,
+      errorMessage: 'problem_id is invalid'
+    },
+    status: {
+      in: 'body',
+      isString: true,
+      notEmpty: true,
+      optional: true,
+      errorMessage: 'status is invalid'
+    },
+    sub_no: {
+      in: 'body',
+      isNumeric: true,
+      notEmpty: true,
+      optional: true,
+      errorMessage: 'sub_no is invalid'
+    },
+    team_id: {
+      in: 'body',
+      isString: true,
+      notEmpty: true,
+      optional: true,
+      errorMessage: 'team_id is invalid'
+    }
+  }),
+  async (req: Request, res: Response) => {
+    const errors = validationResult(req).array()
+    if (errors.length > 0) {
+      res.status(400).json({ message: errors[0].msg })
+      return
+    }
+    const item = matchedData(req)
+    contest.updateItem('submission', { submission_id: req.body.submission_id }, item)
+      .then(_ => res.send(item))
+      .catch(err => res.status(500).send(err))
+  }
+)
+
+submissions.delete(
+  '/submissions',
+  checkSchema({
+    submission_id: {
+      in: 'body',
+      notEmpty: true,
+      errorMessage: 'No submission_id supplied'
+    }
+  }),
+  async (req: Request, res: Response) => {
+    const errors = validationResult(req).array()
+    if (errors.length > 0) {
+      res.status(400).json({
+        message: errors[0].msg
+      })
+      return
+    }
+    if (req.body.submission_id instanceof Array) {
+      let success = 0
+      let failed = 0
+      for (const submission_id of req.body.submission_id) {
+        contest.deleteItem('submission', { submission_id })
+          .then(_ => { success++ })
+          .catch(_ => { failed++ })
+      }
+      res.json({ message: `${success} submission(s) successfully deleted. ${failed} failed to delete.` })
+    } else {
+      contest.deleteItem('submission', { submission_id: req.body.submission_id })
+        .then(_ => res.json({ message: "Submission successfully deleted!" }))
+        .catch(err => res.status(500).send(err))
+    }
+  }
+)
 
 submissions.post(
   '/submissions',
