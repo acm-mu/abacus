@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from 'react'
-import { Loader, Table } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
-import { SubmissionType } from '../../types'
-import { Block, Countdown } from '../../components'
-import config from '../../environment'
+import { Button, ButtonGroup, Loader, Popup, Table } from 'semantic-ui-react'
 import Moment from 'react-moment'
+import { Link } from 'react-router-dom'
+import { ProblemType, SubmissionType, UserType } from '../../types'
+import { Block } from '../../components'
+import config from '../../environment'
+
+interface SubmissionItem extends SubmissionType {
+  checked: boolean
+}
 
 const Submissions = (): JSX.Element => {
-
   const [isLoading, setLoading] = useState(true)
-  const [submissions, setSubmissions] = useState([])
+  const [submissions, setSubmissions] = useState<SubmissionItem[]>([])
+  const [problems, setProblems] = useState<{ [key: string]: ProblemType }>()
+  const [teams, setTeams] = useState<{ [key: string]: UserType }>()
 
   let isMounted = false
   useEffect(() => {
@@ -17,24 +22,67 @@ const Submissions = (): JSX.Element => {
     fetch(`${config.API_URL}/submissions`)
       .then(res => res.json())
       .then(data => {
-        data = Object.values(data)
         if (isMounted) {
-          setSubmissions(data)
+          const submissions: SubmissionType[] = Object.values(data)
+          setSubmissions(submissions.map(submission => ({ ...submission, checked: false })))
           setLoading(false)
+        }
+      })
+    fetch(`${config.API_URL}/problems`)
+      .then(res => res.json())
+      .then(data => {
+        if (isMounted) {
+          setProblems(data)
+        }
+      })
+
+    fetch(`${config.API_URL}/users?role=team`)
+      .then(res => res.json())
+      .then(data => {
+        if (isMounted) {
+          setTeams(data)
         }
       })
     return () => { isMounted = false }
   }, [])
 
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSubmissions(submissions.map(submission => submission.submission_id == event.target.id ? { ...submission, checked: !submission.checked } : submission))
+  }
+
+  const checkAll = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSubmissions(submissions.map(submission => ({ ...submission, checked: event.target.checked })))
+  }
+
+  const deleteSelected = () => {
+    const submissionsToDelete = submissions.filter(submission => submission.checked).map(submission => submission.submission_id)
+    fetch(`${config.API_URL}/submissions`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ submission_id: submissionsToDelete })
+    }).then(res => {
+      if (res.status == 200) {
+        setSubmissions(submissions.filter(submission => !submissionsToDelete.includes(submission.submission_id)))
+      }
+    })
+  }
+
   return (
     <>
-      <Countdown />
       <Block size='xs-12' transparent>
+        <ButtonGroup>
+          <Popup content='Export to CSV' trigger={<Button icon='download' />} />
+          {submissions.filter(submission => submission.checked).length > 0 ?
+            <Popup content='Delete Selected' trigger={<Button icon='trash' negative onClick={deleteSelected} />} /> : <></>}
+        </ButtonGroup>
         {isLoading ?
           <Loader active inline='centered' content="Loading" /> :
           <Table>
             <Table.Header>
               <Table.Row>
+                <Table.HeaderCell collapsing><input type='checkbox' onChange={checkAll} /></Table.HeaderCell>
                 <Table.HeaderCell>Submission ID</Table.HeaderCell>
                 <Table.HeaderCell>Problem</Table.HeaderCell>
                 <Table.HeaderCell>Team</Table.HeaderCell>
@@ -47,11 +95,18 @@ const Submissions = (): JSX.Element => {
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {submissions.length > 0 ? (submissions.map((submission: SubmissionType, index: number) =>
+              {submissions.length > 0 ? (submissions.map((submission: SubmissionItem, index: number) =>
               (<Table.Row key={index}>
+                <Table.Cell>
+                  <input
+                    type='checkbox'
+                    checked={submission.checked}
+                    id={submission.submission_id}
+                    onChange={handleChange} />
+                </Table.Cell>
                 <Table.Cell><Link to={`/admin/submissions/${submission.submission_id}`}>{submission.submission_id.substring(0, 7)}</Link></Table.Cell>
-                <Table.Cell><Link to={`/admin/problems/${submission.problem_id}/edit`}>{submission.prob_name} </Link></Table.Cell>
-                <Table.Cell>{submission.team_name}</Table.Cell>
+                <Table.Cell><Link to={`/admin/problems/${submission.problem_id}`}>{problems && problems[submission.problem_id].problem_name} </Link></Table.Cell>
+                <Table.Cell>{teams && teams[submission.team_id].display_name}</Table.Cell>
                 <Table.Cell>{submission.sub_no + 1}</Table.Cell>
                 <Table.Cell>{submission.language}</Table.Cell>
                 <Table.Cell className={`icn ${submission.status}`} />

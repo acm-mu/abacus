@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react'
-import { Table, Button, Loader } from 'semantic-ui-react'
+import { Table, Button, Loader, ButtonGroup, Popup } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { Block } from '../../components'
 import { ProblemType, SubmissionType } from '../../types'
 import config from '../../environment'
 
+interface ProblemItem extends ProblemType {
+  checked: boolean
+}
+
 const Problems = (): JSX.Element => {
   const [isLoading, setLoading] = useState(true)
-  const [problems, setProblems] = useState([])
+  const [problems, setProblems] = useState<ProblemItem[]>([])
   const [submissions, setSubmissions] = useState<{ [key: string]: SubmissionType[] }>()
 
   let isMounted = false
@@ -15,11 +19,11 @@ const Problems = (): JSX.Element => {
     isMounted = true
     fetch(`${config.API_URL}/problems?division=blue`)
       .then(res => res.json())
-      .then(probs => {
+      .then(data => {
         if (isMounted) {
-          probs = Object.values(probs)
-          probs.sort((a: ProblemType, b: ProblemType) => a.id.localeCompare(b.id))
-          setProblems(probs)
+          const problems: ProblemType[] = Object.values(data)
+          problems.sort((a: ProblemType, b: ProblemType) => a.id.localeCompare(b.id))
+          setProblems(problems.map(problem => ({ ...problem, checked: false })))
           setLoading(false)
         }
       })
@@ -41,15 +45,45 @@ const Problems = (): JSX.Element => {
     return () => { isMounted = false }
   }, [])
 
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setProblems(problems.map(problem => problem.problem_id == event.target.id ? { ...problem, checked: !problem.checked } : problem))
+  }
+
+  const checkAll = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setProblems(problems.map(problem => ({ ...problem, checked: event.target.checked })))
+  }
+
+  const deleteSelected = () => {
+    const problemsToDelete = problems.filter(problem => problem.checked).map(problem => problem.problem_id)
+    fetch(`${config.API_URL}/problems`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ problem_id: problemsToDelete })
+    }).then(res => {
+      if (res.status == 200) {
+        setProblems(problems.filter(problem => !problemsToDelete.includes(problem.problem_id)))
+      }
+    })
+  }
+
   return (
     <Block size='xs-12' transparent>
-      <Link to="/admin/problems/new"><Button className='blue'>Create Problem</Button></Link>
+      <ButtonGroup>
+        <Popup content='Add User' trigger={<Button as={Link} to='/admin/problems/new' icon='plus' />} />
+        <Popup content='Import from CSV' trigger={<Button icon='upload' />} />
+        <Popup content='Export to CSV' trigger={<Button icon='download' />} />
+        {problems.filter(problem => problem.checked).length > 0 ?
+          <Popup content='Delete Selected' trigger={<Button icon='trash' negative onClick={deleteSelected} />} /> : <></>}
+      </ButtonGroup>
       {isLoading ?
         <Loader active inline='centered' content="Loading" /> :
         <Table celled className='blue'>
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell collapsing></Table.HeaderCell>
+              <Table.HeaderCell collapsing><input type='checkbox' onChange={checkAll} /></Table.HeaderCell>
+              <Table.HeaderCell>Problem Id</Table.HeaderCell>
               <Table.HeaderCell>Problem Name</Table.HeaderCell>
               <Table.HeaderCell># of Tests</Table.HeaderCell>
               <Table.HeaderCell>Solved Attempts</Table.HeaderCell>
@@ -57,9 +91,16 @@ const Problems = (): JSX.Element => {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {problems.map((problem: ProblemType, index: number) => (
+            {problems.map((problem: ProblemItem, index: number) => (
               <Table.Row key={index}>
-                <Table.HeaderCell className="collapsing">{problem.id}</Table.HeaderCell>
+                <Table.Cell>
+                  <input
+                    type='checkbox'
+                    checked={problem.checked}
+                    id={problem.problem_id}
+                    onChange={handleChange} />
+                </Table.Cell>
+                <Table.Cell>{problem.id}</Table.Cell>
                 <Table.Cell><Link to={`/admin/problems/${problem.problem_id}/edit`}>{problem.problem_name}</Link></Table.Cell>
                 <Table.Cell>{problem.tests.length}</Table.Cell>
                 {submissions &&

@@ -199,10 +199,20 @@ problems.delete(
       res.status(400).json({ message: errors[0].msg })
       return
     }
-
-    contest.deleteItem('problem', { problem_id: req.body.problem_id })
-      .then(_ => res.json({ message: "Problem successfully deleted" }))
-      .catch(err => res.status(500).send(err))
+    if (req.body.problem_id instanceof Array) {
+      let success = 0
+      let failed = 0
+      for (const problem_id of req.body.problem_id) {
+        contest.deleteItem('problem', { problem_id })
+          .then(_ => { success++ })
+          .catch(_ => { failed++ })
+      }
+      res.json({ message: `${success} problem(s) successfully deleted. ${failed} failed to delete.` })
+    } else {
+      contest.deleteItem('problem', { problem_id: req.body.problem_id })
+        .then(_ => res.json({ message: "Problem successfully deleted" }))
+        .catch(err => res.status(500).send(err))
+    }
   }
 )
 
