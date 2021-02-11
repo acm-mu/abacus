@@ -20,6 +20,7 @@ type SubmissionType = {
   team_id: string;
   team_name: string;
   tests: TestType[];
+  source: string;
 }
 
 type ProblemScoreType = {

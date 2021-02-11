@@ -199,7 +199,7 @@ submissions.post(
       isString: true,
       notEmpty: true,
       errorMessage: 'language is not supplied'
-    },
+    }
   }),
   async (req: Request, res: Response) => {
     const errors = validationResult(req).array()
@@ -207,9 +207,14 @@ submissions.post(
       res.status(400).json({ message: errors[0].msg })
       return
     }
+    if (req.files?.source == undefined) {
+      res.status(400).json({ message: "source file not supplied" })
+      return
+    }
+
     const { problem_id, team_id, division, language } = matchedData(req)
 
-    const { name: filename, size: filesize, md5 } = req.files!.file as UploadedFile
+    const { name: filename, size: filesize, md5, data } = req.files!.source as UploadedFile
     const submission_id = uuidv4().replace(/-/g, '')
     const submission = {
       submission_id,
@@ -225,13 +230,14 @@ submissions.post(
       score: 0,
       date: Date.now() / 1000,
       runtime: 0,
-      tests: []
+      tests: [],
+      source: data.toString('utf-8')
     }
 
     contest.s3.upload({
       Bucket: 'abacus-submissions',
       Key: `${submission_id}/${filename}`,
-      Body: (req as any).files.file.data
+      Body: (req as any).files.source.data
     })
 
     contest.getItem('problem', { problem_id })
