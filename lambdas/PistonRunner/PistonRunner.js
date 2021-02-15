@@ -20,6 +20,7 @@ exports.handler = async (event) => {
 
     let status = "accepted"
     let runtime = -1
+    submission.tests = problem.tests
     for (const test of submission.tests) {
       const res = await axios.post("https://piston.codeabac.us/execute", {
         language,
@@ -38,7 +39,6 @@ exports.handler = async (event) => {
         console.log("Result: REJECTED")
         status = "rejected"
         test['result'] = "rejected"
-        break
       } else {
         console.log("Result: ACCEPTED")
         test['result'] = "accepted"
