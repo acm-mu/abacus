@@ -1,4 +1,4 @@
-import { contest, transpose } from '../contest';
+import { contest, makeJSON, transpose } from '../contest';
 import { Router, Request, Response } from 'express'
 import { v4 as uuidv4 } from 'uuid'
 import { checkSchema, matchedData, validationResult } from 'express-validator';
@@ -215,5 +215,18 @@ problems.delete(
     }
   }
 )
+
+problems.get('/problems.json', (_req, res) => {
+  contest.scanItems('problem')
+    .then(response => {
+      if (response == undefined) {
+        res.status(500).send({ message: "Internal Server Error" })
+      } else {
+        const columns = ['problem_id', 'cpu_time_limit', 'description', 'division', 'id', 'max_points', 'memory_limit', 'problem_name', 'tests']
+        res.attachment('problems.json').send(makeJSON(response, columns))
+      }
+    })
+    .catch(err => res.status(500).send(err))
+})
 
 export default problems

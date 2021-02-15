@@ -1,7 +1,7 @@
 import { Router, Request, Response } from "express";
 import { checkSchema, matchedData, validationResult } from "express-validator";
 import { v4 as uuidv4 } from 'uuid'
-import { contest, transpose } from "../contest";
+import { contest, transpose, makeJSON } from "../contest";
 
 const users = Router();
 
@@ -164,7 +164,6 @@ users.post(
     division: {
       in: 'body',
       isString: true,
-      optional: true,
       errorMessage: 'String division is not supplied'
     },
     password: {
@@ -214,5 +213,18 @@ users.post(
       .catch(err => res.status(500).send(err))
   }
 )
+
+users.get('/users.json', (_req, res) => {
+  contest.scanItems('user')
+    .then(response => {
+      if (response == undefined) {
+        res.status(500).send({ message: "Internal Server Error" })
+      } else {
+        const columns = ['user_id', 'division', 'role', 'username', 'display_name', 'password', 'scratch_username']
+        res.attachment('users.json').send(makeJSON(response, columns))
+      }
+    })
+    .catch(err => res.status(500).send({ message: err }))
+})
 
 export default users;

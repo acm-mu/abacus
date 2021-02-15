@@ -2,7 +2,7 @@ import { Router, Request, Response } from "express";
 import { UploadedFile } from "express-fileupload";
 import { v4 as uuidv4 } from 'uuid'
 import { checkSchema, matchedData, validationResult } from "express-validator";
-import { contest, transpose } from "../contest";
+import { contest, makeJSON, transpose } from "../contest";
 
 const submissions = Router();
 
@@ -250,5 +250,18 @@ submissions.post(
       .catch(err => res.status(500).send(err))
   }
 )
+
+submissions.get('/submissions.json', (_req, res) => {
+  contest.scanItems('submission')
+    .then(response => {
+      if (response == undefined) {
+        res.status(500).send({ message: "Internal Server Error" })
+      } else {
+        const columns = ['submission_id', 'date', 'division', 'filename', 'filesize', 'language', 'md5', 'problem_id', 'runtime', 'score', 'source', 'status', 'sub_no', 'team_id', 'tests']
+        res.attachment('submissions.json').send(makeJSON(response, columns))
+      }
+    })
+    .catch(err => res.status(500).send(err))
+})
 
 export default submissions;
