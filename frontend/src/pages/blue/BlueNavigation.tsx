@@ -5,27 +5,12 @@ import { Menu } from "semantic-ui-react";
 import { Navigation } from "../../components";
 
 const BlueNavigation = (): JSX.Element => (
-  <Navigation>
-    <Menu.Item as={NavLink} exact to="/blue">
-      Home
-    </Menu.Item>
-
-    <Menu.Item as={NavLink} to="/blue/problems">
-      Problems
-    </Menu.Item>
-
-    <Menu.Item as={NavLink} to="/blue/standings">
-      Standings
-    </Menu.Item>
-
-    <Menu.Item as={NavLink} to="/blue/submissions">
-      Submissions
-    </Menu.Item>
-
-    <Menu.Item as={NavLink} to="/blue/clarifications">
-      Clarifications
-    </Menu.Item>
-
+  <Navigation className="blue-div">
+    <Menu.Item as={NavLink} exact to="/blue" content="Home" />
+    <Menu.Item as={NavLink} to="/blue/problems" content="Problems" />
+    <Menu.Item as={NavLink} to="/blue/standings" content="Standings" />
+    <Menu.Item as={NavLink} to="/blue/submissions" content="Submissions" />
+    <Menu.Item as={NavLink} to="/blue/clarifications" content="Clarfications" />
   </Navigation>
 );
 
