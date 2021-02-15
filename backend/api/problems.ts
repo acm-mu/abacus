@@ -157,17 +157,19 @@ problems.put(
     },
     tests: {
       in: 'body',
-      optional: true
+      optional: true,
+      notEmpty: true,
+      errorMessage: 'tests are invalid'
     },
     memory_limit: {
       in: 'body',
-      isNumeric: true,
-      optional: true
+      optional: true,
+      errorMessage: 'memory_limit is invalid'
     },
     cpu_time_limit: {
       in: 'body',
-      isNumeric: true,
-      optional: true
+      optional: true,
+      errorMessage: 'cpu_time_limit is invalid'
     }
   }),
   async (req: Request, res: Response) => {
@@ -188,7 +190,6 @@ problems.delete(
   checkSchema({
     problem_id: {
       in: 'body',
-      isString: true,
       notEmpty: true,
       errorMessage: 'problem_id is not supplied'
     }
@@ -203,18 +204,32 @@ problems.delete(
       let success = 0
       let failed = 0
       for (const problem_id of req.body.problem_id) {
+        deleteSubmissionsForProblem(problem_id)
         contest.deleteItem('problem', { problem_id })
           .then(_ => { success++ })
           .catch(_ => { failed++ })
       }
       res.json({ message: `${success} problem(s) successfully deleted. ${failed} failed to delete.` })
     } else {
+      deleteSubmissionsForProblem(req.body.problem_id)
       contest.deleteItem('problem', { problem_id: req.body.problem_id })
         .then(_ => res.json({ message: "Problem successfully deleted" }))
         .catch(err => res.status(500).send(err))
     }
   }
 )
+
+function deleteSubmissionsForProblem(problem_id: string) {
+  contest.scanItems('submission', { problem_id: problem_id })
+    .then(data => {
+      data?.forEach((submission) => {
+        contest.deleteItem('submission', { submission_id: submission.submission_id })
+          .then(_ => console.log(`Deleted submission ${submission.submission_id}`))
+          .catch(_ => console.log(`Error deleting submission ${submission.submission_id}`))
+      })
+    })
+    .catch(_ => console.log(`Error finding submissions to delete for problem ${problem_id}`))
+}
 
 problems.get('/problems.json', (_req, res) => {
   contest.scanItems('problem')
