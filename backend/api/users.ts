@@ -154,18 +154,32 @@ users.delete(
       let success = 0
       let failed = 0
       for (const user_id of req.body.user_id) {
+        deleteSubmissionsForUser(user_id)
         contest.deleteItem('user', { user_id })
           .then(_ => { success++ })
           .catch(_ => { failed++ })
       }
       res.json({ message: `${success} user(s) succesfully deleted. ${failed} failed to delete.` })
     } else {
+      deleteSubmissionsForUser(req.body.user_id)
       contest.deleteItem('user', { user_id: req.body.user_id })
         .then(_ => res.json({ message: "User successfully deleted!" }))
         .catch(err => res.status(500).send(err))
     }
   }
 )
+
+function deleteSubmissionsForUser(team_id: string) {
+  contest.scanItems('submission', { team_id })
+    .then(data => {
+      data?.forEach((submission) => {
+        contest.deleteItem('submission', { submission_id: submission.submission_id })
+          .then(_ => console.log(`Deleted submission ${submission.submission_id}`))
+          .catch(_ => console.log(`Error deleting submission ${submission.submission_id}`))
+      })
+    })
+    .catch(_ => console.log(`Error finding submissions to delete for user ${team_id}`))
+}
 
 users.post(
   '/users',
