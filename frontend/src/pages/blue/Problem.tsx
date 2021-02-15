@@ -1,23 +1,35 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link, useParams } from "react-router-dom";
 import MarkdownView from "react-showdown";
 import { Button, Popup } from "semantic-ui-react";
 import { Block, Countdown } from '../../components'
-import { ProblemType } from '../../types'
+import { ProblemType, SubmissionType } from '../../types'
 import config from '../../environment'
 import "./Problem.scss";
+import { UserContext } from "../../context/user";
 
 const Problem: React.FunctionComponent = () => {
   const [problem, setProblem] = useState<ProblemType>();
+  const [submissions, setSubmissions] = useState<SubmissionType[]>()
+  const { user } = useContext(UserContext)
   const { problem_id } = useParams<{ problem_id: string }>()
 
   useEffect(() => {
     fetch(`${config.API_URL}/problems?division=blue&id=${problem_id}`)
       .then((res) => res.json())
       .then((res) => {
-        if (res) setProblem(Object.values(res)[0] as ProblemType);
+        if (res) {
+          const problem = Object.values(res)[0] as ProblemType
+          setProblem(problem);
+          fetch(`${config.API_URL}/submissions?team_id=${user?.user_id}&problem_id=${problem.problem_id}`)
+            .then((res => res.json()))
+            .then(res => {
+              if (res) setSubmissions(Object.values(res))
+            })
+        }
       });
   }, []);
+
 
   return (
     <>
@@ -35,17 +47,20 @@ const Problem: React.FunctionComponent = () => {
       </Block>
       <Block size='xs-3'>
         <div style={{ display: "flex", justifyContent: "space-evenly" }}>
-          <Popup
-            trigger={
-              <Button
-                as={Link}
-                to={`/blue/problems/${problem?.id}/submit`}
-                content="Submit"
-                icon="upload" />
-            }
-            content="Submit"
-            position="top center"
-            inverted />
+          {!submissions || submissions?.filter((e) => e.status == "accepted").length == 0 ?
+            <Popup
+              trigger={
+                <Button
+                  as={Link}
+                  to={`/blue/problems/${problem?.id}/submit`}
+                  content="Submit"
+                  icon="upload"
+                />
+              }
+              content="Submit"
+              position="top center"
+              inverted /> : <></>
+          }
           {/* <Popup
             trigger={<Button content="Stats" icon="chart bar" />}
             content="Stats"

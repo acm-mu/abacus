@@ -3,6 +3,7 @@ import { UploadedFile } from "express-fileupload";
 import { v4 as uuidv4 } from 'uuid'
 import { checkSchema, matchedData, validationResult } from "express-validator";
 import { contest, makeJSON, transpose } from "../contest";
+import AWS from "aws-sdk";
 
 const submissions = Router();
 
@@ -159,7 +160,7 @@ submissions.delete(
   '/submissions',
   checkSchema({
     submission_id: {
-      in: 'body',
+      in: ['body', 'query'],
       notEmpty: true,
       errorMessage: 'No submission_id supplied'
     }
@@ -230,6 +231,8 @@ submissions.post(
 
     const { problem_id, team_id, division, language } = matchedData(req)
 
+    const submissions = await contest.scanItems('submission', { team_id, problem_id })
+
     const { name: filename, size: filesize, md5, data } = req.files!.source as UploadedFile
     const submission_id = uuidv4().replace(/-/g, '')
     const submission = {
@@ -241,7 +244,7 @@ submissions.post(
       filename,
       filesize,
       md5,
-      sub_no: 0,
+      sub_no: submissions?.length,
       status: 'pending',
       score: 0,
       date: Date.now() / 1000,
@@ -250,11 +253,11 @@ submissions.post(
       source: data.toString('utf-8')
     }
 
-    contest.s3.upload({
-      Bucket: 'abacus-submissions',
-      Key: `${submission_id}/${filename}`,
-      Body: (req as any).files.source.data
-    })
+    // contest.s3.upload({
+    //   Bucket: 'abacus-submissions',
+    //   Key: `${submission_id}/${filename}`,
+    //   Body: (req as any).files.source.data
+    // })
 
     contest.getItem('problem', { problem_id })
       .then((result: any) => {
@@ -264,6 +267,48 @@ submissions.post(
           .catch(err => res.status(500).send(err))
       })
       .catch(err => res.status(500).send(err))
+  }
+)
+
+submissions.post(
+  '/submissions/rerun',
+  checkSchema({
+    submission_id: {
+      in: ['query', 'body'],
+      isString: true,
+      notEmpty: true,
+      errorMessage: 'submission_id is invalid'
+    }
+  }),
+  async (req: Request, res: Response) => {
+    const errors = validationResult(req).array()
+    if (errors.length > 0) {
+      res.status(400).json({
+        message: errors[0].msg
+      })
+      return
+    }
+
+    const query = matchedData(req)
+    contest.scanItems('submission', query)
+      .then(response => {
+        if (response?.length)
+          contest.lambda.invoke({
+            FunctionName: 'PistonRunner',
+            Payload: JSON.stringify({
+              Records: [{
+                eventName: "INSERT",
+                dynamodb: {
+                  NewImage: AWS.DynamoDB.Converter.marshall(response[0])
+                }
+              }]
+            })
+          }, (err, data) => {
+            if (err) res.status(400).send(err)
+            else res.send(data)
+          })
+      })
+      .catch(err => res.status(400).send(err))
   }
 )
 
