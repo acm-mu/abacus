@@ -10,13 +10,13 @@ type SubmissionType = {
   filesize: number;
   language: string;
   md5: string;
-  problem: ProblemType;
+  problem_id: string;
   runtime: number;
   score: number;
   status: string;
   sub_no: number;
   submission_id: string;
-  team: UserType;
+  team_id: string;
   tests: TestType[];
 }
 
