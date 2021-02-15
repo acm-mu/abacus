@@ -16,6 +16,7 @@ import Settings from './Settings'
 import { NotFound, Unauthorized } from "../../components";
 import DefaultNavigation from "../DefaultNavigation";
 import { UserContext } from "../../context/user";
+import EditUser from "./EditUser";
 
 const Admin = (): JSX.Element => {
   const { user } = useContext(UserContext);
@@ -31,6 +32,7 @@ const Admin = (): JSX.Element => {
               <Route path='/admin/problems/new' component={NewProblem} />
               <Route path='/admin/problems/:problem_id' component={EditProblem} />
               <Route path='/admin/problems' component={Problems} />
+              <Route path='/admin/users/:user_id' component={EditUser} />
               <Route path='/admin/users' component={Users} />
               <Route path='/admin/submissions/:submission_id' component={Submission} />
               <Route path='/admin/submissions' component={Submissions} />
