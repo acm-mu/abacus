@@ -36,8 +36,7 @@ const Settings = (): JSX.Element => {
   }, [])
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const name = event.target.name
-    const value = event.target.value
+    const { name, value } = event.target
     setSettings({ ...settings, [name]: value })
   }
 

@@ -52,7 +52,7 @@ const Submissions = (): JSX.Element => {
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                  {submissions ? (submissions.map((submission: SubmissionType, index: number) => (
+                  {submissions?.length ? (submissions.map((submission: SubmissionType, index: number) => (
                     <Table.Row key={index}>
                       <Table.Cell>
                         <Link to={`/blue/submissions/${submission.submission_id}`}>
@@ -77,7 +77,7 @@ const Submissions = (): JSX.Element => {
                   ))) :
                     (<Table.Row>
                       <Table.Cell colSpan={7} style={{ textAlign: "center" }}>
-                        No Submissions
+                        You don&lsquo;t have any submissions yet. Go write some code!
                     </Table.Cell>
                     </Table.Row>)}
                 </Table.Body>

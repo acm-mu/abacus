@@ -79,29 +79,29 @@ const Submissions = (): JSX.Element => {
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {submissions.length ? (submissions.map((submission: SubmissionItem, index: number) =>
-              (<Table.Row key={index}>
-                <Table.Cell>
-                  <input
-                    type='checkbox'
-                    checked={submission.checked}
-                    id={submission.submission_id}
-                    onChange={handleChange} />
-                </Table.Cell>
-                <Table.Cell><Link to={`/admin/submissions/${submission.submission_id}`}>{submission.submission_id.substring(0, 7)}</Link></Table.Cell>
-                <Table.Cell><Link to={`/admin/problems/${submission.problem.id}`}>{submission.problem.problem_name} </Link></Table.Cell>
-                <Table.Cell><Link to={`/admin/users/${submission.team.user_id}`}>{submission.team.display_name}</Link></Table.Cell>
-                <Table.Cell>{submission.sub_no + 1}</Table.Cell>
-                <Table.Cell>{submission.language}</Table.Cell>
-                <Table.Cell><span className={`status icn ${submission.status}`} /></Table.Cell>
-                <Table.Cell>{Math.floor(submission.runtime)}</Table.Cell>
-                <Table.Cell><Moment fromNow date={submission.date * 1000} /> </Table.Cell>
-                <Table.Cell>{submission.score}</Table.Cell>
-              </Table.Row>)
-              )) :
-                (<Table.Row>
-                  <Table.Cell colSpan={10} style={{ textAlign: "center" }}>No Submissions</Table.Cell>
+              {submissions.length ? (submissions.map((submission: SubmissionItem) =>
+                <Table.Row key={submission.submission_id}>
+                  <Table.Cell>
+                    <input
+                      type='checkbox'
+                      checked={submission.checked}
+                      id={submission.submission_id}
+                      onChange={handleChange} />
+                  </Table.Cell>
+                  <Table.Cell><Link to={`/admin/submissions/${submission.submission_id}`}>{submission.submission_id.substring(0, 7)}</Link></Table.Cell>
+                  <Table.Cell><Link to={`/admin/problems/${submission.problem_id}`}>{submission.problem.problem_name} </Link></Table.Cell>
+                  <Table.Cell><Link to={`/admin/users/${submission.team.user_id}`}>{submission.team.display_name}</Link></Table.Cell>
+                  <Table.Cell>{submission.sub_no + 1}</Table.Cell>
+                  <Table.Cell>{submission.language}</Table.Cell>
+                  <Table.Cell><span className={`status icn ${submission.status}`} /></Table.Cell>
+                  <Table.Cell>{Math.floor(submission.runtime)}</Table.Cell>
+                  <Table.Cell><Moment fromNow date={submission.date * 1000} /> </Table.Cell>
+                  <Table.Cell>{submission.score}</Table.Cell>
                 </Table.Row>)
+              ) :
+                <Table.Row>
+                  <Table.Cell colSpan={10} style={{ textAlign: "center" }}>No Submissions</Table.Cell>
+                </Table.Row>
               }
             </Table.Body>
           </Table>

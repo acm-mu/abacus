@@ -10,7 +10,10 @@ type BlockProps = {
 };
 
 const Block = (props: BlockProps): JSX.Element => (
-  <div className={`${props.size || ""} block ${props.center ? "center" : ""} ${props.transparent ? "transparent" : ""} ${props.className || ""}`}>
+  <div
+    className={`${props.size || ""} block ${props.center ? "center" : ""} 
+  ${props.transparent ? "transparent" : ""} 
+  ${props.className || ""}`}>
     {props?.children}
   </div>
 );
