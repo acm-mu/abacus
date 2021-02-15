@@ -13,7 +13,6 @@ const DefaultNavigation = (): JSX.Element => (
       <Dropdown.Menu>
         <Dropdown.Item as={NavLink} to="/blue" text="Blue" />
         <Dropdown.Item as={NavLink} to="/gold" text="Gold" />
-        <Dropdown.Item as={NavLink} to="/eagle" text="Eagle" />
       </Dropdown.Menu>
     </Dropdown>
 
