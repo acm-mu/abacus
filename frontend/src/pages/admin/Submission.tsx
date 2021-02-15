@@ -80,7 +80,7 @@ const Submission = (): JSX.Element => {
               </Table.Cell>
               <Table.Cell>{submission.team.display_name}</Table.Cell>
               <Table.Cell><Moment fromNow date={submission?.date * 1000} /></Table.Cell>
-              <Table.Cell><Link to={`/admin/problems/${submission.problem_id}/edit`}>{submission.problem.problem_name}</Link></Table.Cell>
+              <Table.Cell><Link to={`/admin/problems/${submission.problem_id}`}>{submission.problem.problem_name}</Link></Table.Cell>
               <Table.Cell><span className={`icn status ${submission.status}`} /></Table.Cell>
               <Table.Cell>{Math.floor(submission.runtime)}</Table.Cell>
               <Table.Cell>{submission.score}</Table.Cell>
@@ -88,14 +88,14 @@ const Submission = (): JSX.Element => {
             </Table.Row>
             <Table.Row>
               <Table.Cell colSpan={7}>
-                {submission?.tests.map((test: TestType) => {
+                {submission?.tests.map((test: TestType, index: number) => {
                   switch (test.result) {
                     case 'accepted':
-                      return <span className='result icn accepted' />
+                      return <span key={`test-${index}`} className='result icn accepted' />
                     case 'rejected':
-                      return <span className='result icn rejected' />
+                      return <span key={`test-${index}`} className='result icn rejected' />
                     default:
-                      return <span className='result icn' />
+                      return <span key={`test-${index}`} className='result icn' />
                   }
                 })}
               </Table.Cell>
