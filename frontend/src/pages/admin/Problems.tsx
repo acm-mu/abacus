@@ -10,13 +10,13 @@ interface ProblemItem extends ProblemType {
 }
 
 const Problems = (): JSX.Element => {
-  const [isLoading, setLoading] = useState(true)
+  const [isLoading, setLoading] = useState<boolean>(true)
   const [problems, setProblems] = useState<ProblemItem[]>([])
   const [submissions, setSubmissions] = useState<{ [key: string]: SubmissionType[] }>()
+  const [isMounted, setMounted] = useState<boolean>(false)
 
-  let isMounted = false
   useEffect(() => {
-    isMounted = true
+    setMounted(true)
     fetch(`${config.API_URL}/problems?division=blue`)
       .then(res => res.json())
       .then(data => {
@@ -42,8 +42,8 @@ const Problems = (): JSX.Element => {
           setSubmissions(subs)
         }
       })
-    return () => { isMounted = false }
-  }, [])
+    return () => { setMounted(false) }
+  }, [isMounted])
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setProblems(problems.map(problem => problem.problem_id == event.target.id ? { ...problem, checked: !problem.checked } : problem))
@@ -74,6 +74,7 @@ const Problems = (): JSX.Element => {
         <Popup content='Add User' trigger={<Button as={Link} to='/admin/problems/new' icon='plus' />} />
         <Popup content='Import from CSV' trigger={<Button icon='upload' />} />
         <Popup content='Export to JSON' trigger={<a href={`${config.API_URL}/problems.json`}><Button icon='download' /></a>} />
+        {problems.filter(problem => problem.checked).length ?
           <Popup content='Delete Selected' trigger={<Button icon='trash' negative onClick={deleteSelected} />} /> : <></>}
       </ButtonGroup>
       {isLoading ?
@@ -82,7 +83,7 @@ const Problems = (): JSX.Element => {
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell collapsing><input type='checkbox' onChange={checkAll} /></Table.HeaderCell>
-              <Table.HeaderCell>Problem Id</Table.HeaderCell>
+              <Table.HeaderCell collapsing>ID</Table.HeaderCell>
               <Table.HeaderCell>Problem Name</Table.HeaderCell>
               <Table.HeaderCell># of Tests</Table.HeaderCell>
               <Table.HeaderCell>Solved Attempts</Table.HeaderCell>
@@ -99,8 +100,8 @@ const Problems = (): JSX.Element => {
                     id={problem.problem_id}
                     onChange={handleChange} />
                 </Table.Cell>
-                <Table.Cell>{problem.id}</Table.Cell>
-                <Table.Cell><Link to={`/admin/problems/${problem.problem_id}/edit`}>{problem.problem_name}</Link></Table.Cell>
+                <Table.Cell><Link to={`/admin/problems/${problem.problem_id}`}>{problem.id}</Link></Table.Cell>
+                <Table.Cell><Link to={`/admin/problems/${problem.problem_id}`}>{problem.problem_name}</Link></Table.Cell>
                 <Table.Cell>{problem.tests.length}</Table.Cell>
                 {submissions &&
                   <>

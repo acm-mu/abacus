@@ -2,8 +2,8 @@ import { Dispatch, SetStateAction, useState } from "react"
 import config from './environment'
 import { UserType } from "./types"
 
-const useAuth = (user: UserType | undefined): [_: boolean, _: Dispatch<SetStateAction<boolean>>] => {
-  const [state, setState] = useState(false)
+const useAuth = (user: UserType | undefined, isMounted: boolean): [_: boolean, _: Dispatch<SetStateAction<boolean>>] => {
+  const [state, setState] = useState<boolean>(false)
 
   if (user) {
     const formData = new FormData()
@@ -13,7 +13,7 @@ const useAuth = (user: UserType | undefined): [_: boolean, _: Dispatch<SetStateA
     fetch(`${config.API_URL}/auth`, {
       method: 'POST',
       body: formData
-    }).then(res => { setState(res.status == 200) })
+    }).then(res => { if (isMounted) setState(res.status == 200) })
   }
 
   return [state, setState]

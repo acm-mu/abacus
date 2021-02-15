@@ -11,7 +11,7 @@ interface EditUserProps {
 }
 
 const EditUser = ({ user, trigger }: EditUserProps) => {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState<boolean>(false)
 
   const roles = [
     { key: 'team', text: 'Team', value: 'team' },
@@ -97,11 +97,11 @@ interface UserItem extends UserType {
 
 const Users = (): JSX.Element => {
   const [users, setUsers] = useState<UserItem[]>([])
-  const [isLoading, setLoading] = useState(true)
+  const [isLoading, setLoading] = useState<boolean>(true)
+  const [isMounted, setMounted] = useState<boolean>(false)
 
-  let isMounted = false
   useEffect(() => {
-    isMounted = true
+    setMounted(true)
     fetch(`${config.API_URL}/users`)
       .then(res => res.json())
       .then(data => {
@@ -111,8 +111,8 @@ const Users = (): JSX.Element => {
           setLoading(false)
         }
       })
-    return () => { isMounted = false }
-  }, [])
+    return () => { setMounted(false) }
+  }, [isMounted])
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUsers(users.map(user => user.user_id == event.target.id ? { ...user, checked: !user.checked } : user))
@@ -144,6 +144,7 @@ const Users = (): JSX.Element => {
           <Popup content="Add User" trigger={<EditUser trigger={<Button icon="plus" />} />} />
           <Popup content="Import from CSV" trigger={<Button icon="upload" />} />
           <Popup content="Export to JSON" trigger={<a href={`${config.API_URL}/users.json`}><Button icon="download" /></a>} />
+          {users.filter(user => user.checked).length ?
             <Popup content="Delete Selected" trigger={<Button icon="trash" negative onClick={deleteSelected} />} /> : <></>}
         </ButtonGroup>
         {isLoading ?

@@ -7,19 +7,19 @@ import "./Countdown.scss";
 import "./FlipClock.scss";
 
 const Countdown = (): JSX.Element => {
-  const [compName, setCompName] = useState('Loading Competition Info...');
+  const [compName, setCompName] = useState<string>('Loading Competition Info...');
 
   const now = new Date()
 
   const [startDate, setStartDate] = useState<Date>(now);
   const [endDate, setEndDate] = useState<Date>(now);
   const [time, setTime] = useState<Date>(now);
+  const [isMounted, setMounted] = useState<boolean>(false)
 
   const diff = (date1: Date, date2: Date) => date1.getTime() - date2.getTime();
 
-  let isMounted = false
   useEffect(() => {
-    isMounted = true
+    setMounted(true)
     fetch(`${config.API_URL}/contest`)
       .then((res) => res.json())
       .then((res) => {
@@ -29,8 +29,8 @@ const Countdown = (): JSX.Element => {
           setEndDate(new Date(parseInt(res.end_date) * 1000))
         }
       });
-    return () => { isMounted = false }
-  }, [])
+    return () => { setMounted(false) }
+  }, [isMounted])
 
   setInterval(() => {
     if (isMounted)
