@@ -1,39 +1,61 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Table } from 'semantic-ui-react'
-import { Block } from '../../components'
+import { Block, Countdown, Unauthorized } from '../../components'
 import { ProblemType } from '../../types'
 import config from '../../environment'
+import { useAuth } from '../../authlib'
+import { UserContext } from '../../context/user'
+import { Link } from 'react-router-dom'
 
 const Problems = (): JSX.Element => {
-  const [problems, setProblems] = useState([])
+  const [isMounted, setMounted] = useState<boolean>(false)
+  const { user } = useContext(UserContext)
+  const [isAuthenticated] = useAuth(user, isMounted)
+  const [problems, setProblems] = useState<ProblemType[]>()
 
   useEffect(() => {
+    setMounted(true)
     fetch(`${config.API_URL}/problems?division=gold`)
       .then(res => res.json())
-      .then(data => setProblems(data))
-  }, [])
+      .then(probs => {
+        if (isMounted) {
+          probs = Object.values(probs)
+          probs.sort((a: ProblemType, b: ProblemType) => a.id.localeCompare(b.id))
+          setProblems(probs)
+        }
+      })
+    return () => { setMounted(false) }
+  }, [isMounted])
 
   return (
-    <Block size='xs-12' transparent>
-      <Table celled>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell>&nsbp;</Table.HeaderCell>
-            <Table.HeaderCell>Problem Name</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {problems.map((problem: ProblemType, index: number) => (
-            <Table.Row key={index}>
-              <Table.Cell collapsing>{problem.id}</Table.Cell>
-              <Table.Cell>
-                <a href={`/gold/problems/${problem.id}`}>{problem.problem_name}</a>
-              </Table.Cell>
-            </Table.Row>
-          ))}
-        </Table.Body>
-      </Table>
-    </Block>
+    <>
+      {isAuthenticated ?
+        <>
+          <Countdown />
+          <Block size='xs-12' transparent>
+            <Table celled>
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell />
+                  <Table.HeaderCell>Problem Name</Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {problems ? problems.map((problem: ProblemType, index: number) => (
+                  <Table.Row key={index}>
+                    <Table.HeaderCell collapsing>{problem.id}</Table.HeaderCell>
+                    <Table.Cell>
+                      <Link to={`/gold/problems/${problem.id}`}>{problem.problem_name}</Link>
+                    </Table.Cell>
+                  </Table.Row>
+                )) : <></>}
+              </Table.Body>
+            </Table>
+          </Block>
+        </> :
+        <Unauthorized />
+      }
+    </>
   )
 }
 
