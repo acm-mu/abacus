@@ -10,18 +10,23 @@ import { useAuth } from "../../authlib";
 
 const Problems = (): JSX.Element => {
   const { user } = useContext(UserContext)
-  const [isAuthenticated] = useAuth(user)
-  const [problems, setProblems] = useState([]);
+  const [isMounted, setMounted] = useState<boolean>(false)
+  const [isAuthenticated] = useAuth(user, isMounted)
+  const [problems, setProblems] = useState<ProblemType[]>();
 
   useEffect(() => {
+    setMounted(true)
     fetch(`${config.API_URL}/problems?division=blue`)
       .then((res) => res.json())
       .then((probs) => {
-        probs = Object.values(probs)
-        probs.sort((a: ProblemType, b: ProblemType) => a.id.localeCompare(b.id))
-        setProblems(probs)
+        if (isMounted) {
+          probs = Object.values(probs)
+          probs.sort((a: ProblemType, b: ProblemType) => a.id.localeCompare(b.id))
+          setProblems(probs)
+        }
       })
-  }, []);
+    return () => { setMounted(false) }
+  }, [isMounted]);
 
   return (
     <>
@@ -38,7 +43,7 @@ const Problems = (): JSX.Element => {
                 </Table.Row>
               </Table.Header>
               <Table.Body>
-                {problems.map((problem: ProblemType, index) =>
+                {problems ? problems.map((problem: ProblemType, index: number) =>
                   <Table.Row key={index}>
                     <Table.HeaderCell collapsing>{problem.id}</Table.HeaderCell>
                     <Table.Cell>
@@ -46,7 +51,7 @@ const Problems = (): JSX.Element => {
                     </Table.Cell>
                     <Table.Cell>{problem?.tests?.length}</Table.Cell>
                   </Table.Row>
-                )}
+                ) : <></>}
               </Table.Body>
             </Table>
           </Block>

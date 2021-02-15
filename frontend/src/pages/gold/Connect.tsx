@@ -6,8 +6,8 @@ import config from '../../environment'
 
 const Connect = (): JSX.Element => {
   const { user } = useContext(UserContext)
-  const [username, setUsername] = useState('')
-  const [disabled, setDisabled] = useState(true)
+  const [username, setUsername] = useState<string>()
+  const [disabled, setDisabled] = useState<boolean>(true)
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(event.target.value)
@@ -19,6 +19,10 @@ const Connect = (): JSX.Element => {
     const formData = new FormData()
     if (!user) {
       alert("You must be logged in to do that!")
+      return
+    }
+    if (!username) {
+      alert("Missing username!")
       return
     }
     formData.set('user_id', user.user_id)

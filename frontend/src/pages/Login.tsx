@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Button, Form, Message } from "semantic-ui-react";
 import { Block } from "../components";
 import { authenticate, useAuth } from '../authlib'
@@ -7,8 +7,9 @@ import { Redirect } from "react-router-dom";
 
 const Login = (): JSX.Element => {
   const { user, setUser } = useContext(UserContext)
-  const [isAuthenticated] = useAuth(user)
-  const [error, setError] = useState(false)
+  const [isMounted, setMounted] = useState<boolean>(false)
+  const [isAuthenticated] = useAuth(user, isMounted)
+  const [error, setError] = useState<boolean>(false)
   const formData: { [any: string]: string } = {}
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,6 +25,11 @@ const Login = (): JSX.Element => {
       setError(true)
     }
   }
+
+  useEffect(() => {
+    setMounted(true)
+    return () => { setMounted(false) }
+  }, [])
 
   return (
     <Block transparent center size="xs-6">

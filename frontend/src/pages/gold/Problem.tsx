@@ -1,25 +1,22 @@
 import React, { useState } from 'react'
 import MarkdownView from 'react-showdown'
 import { Block } from '../../components'
+import { ProblemType } from '../../types'
 
 const Problem = (): JSX.Element => {
-  const [problem] = useState({
-    id: '',
-    problem_name: '',
-    description: '',
-    cpu_time_limit: 0,
-    memory_limit: 0
-  })
+  const [problem] = useState<ProblemType>()
 
   return (
     <>
       <Block size='xs-9'>
-        <h1>Problem {problem.id}
+        <h1>Problem {problem?.id}
           <br />
-          {problem.problem_name}</h1>
+          {problem?.problem_name}</h1>
         <hr />
 
-        <MarkdownView markdown={problem.description} />
+        {problem ?
+          <MarkdownView markdown={problem?.description} />
+          : <></>}
       </Block>
       <Block size='xs-3'>
         <div style={{ display: 'flex', justifyContent: 'space-evenly' }} >
@@ -38,9 +35,9 @@ const Problem = (): JSX.Element => {
         Stats
       </a> */}
         </div>
-        <p><b>Problem ID:</b> {problem.id}</p>
-        <p><b>CPU Time limit:</b> {problem.cpu_time_limit}</p>
-        <p><b>Memory limit:</b> {problem.memory_limit}</p>
+        <p><b>Problem ID:</b> {problem?.id}</p>
+        <p><b>CPU Time limit:</b> {problem?.cpu_time_limit}</p>
+        <p><b>Memory limit:</b> {problem?.memory_limit}</p>
         <p><b>Download:</b> <a>Sample data files</a></p>
       </Block>
     </>
