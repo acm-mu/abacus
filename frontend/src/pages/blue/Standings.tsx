@@ -8,13 +8,13 @@ import config from '../../environment'
 import "./Standings.scss";
 
 const Standings = (): JSX.Element => {
-  const [problems, setProblems] = useState([]);
-  const [standings, setStandings] = useState([]);
-  const [loading, setLoading] = useState(true)
+  const [problems, setProblems] = useState<ProblemType[]>();
+  const [standings, setStandings] = useState<StandingsUser[]>();
+  const [loading, setLoading] = useState<boolean>(true)
+  const [isMounted, setMounted] = useState<boolean>(false)
 
-  let isMounted = false
   useEffect(() => {
-    isMounted = true
+    setMounted(true)
     fetch(`${config.API_URL}/problems?division=blue`)
       .then((res) => res.json())
       .then((problems) => {
@@ -34,8 +34,8 @@ const Standings = (): JSX.Element => {
           setLoading(false)
         }
       });
-    return () => { isMounted = false }
-  }, []);
+    return () => { setMounted(false) }
+  }, [isMounted]);
 
   return (
     <>
@@ -67,15 +67,15 @@ const Standings = (): JSX.Element => {
                 <Table.HeaderCell>Team</Table.HeaderCell>
                 <Table.HeaderCell collapsing>SLV.</Table.HeaderCell>
                 <Table.HeaderCell collapsing>TIME</Table.HeaderCell>
-                {problems.map((problem: ProblemType, index: number) => (
+                {problems ? problems.map((problem: ProblemType, index: number) => (
                   <Table.HeaderCell key={index} collapsing>
                     <Link to={`/blue/problems/${problem.id}`}>{problem.id}</Link>
                   </Table.HeaderCell>
-                ))}
+                )) : <></>}
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {standings.map((team: StandingsUser, index: number) => (
+              {standings ? standings.map((team: StandingsUser, index: number) => (
                 <Table.Row key={index}>
                   <Table.Cell collapsing>{index + 1}</Table.Cell>
                   <Table.Cell>
@@ -93,7 +93,7 @@ const Standings = (): JSX.Element => {
                             {problem.submissions.length}
                           </Table.Cell>
                         );
-                      } else if (problem.submissions.length > 0) {
+                      } else if (problem.submissions.length) {
                         return (
                           <Table.Cell key={index} className="attempted">
                             --
@@ -108,7 +108,7 @@ const Standings = (): JSX.Element => {
                     }
                   )}
                 </Table.Row>
-              ))}
+              )) : <></>}
             </Table.Body>
           </Table>
         </Block>
