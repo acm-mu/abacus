@@ -28,12 +28,12 @@ const Admin = (): JSX.Element => {
             <Switch>
               <Route exact path='/admin/' component={Home} />
               <Route path='/admin/settings' component={Settings} />
-              <Route path='/admin/problems/:problem_id/edit' component={EditProblem} />
               <Route path='/admin/problems/new' component={NewProblem} />
+              <Route path='/admin/problems/:problem_id' component={EditProblem} />
               <Route path='/admin/problems' component={Problems} />
               <Route path='/admin/users' component={Users} />
-              <Route path='/admin/submissions' component={Submissions} />
               <Route path='/admin/submissions/:submission_id' component={Submission} />
+              <Route path='/admin/submissions' component={Submissions} />
               <Route default component={NotFound} />
             </Switch>
           </Container>

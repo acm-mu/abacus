@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Block, Countdown } from '../../components'
 import { Form, Button } from 'semantic-ui-react'
 import { ProblemType, SubmissionType } from '../../types'
-import { useHistory, useParams } from 'react-router-dom'
+import { Link, useHistory, useParams } from 'react-router-dom'
 import config from '../../environment'
 import './Submit.scss'
 import { UserContext } from '../../context/user'
@@ -22,14 +22,15 @@ const languages: Language[] = [
 
 const Submit = (): JSX.Element => {
   const { user } = useContext(UserContext)
+  const [submissions, setSubmissions] = useState<SubmissionType[]>()
   const [problem, setProblem] = useState<ProblemType>()
   const [language, setLanguage] = useState<Language>()
   const [file, setFile] = useState<File>()
   const history = useHistory()
 
-  const { problem_id: id } = useParams<{ problem_id: string }>()
+  const { problem_id } = useParams<{ problem_id: string }>()
   useEffect(() => {
-    fetch(`${config.API_URL}/problems?id=${id}`)
+    fetch(`${config.API_URL}/problems?id=${problem_id}`)
       .then(res => res.json())
       .then(res => {
         res = Object.values(res)[0] as ProblemType
@@ -37,12 +38,19 @@ const Submit = (): JSX.Element => {
       })
   }, [])
 
+  useEffect(() => {
+    fetch(`${config.API_URL}/submissions?team_id=${user?.user_id}&id=${problem_id}`)
+      .then((res) => res.json())
+      .then(res => {
+        if (res) setSubmissions(Object.values(res))
+      })
+  }, [])
+
   const handleSubmit = async () => {
     if (!(language && file && problem && user)) return
     const formData = new FormData()
-    // formData.set('file_ext', language.file_extension)
     formData.set('problem_id', problem.problem_id)
-    formData.set('file', file, file.name)
+    formData.set('source', file, file.name)
     formData.set('language', language.key)
     formData.set('team_id', user.user_id)
     formData.set('division', user.division)
@@ -54,7 +62,10 @@ const Submit = (): JSX.Element => {
 
     const body: SubmissionType = await res.json()
 
-    if (res.status != 200) alert("An error occurred! Please try again")
+    if (res.status != 200) {
+      alert("An error occurred! Please try again")
+      return
+    }
 
     history.push(`/blue/submissions/${body.submission_id}`)
   }
@@ -84,33 +95,38 @@ const Submit = (): JSX.Element => {
   return (
     <>
       <Countdown />
-      <Block size='xs-12'>
-        <h1>Submit a solution to {problem?.problem_name} </h1>
+      {!submissions || submissions.filter((e) => e.status == "accepted").length == 0 ?
+        <Block size='xs-12'>
+          <h1>Submit a solution to {problem?.problem_name} </h1>
 
-        <Form onSubmit={handleSubmit}>
-          <div id="file_dialog">
-            <div className="message">
-              {file ? <>
-                <h3>Your submission will include the following files:</h3>
-                <ul> <li>
-                  {file.name}
-                </li> </ul>
-              </> : <>
-                  <b>Drag & drop</b> a file here to upload<br />
-                  <i>(Or click and choose file)</i>
-                </>}
+          <Form onSubmit={handleSubmit}>
+            <div id="file_dialog">
+              <div className="message">
+                {file ? <>
+                  <h3>Your submission will include the following files:</h3>
+                  <ul> <li>
+                    {file.name}
+                  </li> </ul>
+                </> : <>
+                    <b>Drag & drop</b> a file here to upload<br />
+                    <i>(Or click and choose file)</i>
+                  </>}
+              </div>
+              <input id="sub_files_input" type="file" name="source" onChange={uploadChange} />
             </div>
-            <input id="sub_files_input" type="file" name="sub-file" onChange={uploadChange} />
-          </div>
 
-          <Form.Select inline label='Language' placeholder="Select Language" value={language?.value} options={languages} />
+            <Form.Select inline label='Language' placeholder="Select Language" value={language?.value} options={languages} />
 
-          <Form.Group>
-            <Button>Cancel</Button>
-            <Form.Button primary content="Submit" />
-          </Form.Group>
-        </Form>
-      </Block>
+            <Form.Group>
+              <Button>Cancel</Button>
+              <Form.Button primary content="Submit" />
+            </Form.Group>
+          </Form>
+        </Block>
+        : <Block size='xs-12' transparent>
+          <h2>You Already Solved This Problem!</h2>
+          <Link to={`/blue/submissions/${submissions.filter((e) => e.status == "accepted")[0].submission_id}`}>Go to your solved submission</Link>
+        </Block>}
     </>
   )
 }

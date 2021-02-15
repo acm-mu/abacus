@@ -52,7 +52,7 @@ const Settings = (): JSX.Element => {
     formData.set('end_date', `${Date.parse(`${settings.end_date} ${settings.end_time}`) / 1000.0}`)
 
     await fetch(`${config.API_URL}/contest`, {
-      method: 'POST',
+      method: 'PUT',
       body: formData
     })
   }

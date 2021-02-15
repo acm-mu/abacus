@@ -1,10 +1,11 @@
-import AWS, { AWSError, S3 } from "aws-sdk";
+import AWS, { AWSError, Lambda, S3 } from "aws-sdk";
 import { AttributeMap, BatchWriteItemOutput, DeleteItemOutput, DocumentClient, GetItemOutput, ItemList, PutItemOutput, ScanInput, ScanOutput, UpdateItemOutput } from "aws-sdk/clients/dynamodb";
 import { ArgsType, CompetitionSettings } from "types";
 
 class ContestService {
   db: DocumentClient;
   s3: S3;
+  lambda: Lambda;
 
   constructor() {
     this.init_aws();
@@ -15,6 +16,7 @@ class ContestService {
 
     this.db = new DocumentClient();
     this.s3 = new S3();
+    this.lambda = new Lambda();
   }
 
   async get_settings(): Promise<CompetitionSettings> {
