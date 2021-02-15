@@ -33,16 +33,15 @@ const Submit = (): JSX.Element => {
     fetch(`${config.API_URL}/problems?id=${problem_id}`)
       .then(res => res.json())
       .then(res => {
-        res = Object.values(res)[0] as ProblemType
-        setProblem(res)
-      })
-  }, [])
-
-  useEffect(() => {
-    fetch(`${config.API_URL}/submissions?team_id=${user?.user_id}&id=${problem_id}`)
-      .then((res) => res.json())
-      .then(res => {
-        if (res) setSubmissions(Object.values(res))
+        if (res) {
+          const problem = Object.values(res)[0] as ProblemType
+          setProblem(problem)
+          fetch(`${config.API_URL}/submissions?team_id=${user?.user_id}&problem_id=${problem.problem_id}`)
+            .then((res) => res.json())
+            .then(res => {
+              if (res) setSubmissions(Object.values(res))
+            })
+        }
       })
   }, [])
 
@@ -95,7 +94,7 @@ const Submit = (): JSX.Element => {
   return (
     <>
       <Countdown />
-      {!submissions || submissions.filter((e) => e.status == "accepted").length == 0 ?
+      {!submissions || submissions?.filter((e) => e.status == "accepted").length == 0 ?
         <Block size='xs-12'>
           <h1>Submit a solution to {problem?.problem_name} </h1>
 
