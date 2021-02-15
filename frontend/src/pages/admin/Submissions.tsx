@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Button, ButtonGroup, Loader, Popup, Table } from 'semantic-ui-react'
 import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
-import { ProblemType, SubmissionType, UserType } from '../../types'
+import { SubmissionType } from '../../types'
 import { Block } from '../../components'
 import config from '../../environment'
 
@@ -11,14 +11,13 @@ interface SubmissionItem extends SubmissionType {
 }
 
 const Submissions = (): JSX.Element => {
-  const [isLoading, setLoading] = useState(true)
+  const [isLoading, setLoading] = useState<boolean>(true)
   const [submissions, setSubmissions] = useState<SubmissionItem[]>([])
-  const [problems, setProblems] = useState<{ [key: string]: ProblemType }>()
-  const [teams, setTeams] = useState<{ [key: string]: UserType }>()
+  const [isMounted, setMounted] = useState<boolean>(false)
 
-  let isMounted = false
+
   useEffect(() => {
-    isMounted = true
+    setMounted(true)
     fetch(`${config.API_URL}/submissions`)
       .then(res => res.json())
       .then(data => {
@@ -28,23 +27,8 @@ const Submissions = (): JSX.Element => {
           setLoading(false)
         }
       })
-    fetch(`${config.API_URL}/problems`)
-      .then(res => res.json())
-      .then(data => {
-        if (isMounted) {
-          setProblems(data)
-        }
-      })
-
-    fetch(`${config.API_URL}/users?role=team`)
-      .then(res => res.json())
-      .then(data => {
-        if (isMounted) {
-          setTeams(data)
-        }
-      })
-    return () => { isMounted = false }
-  }, [])
+    return () => { setMounted(false) }
+  }, [isMounted])
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSubmissions(submissions.map(submission => submission.submission_id == event.target.id ? { ...submission, checked: !submission.checked } : submission))
@@ -74,6 +58,7 @@ const Submissions = (): JSX.Element => {
       <Block size='xs-12' transparent>
         <ButtonGroup>
           <Popup content='Export to JSON' trigger={<a href={`${config.API_URL}/submissions.json`}><Button icon='download' /></a>} />
+          {submissions.filter(submission => submission.checked).length ?
             <Popup content='Delete Selected' trigger={<Button icon='trash' negative onClick={deleteSelected} />} /> : <></>}
         </ButtonGroup>
         {isLoading ?
@@ -94,7 +79,7 @@ const Submissions = (): JSX.Element => {
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {submissions.length > 0 ? (submissions.map((submission: SubmissionItem, index: number) =>
+              {submissions.length ? (submissions.map((submission: SubmissionItem, index: number) =>
               (<Table.Row key={index}>
                 <Table.Cell>
                   <input
@@ -104,17 +89,19 @@ const Submissions = (): JSX.Element => {
                     onChange={handleChange} />
                 </Table.Cell>
                 <Table.Cell><Link to={`/admin/submissions/${submission.submission_id}`}>{submission.submission_id.substring(0, 7)}</Link></Table.Cell>
-                <Table.Cell><Link to={`/admin/problems/${submission.problem_id}`}>{problems && problems[submission.problem_id].problem_name} </Link></Table.Cell>
-                <Table.Cell>{teams && teams[submission.team_id].display_name}</Table.Cell>
+                <Table.Cell><Link to={`/admin/problems/${submission.problem.id}`}>{submission.problem.problem_name} </Link></Table.Cell>
+                <Table.Cell><Link to={`/admin/users/${submission.team.user_id}`}>{submission.team.display_name}</Link></Table.Cell>
                 <Table.Cell>{submission.sub_no + 1}</Table.Cell>
                 <Table.Cell>{submission.language}</Table.Cell>
-                <Table.Cell className={`icn ${submission.status}`} />
-                <Table.Cell>{submission.runtime}</Table.Cell>
+                <Table.Cell><span className={`status icn ${submission.status}`} /></Table.Cell>
+                <Table.Cell>{Math.floor(submission.runtime)}</Table.Cell>
                 <Table.Cell><Moment fromNow date={submission.date * 1000} /> </Table.Cell>
                 <Table.Cell>{submission.score}</Table.Cell>
               </Table.Row>)
-              )) : (
-                  <Table.Cell colSpan="7" style={{ textAlign: "center" }}>No Submissions</Table.Cell>)
+              )) :
+                (<Table.Row>
+                  <Table.Cell colSpan={10} style={{ textAlign: "center" }}>No Submissions</Table.Cell>
+                </Table.Row>)
               }
             </Table.Body>
           </Table>

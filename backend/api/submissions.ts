@@ -67,9 +67,25 @@ submissions.get(
       })
       return
     }
+    const problems = transpose(await contest.scanItems('problem'), 'problem_id')
+    const teams = transpose(await contest.scanItems('user', { role: 'team' }), 'user_id')
+
     const query = matchedData(req)
     contest.scanItems('submission', query)
-      .then(response => res.send(transpose(response, 'submission_id')))
+      .then(response => {
+        response?.map((submission: any) => {
+          submission.problem = problems[submission.problem_id]
+          const team = teams[submission.team_id]
+          submission.team = {
+            user_id: team.user_id,
+            username: team.username,
+            display_name: team.display_name,
+            division: team.division
+          }
+        })
+
+        res.send(transpose(response, 'submission_id'))
+      })
       .catch(err => res.status(400).send(err))
   }
 )
