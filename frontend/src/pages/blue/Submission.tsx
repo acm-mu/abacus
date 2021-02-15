@@ -6,35 +6,33 @@ import { useAuth } from '../../authlib'
 import { Block, Countdown, NotFound, Unauthorized } from '../../components'
 import { UserContext } from '../../context/user'
 import config from '../../environment'
-import { ProblemType, SubmissionType } from '../../types'
+import { SubmissionType } from '../../types'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 
 const Submission = (): JSX.Element => {
   const { user } = useContext(UserContext)
-  const [isAuthenticated] = useAuth(user)
+  const [isMounted, setMounted] = useState<boolean>(false)
+  const [isAuthenticated] = useAuth(user, isMounted)
   const [submission, setSubmission] = useState<SubmissionType>()
-  const [problem, setProblem] = useState<ProblemType>()
   const { submission_id } = useParams<{ submission_id: string }>()
 
-  let isMounted = false
   useEffect(() => {
-    isMounted = true
-    if (isMounted && submission_id)
+    setMounted(true)
+    if (submission_id) {
       fetch(`${config.API_URL}/submissions?submission_id=${submission_id}`)
         .then(res => res.json())
         .then(res => {
-          const submission = Object.values(res)[0] as SubmissionType
-          if (submission) {
-            setSubmission(submission);
-            fetch(`${config.API_URL}/problems?problem_id=${submission.problem_id}`)
-              .then(res => res.json())
-              .then(prob => {
-                setProblem(Object.values(prob)[0] as ProblemType)
-              })
-          }
+          if (isMounted)
+            setSubmission(Object.values(res)[0] as SubmissionType)
         })
-    return () => { isMounted = false }
-  }, [])
+    }
+    return () => { setMounted(false) }
+  }, [submission_id, isMounted])
+
+  const lang = (language: string) => {
+    if (["python3"].includes(language)) return "python"
+    return language
+  }
 
   return (
     <>
@@ -63,7 +61,7 @@ const Submission = (): JSX.Element => {
                     <Table.Row>
                       <Table.Cell rowSpan={2}><Link to={`/blue/submissions/${submission?.submission_id}`}>{submission?.submission_id.substring(0, 7)}</Link></Table.Cell>
                       <Table.Cell>{submission && <Moment fromNow date={submission.date * 1000} />}</Table.Cell>
-                      <Table.Cell><Link to={`/blue/problems/${problem?.id}`}>{problem?.problem_name}</Link></Table.Cell>
+                      <Table.Cell><Link to={`/blue/problems/${submission?.problem.id}`}>{submission?.problem.problem_name}</Link></Table.Cell>
                       <Table.Cell><span className={`status icn ${submission?.status}`} /></Table.Cell>
                       <Table.Cell>{submission?.runtime.toString().substring(0, 4)}</Table.Cell>
                       <Table.Cell>{submission?.language}</Table.Cell>
@@ -107,8 +105,8 @@ const Submission = (): JSX.Element => {
 
                 <h3>{submission?.filename}</h3>
                 <pre>
-                  {submission &&
-                    <SyntaxHighlighter language={submission.language}>{submission.source}</SyntaxHighlighter>
+                  {submission?.source &&
+                    <SyntaxHighlighter language={lang(submission.language)}>{submission.source}</SyntaxHighlighter>
                   }
                 </pre>
               </Block>

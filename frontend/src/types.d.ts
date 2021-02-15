@@ -9,18 +9,18 @@ type SubmissionType = {
   filename: string;
   filesize: number;
   language: string;
-  prob_name: string;
+  md5: string;
+  problem: ProblemType;
   problem_id: string;
   runtime: number;
   score: number;
-  md5: string;
+  source: string;
   status: string;
   sub_no: number;
   submission_id: string;
+  team: UserType;
   team_id: string;
-  team_name: string;
   tests: TestType[];
-  source: string;
 }
 
 type ProblemScoreType = {
