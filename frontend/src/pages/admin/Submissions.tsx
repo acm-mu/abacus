@@ -73,8 +73,7 @@ const Submissions = (): JSX.Element => {
     <>
       <Block size='xs-12' transparent>
         <ButtonGroup>
-          <Popup content='Export to CSV' trigger={<Button icon='download' />} />
-          {submissions.filter(submission => submission.checked).length > 0 ?
+          <Popup content='Export to JSON' trigger={<a href={`${config.API_URL}/submissions.json`}><Button icon='download' /></a>} />
             <Popup content='Delete Selected' trigger={<Button icon='trash' negative onClick={deleteSelected} />} /> : <></>}
         </ButtonGroup>
         {isLoading ?

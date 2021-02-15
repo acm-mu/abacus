@@ -120,4 +120,15 @@ const contest = new ContestService();
 
 const transpose = (itemList: ItemList | undefined, key: string): { [key: string]: any } => itemList ? Object.assign({}, ...itemList.map((obj: any) => ({ [obj[key]]: obj }))) : {}
 
-export { contest, transpose };
+const makeJSON = (itemList: ItemList, columns: string[]): string => {
+  itemList.map((e) => {
+    Object.keys(e).forEach((key) => {
+      if (!columns.includes(key)) {
+        delete e[key]
+      }
+    })
+  })
+  return JSON.stringify(itemList)
+}
+
+export { contest, transpose, makeJSON };
