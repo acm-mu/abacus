@@ -29,6 +29,24 @@ const Navigation: React.FunctionComponent<Props> = (props: Props) => {
     return () => { setMounted(false) }
   })
 
+  const userHistory = () => {
+    switch (user?.role) {
+      case 'admin':
+        return '/admin';
+      case 'team':
+        switch (user.division) {
+          case 'gold':
+            return '/gold';
+          case 'blue':
+            return '/blue'
+          default:
+            return '/'
+        }
+      default:
+        return '/';
+    }
+  }
+
   return (
     <Menu className={`fixed ${props.className}`} inverted>
       <Container>
@@ -40,9 +58,8 @@ const Navigation: React.FunctionComponent<Props> = (props: Props) => {
 
         <Menu.Menu position="right">
           {isAuthenticated ?
-            <Dropdown item text={user?.username} simple>
+            <Dropdown item text={user?.username} onClick={() => { history.push(userHistory()) }} simple>
               <Dropdown.Menu>
-                {user?.role == 'admin' && <Menu.Item as={Link} to='/admin/settings'>Settings</Menu.Item>}
                 <Dropdown.Item onClick={handleLogout} text="Log out" />
               </Dropdown.Menu>
             </Dropdown> :
