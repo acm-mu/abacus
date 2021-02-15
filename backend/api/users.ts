@@ -1,3 +1,4 @@
+import { createHash } from "crypto";
 import { Router, Request, Response } from "express";
 import { checkSchema, matchedData, validationResult } from "express-validator";
 import { v4 as uuidv4 } from 'uuid'
@@ -119,6 +120,8 @@ users.put(
     }
     const item = matchedData(req)
 
+    item.password = createHash('sha256').update(item.password).digest('hex')
+
     const users = Object.values(await contest.scanItems('user', { username: item.username }) || {})
     if (users.length > 1) {
       res.status(400).json({
@@ -229,6 +232,8 @@ users.post(
     }
 
     const item = matchedData(req)
+
+    item.password = createHash('sha256').update(item.password).digest('hex')
 
     const users = Object.values(await contest.scanItems('user', { username: item.username }) || {})
     if (users.length) {
