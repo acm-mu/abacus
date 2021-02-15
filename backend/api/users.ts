@@ -8,6 +8,12 @@ const users = Router();
 users.get(
   '/users',
   checkSchema({
+    user_id: {
+      in: ['body', 'query'],
+      isString: true,
+      optional: true,
+      errorMessage: 'String user_id is invalid'
+    },
     display_name: {
       in: ['body', 'query'],
       isString: true,
@@ -112,6 +118,15 @@ users.put(
       return
     }
     const item = matchedData(req)
+
+    const users = Object.values(await contest.scanItems('user', { username: item.username }) || {})
+    if (users.length > 1) {
+      res.status(400).json({
+        message: "Username is alreay used"
+      })
+      return
+    }
+
     contest.updateItem('user', { user_id: req.body.user_id }, item)
       .then(_ => res.send(item))
       .catch(err => res.status(500).send(err))
@@ -200,6 +215,15 @@ users.post(
     }
 
     const item = matchedData(req)
+
+    const users = Object.values(await contest.scanItems('user', { username: item.username }) || {})
+    if (users.length) {
+      res.status(400).json({
+        message: "Username is alreay used"
+      })
+      return
+    }
+
     if (item.role == 'team' && item.division == undefined) {
       res.status(400).json({
         message: "Teams need a division"
