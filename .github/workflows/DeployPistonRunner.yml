@@ -18,11 +18,10 @@ jobs:
         run: zip PistonRunner.zip PistonRunner.js
 
       - name: Deploy zip file to lambda
-        working-directory: lambdas/PistonRunner
         uses: appleboy/lambda-action@master
         with:
           aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws_region: ${{ secrets.AWS_REGION }}
           function_name: PistonRunner
-          zip_file: PistonRunner.zip
+          zip_file: lambdas/PistonRunner/PistonRunner.zip
