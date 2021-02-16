@@ -5,7 +5,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
-  // <React.StrictMode> Disable StrictMode because components from semantic-ui-react don't comply and throw errors we can't supress
+  // <React.StrictMode> Disable StrictMode because components from semantic-ui-react do not comply and throw errors
   <App />,
   // </React.StrictMode>,
   document.getElementById("root")
