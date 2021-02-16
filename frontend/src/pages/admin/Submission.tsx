@@ -45,9 +45,11 @@ const Submission = (): JSX.Element => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({ submission_id })
-    }).then(() => {
-      loadSubmission()
-    })
+    }).then(res => res.json())
+      .then(res => {
+        if (submission_id in res.submissions)
+          setSubmission({ ...submission, ...res.submissions[submission_id] })
+      })
   }
 
   return (
