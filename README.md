@@ -4,71 +4,41 @@
 
 ## Overview
 
-This Open Source competition judging software is designed for the [Marquette ACM Programming Competition](https://mu.acm.org/competition). It was created my Marquette students, and modeled after [Kattis](https://www.kattis.com/), the judging software used for [ICPC](https://icpc.global/).
+This Open Source competition judging software is designed for the [Marquette ACM Programming Competition](https://mu.acm.org/competition). It was created by Marquette students, and modeled after [Kattis](https://www.kattis.com/), the judging software used for [ICPC](https://icpc.global/).
 
 ### Technology
 
-- React
-- Node.js
-- AWS DynamoDB
-- AWS EBS
-- AWS Lambda
-- AWS S3
+- [React](https://reactjs.org/)
+  - [Semantic UI React](https://react.semantic-ui.com/)
+  - [React Syntax Highlighter](https://github.com/react-syntax-highlighter/react-syntax-highlighter)
+  - [React Moment](https://github.com/headzoo/react-moment)
+  - [React Showdown](https://github.com/jerolimov/react-showdown)
+- [Node.js](https://nodejs.org/en/)
+  - [Express.js](https://expressjs.com/)
+- [AWS DynamoDB](https://aws.amazon.com/dynamodb/)
+- [AWS Elastic Beanstalk](https://aws.amazon.com/elasticbeanstalk/)
+- [AWS Lambda](https://aws.amazon.com/lambda/)
+- [AWS S3](https://aws.amazon.com/s3/)
+- [engineer-man/piston](https://github.com/engineer-man/piston)
+
+## Local Development
+
+#### Prerequisites
+
+- [Node.js](https://nodejs.org/en/)
+
+#### Installation
+
+- Clone this repo.
+- Navigate to the `backend` directory
+- Run `npm install` to install backend node dependencies
+- Navigate to `frontend` directory
+- Run `npm install` to install frontend node dependencies
+- Backend and frontend run as two seperate processes. You have two choices here
+  - From the repo root directory, open one terminal and run `npm run dev`
+  - Open two terminals (or command prompt). In one terminal run `npm start` from the `frontend` directory and in the other terminal, run `npm run dev` from the `backend` directory.
+- After running the frontend (eitehr way) the terminal should open a new web browser window to `localhost:3000`
 
 ## TODO
 
-### Admin
-
-- **STRETCH** Admin dashboard
-- Refresh users page after adding new user
-- Input validation for usernames, displaynames, and passwords for users
-- Import users from a file
-- View clarifications
-- Close clarifications (no more replies)
-- Delete clarifications
-- Respond to clarifications
-
-### Blue
-
-- Download sample files
-- Add submission "cooldown"
-- Show most recent submission statistics on problem page
-- View private & public clarifications
-- Submit private clarifications
-- Reply to private clarifications
-- Get notified when clarification has been answered `(STRETCH)`
-- Get notified when submission has been graded `(STRETCH)`
-- Notifications for clarifications (async global javascript) `(STRETCH)`
-- Notifications for results (async global javascript) `(STRETCH)`
-
-### Gold
-
-- View clarifications
-- View standings
-- Submit private clarifications
-- Reply to private clarifications
-- Get notified when clarification has been answered `(STRETCH)`
-- Get notified when submission has been graded `(STRETCH)`
-
-### Judge
-
-- View solutions to problems
-- View sample files for problems (skeletons, testdata)
-- View unclaimed submissions
-- Claim unclaimed submission
-- Read-only claimed submissions
-- Unclaim submissions
-- View run output for submissions
-- View clarifications
-- Respond to clarifications
-- Delete clarifications
-- Close clarifications
-- Reopen clarifications
-- Submit public clarifications
-- regrade submissions (only notify team if it has changed.) `(STRETCH)`
-
-### Stretch Goal
-
-Create aws_setup.py script to create DynamoDB tables, S3 buckets, and maybe lambda handlers to project can run out of the box with just aws credentials.
-
-## Installation
+[View project board here](https://github.com/acm-mu/abacus/projects/1)

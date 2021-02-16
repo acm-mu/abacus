@@ -4,7 +4,7 @@ on:
     paths:
       - "frontend/**"
     branches:
-      - "react"
+      - "master"
 jobs:
   deploy:
     name: CI/CD Pipeline

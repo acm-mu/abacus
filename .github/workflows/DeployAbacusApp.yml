@@ -2,9 +2,9 @@ name: Build and deploy backend
 on:
   push:
     paths:
-      - "backend/*"
+      - "backend/**"
     branches:
-      - "react"
+      - "master"
 jobs:
   deploy:
     name: CI/CD Pipeline
