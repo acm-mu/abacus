@@ -14,9 +14,11 @@ jobs:
         uses: actions/checkout@v1
 
       - name: Package source into zip file
-        run: cd lambdas/PistonRunner && zip PistonRunner.zip PistonRunner.js
+        working-directory: lambdas/PistonRunner
+        run: zip PistonRunner.zip PistonRunner.js
 
       - name: Deploy zip file to lambda
+        working-directory: lambdas/PistonRunner
         uses: appleboy/lambda-action@master
         with:
           aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
