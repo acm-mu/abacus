@@ -1,0 +1,28 @@
+name: Test backend
+on:
+  push:
+    paths:
+      - "backend/**"
+    branches:
+      - "*"
+      - "!master"
+jobs:
+  deploy:
+    name: CI Pipeline
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+
+      - name: Install Node.js 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+
+      - name: Install dependencies from package.json
+        run: npm install
+        working-directory: backend
+
+      - name: Build project
+        run: npm run build
+        working-directory: backend
