@@ -41,4 +41,4 @@ This Open Source competition judging software is designed for the [Marquette ACM
 
 ## TODO
 
-[View project board here](https://www.notion.so/8fc0cc20e7cf4b0ab58b188dc56d4c85?v=a646f1b3be2742e193046202d63fbe61)
+[View project board here](https://github.com/acm-mu/abacus/projects/1)
