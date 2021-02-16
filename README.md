@@ -37,7 +37,7 @@ This Open Source competition judging software is designed for the [Marquette ACM
 - Backend and frontend run as two seperate processes. You have two choices here
   - From the repo root directory, open one terminal and run `npm run dev`
   - Open two terminals (or command prompt). In one terminal run `npm start` from the `frontend` directory and in the other terminal, run `npm run dev` from the `backend` directory.
-- After running the frontend (eitehr way) the terminal should open a new web browser window to `localhost:3000`
+- After running the frontend (either way) the terminal should open a new web browser window to `localhost:3000`
 
 ## TODO
 
