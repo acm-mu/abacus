@@ -1,17 +1,15 @@
+import React from "react";
+import { Switch, Route } from 'react-router-dom'
+import { Container } from "semantic-ui-react";
+import { NotFound } from '../../components'
+import BlueNavigation from './BlueNavigation'
+import Home from './Home'
 import Problem from './Problem'
 import Problems from './Problems'
 import Standings from './Standings'
 import Submissions from './Submissions'
 import Submission from './Submission'
-import Home from './Home'
-import BlueNavigation from './BlueNavigation'
-
-import React from "react";
-import { Switch, Route } from 'react-router-dom'
-import { Container } from "semantic-ui-react";
 import Submit from './Submit'
-import { NotFound } from '../../components'
-import BlueClarifications from './BlueClarifications'
 
 const Blue = (): JSX.Element => (
   <>
@@ -26,7 +24,6 @@ const Blue = (): JSX.Element => (
         <Route path='/blue/standings' component={Standings} />
         <Route path='/blue/submissions/:submission_id' component={Submission} />
         <Route path='/blue/submissions' component={Submissions} />
-        <Route path='/blue/clarifications' component={BlueClarifications} />
         <Route default component={NotFound} />
       </Switch>
     </Container>
