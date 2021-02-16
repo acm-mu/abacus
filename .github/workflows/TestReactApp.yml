@@ -1,10 +1,8 @@
 name: Test frontend
 on:
-  pull_request:
-  workflow_dispatch:
   push:
     paths:
-      - "backend/**"
+      - "frontend/**"
     branches:
       - "*"
       - "!master"
