@@ -1,4 +1,4 @@
-name: Deploy BlueRunner Lambda
+name: Deploy BlueRunner lambda
 on:
   push:
     paths:
@@ -7,12 +7,13 @@ on:
       - "master"
 jobs:
   deploy_bluerunner:
-    name: deploy BlueRunner
+    name: CD Pipeline
     runs-on: ubuntu-latest
     steps:
-      - name: checkout source code
+      - name: Checkout source code
         uses: actions/checkout@v1
-      - name: default deploy
+
+      - name: Deploy source to lambda
         uses: appleboy/lambda-action@master
         with:
           aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}

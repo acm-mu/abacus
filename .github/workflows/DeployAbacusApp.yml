@@ -10,7 +10,7 @@ jobs:
     name: CI/CD Pipeline
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout source code
         uses: actions/checkout@v2
 
       - name: Install Node.js 12.x
@@ -18,7 +18,7 @@ jobs:
         with:
           node-version: 12.x
 
-      - name: Install dependencies
+      - name: Install dependencies from package.json
         run: npm install
         working-directory: backend
 
@@ -26,22 +26,22 @@ jobs:
         run: npm run build
         working-directory: backend
 
-      - name: Zip project
+      - name: Package project into zip file
         run: npm run zip
         working-directory: backend
 
-      - name: Configure AWS
+      - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Upload package to S3 bucket
+      - name: Upload zip file to codedeploy s3 bucket
         run: aws s3 cp dist/backend.zip "s3://codeabac.us-codedeploy/${{ github.sha }}.zip"
         working-directory: backend
 
-      - name: AWS Create new ElasticBeanstalk application version
+      - name: Create new elastic beanstalk application version with zip file
         run: |
           aws elasticbeanstalk create-application-version \
           --application-name abacus-backend \
@@ -49,5 +49,5 @@ jobs:
           --version-label "ver-${{ github.sha }}" \
           --description "commit-sha-${{ github.sha }}"
 
-      - name: Deploy new ElasticBeanstalk application version
+      - name: Deploy new application version
         run: aws elasticbeanstalk update-environment --environment-name abacus-backend-prod --version-label "ver-${{ github.sha }}"
