@@ -1,22 +1,26 @@
-name: Deploy PistonRunner Lambda
+name: Deploy PistonRunner lambda
 on:
   push:
     paths:
-      - "lambdas/PistonRunner/PistonRunner.js"
+      - "lambdas/PistonRunner/*"
     branches:
       - "master"
 jobs:
   deploy_bluerunner:
-    name: deploy PistonRunner
+    name: CD Pipeline
     runs-on: ubuntu-latest
     steps:
-      - name: checkout source code
+      - name: Checkout source code
         uses: actions/checkout@v1
-      - name: default deploy
+
+      - name: Package source into zip file
+        run: cd lambdas/PistonRunner && zip PistonRunner.zip PistonRunner.js
+
+      - name: Deploy zip file to lambda
         uses: appleboy/lambda-action@master
         with:
           aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws_region: ${{ secrets.AWS_REGION }}
           function_name: PistonRunner
-          source: lambdas/PistonRunner/PistonRunner.js
+          zip_file: PistonRunner.js
