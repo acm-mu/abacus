@@ -29,6 +29,7 @@ exports.handler = async (event) => {
 
     // Run tests
     for (const test of submission.tests) {
+      // Await response from piston execution
       const res = await axios.post("https://piston.codeabac.us/execute", {
         language,
         source,
