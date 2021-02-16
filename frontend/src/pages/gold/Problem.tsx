@@ -1,39 +1,62 @@
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
 import MarkdownView from 'react-showdown'
-import { Block } from '../../components'
-import { ProblemType } from '../../types'
+import { Button, Popup } from 'semantic-ui-react'
+import { Block, Countdown } from '../../components'
+import { UserContext } from '../../context/user'
+import { ProblemType, SubmissionType } from '../../types'
+import config from "../../environment"
 
 const Problem = (): JSX.Element => {
-  const [problem] = useState<ProblemType>()
+  const [problem, setProblem] = useState<ProblemType>()
+  const [submissions, setSubmissions] = useState<SubmissionType[]>()
+  const { user } = useContext(UserContext)
+  const { problem_id } = useParams<{ problem_id: string }>()
+
+  useEffect(() => {
+    fetch(`${config.API_URL}/problems?division=gold&id=${problem_id}`)
+      .then(res => res.json())
+      .then(res => {
+        if (res) {
+          const problem = Object.values(res)[0] as ProblemType
+          setProblem(problem)
+          if (user)
+            fetch(`${config.API_URL}/submissions?team_id=${user?.user_id}&problem_id=${problem.problem_id}`)
+              .then(res => res.json())
+              .then(res => setSubmissions(Object.values(res)))
+        }
+      })
+  }, [])
 
   return (
     <>
+      <Countdown />
       <Block size='xs-9'>
         <h1>Problem {problem?.id}
           <br />
-          {problem?.problem_name}</h1>
+          {problem?.problem_name}
+        </h1>
         <hr />
-
-        {problem ?
-          <MarkdownView markdown={problem?.description} />
-          : <></>}
+        <div className="markdown">
+          <MarkdownView markdown={problem?.description || ""} />
+        </div>
       </Block>
       <Block size='xs-3'>
         <div style={{ display: 'flex', justifyContent: 'space-evenly' }} >
-          {/* <a 
-      {% if submissions['status'] == "accepted" or submissions['status'] == "pending" or not(is_logged_in()) %}
-      class="icon button ui disabled"
-      {% else %}
-      href="/gold/problems/{{ problem.id }}/submit"  id="submit" class = "icon button ui"
-      {% endif %} 
-      data-tooltip="Submit" data-position="top center" data-inverted="">
-        <i class="upload icon"></i>
-        Submit
-      </a> */}
-          {/* <a class="icon button ui" id="stats" data-tooltip="Stats" data-position="top center" data-inverted="">
-        <i class="chart bar icon"></i>
-        Stats
-      </a> */}
+          {!submissions || submissions?.filter((e) => e.status == "accepted").length == 0 ?
+            <Popup
+              trigger={
+                <Button
+                  as={Link}
+                  to={`/blue/problems/${problem?.id}/submit`}
+                  content="Submit"
+                  icon="upload"
+                />
+              }
+              content="Submit"
+              position="top center"
+              inverted /> : <></>
+          }
         </div>
         <p><b>Problem ID:</b> {problem?.id}</p>
         <p><b>CPU Time limit:</b> {problem?.cpu_time_limit}</p>

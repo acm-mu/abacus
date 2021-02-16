@@ -104,7 +104,6 @@ const Standings = (): JSX.Element => {
                       } else {
                         return <Table.Cell key={index}></Table.Cell>;
                       }
-                      // <Table.Cell key={index} className="team_problem_solve"></Table.Cell>
                     }
                   )}
                 </Table.Row>

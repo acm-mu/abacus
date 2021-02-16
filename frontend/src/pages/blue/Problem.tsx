@@ -8,7 +8,7 @@ import config from '../../environment'
 import "./Problem.scss";
 import { UserContext } from "../../context/user";
 
-const Problem: React.FunctionComponent = () => {
+const Problem = (): JSX.Element => {
   const [problem, setProblem] = useState<ProblemType>();
   const [submissions, setSubmissions] = useState<SubmissionType[]>()
   const { user } = useContext(UserContext)
@@ -21,11 +21,10 @@ const Problem: React.FunctionComponent = () => {
         if (res) {
           const problem = Object.values(res)[0] as ProblemType
           setProblem(problem);
-          fetch(`${config.API_URL}/submissions?team_id=${user?.user_id}&problem_id=${problem.problem_id}`)
-            .then((res => res.json()))
-            .then(res => {
-              if (res) setSubmissions(Object.values(res))
-            })
+          if (user)
+            fetch(`${config.API_URL}/submissions?team_id=${user?.user_id}&problem_id=${problem.problem_id}`)
+              .then((res => res.json()))
+              .then(res => setSubmissions(Object.values(res)))
         }
       });
   }, []);
@@ -68,18 +67,10 @@ const Problem: React.FunctionComponent = () => {
             inverted
           /> */}
         </div>
-        <p>
-          <b>Problem ID:</b> {problem?.id}
-        </p>
-        <p>
-          <b>CPU Time limit:</b> {problem?.cpu_time_limit}
-        </p>
-        <p>
-          <b>Memory limit:</b> {problem?.memory_limit}
-        </p>
-        <p>
-          <b>Download:</b> <Link to='#'>Sample data files</Link>
-        </p>
+        <p><b>Problem ID:</b> {problem?.id}</p>
+        <p><b>CPU Time limit:</b> {problem?.cpu_time_limit}</p>
+        <p><b>Memory limit:</b> {problem?.memory_limit}</p>
+        <p><b>Download:</b> <Link to='#'>Sample data files</Link></p>
       </Block>
     </>
   );
