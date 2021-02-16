@@ -5,22 +5,29 @@ const db = new AWS.DynamoDB.DocumentClient()
 
 exports.handler = async (event) => {
   for (const record of event.Records) {
+    // Only run for new items
     if (record.eventName != "INSERT") continue
 
+    // Find submission from event metadata
     const submission = AWS.DynamoDB.Converter.unmarshall(record.dynamodb.NewImage)
     const { submission_id } = submission
 
+    // Get problem and competition details
     const problem = await getItem('problem', { problem_id: submission.problem_id })
-
     const settings = Object.assign({}, ...(await scanItems('setting')).map(((x) => ({ [x.key]: x.value }))))
 
+    // Update status to 'pending'
     await updateItem('submission', { submission_id }, { status: 'pending' })
 
+    // Extract details and set defaults
     const { language, source, date: submission_date } = submission
-
     let status = "accepted"
     let runtime = -1
+
+    // Copy tests from problem
     submission.tests = problem.tests
+
+    // Run tests
     for (const test of submission.tests) {
       const res = await axios.post("https://piston.codeabac.us/execute", {
         language,
@@ -55,6 +62,7 @@ exports.handler = async (event) => {
       submission.score = 0
     }
 
+    // Save submission to database
     await updateItem('submission', { submission_id }, { ...submission, status, runtime })
   }
 
