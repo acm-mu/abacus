@@ -72,7 +72,7 @@ const Problems = (): JSX.Element => {
     <Block size='xs-12' transparent>
       <ButtonGroup>
         <Popup content='Add Problem' trigger={<Button as={Link} to='/admin/problems/new' icon='plus' />} />
-        <Popup content='Import from CSV' trigger={<Button icon='upload' />} />
+        <Popup content='Import from CSV' trigger={<Link to='/admin/problems/upload'><Button icon='upload' /></Link>} />
         <Popup content='Export to JSON' trigger={<a href={`${config.API_URL}/problems.json`}><Button icon='download' /></a>} />
         {problems.filter(problem => problem.checked).length ?
           <Popup content='Delete Selected' trigger={<Button icon='trash' negative onClick={deleteSelected} />} /> : <></>}
