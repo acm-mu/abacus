@@ -57,7 +57,7 @@ const Users = (): JSX.Element => {
       <Block size='xs-12' transparent>
         <ButtonGroup>
           <Popup content="Add User" trigger={<CreateUser trigger={<Button icon="plus" />} />} />
-          <Popup content="Import from CSV" trigger={<Button icon="upload" />} />
+          <Popup content="Import from CSV" trigger={<Link to='/admin/users/upload'><Button icon="upload" /></Link>} />
           <Popup content="Export to JSON" trigger={<a href={`${config.API_URL}/users.json`}><Button icon="download" /></a>} />
           {users.filter(user => user.checked).length ?
             <Popup content="Delete Selected" trigger={<Button icon="trash" negative onClick={deleteSelected} />} /> : <></>}

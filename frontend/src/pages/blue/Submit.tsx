@@ -1,11 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react'
 
-import { Block, Countdown } from '../../components'
+import { Block, Countdown, FileDialog } from '../../components'
 import { Form, Button } from 'semantic-ui-react'
 import { ProblemType, SubmissionType } from '../../types'
 import { Link, useHistory, useParams } from 'react-router-dom'
 import config from '../../environment'
-import './Submit.scss'
 import { UserContext } from '../../context/user'
 
 interface Language {
@@ -99,21 +98,18 @@ const Submit = (): JSX.Element => {
           <h1>Submit a solution to {problem?.problem_name} </h1>
 
           <Form onSubmit={handleSubmit}>
-            <div id="file_dialog">
-              <div className="message">
-                {file ? <>
-                  <h3>Your submission will include the following files:</h3>
-                  <ul> <li>
-                    {file.name}
-                  </li> </ul>
-                </> : <>
-                    <b>Drag & drop</b> a file here to upload<br />
-                    <i>(Or click and choose file)</i>
-                  </>}
-              </div>
-              <input id="sub_files_input" type="file" name="source" onChange={uploadChange} />
-            </div>
-
+            <FileDialog file={file} onChange={uploadChange} control={(file?: File) => (
+              file ?
+                <>
+                  <h3>Your upload will include the following files:</h3>
+                  <ul>
+                    <li>{file.name} ({file.size} bytes)</li>
+                  </ul>
+                </> : <p>
+                  <b>Drag & drop</b> a file here to upload <br />
+                  <i>(Or click and choose file)</i>
+                </p>
+            )} />
             <Form.Select inline label='Language' placeholder="Select Language" value={language?.value} options={languages} />
 
             <Form.Group>
