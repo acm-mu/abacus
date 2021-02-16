@@ -305,7 +305,7 @@ submissions.post(
             })
           }, (err, data) => {
             if (err) res.status(400).send(err)
-            else res.send(data)
+            else if (data.StatusCode == 200) res.send(data.Payload)
           })
       })
       .catch(err => res.status(400).send(err))
