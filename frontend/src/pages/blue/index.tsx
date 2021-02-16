@@ -11,36 +11,25 @@ import { Switch, Route } from 'react-router-dom'
 import { Container } from "semantic-ui-react";
 import Submit from './Submit'
 import { NotFound } from '../../components'
-
-/* Flask endpoints to move to backend
-  * /problems/<pid>/submit
-*/
+import BlueClarifications from './BlueClarifications'
 
 const Blue = (): JSX.Element => (
   <>
-    {/* {!hasAccess('blue') ?
-      <>
-        <DefaultNavigation />
-        <Container text className="main">
-          <Unauthorized />
-        </Container>
-      </> :*/} <>
-      <BlueNavigation />
-      <Container text className="main">
-        <Switch>
-          <Route exact path='/blue/' component={Home} />
-          <Route path='/blue/problem/' component={Problem} />
-          <Route path='/blue/problems/:problem_id/submit' component={Submit} />
-          <Route path='/blue/problems/:problem_id' component={Problem} />
-          <Route path='/blue/problems' component={Problems} />
-          <Route path='/blue/standings' component={Standings} />
-          <Route path='/blue/submissions/:submission_id' component={Submission} />
-          <Route path='/blue/submissions' component={Submissions} />
-          <Route default component={NotFound} />
-        </Switch>
-      </Container>
-    </>
-    {/* } */}
+    <BlueNavigation />
+    <Container text className="main">
+      <Switch>
+        <Route exact path='/blue/' component={Home} />
+        <Route path='/blue/problem/' component={Problem} />
+        <Route path='/blue/problems/:problem_id/submit' component={Submit} />
+        <Route path='/blue/problems/:problem_id' component={Problem} />
+        <Route path='/blue/problems' component={Problems} />
+        <Route path='/blue/standings' component={Standings} />
+        <Route path='/blue/submissions/:submission_id' component={Submission} />
+        <Route path='/blue/submissions' component={Submissions} />
+        <Route path='/blue/clarifications' component={BlueClarifications} />
+        <Route default component={NotFound} />
+      </Switch>
+    </Container>
   </>
 );
 

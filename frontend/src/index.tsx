@@ -5,12 +5,8 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
-  // <React.StrictMode>
-  <>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
-    <link rel="icon" type="image/png" href="/images/logo.png" />
-    <App />
-  </>,
+  // <React.StrictMode> Disable StrictMode because components from semantic-ui-react don't comply and throw errors we can't supress
+  <App />,
   // </React.StrictMode>,
   document.getElementById("root")
 );

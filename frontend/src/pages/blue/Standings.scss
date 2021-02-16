@@ -35,21 +35,15 @@
 }
 
 .legend-status.legend-solved {
-    background: #aae2ab no-repeat center/50% url(https://open.kattis.com/images/standings/check.svg);
-    //   background: #aae2ab no-repeat center/75%
-    //     url(/images/standings/check.svg);
+    background: #aae2ab no-repeat center/50% url('/assets/standings/check.svg');
 }
 
 .legend-status.legend-attempted {
-    background: #f67b51 no-repeat center/50% url(https://open.kattis.com/images/standings/cross.svg);
-    //   background: #f67b51 no-repeat center/75%
-    //     url(/images/standings/cross.svg);
+    background: #f67b51 no-repeat center/50% url('/assets/standings/cross.svg');
 }
 
 .legend-status.legend-pending {
-    background: #dcdcdc no-repeat center/50% url(https://open.kattis.com/images/standings/question.svg);
-    //   background: #dcdcdc no-repeat center/50%
-    //     url(/images/standings/question.svg);
+    background: #dcdcdc no-repeat center/50% url('/assets/standings/question.svg');
 }
 
 .ui.table {
@@ -60,23 +54,17 @@
         vertical-align: middle;
     }
     td.solved {
-        // background: #aae2ab no-repeat center/32px
-        //   url(/images/standings/check.svg);
-        background: #aae2ab no-repeat center/32px url(https://open.kattis.com/images/standings/check.svg);
+        background: #aae2ab no-repeat center/32px url('/assets/standings/check.svg');
         text-align: center;
     }
     td.attempted {
         text-align: center;
-        background: #f67b51 no-repeat center/32px url(https://open.kattis.com/images/standings/cross.svg);
-        // background: #f67b51 no-repeat center/32px
-        //   url(/images/standings/cross.svg);
+        background: #f67b51 no-repeat center/32px url('/assets/standings/cross.svg');
         color: white;
     }
     #standings td.pending {
         text-align: center;
-        // background: #dcdcdc no-repeat center/50%
-        //   url(/images/standings/question.svg);
-        background: #dcdcdc no-repeat center/50% url(https://open.kattis.com/images/standings/question.svg);
+        background: #dcdcdc no-repeat center/50% url('/assets/standings/question.svg');
         text-align: center;
     }
 }

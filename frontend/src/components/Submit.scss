@@ -1,46 +1,46 @@
 pre {
-  font-size: .9rem;
-  line-height: .9rem;
+    font-size: 0.9rem;
+    line-height: 0.9rem;
 }
 
 #file_dialog {
-  background: rgba(0, 0, 0, 0.03);
-  border-radius: 3px;
-  position: relative;
-  height: 173px;
-  border: 1px solid rgba(0, 0, 0, 0.03);
+    background: rgba(0, 0, 0, 0.03);
+    border-radius: 3px;
+    position: relative;
+    height: 173px;
+    border: 1px solid rgba(0, 0, 0, 0.03);
 }
 
 #file_dialog .message {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translateX(-50%) translateY(-50%);
-  text-align: center;
-  font-size: 2em;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    text-align: center;
+    font-size: 2em;
 }
 
 #file_dialog h3 {
-  font-size: 24px;
+    font-size: 24px;
 }
 
 #file_dialog ul {
-  margin: 0;
-  font-size: 18px;
-  text-align: left;
+    margin: 0;
+    font-size: 18px;
+    text-align: left;
 }
 
 #file_dialog i {
-  color: rgb(196, 196, 196);
+    color: rgb(196, 196, 196);
 }
 
 #sub_files_input {
-  cursor: pointer;
-  display: block;
-  font-family: "Open Sans", sans-serif;
-  font-size: 1rem;
-  font-weight: 400;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
+    cursor: pointer;
+    display: block;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
 }

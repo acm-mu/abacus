@@ -6,11 +6,11 @@
 }
 
 .ui.table td.team_problem_solve.solved {
-    background: var(--light-green) no-repeat center/32px url('https://open.kattis.com/images/standings/check.svg');
+    background: var(--light-green) no-repeat center/32px url('/assets/standings/check.svg');
 }
 
 .ui.table td.team_problem_solve.failed {
-    background: var(--light-red) no-repeat center/32px url('https://open.kattis.com/images/standings/cross.svg');
+    background: var(--light-red) no-repeat center/32px url('/assets/standings/cross.svg');
     color: #fff;
 }
 
