@@ -4,6 +4,7 @@ const axios = require("axios");
 const db = new AWS.DynamoDB.DocumentClient();
 
 exports.handler = async (event) => {
+  const submissions = {}
   for (const record of event.Records) {
     // Only run for new items
     if (record.eventName != "INSERT") continue;
@@ -65,9 +66,11 @@ exports.handler = async (event) => {
 
     // Save submission to database
     await updateItem('submission', { submission_id }, { ...submission, status, runtime });
+
+    submissions[submission_id] = submission
   }
 
-  return { statusCode: 200 };
+  return { statusCode: 200, submissions };
 };
 
 function scanItems(tableName) {
