@@ -1,5 +1,10 @@
 name: Deploy PistonRunner lambda
-on: push
+on:
+  push:
+    paths:
+      - "lambdas/PistonRunner/*"
+    branches:
+      - "master"
 jobs:
   deploy_bluerunner:
     name: CD Pipeline
