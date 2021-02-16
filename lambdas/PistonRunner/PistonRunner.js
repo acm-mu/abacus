@@ -1,31 +1,31 @@
 const AWS = require("aws-sdk");
 const axios = require("axios");
 
-const db = new AWS.DynamoDB.DocumentClient()
+const db = new AWS.DynamoDB.DocumentClient();
 
 exports.handler = async (event) => {
   for (const record of event.Records) {
     // Only run for new items
-    if (record.eventName != "INSERT") continue
+    if (record.eventName != "INSERT") continue;
 
     // Find submission from event metadata
-    const submission = AWS.DynamoDB.Converter.unmarshall(record.dynamodb.NewImage)
-    const { submission_id } = submission
+    const submission = AWS.DynamoDB.Converter.unmarshall(record.dynamodb.NewImage);
+    const { submission_id } = submission;
 
     // Get problem and competition details
-    const problem = await getItem('problem', { problem_id: submission.problem_id })
-    const settings = Object.assign({}, ...(await scanItems('setting')).map(((x) => ({ [x.key]: x.value }))))
+    const problem = await getItem('problem', { problem_id: submission.problem_id });
+    const settings = Object.assign({}, ...(await scanItems('setting')).map(((x) => ({ [x.key]: x.value }))));
 
     // Update status to 'pending'
-    await updateItem('submission', { submission_id }, { status: 'pending' })
+    await updateItem('submission', { submission_id }, { status: 'pending' });
 
     // Extract details and set defaults
-    const { language, source, date: submission_date } = submission
-    let status = "accepted"
-    let runtime = -1
+    const { language, source, date: submission_date } = submission;
+    let status = "accepted";
+    let runtime = -1;
 
     // Copy tests from problem
-    submission.tests = problem.tests
+    submission.tests = problem.tests;
 
     // Run tests
     for (const test of submission.tests) {
@@ -40,31 +40,31 @@ exports.handler = async (event) => {
         }
       });
 
-      runtime = Math.max(runtime, res.data.runtime)
-      test.stdout = res.data.output
+      runtime = Math.max(runtime, res.data.runtime);
+      test.stdout = res.data.output;
 
       if (res.data.output != test.out) {
-        console.log("Result: REJECTED")
-        status = "rejected"
-        test['result'] = "rejected"
+        console.log("Result: REJECTED");
+        status = "rejected";
+        test['result'] = "rejected";
       } else {
-        console.log("Result: ACCEPTED")
-        test['result'] = "accepted"
+        console.log("Result: ACCEPTED");
+        test['result'] = "accepted";
       }
     }
 
     // Calculate Score
     if (status == "accepted") {
-      const { start_date, points_per_no, points_per_yes, points_per_minute } = settings
-      const minutes = (submission_date - start_date) / 60
+      const { start_date, points_per_no, points_per_yes, points_per_minute } = settings;
+      const minutes = (submission_date - start_date) / 60;
 
-      submission.score = Math.floor((minutes * points_per_minute) + (points_per_no * submission.sub_no) + points_per_yes)
+      submission.score = Math.floor((minutes * points_per_minute) + (points_per_no * submission.sub_no) + points_per_yes);
     } else {
-      submission.score = 0
+      submission.score = 0;
     }
 
     // Save submission to database
-    await updateItem('submission', { submission_id }, { ...submission, status, runtime })
+    await updateItem('submission', { submission_id }, { ...submission, status, runtime });
   }
 
   return { statusCode: 200 };
@@ -75,10 +75,10 @@ function scanItems(tableName) {
     db.scan({
       TableName: tableName
     }, (err, data) => {
-      if (err) reject(err)
-      else resolve(data.Items)
-    })
-  })
+      if (err) reject(err);
+      else resolve(data.Items);
+    });
+  });
 }
 
 function getItem(tableName, key) {
@@ -87,15 +87,15 @@ function getItem(tableName, key) {
       TableName: tableName,
       Key: key
     }, (err, data) => {
-      if (err) reject(err)
-      else resolve(data.Item)
-    })
-  })
+      if (err) reject(err);
+      else resolve(data.Item);
+    });
+  });
 }
 
 function updateItem(tableName, key, args) {
   return new Promise((resolve, reject) => {
-    const entries = Object.entries(args).filter(entry => !Object.keys(key).includes(entry[0]))
+    const entries = Object.entries(args).filter(entry => !Object.keys(key).includes(entry[0]));
     db.update({
       TableName: tableName,
       Key: key,
@@ -103,8 +103,8 @@ function updateItem(tableName, key, args) {
       ExpressionAttributeNames: Object.assign({}, ...entries.map((x) => ({ [`#${x[0]}`]: x[0] }))),
       ExpressionAttributeValues: Object.assign({}, ...entries.map((x) => ({ [`:${x[0]}`]: x[1] })))
     }, (err, data) => {
-      if (err) reject(err)
-      else resolve(data)
-    })
-  })
+      if (err) reject(err);
+      else resolve(data);
+    });
+  });
 }
