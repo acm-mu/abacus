@@ -49,7 +49,6 @@ exports.handler = async (event) => {
     if (status == "accepted") {
       const { start_date, points_per_no, points_per_yes, points_per_minute } = settings
       const minutes = (submission_date - start_date) / 60
-      console.log(`Minutes: ${minutes}`)
 
       submission.score = Math.floor((minutes * points_per_minute) + (points_per_no * submission.sub_no) + points_per_yes)
     } else {
@@ -59,12 +58,7 @@ exports.handler = async (event) => {
     await updateItem('submission', { submission_id }, { ...submission, status, runtime })
   }
 
-  // TODO implement
-  const response = {
-    statusCode: 200,
-    body: JSON.stringify('Hello from Lambda!'),
-  };
-  return response;
+  return { statusCode: 200 };
 };
 
 function scanItems(tableName) {
