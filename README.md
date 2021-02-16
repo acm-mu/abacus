@@ -1,7 +1,5 @@
 # MU ACM Contest Software
 
-[![Build Status](https://travis-ci.com/acm-mu/abacus.svg?branch=master)](https://travis-ci.com/acm-mu/abacus)
-
 ## Overview
 
 This Open Source competition judging software is designed for the [Marquette ACM Programming Competition](https://mu.acm.org/competition). It was created by Marquette students, and modeled after [Kattis](https://www.kattis.com/), the judging software used for [ICPC](https://icpc.global/).
