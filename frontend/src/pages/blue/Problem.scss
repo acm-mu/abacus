@@ -20,67 +20,66 @@
 .markdown {
     font-weight: 400;
     line-height: 2rem;
-}
 
-.markdown p {
-    font-size: 1rem;
-    padding-top: 0.66001rem;
-    margin-bottom: 1.33999rem;
-}
+    p {
+        font-size: 1rem;
+        padding-top: 0.66001rem;
+        margin-bottom: 1.33999rem;
+    }
 
-.markdown pre {
-    padding: 0.66001rem 9.5px 9.5px;
-    background: linear-gradient(
-        to bottom,
-        #fff 0,
-        #fff 0.75rem,
-        #f5f7fa 0.75rem,
-        #f5f7fa 2.75rem,
-        #fff 2.75rem,
-        #fff 4rem
-    );
-    background-size: 100% 4rem;
-    border-color: #d3daea;
-    font-family: monospace;
-    display: block;
-    margin: 0 0 10px;
-    color: #333;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
+    pre {
+        padding: 0.66001rem 0;
+        background: white;
+        background-size: 100% 4rem;
+        border-color: #d3daea;
+        font-family: monospace;
+        display: block;
+        margin: 0 0 0.75rem;
+        color: #333;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
 
-.markdown pre code {
-    color: rgba(0, 0, 0, 0.87);
-    background: transparent;
-}
+    pre code {
+        background: linear-gradient(to bottom, #fff 0%, #fff 50%, #f5f7fa 50%, #f5f7fa 100%);
+        background-size: 100% 1.78rem;
+        padding: 0 9.5px;
+        display: block;
+        color: rgba(0, 0, 0, 0.87);
+    }
 
-.markdown h4 {
-    font-size: 1.5625rem;
-}
+    h4 {
+        font-size: 1.5625rem;
+    }
 
-.markdown blockquote {
-    margin: 0;
-    line-height: 2rem;
-    font-weight: 400;
-    font-family: Georgia, Cambria, serif;
-    color: #373d49;
-}
+    blockquote {
+        margin: 0;
+        line-height: 2rem;
+        font-weight: 400;
+        font-family: Georgia, Cambria, serif;
+        color: #373d49;
+    }
 
-.markdown blockquote p {
-    margin-bottom: 0.33999rem;
-    font-size: 1rem;
-    font-style: italic;
-    padding: 0.66001rem 1rem 1rem 0.66001rem;
-    border-left: 3px solid #a0aabf;
-    font-feature-settings: 'kern' 1, 'onum' 1, 'liga' 1;
-    margin-top: 0;
-}
+    blockquote p {
+        margin-bottom: 0.33999rem;
+        font-size: 1rem;
+        font-style: italic;
+        padding: 0.66001rem 1rem 1rem 0.66001rem;
+        border-left: 3px solid #a0aabf;
+        font-feature-settings: 'kern' 1, 'onum' 1, 'liga' 1;
+        margin-top: 0;
+    }
 
-.markdown code {
-    font-family: monospace;
-    font-size: 1em;
-    padding: 2px 4px;
-    color: #c7254e;
-    background-color: #f9f2f4;
-    border-radius: 4px;
+    code {
+        font-family: monospace;
+        font-size: 1em;
+        padding: 2px 4px;
+        color: #c7254e;
+        background-color: #f9f2f4;
+        border-radius: 4px;
+    }
+
+    img {
+        width: 100%;
+    }
 }
