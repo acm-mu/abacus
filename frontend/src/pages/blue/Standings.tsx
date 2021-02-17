@@ -67,7 +67,7 @@ const Standings = (): JSX.Element => {
                 <Table.HeaderCell>Team</Table.HeaderCell>
                 <Table.HeaderCell collapsing>SLV.</Table.HeaderCell>
                 <Table.HeaderCell collapsing>TIME</Table.HeaderCell>
-                {problems ? problems.map((problem: ProblemType, index: number) => (
+                {problems ? problems.map((problem: ProblemType) => (
                   <Table.HeaderCell key={problem.id} collapsing>
                     <Link to={`/blue/problems/${problem.id}`}>{problem.id}</Link>
                   </Table.HeaderCell>
