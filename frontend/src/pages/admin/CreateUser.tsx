@@ -13,6 +13,7 @@ const CreateUser = ({ trigger }: CreateUserProps): JSX.Element => {
     username: '',
     role: '',
     division: '',
+    school: '',
     display_name: '',
     password: ''
   })
@@ -44,7 +45,7 @@ const CreateUser = ({ trigger }: CreateUserProps): JSX.Element => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(user)
+      body: JSON.stringify({ ...user, school: user.role == 'team' ? user.school : '' })
     })
     if (res.status == 200) {
       setOpen(false)
@@ -86,6 +87,16 @@ const CreateUser = ({ trigger }: CreateUserProps): JSX.Element => {
               placeholder='User Role'
               required
             />
+            {user.role == 'team' &&
+              <Form.Field
+                control={Input}
+                onChange={handleChange}
+                label='School'
+                name='school'
+                value={user.school}
+                placeholder='School'
+                required
+              />}
             <Form.Field
               control={Select}
               onChange={handleSelectChange}

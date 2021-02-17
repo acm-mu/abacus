@@ -47,6 +47,7 @@ type UserType = {
   password: string;
   display_name: string;
   division: string;
+  school?: string;
   scratch_username?: string;
   session_token: string;
 }

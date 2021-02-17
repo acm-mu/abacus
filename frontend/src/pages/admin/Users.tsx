@@ -1,4 +1,4 @@
-import { Table, Button, Popup, Loader, ButtonGroup } from 'semantic-ui-react'
+import { Table, Button, Popup, Loader, ButtonGroup, Label } from 'semantic-ui-react'
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Block } from '../../components'
@@ -87,7 +87,7 @@ const Users = (): JSX.Element => {
                   <Table.Cell><Link to={`/admin/users/${user.user_id}`}>{user.username}</Link></Table.Cell>
                   <Table.Cell>{user.role}</Table.Cell>
                   <Table.Cell>{user.division}</Table.Cell>
-                  <Table.Cell>{user.display_name}</Table.Cell>
+                  <Table.Cell>{user.display_name} {user.school && <Label style={{ float: 'right' }} content={user.school} />}</Table.Cell>
                 </Table.Row>)}
             </Table.Body>
           </Table>
