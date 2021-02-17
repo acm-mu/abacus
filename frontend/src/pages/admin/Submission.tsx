@@ -48,7 +48,7 @@ const Submission = (): JSX.Element => {
     }).then(res => res.json())
       .then(res => {
         if (submission_id in res.submissions)
-          setSubmission({ ...submission, ...res.submissions[submission_id] })
+          setSubmission({ team: submission?.team, problem: submission?.problem, ...res.submissions[submission_id], })
       })
   }
 
