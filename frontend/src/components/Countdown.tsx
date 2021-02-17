@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react";
+import { Loader } from "semantic-ui-react";
 import Moment from "react-moment";
 import { CompetitionSettings } from "../types";
 import config from '../environment'
 import { Block } from "./";
 import "./Countdown.scss";
-import "./FlipClock.scss";
-import { Loader } from "semantic-ui-react";
 
 const Countdown = (): JSX.Element => {
   const [settings, setSettings] = useState<CompetitionSettings>()
-  const [time, setTime] = useState<Date>()
+  const [time, setTime] = useState<Date>(new Date())
   const [isLoading, setLoading] = useState<boolean>(true)
   const [isMounted, setMounted] = useState<boolean>(false)
 
@@ -33,14 +32,16 @@ const Countdown = (): JSX.Element => {
   }, [isMounted])
 
   setInterval(() => {
-    if (isMounted)
+    if (isMounted) {
       setTime(new Date());
+    }
   }, 200);
 
   return (
     <Block size='xs-12'>
-      {!isLoading && (settings && time) ?
-        <div id="countdown_during">
+      {isLoading || !settings ?
+        <Loader active inline='centered' content="Loading" /> :
+        <>
           <div className="upper">
             <p>
               <b>Start</b> <Moment date={settings.start_date} format="MM/DD/YYYY, hh:mm:ss A" />
@@ -74,8 +75,8 @@ const Countdown = (): JSX.Element => {
                 : "Finished"}
             </p>
           </div>
-        </div>
-        : <Loader active inline='centered' content="Loading" />}
+        </>
+      }
     </Block>
   );
 };
