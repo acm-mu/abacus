@@ -68,7 +68,7 @@ const Standings = (): JSX.Element => {
                 <Table.HeaderCell collapsing>SLV.</Table.HeaderCell>
                 <Table.HeaderCell collapsing>TIME</Table.HeaderCell>
                 {problems ? problems.map((problem: ProblemType, index: number) => (
-                  <Table.HeaderCell key={index} collapsing>
+                  <Table.HeaderCell key={problem.id} collapsing>
                     <Link to={`/blue/problems/${problem.id}`}>{problem.id}</Link>
                   </Table.HeaderCell>
                 )) : <></>}
@@ -76,7 +76,7 @@ const Standings = (): JSX.Element => {
             </Table.Header>
             <Table.Body>
               {standings ? standings.map((team: StandingsUser, index: number) => (
-                <Table.Row key={index}>
+                <Table.Row key={team.user_id}>
                   <Table.Cell collapsing>{index + 1}</Table.Cell>
                   <Table.Cell>
                     <Link to="#">{team.display_name}</Link>
@@ -87,7 +87,7 @@ const Standings = (): JSX.Element => {
                     (problem: ProblemScoreType, index: number) => {
                       if (problem.solved) {
                         return (
-                          <Table.Cell key={index} className="solved">
+                          <Table.Cell key={`${team.user_id}-${index}`} className="solved">
                             {problem.problem_score}
                             <br />
                             {problem.submissions.length}
@@ -95,14 +95,14 @@ const Standings = (): JSX.Element => {
                         );
                       } else if (problem.submissions.length) {
                         return (
-                          <Table.Cell key={index} className="attempted">
+                          <Table.Cell key={`${team.user_id}-${index}`} className="attempted">
                             --
                             <br />
                             {problem.submissions.length}
                           </Table.Cell>
                         );
                       } else {
-                        return <Table.Cell key={index}></Table.Cell>;
+                        return <Table.Cell key={`${team.user_id}-${index}`}></Table.Cell>;
                       }
                     }
                   )}

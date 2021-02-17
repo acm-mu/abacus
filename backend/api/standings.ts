@@ -25,8 +25,8 @@ standings.get("/standings", async (_, res: Response) => {
     team.problems = {}
     team.time = 0
     team.solved = 0
-    problems.forEach((problem: ProblemType) => {
-      team.problems[problem.problem_id] = {
+    problems.sort((p1, p2) => p1.id.localeCompare(p2.id)).forEach((problem: ProblemType) => {
+      team.problems[problem.id] = {
         solved: false,
         problem_score: 0,
         num_submissions: 0,
@@ -34,12 +34,12 @@ standings.get("/standings", async (_, res: Response) => {
       }
       if (team.user_id in subs) {
         if (problem.problem_id in subs[team.user_id]) {
-          team.problems[problem.problem_id].num_submissions = subs[team.user_id][problem.problem_id].length
-          team.problems[problem.problem_id].submissions = subs[team.user_id][problem.problem_id]
+          team.problems[problem.id].num_submissions = subs[team.user_id][problem.problem_id].length
+          team.problems[problem.id].submissions = subs[team.user_id][problem.problem_id]
           subs[team.user_id][problem.problem_id].every((sub: any) => {
             if (sub.score > 0) {
-              team.problems[problem.problem_id].problem_score = sub.score
-              team.problems[problem.problem_id].solved = true
+              team.problems[problem.id].problem_score = sub.score
+              team.problems[problem.id].solved = true
               team.solved++
               team.time += sub.score
               return false
