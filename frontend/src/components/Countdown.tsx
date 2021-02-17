@@ -1,19 +1,16 @@
 import React, { useState, useEffect } from "react";
 import Moment from "react-moment";
-
-import { Block } from "./";
+import { CompetitionSettings } from "../types";
 import config from '../environment'
+import { Block } from "./";
 import "./Countdown.scss";
 import "./FlipClock.scss";
+import { Loader } from "semantic-ui-react";
 
 const Countdown = (): JSX.Element => {
-  const [compName, setCompName] = useState<string>('Loading Competition Info...');
-
-  const now = new Date()
-
-  const [startDate, setStartDate] = useState<Date>(now);
-  const [endDate, setEndDate] = useState<Date>(now);
-  const [time, setTime] = useState<Date>(now);
+  const [settings, setSettings] = useState<CompetitionSettings>()
+  const [time, setTime] = useState<Date>()
+  const [isLoading, setLoading] = useState<boolean>(true)
   const [isMounted, setMounted] = useState<boolean>(false)
 
   const diff = (date1: Date, date2: Date) => date1.getTime() - date2.getTime();
@@ -24,9 +21,12 @@ const Countdown = (): JSX.Element => {
       .then((res) => res.json())
       .then((res) => {
         if (isMounted) {
-          setCompName(res.competition_name);
-          setStartDate(new Date(parseInt(res.start_date) * 1000))
-          setEndDate(new Date(parseInt(res.end_date) * 1000))
+          setSettings({
+            ...res,
+            start_date: new Date(parseInt(res.start_date) * 1000),
+            end_date: new Date(parseInt(res.end_date) * 1000)
+          })
+          setLoading(false)
         }
       });
     return () => { setMounted(false) }
@@ -39,41 +39,43 @@ const Countdown = (): JSX.Element => {
 
   return (
     <Block size='xs-12'>
-      <div id="countdown_during">
-        <div className="upper">
-          <p>
-            <b>Start</b> <Moment date={startDate} format="MM/DD/YYYY, HH:mm:ss A" />
-          </p>
-          <h1>{compName}</h1>
-          <p>
-            <b>End</b> <Moment date={endDate} format="MM/DD/YYYY, HH:mm:ss A" />
-          </p>
-        </div>
+      {!isLoading && (settings && time) ?
+        <div id="countdown_during">
+          <div className="upper">
+            <p>
+              <b>Start</b> <Moment date={settings.start_date} format="MM/DD/YYYY, hh:mm:ss A" />
+            </p>
+            <h1>{settings?.competition_name}</h1>
+            <p>
+              <b>End</b> <Moment date={settings.end_date} format="MM/DD/YYYY, hh:mm:ss A" />
+            </p>
+          </div>
 
-        <div className="countdown">
-          <div
-            className="progress_bar"
-            style={{
-              width: `${Math.min(diff(time, startDate) / diff(endDate, startDate), 1) * 100}%`
-            }}
-          />
-        </div>
+          <div className="countdown">
+            <div
+              className="progress_bar"
+              style={{
+                width: `${Math.min(diff(time, settings?.start_date) / diff(settings.end_date, settings?.start_date), 1) * 100}%`
+              }}
+            />
+          </div>
 
-        <div className="lower">
-          <p>
-            <b>Time elapsed </b>
-            {endDate > time ?
-              <Moment format="H:mm:ss" date={startDate} durationFromNow />
-              : <Moment format="H:mm:ss" duration={startDate} date={endDate} />}
-          </p>
-          <p>
-            <b>Time remaining </b>
-            {endDate > time ?
-              <Moment format="H:mm:ss" duration={time} date={endDate} />
-              : "Finished"}
-          </p>
+          <div className="lower">
+            <p>
+              <b>Time elapsed </b>
+              {settings.end_date > time ?
+                <Moment format="H:mm:ss" date={settings.start_date} durationFromNow />
+                : <Moment format="H:mm:ss" duration={settings.start_date} date={settings.end_date} />}
+            </p>
+            <p>
+              <b>Time remaining </b>
+              {settings.end_date > time ?
+                <Moment format="H:mm:ss" duration={time} date={settings.end_date} />
+                : "Finished"}
+            </p>
+          </div>
         </div>
-      </div>
+        : <Loader active inline='centered' content="Loading" />}
     </Block>
   );
 };

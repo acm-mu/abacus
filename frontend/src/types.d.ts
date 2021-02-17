@@ -72,4 +72,14 @@ type ClarificationType = {
   parent: string;
 }
 
-export type { StandingsUser, TestType, SubmissionType, ProblemType, UserType, ProblemScoreType, ClarificationType }
+type CompetitionSettings = {
+  competition_name: string;
+  points_per_yes: number;
+  points_per_no: number;
+  points_per_compilation_error: number;
+  points_per_minute: number;
+  start_date: Date;
+  end_date: Date
+}
+
+export type { StandingsUser, TestType, SubmissionType, ProblemType, UserType, ProblemScoreType, CompetitionSettings, ClarificationType }
