@@ -52,7 +52,7 @@ const Submissions = (): JSX.Element => {
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                  {submissions?.length ? (submissions.map((submission: SubmissionType, index: number) => (
+                  {submissions?.length ? (submissions.sort((s1, s2) => s2.date - s1.date).map((submission: SubmissionType, index: number) => (
                     <Table.Row key={index}>
                       <Table.Cell>
                         <Link to={`/blue/submissions/${submission.submission_id}`}>
