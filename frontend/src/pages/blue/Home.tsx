@@ -1,13 +1,15 @@
 import React from 'react'
 import { Block } from '../../components'
+import java from '../../assets/java.png'
+import python from '../../assets/python.png'
 
 const Home = (): JSX.Element => (
   <Block size='xs-12'>
     <h1>Blue Division (Java/Python)</h1>
 
     <div style={{ display: 'flex', justifyContent: 'space-evenly', padding: '15px' }}>
-      <img style={{ height: '175px' }} src='https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Flogos-download.com%2Fwp-content%2Fuploads%2F2016%2F10%2FJava_logo.png&f=1&nofb=1' />
-      <img style={{ height: '175px' }} src='https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Flogodownload.org%2Fwp-content%2Fuploads%2F2019%2F10%2Fpython-logo.png&f=1&nofb=1' />
+      <img height='175px' src={java} />
+      <img height='175px' src={python} />
     </div>
 
     <p>A traditional team-based programming competition, modeled on the ACM International Collegiate Programming Contest.

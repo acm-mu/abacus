@@ -4,6 +4,7 @@ import { Block } from "../components";
 import { authenticate, useAuth } from '../authlib'
 import { UserContext } from "../context/user";
 import { Redirect } from "react-router-dom";
+import fulllogo from '../assets/fulllogo.png'
 
 const Login = (): JSX.Element => {
   const { user, setUser } = useContext(UserContext)
@@ -49,7 +50,7 @@ const Login = (): JSX.Element => {
             content="Could not log in given provided credentials!"
           />}
           <Form className='attached fluid segment' id="loginForm" onSubmit={handleSubmit}>
-            <img src="/images/fulllogo.png" width="300px" alt="Logo" />
+            <img src={fulllogo} width="300px" alt="Logo" />
 
             <Form.Input
               label="Username"
