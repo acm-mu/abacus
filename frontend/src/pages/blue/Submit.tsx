@@ -102,7 +102,7 @@ const Submit = (): JSX.Element => {
                 <>
                   <h3>Your upload will include the following files:</h3>
                   <ul>
-                    <li>{file.name} ({file.size} bytes)</li>
+                    <li>{file.name}</li>
                   </ul>
                 </> : <p>
                   <b>Drag & drop</b> a file here to upload <br />
