@@ -21,8 +21,11 @@
     font-weight: 400;
     line-height: 2rem;
 
-    p {
+    p,
+    li {
         font-size: 1rem;
+    }
+    p {
         padding-top: 0.66001rem;
         margin-bottom: 1.33999rem;
     }
@@ -62,7 +65,6 @@
 
     blockquote p {
         margin-bottom: 0.33999rem;
-        font-size: 1rem;
         font-style: italic;
         padding: 0.66001rem 1rem 1rem 0.66001rem;
         border-left: 3px solid #a0aabf;

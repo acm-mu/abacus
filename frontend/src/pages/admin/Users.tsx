@@ -1,4 +1,4 @@
-import { Table, Button, Popup, Loader, ButtonGroup } from 'semantic-ui-react'
+import { Table, Button, Popup, Loader, ButtonGroup, Label } from 'semantic-ui-react'
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Block } from '../../components'
@@ -10,10 +10,23 @@ interface UserItem extends UserType {
   checked: boolean
 }
 
+type SortKey = 'user_id' | 'display_name' | 'username' | 'role' | 'division'
+
 const Users = (): JSX.Element => {
   const [users, setUsers] = useState<UserItem[]>([])
   const [isLoading, setLoading] = useState<boolean>(true)
   const [isMounted, setMounted] = useState<boolean>(false)
+  const [sortConfig, setSortConfig] = useState<{ key: SortKey, direction: 'ascending' | 'descending' }>({
+    key: 'username',
+    direction: 'ascending'
+  })
+
+  const sort = (key: SortKey) => {
+    if (sortConfig.key === key && sortConfig.direction === 'ascending')
+      setSortConfig({ key, direction: 'descending' })
+    else
+      setSortConfig({ key, direction: 'ascending' })
+  }
 
   useEffect(() => {
     setMounted(true)
@@ -68,27 +81,29 @@ const Users = (): JSX.Element => {
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell collapsing><input type='checkbox' onChange={checkAll} /></Table.HeaderCell>
-                <Table.HeaderCell>Username</Table.HeaderCell>
-                <Table.HeaderCell>Role</Table.HeaderCell>
-                <Table.HeaderCell>Division</Table.HeaderCell>
-                <Table.HeaderCell>Displayname</Table.HeaderCell>
+                <Table.HeaderCell className='sortable' onClick={() => sort('username')}>Username</Table.HeaderCell>
+                <Table.HeaderCell className='sortable' onClick={() => sort('role')}>Role</Table.HeaderCell>
+                <Table.HeaderCell className='sortable' onClick={() => sort('division')}>Division</Table.HeaderCell>
+                <Table.HeaderCell className='sortable' onClick={() => sort('display_name')}>Displayname</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {users.map((user: UserItem, index: number) =>
-                <Table.Row key={index} uuid={`${user.user_id}`}>
-                  <Table.Cell>
-                    <input
-                      type='checkbox'
-                      checked={user.checked}
-                      id={user.user_id}
-                      onChange={handleChange} />
-                  </Table.Cell>
-                  <Table.Cell><Link to={`/admin/users/${user.user_id}`}>{user.username}</Link></Table.Cell>
-                  <Table.Cell>{user.role}</Table.Cell>
-                  <Table.Cell>{user.division}</Table.Cell>
-                  <Table.Cell>{user.display_name}</Table.Cell>
-                </Table.Row>)}
+              {users.sort(
+                (u1: UserType, u2: UserType) => u1[sortConfig.key].localeCompare(u2[sortConfig.key]) * (sortConfig.direction == 'ascending' ? 1 : -1))
+                .map((user: UserItem, index: number) =>
+                  <Table.Row key={index} uuid={`${user.user_id}`}>
+                    <Table.Cell>
+                      <input
+                        type='checkbox'
+                        checked={user.checked}
+                        id={user.user_id}
+                        onChange={handleChange} />
+                    </Table.Cell>
+                    <Table.Cell><Link to={`/admin/users/${user.user_id}`}>{user.username}</Link></Table.Cell>
+                    <Table.Cell>{user.role}</Table.Cell>
+                    <Table.Cell>{user.division}</Table.Cell>
+                    <Table.Cell>{user.display_name} {user.school && <Label style={{ float: 'right' }} content={user.school} />}</Table.Cell>
+                  </Table.Row>)}
             </Table.Body>
           </Table>
         }

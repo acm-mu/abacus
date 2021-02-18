@@ -61,17 +61,20 @@ h6 {
 }
 
 /* header */
+.ui.fixed.menu.inverted {
+    border-bottom: 6px solid var(--bg-color);
+}
 
 .ui.fixed.menu.inverted.blue-div {
-    border-bottom: 6px solid var(--blue);
+    border-bottom-color: var(--blue);
 }
 
 .ui.fixed.menu.inverted.gold-div {
-    border-bottom: 6px solid #ffcf40;
+    border-bottom-color: var(--gold);
 }
 
 .ui.fixed.menu.inverted.admin-div {
-    border-bottom: 6px solid #aaa;
+    border-bottom-color: #aaa;
 }
 
 .header.item img.logo {
@@ -114,4 +117,8 @@ a.button {
     text-align: center;
     cursor: pointer;
     border: none;
+}
+
+.ui.table thead th.sortable {
+    cursor: pointer;
 }

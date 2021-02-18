@@ -4,6 +4,11 @@ type TestType = {
   result: string;
 }
 
+type SkeletonType = {
+  language: string;
+  source: string;
+}
+
 type SubmissionType = {
   date: number;
   filename: string;
@@ -35,6 +40,7 @@ type ProblemType = {
   cpu_time_limit: number;
   memory_limit: number;
   tests: TestType[];
+  skeletons: SkeletonType[];
 }
 
 type UserType = {
@@ -44,6 +50,7 @@ type UserType = {
   password: string;
   display_name: string;
   division: string;
+  school?: string;
   scratch_username?: string;
   session_token: string;
 }
@@ -54,6 +61,7 @@ type StandingsUser = {
   username: string;
   display_name: string;
   division: string;
+  school?: string;
   scratch_username?: string;
   solved: number;
   time: number;

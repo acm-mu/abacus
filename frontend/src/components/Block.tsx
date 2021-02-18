@@ -6,11 +6,12 @@ type BlockProps = {
   center?: boolean;
   transparent?: boolean;
   children?: JSX.Element | JSX.Element[];
-  className?: string
+  className?: string;
+  style?: React.CSSProperties
 };
 
 const Block = (props: BlockProps): JSX.Element => (
-  <div
+  <div style={props.style}
     className={`${props.size || ""} block ${props.center ? "center" : ""} 
   ${props.transparent ? "transparent" : ""} 
   ${props.className || ""}`}>

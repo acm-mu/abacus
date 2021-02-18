@@ -21,6 +21,12 @@ users.get(
       optional: true,
       errorMessage: 'String display_name is not supplied'
     },
+    school: {
+      in: ['body', 'query'],
+      isString: true,
+      optional: true,
+      errorMessage: 'String school is invalid'
+    },
     division: {
       in: ['body', 'query'],
       isString: true,
@@ -83,6 +89,11 @@ users.put(
       in: 'body',
       isString: true,
       notEmpty: true,
+      optional: true
+    },
+    school: {
+      in: 'body',
+      isString: true,
       optional: true
     },
     password: {
@@ -198,6 +209,11 @@ users.post(
       isString: true,
       errorMessage: 'String division is not supplied'
     },
+    school: {
+      in: 'body',
+      isString: true,
+      optional: true
+    },
     password: {
       in: 'body',
       notEmpty: true,
@@ -243,11 +259,13 @@ users.post(
       return
     }
 
-    if (item.role == 'team' && item.division == undefined) {
-      res.status(400).json({
-        message: "Teams need a division"
-      })
-      return
+    if (item.role == 'team') {
+      if (!item.division || !item.school) {
+        res.status(400).json({
+          message: "Teams need a division and a school"
+        })
+        return
+      }
     }
     item.user_id = uuidv4().replace(/-/g, '')
 

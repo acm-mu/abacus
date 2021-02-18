@@ -4,6 +4,7 @@ import { Link, useHistory } from "react-router-dom";
 import { Container, Dropdown, Menu } from "semantic-ui-react";
 import { useAuth } from "../authlib";
 import { UserContext } from "../context/user";
+import fulllogoy from '../assets/fulllogoy.png'
 
 type Props = {
   children: React.ReactNode;
@@ -51,7 +52,7 @@ const Navigation: React.FunctionComponent<Props> = (props: Props) => {
     <Menu className={`fixed ${props.className}`} inverted>
       <Container>
         <Menu.Item as={Link} to="/" header>
-          <img className="logo" src="/images/fulllogoy.png" alt="Abacus" />
+          <img className="logo" src={fulllogoy} alt="Abacus" />
         </Menu.Item>
 
         {props.children}

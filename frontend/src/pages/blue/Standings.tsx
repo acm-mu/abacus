@@ -93,6 +93,14 @@ const Standings = (): JSX.Element => {
                             {problem.submissions.length}
                           </Table.Cell>
                         );
+                      } else if (problem.submissions.length && problem.submissions[problem.submissions.length - 1].status == "pending") {
+                        return (
+                          <Table.Cell key={`${team.user_id}-${index}`} className="pending">
+                            --
+                            <br />
+                            {problem.submissions.length}
+                          </Table.Cell>
+                        );
                       } else if (problem.submissions.length) {
                         return (
                           <Table.Cell key={`${team.user_id}-${index}`} className="attempted">

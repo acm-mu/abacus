@@ -63,7 +63,7 @@ const Submission = (): JSX.Element => {
                       <Table.Cell>{submission && <Moment fromNow date={submission.date * 1000} />}</Table.Cell>
                       <Table.Cell><Link to={`/blue/problems/${submission?.problem.id}`}>{submission?.problem.problem_name}</Link></Table.Cell>
                       <Table.Cell><span className={`status icn ${submission?.status}`} /></Table.Cell>
-                      <Table.Cell>{submission?.runtime.toString().substring(0, 4)}</Table.Cell>
+                      <Table.Cell>{Math.floor(submission?.runtime || 0)}</Table.Cell>
                       <Table.Cell>{submission?.language}</Table.Cell>
                     </Table.Row>
                     <Table.Row>

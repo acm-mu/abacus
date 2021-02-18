@@ -12,6 +12,7 @@ const EditUser = (): JSX.Element => {
     username: '',
     role: '',
     division: '',
+    school: '',
     display_name: '',
     password: ''
   })
@@ -45,7 +46,7 @@ const EditUser = (): JSX.Element => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(formUser)
+      body: JSON.stringify({ ...formUser, school: formUser.role == 'team' ? formUser.school : '', })
     })
     if (res.status == 200) {
       const body = await res.json()
@@ -118,6 +119,15 @@ const EditUser = (): JSX.Element => {
             value={formUser?.role}
             placeholder='User Role'
             required />
+          {formUser.role == 'team' &&
+            <Form.Field
+              control={Input}
+              onChange={handleChange}
+              label='School'
+              name='school'
+              value={formUser?.school}
+              placeholder='School'
+              required />}
           <Form.Field
             control={Select}
             onChange={handleSelectChange}
