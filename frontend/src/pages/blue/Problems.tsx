@@ -46,7 +46,7 @@ const Problems = (): JSX.Element => {
 
   const problemInfo = (problem: ProblemType) => {
     if (submissions && problem.problem_id in submissions && submissions[problem.problem_id].length) {
-      const subs = submissions[problem.problem_id]
+      const subs = submissions[problem.problem_id].sort((s1, s2) => s1.date - s2.date)
       const lastSub = subs[subs.length - 1]
       return (
         <>
