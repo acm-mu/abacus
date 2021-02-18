@@ -32,18 +32,18 @@ const Login = (): JSX.Element => {
     return () => { setMounted(false) }
   }, [])
 
+  const RedirectHome = () => {
+    switch (user?.role) {
+      case 'admin': return <Redirect to='/admin' />
+      case 'team': return <Redirect to={`/${user?.division}`} />
+      default: return <Redirect to='/' />
+    }
+  }
+
   return (
     <Block transparent center size="xs-6">
-      {isAuthenticated ?
+      {isAuthenticated ? <RedirectHome /> :
         <>
-          {
-            (user?.role == "admin" && <Redirect to='/admin' />) ||
-            (user?.role == "team" && (
-              (user?.division == "blue" && <Redirect to='/blue' />) ||
-              (user?.division == "gold" && <Redirect to='/gold' />)
-            ))
-          }
-        </> : <>
           {error && <Message attached
             error
             icon="warning sign"
