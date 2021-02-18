@@ -10,16 +10,18 @@ interface UserItem extends UserType {
   checked: boolean
 }
 
+type SortKey = 'user_id' | 'display_name' | 'username' | 'role' | 'division'
+
 const Users = (): JSX.Element => {
   const [users, setUsers] = useState<UserItem[]>([])
   const [isLoading, setLoading] = useState<boolean>(true)
   const [isMounted, setMounted] = useState<boolean>(false)
-  const [sortConfig, setSortConfig] = useState({
+  const [sortConfig, setSortConfig] = useState<{ key: SortKey, direction: 'ascending' | 'descending' }>({
     key: 'username',
     direction: 'ascending'
   })
 
-  const sort = (key: string) => {
+  const sort = (key: SortKey) => {
     if (sortConfig.key === key && sortConfig.direction === 'ascending')
       setSortConfig({ key, direction: 'descending' })
     else
@@ -87,7 +89,7 @@ const Users = (): JSX.Element => {
             </Table.Header>
             <Table.Body>
               {users.sort(
-                (u1: any, u2: any) => u1[sortConfig.key].localeCompare(u2[sortConfig.key]) * (sortConfig.direction == 'ascending' ? 1 : -1))
+                (u1: UserType, u2: UserType) => u1[sortConfig.key].localeCompare(u2[sortConfig.key]) * (sortConfig.direction == 'ascending' ? 1 : -1))
                 .map((user: UserItem, index: number) =>
                   <Table.Row key={index} uuid={`${user.user_id}`}>
                     <Table.Cell>

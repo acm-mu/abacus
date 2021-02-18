@@ -4,6 +4,11 @@ type TestType = {
   result: string;
 }
 
+type SkeletonType = {
+  source: string;
+  language: string;
+}
+
 type SubmissionType = {
   date: number;
   filename: string;
@@ -38,6 +43,7 @@ type ProblemType = {
   cpu_time_limit: number;
   memory_limit: number;
   tests: TestType[];
+  skeletons: SkeletonType[]
 }
 
 type UserType = {
@@ -83,4 +89,4 @@ type CompetitionSettings = {
   end_date: Date
 }
 
-export type { StandingsUser, TestType, SubmissionType, ProblemType, UserType, ProblemScoreType, CompetitionSettings, ClarificationType }
+export type { StandingsUser, TestType, SubmissionType, ProblemType, UserType, ProblemScoreType, CompetitionSettings, ClarificationType, SkeletonType }
