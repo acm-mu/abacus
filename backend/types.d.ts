@@ -4,6 +4,11 @@ type TestType = {
   result: string;
 }
 
+type SkeletonType = {
+  language: string;
+  source: string;
+}
+
 type SubmissionType = {
   date: number;
   filename: string;
@@ -35,6 +40,7 @@ type ProblemType = {
   cpu_time_limit: number;
   memory_limit: number;
   tests: TestType[];
+  skeletons: SkeletonType[];
 }
 
 type UserType = {

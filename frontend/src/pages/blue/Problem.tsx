@@ -70,7 +70,7 @@ const Problem = (): JSX.Element => {
         <p><b>Problem ID:</b> {problem?.id}</p>
         <p><b>CPU Time limit:</b> {problem?.cpu_time_limit}</p>
         <p><b>Memory limit:</b> {problem?.memory_limit}</p>
-        <p><b>Download:</b> <Link to='#'>Sample data files</Link></p>
+        <p><b>Download:</b> <a href={`${config.API_URL}/sample_files?problem_id=${problem?.problem_id}`}>Sample data files</a></p>
       </Block>
     </>
   );

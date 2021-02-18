@@ -2,6 +2,8 @@ import { contest, makeJSON, transpose } from '../contest';
 import { Router, Request, Response } from 'express'
 import { v4 as uuidv4 } from 'uuid'
 import { checkSchema, matchedData, validationResult } from 'express-validator';
+import archiver from 'archiver'
+import { ProblemType } from 'types';
 
 const problems = Router();
 
@@ -243,7 +245,49 @@ function deleteSubmissionsForProblem(problem_id: string) {
     .catch(_ => console.log(`Error finding submissions to delete for problem ${problem_id}`))
 }
 
-problems.get('/problems.json', (_req, res) => {
+const stripFilename = (str: string) => str.replace(/ /g, '_').replace(/[!@#$%^&*\(\)]/g, '');
+const fileExtension = (lang: string) => {
+  switch (lang) {
+    case 'python':
+      return 'py';
+    default:
+      return lang
+  }
+}
+
+problems.get(
+  '/sample_files',
+  checkSchema({
+    problem_id: {
+      in: 'query',
+      notEmpty: true,
+      errorMessage: 'problem_id is not supplied'
+    }
+  }),
+  async (req: Request, res: Response) => {
+    const errors = validationResult(req).array()
+    if (errors.length > 0) {
+      res.status(400).json({ message: errors[0].msg })
+      return
+    }
+    const data = matchedData(req)
+    const { problem_id } = data
+    console.log(problem_id)
+    contest.getItem('problem', { problem_id })
+      .then((response) => {
+        const problem = response as ProblemType
+        const archive = archiver('zip')
+        for (const skeleton of problem.skeletons)
+          archive.append(skeleton.source, { name: `${stripFilename(problem.problem_name)}.${fileExtension(skeleton.language)}` })
+
+        res.attachment(`${stripFilename(problem.problem_name)}.zip`)
+        archive.pipe(res)
+        archive.finalize()
+      })
+      .catch(err => res.status(500).send(err))
+  })
+
+problems.get('/problems.json', (_req: Request, res: Response) => {
   contest.scanItems('problem')
     .then(response => {
       if (response == undefined) {
