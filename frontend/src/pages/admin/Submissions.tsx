@@ -9,17 +9,21 @@ import config from '../../environment'
 interface SubmissionItem extends SubmissionType {
   checked: boolean
 }
+type SortKey = 'date' | 'submission_id' | 'sub_no' | 'language' | 'status' | 'runtime' | 'date' | 'score'
 
 const Submissions = (): JSX.Element => {
   const [isLoading, setLoading] = useState<boolean>(true)
   const [submissions, setSubmissions] = useState<SubmissionItem[]>([])
   const [isMounted, setMounted] = useState<boolean>(false)
-  const [sortConfig, setSortConfig] = useState({
+  const [sortConfig, setSortConfig] = useState<{
+    key: SortKey,
+    direction: 'ascending' | 'descending'
+  }>({
     key: 'date',
     direction: 'ascending'
   })
 
-  const sort = (key: string) => {
+  const sort = (key: SortKey) => {
     if (sortConfig.key === key && sortConfig.direction === 'ascending')
       setSortConfig({ key, direction: 'descending' })
     else
@@ -91,7 +95,7 @@ const Submissions = (): JSX.Element => {
             </Table.Header>
             <Table.Body>
               {submissions.length ? (submissions.sort(
-                (s1: any, s2: any) => `${s1[sortConfig.key]}`.localeCompare(`${s2[sortConfig.key]}`) * (sortConfig.direction == 'ascending' ? 1 : -1)
+                (s1: SubmissionType, s2: SubmissionType) => `${s1[sortConfig.key]}`.localeCompare(`${s2[sortConfig.key]}`) * (sortConfig.direction == 'ascending' ? 1 : -1)
               ).map((submission: SubmissionItem) =>
                 <Table.Row key={submission.submission_id}>
                   <Table.Cell>
