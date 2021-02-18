@@ -93,6 +93,10 @@ problems.post(
       in: 'body',
       optional: true
     },
+    skeletons: {
+      in: 'body',
+      optional: true
+    },
     memory_limit: {
       in: 'body',
       isNumeric: true,
@@ -111,7 +115,9 @@ problems.post(
       return
     }
     const item = matchedData(req)
+    item.skeletons = [{ source: '# Python skeleton goes here', language: 'python' }, { source: '// Java skeleton goes here', language: 'java' }]
     item.problem_id = uuidv4().replace(/-/g, '')
+
     contest.putItem('problem', item)
       .then(_ => res.send(item))
       .catch(err => res.status(500).send(err))
@@ -160,6 +166,12 @@ problems.put(
       optional: true,
       notEmpty: true,
       errorMessage: 'tests are invalid'
+    },
+    skeletons: {
+      in: 'body',
+      optional: true,
+      notEmpty: true,
+      errorMessage: 'skeletons are invalid'
     },
     memory_limit: {
       in: 'body',
