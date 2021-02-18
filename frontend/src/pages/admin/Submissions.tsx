@@ -14,6 +14,17 @@ const Submissions = (): JSX.Element => {
   const [isLoading, setLoading] = useState<boolean>(true)
   const [submissions, setSubmissions] = useState<SubmissionItem[]>([])
   const [isMounted, setMounted] = useState<boolean>(false)
+  const [sortConfig, setSortConfig] = useState({
+    key: 'date',
+    direction: 'ascending'
+  })
+
+  const sort = (key: string) => {
+    if (sortConfig.key === key && sortConfig.direction === 'ascending')
+      setSortConfig({ key, direction: 'descending' })
+    else
+      setSortConfig({ key, direction: 'ascending' })
+  }
 
 
   useEffect(() => {
@@ -58,28 +69,30 @@ const Submissions = (): JSX.Element => {
       <Block size='xs-12' transparent>
         <ButtonGroup>
           <Popup content='Export to JSON' trigger={<a href={`${config.API_URL}/submissions.json`}><Button icon='download' /></a>} />
-          {submissions.filter(submission => submission.checked).length ?
-            <Popup content='Delete Selected' trigger={<Button icon='trash' negative onClick={deleteSelected} />} /> : <></>}
+          {submissions.filter(submission => submission.checked).length &&
+            <Popup content='Delete Selected' trigger={<Button icon='trash' negative onClick={deleteSelected} />} />}
         </ButtonGroup>
         {isLoading ?
           <Loader active inline='centered' content="Loading" /> :
-          <Table>
+          <Table singleLine>
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell collapsing><input type='checkbox' onChange={checkAll} /></Table.HeaderCell>
-                <Table.HeaderCell>Submission ID</Table.HeaderCell>
+                <Table.HeaderCell className='sortable' onClick={() => sort('submission_id')}>Submission ID</Table.HeaderCell>
                 <Table.HeaderCell>Problem</Table.HeaderCell>
                 <Table.HeaderCell>Team</Table.HeaderCell>
-                <Table.HeaderCell>Submission #</Table.HeaderCell>
-                <Table.HeaderCell>Language</Table.HeaderCell>
-                <Table.HeaderCell>Status</Table.HeaderCell>
-                <Table.HeaderCell>Runtime</Table.HeaderCell>
-                <Table.HeaderCell>Time</Table.HeaderCell>
-                <Table.HeaderCell>Score</Table.HeaderCell>
+                <Table.HeaderCell className='sortable' onClick={() => sort('sub_no')}>Submission #</Table.HeaderCell>
+                <Table.HeaderCell className='sortable' onClick={() => sort('language')}>Language</Table.HeaderCell>
+                <Table.HeaderCell className='sortable' onClick={() => sort('status')}>Status</Table.HeaderCell>
+                <Table.HeaderCell className='sortable' onClick={() => sort('runtime')}>Runtime</Table.HeaderCell>
+                <Table.HeaderCell className='sortable' onClick={() => sort('date')}>Time</Table.HeaderCell>
+                <Table.HeaderCell className='sortable' onClick={() => sort('score')}>Score</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {submissions.length ? (submissions.map((submission: SubmissionItem) =>
+              {submissions.length ? (submissions.sort(
+                (s1: any, s2: any) => `${s1[sortConfig.key]}`.localeCompare(`${s2[sortConfig.key]}`) * (sortConfig.direction == 'ascending' ? 1 : -1)
+              ).map((submission: SubmissionItem) =>
                 <Table.Row key={submission.submission_id}>
                   <Table.Cell>
                     <input
@@ -88,7 +101,8 @@ const Submissions = (): JSX.Element => {
                       id={submission.submission_id}
                       onChange={handleChange} />
                   </Table.Cell>
-                  <Table.Cell><Link to={`/admin/submissions/${submission.submission_id}`}>{submission.submission_id.substring(0, 7)}</Link></Table.Cell>
+                  <Table.Cell>
+                    <Link to={`/admin/submissions/${submission.submission_id}`}>{submission.submission_id.substring(0, 7)}</Link></Table.Cell>
                   <Table.Cell><Link to={`/admin/problems/${submission.problem_id}`}>{submission.problem.problem_name} </Link></Table.Cell>
                   <Table.Cell><Link to={`/admin/users/${submission.team.user_id}`}>{submission.team.display_name}</Link></Table.Cell>
                   <Table.Cell>{submission.sub_no + 1}</Table.Cell>
