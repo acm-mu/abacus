@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import MarkdownView from 'react-showdown'
 import { Form, Input, Button, Menu, TextArea, Message, MenuItemProps } from "semantic-ui-react"
 import { Block } from '../../components'
 import { TestType } from '../../types'
 import config from '../../environment'
+import MDEditor from '@uiw/react-md-editor'
 
 const NewProblem = (): JSX.Element => {
   const history = useHistory()
@@ -55,11 +55,9 @@ const NewProblem = (): JSX.Element => {
       setProblem({ ...problem, [name]: value })
   }
 
-  const handleTextareaChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const { name, value } = event.target
-    event.target.style.height = `${event.target.scrollHeight}px`
-    if (problem)
-      setProblem({ ...problem, [name]: value })
+  const handleTextareaChange = (value?: string) => {
+    if (problem && value)
+      setProblem({ ...problem, description: value })
   }
 
   const handleTestChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -79,17 +77,11 @@ const NewProblem = (): JSX.Element => {
   return (
     <>
       <h1>New Problem</h1>
-      <Block size='xs-12' transparent>
-        <> {message ?
-          (() => {
-            switch (message.type) {
-              case 'error':
-                return (<Message error>{message.message}</Message>)
-              case 'success':
-                return <Message success>{message.message}</Message>
-            }
-          })() : <></>} </>
-        <Form style={{ padding: '20px', background: 'white', border: '1px solid #d4d4d5', borderTop: 'none' }}>
+      <Block size='xs-12'>
+        {message?.type == 'error' ? <Message error content={message.message} /> :
+          message?.type == 'success' ? <Message success content={message.message} /> : <></>}
+
+        <Form>
           <h1>Problem Info</h1>
           <Form.Field label='Problem ID' name='id' control={Input} onChange={handleChange} placeholder="Problem Id" value={problem?.id || ''} />
           <Form.Field label='Problem Name' name='problem_name' control={Input} onChange={handleChange} placeholder="Problem Name" value={problem?.problem_name || ''} />
@@ -99,7 +91,7 @@ const NewProblem = (): JSX.Element => {
           </Form.Group>
 
           <h1>Test Data</h1>
-          <Menu >
+          <Menu>
             {problem?.tests.map((test: TestType, index: number) => (
               <Menu.Item name={`${index + 1}`} key={`${index}-test-tab`} tab={index} active={activeTestItem === index} onClick={handleTestItemClick} />
             ))}
@@ -121,24 +113,18 @@ const NewProblem = (): JSX.Element => {
               </div>
             ))
           }
-
-          <h1>Problem Description</h1>
-          <Form.Group widths='equal'>
-            <Form.Field>
-              <label>Problem Description</label>
-              <TextArea name='description' onChange={handleTextareaChange} value={problem?.description || ''} style={{ height: '100%', overflowY: 'hidden' }} />
-            </Form.Field>
-            <Form.Field>
-              <label>Preview</label>
-              <div className="markdown" id='preview'>
-                <MarkdownView markdown={problem?.description || ""} />
-              </div>
-            </Form.Field>
-          </Form.Group>
-          <h1>Sample Files</h1>
-
-          <Button primary onClick={handleSubmit}>Create</Button>
         </Form>
+
+        <h1>Problem Description</h1>
+        <MDEditor
+          value={problem?.description || ''}
+          onChange={handleTextareaChange}
+          height="500"
+        />
+
+        <h1>Skeletons</h1>
+        <p>Skeletons will be auto generated.</p>
+        <Button primary onClick={handleSubmit}>Create</Button>
       </Block>
     </>
   )

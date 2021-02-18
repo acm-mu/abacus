@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link, useParams } from "react-router-dom";
-import MarkdownView from "react-showdown";
 import { Button, Popup } from "semantic-ui-react";
 import { Block, Countdown } from '../../components'
 import { ProblemType, SubmissionType } from '../../types'
 import config from '../../environment'
 import "./Problem.scss";
 import { UserContext } from "../../context/user";
+import MDEditor from "@uiw/react-md-editor";
 
 const Problem = (): JSX.Element => {
   const [problem, setProblem] = useState<ProblemType>();
@@ -40,9 +40,7 @@ const Problem = (): JSX.Element => {
           {problem?.problem_name}
         </h1>
         <hr />
-        <div className="markdown">
-          <MarkdownView markdown={problem?.description || ""} />
-        </div>
+        <MDEditor.Markdown source={problem?.description || ''} />
       </Block>
       <Block size='xs-3'>
         <div style={{ display: "flex", justifyContent: "space-evenly" }}>

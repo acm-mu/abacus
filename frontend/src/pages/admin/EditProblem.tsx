@@ -5,7 +5,7 @@ import Editor from '@monaco-editor/react'
 import { ProblemType, SkeletonType, TestType } from '../../types'
 import { Block } from '../../components'
 import config from '../../environment'
-import MarkdownView from 'react-showdown'
+import MDEditor from '@uiw/react-md-editor'
 
 type ProblemStateProps = {
   problem: {
@@ -95,27 +95,17 @@ const TestData = (props: ProblemStateProps) => {
 const Description = (props: ProblemStateProps) => {
   const { problem, setProblem } = props.problem
 
-  const handleTextareaChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const { name, value } = event.target
-    event.target.style.height = `${event.target.scrollHeight}px`
-    if (problem)
-      setProblem({ ...problem, [name]: value })
+  const handleTextareaChange = (value: string | undefined) => {
+    if (problem && value)
+      setProblem({ ...problem, description: value })
   }
 
-  return (<Form>
-    <Form.Group widths='equal'>
-      <Form.Field>
-        <label>Problem Description</label>
-        <TextArea name='description' onChange={handleTextareaChange} value={problem?.description || ''} style={{ height: '100%', overflowY: 'hidden' }} />
-      </Form.Field>
-      <Form.Field>
-        <label>Preview</label>
-        <div className="markdown" id='preview'>
-          <MarkdownView markdown={problem?.description || ""} />
-        </div>
-      </Form.Field>
-    </Form.Group>
-  </Form>)
+  return <MDEditor
+    value={problem?.description || ''}
+    onChange={handleTextareaChange}
+    height="500"
+  />
+
 }
 
 const Skeletons = (props: ProblemStateProps) => {
