@@ -136,7 +136,7 @@ users.put(
     const users = Object.values(await contest.scanItems('user', { username: item.username }) || {})
     if (users.length > 1) {
       res.status(400).json({
-        message: "Username is alreay used"
+        message: "Username is already used"
       })
       return
     }
@@ -173,7 +173,7 @@ users.delete(
           .then(_ => { success++ })
           .catch(_ => { failed++ })
       }
-      res.json({ message: `${success} user(s) succesfully deleted. ${failed} failed to delete.` })
+      res.json({ message: `${success} user(s) successfully deleted. ${failed} failed to delete.` })
     } else {
       deleteSubmissionsForUser(req.body.user_id)
       contest.deleteItem('user', { user_id: req.body.user_id })
@@ -254,7 +254,7 @@ users.post(
     const users = Object.values(await contest.scanItems('user', { username: item.username }) || {})
     if (users.length) {
       res.status(400).json({
-        message: "Username is alreay used"
+        message: "Username is already used"
       })
       return
     }

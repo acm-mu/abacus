@@ -10,7 +10,7 @@ const BlueNavigation = (): JSX.Element => (
     <Menu.Item as={NavLink} to="/blue/problems" content="Problems" />
     <Menu.Item as={NavLink} to="/blue/standings" content="Standings" />
     <Menu.Item as={NavLink} to="/blue/submissions" content="Submissions" />
-    <Menu.Item as={NavLink} to="/blue/clarifications" content="Clarfications" />
+    <Menu.Item as={NavLink} to="/blue/clarifications" content="Clarifications" />
   </Navigation>
 );
 
