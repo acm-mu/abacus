@@ -54,22 +54,15 @@ const Home = (): JSX.Element => {
       name: problem.problem_name
     } 
   })));
-  
+
   submissions.forEach((sub: { status: string, date: any, problem: any }) => {
 
     const timeBin = Math.floor((sub.date - startDate)/ (1800));
     timeSubmissions[sub.problem.id].data[timeBin]++;
 
     statuses[sub.status] == undefined ? statuses[sub.status] = {name: sub.status, data: 1} : statuses[sub.status].data++;
-  });
 
-  const hour0 = startDate;
-  const hour05 = startDate + 1800;
-  const hour10 = hour05 + 1800;
-  const hour15 = hour10 + 1800;
-  const hour20 = hour15 + 1800;
-  const hour25 = hour20 + 1800;
-  const hour30 = hour25 + 1800;
+  });
   
   const breakdownData = {
     categories: ['Submission Status'],
