@@ -14,7 +14,6 @@ const Home = (): JSX.Element => {
   const [isMounted, setMounted] = useState<boolean>(false)
 
   let startTime = 0; 
-  let endTime;
 
   useEffect(() => {
     setMounted(true)
@@ -32,7 +31,6 @@ const Home = (): JSX.Element => {
       .then(data => {
         if(isMounted) {
           startTime = data.start_time
-          endTime = data.end_time
         }
       })
     fetch(`${config.API_URL}/problems?division=blue`)
@@ -62,6 +60,8 @@ const Home = (): JSX.Element => {
     } 
   })));
 
+  console.log(timeSubmissions);
+
   submissions.forEach((sub: { status: any, date: any, problem_id: any }) => {
     switch(sub.status) {
       case 'accepted':
@@ -77,9 +77,6 @@ const Home = (): JSX.Element => {
         other++;
         break;
     }
-
-    
-
   });
 
   const problemNames: string[] = [];
