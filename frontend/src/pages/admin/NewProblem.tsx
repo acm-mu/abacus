@@ -2,21 +2,13 @@ import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Form, Input, Button, Menu, TextArea, Message, MenuItemProps } from "semantic-ui-react"
 import { Block } from '../../components'
-import { TestType } from '../../types'
+import { ProblemType, TestType } from '../../types'
 import config from '../../environment'
 import MDEditor from '@uiw/react-md-editor'
 
 const NewProblem = (): JSX.Element => {
   const history = useHistory()
-  const [problem, setProblem] = useState({
-    id: '',
-    problem_name: '',
-    description: '',
-    division: 'blue',
-    tests: [{ in: '', out: '', result: '' }],
-    cpu_time_limit: -1,
-    memory_limit: -1
-  })
+  const [problem, setProblem] = useState<ProblemType>()
   const [message, setMessage] = useState<{ type: string, message: string }>()
   const handleSubmit = async () => {
     const res = await fetch(`${config.API_URL}/problems`, {
@@ -38,7 +30,7 @@ const NewProblem = (): JSX.Element => {
   const handleTestItemClick = (event: React.MouseEvent, data: MenuItemProps) => setActiveTestItem(data.tab)
   const handleNewTest = () => {
     if (problem) {
-      setProblem({ ...problem, tests: [...problem.tests, { in: '', out: '', result: '' }] })
+      setProblem({ ...problem, tests: [...problem.tests, { in: '', out: '', result: '', include: false }] })
       setActiveTestItem(problem.tests.length)
     }
   }
