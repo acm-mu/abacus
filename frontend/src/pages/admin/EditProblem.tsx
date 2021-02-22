@@ -83,8 +83,8 @@ const TestData = (props: ProblemStateProps) => {
       <div key={`test-${index}`}>
         {activeTestItem == index ?
           <Form.Group widths='equal'>
-            <Form.Field label='Input' onChange={handleTestChange} control={TextArea} name={`${index}-in`} value={test.in} />
-            <Form.Field label='Answer' onChange={handleTestChange} control={TextArea} name={`${index}-out`} value={test.out} />
+            <Form.Field style={{ height: '18em' }} label='Input' onChange={handleTestChange} control={TextArea} name={`${index}-in`} value={test.in} />
+            <Form.Field style={{ height: '18em' }} label='Answer' onChange={handleTestChange} control={TextArea} name={`${index}-out`} value={test.out} />
           </Form.Group>
           : <></>}
       </div>

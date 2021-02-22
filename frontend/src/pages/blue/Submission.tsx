@@ -41,8 +41,7 @@ const Submission = (): JSX.Element => {
           {submission_id ?
             <>
               <Countdown />
-              <Block size="xs-12">
-                <h1>Submission</h1>
+              <Block transparent size="xs-12">
                 <Table celled>
                   <Table.Header>
                     <Table.Row>
