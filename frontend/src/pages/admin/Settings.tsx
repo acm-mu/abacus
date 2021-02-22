@@ -35,10 +35,7 @@ const Settings = (): JSX.Element => {
       }))
   }, [])
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target
-    setSettings({ ...settings, [name]: value })
-  }
+  const handleChange = ({ target: { name, value } }: { target: { name: string, value: string } }) => setSettings({ ...settings, [name]: value })
 
   const handleSubmit = async () => {
     const formData = new FormData()
