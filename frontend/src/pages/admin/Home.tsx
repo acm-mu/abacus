@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react'
 import '@toast-ui/chart/dist/toastui-chart.min.css'
 import { LineChart, PieChart } from '@toast-ui/react-chart'
 import { Block } from '../../components'
-import { SubmissionType, ProblemType, CompetitionSettings } from '../../types'
+import { SubmissionType, ProblemType } from '../../types'
 import config from '../../environment'
+import { start } from 'repl'
 
 
 
@@ -11,7 +12,7 @@ const Home = (): JSX.Element => {
   const [isLoading, setLoading] = useState<boolean>(true)
   const [submissions, setSubmissions] = useState<SubmissionType[]>([])
   const [problems, setProblems] = useState<ProblemType[]>([])
-  const [startTime, setStartTime] = useState<CompetitionSettings>()
+  const [startDate, setStartDate] = useState<number>(0)
   const [isMounted, setMounted] = useState<boolean>(false)
 
   useEffect(() => {
@@ -29,7 +30,7 @@ const Home = (): JSX.Element => {
       .then(res => res.json())
       .then(data => {
         if(isMounted) {
-          const startTime = data.start_time
+          setStartDate(data.start_date)
         }
       })
     fetch(`${config.API_URL}/problems?division=blue`)
@@ -65,10 +66,7 @@ const Home = (): JSX.Element => {
 
   submissions.forEach((sub: { status: any, date: any, problem: any }) => {
 
-
-    console.log(sub.date, " | ", startTime, " | ", (sub.date-startTime));
-    const timeBin = Math.floor((sub.date - startTime)/ (1800));
-    console.log(timeBin);
+    const timeBin = Math.floor((sub.date - startDate)/ (1800));
     timeSubmissions[sub.problem.id].data[timeBin]++;
 
     switch(sub.status) {
@@ -87,8 +85,8 @@ const Home = (): JSX.Element => {
     }
   });
 
-  const hour0 = startTime;
-  const hour05 = startTime + 1800;
+  const hour0 = startDate;
+  const hour05 = startDate + 1800;
   const hour10 = hour05 + 1800;
   const hour15 = hour10 + 1800;
   const hour20 = hour15 + 1800;
