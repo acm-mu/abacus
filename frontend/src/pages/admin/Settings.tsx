@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Form, Input } from 'semantic-ui-react'
+import { Button, Form, Input, Message } from 'semantic-ui-react'
 import { Block } from '../../components'
 import config from '../../environment'
 
@@ -22,6 +22,7 @@ const Settings = (): JSX.Element => {
     points_per_compilation_error: '0',
     points_per_minute: '0'
   })
+  const [message, setMessage] = useState<{ type: string, message: string }>()
 
   useEffect(() => {
     fetch(`${config.API_URL}/contest`)
@@ -50,14 +51,23 @@ const Settings = (): JSX.Element => {
     formData.set('start_date', `${Date.parse(`${settings.start_date} ${settings.start_time}`) / 1000.0}`)
     formData.set('end_date', `${Date.parse(`${settings.end_date} ${settings.end_time}`) / 1000.0}`)
 
-    await fetch(`${config.API_URL}/contest`, {
+    const res = await fetch(`${config.API_URL}/contest`, {
       method: 'PUT',
       body: formData
     })
+
+    if (res.status == 200) {
+      setMessage({ type: 'success', message: "Settings saved successfully!" })
+    } else if (res.status == 400) {
+      const body = await res.json()
+      setMessage({ type: 'error', message: body.message })
+    }
   }
 
   return (
     <Block center size='xs-6'>
+      {message?.type == 'error' ? <Message error icon='warning' header='Error!' content={message.message} /> :
+        message?.type == 'success' ? <Message success icon='check' header='Saved!' content={message.message} /> : <></>}
       <Form onSubmit={handleSubmit}>
         <h1>Settings</h1>
         <hr />

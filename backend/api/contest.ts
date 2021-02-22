@@ -62,6 +62,15 @@ router.put('/contest',
       return
     }
     const settings = matchedData(req) as CompetitionSettings
+
+    const startDate = new Date(settings.start_date * 1000)
+    const endDate = new Date(settings.end_date * 1000)
+
+    if (endDate <= startDate) {
+      res.status(400).send({ message: "End date can not be before start date!" })
+      return
+    }
+
     contest.save_settings(settings)
       .then(_ => res.send(settings))
       .catch(err => res.status(400).send(err))
