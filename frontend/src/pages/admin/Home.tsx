@@ -53,10 +53,14 @@ const Home = (): JSX.Element => {
   let pending = 0;
   let other = 0;
 
-  const problem0 = [];
-  const problem1 = [];
-  const problem2 = [];
-  const problem3 = [];
+  //const statuses = Object.assign()
+
+  const timeSubmissions = Object.assign({}, ...problems.map((problem: ProblemType) => ({
+    [problem.id]: {
+      data: [],
+      name: problem.problem_name
+    } 
+  })));
 
   submissions.forEach((sub: { status: any, date: any, problem_id: any }) => {
     switch(sub.status) {
@@ -147,23 +151,26 @@ const Home = (): JSX.Element => {
       }
     },
     chart: {
-          width: '100%',
+          width: 'vw',
           height: 450,
           animation: true
     },
-      series: {
-        selectable: true,
-        clockwise: true,
-        dataLabels: {
-          visible: true,
-          anchor: 'outer',
-        }
+    series: {
+      selectable: true,
+      clockwise: true,
+      dataLabels: {
+        visible: true,
+        anchor: 'outer',
       }
+    },
+    legend: {
+      align: 'bottom',
+    }
   };
 
   const timelineOptions = {
     chart: {
-      width: '100%',
+      width: 'vw',
       height: 450,
       animation: true
     },
@@ -173,6 +180,9 @@ const Home = (): JSX.Element => {
       },
       selectable: true,
       zoomable: true,
+    },
+    legend: {
+      align: 'bottom',
     }
     // chart?: {
     //   // ...
@@ -227,18 +237,18 @@ return (
     </Block>
 
     <Block size='xs-6'>
-      <h2>Submission Breakdown</h2>
-      <PieChart
-        data={breakdownData} 
-        options={breakdownOptions} 
-      />
-    </Block>
-
-    <Block size='xs-6'>
       <h2>Submission Timeline</h2>
       <LineChart
         data={timelineData}
         options={timelineOptions}
+      />
+    </Block>
+
+    <Block size='xs-6'>
+      <h2>Submission Breakdown</h2>
+      <PieChart
+        data={breakdownData} 
+        options={breakdownOptions} 
       />
     </Block>
   </>
