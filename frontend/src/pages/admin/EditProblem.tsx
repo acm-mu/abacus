@@ -42,7 +42,7 @@ const TestData = (props: ProblemStateProps) => {
   const handleTestItemClick = (event: React.MouseEvent, data: MenuItemProps) => setActiveTestItem(data.tab)
   const handleNewTest = () => {
     if (problem) {
-      setProblem({ ...problem, tests: [...problem.tests, { in: '', out: '', result: '' }] })
+      setProblem({ ...problem, tests: [...problem.tests, { in: '', out: '', include: false }] })
       setActiveTestItem(problem.tests.length)
     }
   }
