@@ -51,6 +51,11 @@ const Users = (): JSX.Element => {
   }
 
   const deleteSelected = () => {
+    if (users.filter(u => u.checked && u.user_id == user?.user_id).length > 0) {
+      alert("Cannot delete currently logged in user!")
+      return
+    }
+
     const usersToDelete = users.filter(user => user.checked).map(user => user.user_id)
     fetch(`${config.API_URL}/users`, {
       method: 'DELETE',
