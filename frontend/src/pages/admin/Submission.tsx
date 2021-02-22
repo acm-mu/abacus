@@ -6,7 +6,7 @@ import { SubmissionType, TestType } from '../../types'
 import config from '../../environment'
 import Moment from 'react-moment'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-import { capitalize, lang, formattext } from "../../utils"
+import { capitalize, lang, format_text } from "../../utils"
 import "../Submission.scss"
 
 const Submission = (): JSX.Element => {
@@ -161,16 +161,16 @@ const Submission = (): JSX.Element => {
                         <div className='testRun'>
                           <h3 className={test.result}>{capitalize(test.result || '')}</h3>
                           <b>Input</b>
-                          <pre>{formattext(test.in)}</pre>
+                          <pre>{format_text(test.in)}</pre>
 
                           <div>
                             <div>
                               <b>Output</b>
-                              <pre>{formattext(test.stdout || '')}</pre>
+                              <pre>{format_text(test.stdout || '')}</pre>
                             </div>
                             <div>
                               <b>Expected</b>
-                              <pre>{formattext(test.out)}</pre>
+                              <pre>{format_text(test.out)}</pre>
                             </div>
                           </div>
                         </div>

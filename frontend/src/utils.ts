@@ -8,8 +8,8 @@ const lang = (language: string): string => {
   }
 }
 
-const formattext = (str: string): string => str.replace(/(^.*$)/gm, (c: string) => isNaN(+c) ? `"${c}"` : c)
+const format_text = (str: string): string => str.replace(/(^.*$)/gm, (c: string) => isNaN(+c) ? `"${c}"` : c)
 const capitalize = (str: string): string => str.trim().replace(/^\w/, (c) => c.toUpperCase());
 
 
-export { lang, capitalize, formattext }
+export { lang, capitalize, format_text }
