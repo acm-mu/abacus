@@ -3,10 +3,11 @@ import { Modal, Form, Input, Select, Button, Message } from "semantic-ui-react"
 import config from '../../environment'
 
 type CreateUserProps = {
-  trigger: JSX.Element
+  trigger: JSX.Element;
+  callback?: (res: Response) => void;
 }
 
-const CreateUser = ({ trigger }: CreateUserProps): JSX.Element => {
+const CreateUser = ({ trigger, callback }: CreateUserProps): JSX.Element => {
   const [open, setOpen] = useState<boolean>(false)
   const [error, setError] = useState<string>()
   const [user, setUser] = useState({
@@ -47,6 +48,9 @@ const CreateUser = ({ trigger }: CreateUserProps): JSX.Element => {
       },
       body: JSON.stringify({ ...user, school: user.role == 'team' ? user.school : '' })
     })
+    if (callback)
+      callback(res)
+
     if (res.status == 200) {
       setOpen(false)
     } else if (res.status == 400) {
