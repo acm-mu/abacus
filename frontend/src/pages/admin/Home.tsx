@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import '@toast-ui/chart/dist/toastui-chart.min.css'
 import { LineChart, PieChart } from '@toast-ui/react-chart'
 import { Block } from '../../components'
-import { SubmissionType, ProblemType } from '../../types'
+import { SubmissionType, ProblemType, CompetitionSettings } from '../../types'
 import config from '../../environment'
 
 
@@ -11,9 +11,8 @@ const Home = (): JSX.Element => {
   const [isLoading, setLoading] = useState<boolean>(true)
   const [submissions, setSubmissions] = useState<SubmissionType[]>([])
   const [problems, setProblems] = useState<ProblemType[]>([])
+  const [startTime, setStartTime] = useState<CompetitionSettings>()
   const [isMounted, setMounted] = useState<boolean>(false)
-
-  let startTime = 0; 
 
   useEffect(() => {
     setMounted(true)
@@ -30,7 +29,7 @@ const Home = (): JSX.Element => {
       .then(res => res.json())
       .then(data => {
         if(isMounted) {
-          startTime = data.start_time
+          const startTime = data.start_time
         }
       })
     fetch(`${config.API_URL}/problems?division=blue`)
@@ -46,42 +45,46 @@ const Home = (): JSX.Element => {
     return () => { setMounted(false) }
   }, [isMounted]);
 
-  let accepted = 0;
-  let rejected = 0;
-  let pending = 0;
-  let other = 0;
-
-  //const statuses = Object.assign()
+  const statuses = Object.assign({}, ...submissions.map((sub : SubmissionType) => ({
+    [sub.problem.id]: {
+      data: [],
+      name: sub.status
+    }
+  })));
 
   const timeSubmissions = Object.assign({}, ...problems.map((problem: ProblemType) => ({
     [problem.id]: {
-      data: [],
+      data: [0, 0, 0, 0, 0, 0],
       name: problem.problem_name
     } 
   })));
 
   console.log(timeSubmissions);
 
-  submissions.forEach((sub: { status: any, date: any, problem_id: any }) => {
+  console.log(submissions);
+
+  submissions.forEach((sub: { status: any, date: any, problem: any }) => {
+
+
+    console.log(sub.date, " | ", startTime, " | ", (sub.date-startTime));
+    const timeBin = Math.floor((sub.date - startTime)/ (1800));
+    console.log(timeBin);
+    timeSubmissions[sub.problem.id].data[timeBin]++;
+
     switch(sub.status) {
       case 'accepted':
-        accepted++;
+        ;
         break;
       case 'rejected':
-        rejected++;
+        ;
         break;
       case 'pending':
-        pending++;
+        ;
         break;
       default:
-        other++;
+        ;
         break;
     }
-  });
-
-  const problemNames: string[] = [];
-  problems.forEach((problem: {problem_name : string}) => {
-    problemNames.push(problem.problem_name);
   });
 
   const hour0 = startTime;
@@ -97,22 +100,24 @@ const Home = (): JSX.Element => {
     series: [
       {
           name: 'Accepted',
-          data: accepted
+          data: 10
       },
       {
           name: 'Rejected',
-          data: rejected
+          data: 15
       },
       {
         name: 'Pending',
-        data: pending
+        data: 73
       },
       {
         name: 'Other',
-        data: other
+        data: 2
       }
   ]
   };
+
+  console.log(Object.values(timeSubmissions));
 
   const timelineData = {
     categories: [
@@ -124,21 +129,7 @@ const Home = (): JSX.Element => {
       '11:30 AM',
       'Noon'
     ],
-    series: [
-      {
-        name: problemNames[0],
-        data: [40, 65, 20, 21, 19, 18, 41],
-        
-      },
-      {
-        name: problemNames[1],
-        data: [5, 30, 21, 18, 59, 50, 28],
-      },
-      {
-        name: problemNames[2],
-        data: [30, 5, 18, 21, 33, 41, 29],
-      },
-    ],
+    series: Object.values(timeSubmissions)
   };
   
   const breakdownOptions = {
