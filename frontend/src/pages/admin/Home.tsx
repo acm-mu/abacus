@@ -4,10 +4,10 @@ import { LineChart, PieChart } from '@toast-ui/react-chart'
 import { Block } from '../../components'
 import { SubmissionType, ProblemType } from '../../types'
 import config from '../../environment'
+import { Loader } from 'semantic-ui-react'
 
 const Home = (): JSX.Element => {
-  const [isLoading, setLoading] = useState<boolean>(true)
-  const [submissions, setSubmissions] = useState<SubmissionType[]>([])
+  const [submissions, setSubmissions] = useState<SubmissionType[]>()
   const [problems, setProblems] = useState<ProblemType[]>([])
   const [startDate, setStartDate] = useState<number>(0)
   const [isMounted, setMounted] = useState<boolean>(false)
@@ -17,58 +17,49 @@ const Home = (): JSX.Element => {
     fetch(`${config.API_URL}/submissions`)
       .then(res => res.json())
       .then(data => {
-        if (isMounted) {
-          const submissions: SubmissionType[] = Object.values(data)
+        if (isMounted)
           setSubmissions(Object.values(data))
-          setLoading(false)
-        }
+
       })
     fetch(`${config.API_URL}/contest`)
       .then(res => res.json())
       .then(data => {
-        if(isMounted) {
+        if (isMounted)
           setStartDate(data.start_date)
-        }
       })
     fetch(`${config.API_URL}/problems?division=blue`)
       .then(res => res.json())
       .then(data => {
-        if(isMounted) {
+        if (isMounted) {
           const problems: ProblemType[] = Object.values(data)
           problems.sort((a: ProblemType, b: ProblemType) => a.id.localeCompare(b.id))
           setProblems(Object.values(data))
-          setLoading(false)
         }
       })
     return () => { setMounted(false) }
   }, [isMounted]);
 
-  const statuses: {[key: string]: {name: string, data: number}} = {};
+  const statuses: { [key: string]: { name: string, data: number } } = {};
 
   const timeSubmissions = Object.assign({}, ...problems.map((problem: ProblemType) => ({
     [problem.id]: {
       data: [0, 0, 0, 0, 0, 0],
       name: problem.problem_name
-    } 
+    }
   })));
 
-  submissions.forEach((sub: { status: string, date: any, problem: any }) => {
-
-    const timeBin = Math.floor((sub.date - startDate)/ (1800));
+  submissions?.forEach((sub: SubmissionType) => {
+    const timeBin = Math.floor((sub.date - startDate) / (1800));
     timeSubmissions[sub.problem.id].data[timeBin]++;
 
-    statuses[sub.status] == undefined ? statuses[sub.status] = {name: sub.status, data: 1} : statuses[sub.status].data++;
+    statuses[sub.status] == undefined ? statuses[sub.status] = { name: sub.status, data: 1 } : statuses[sub.status].data++;
 
   });
 
-  console.log(Object.values(statuses));
-  
   const breakdownData = {
     categories: ['Submission Status'],
     series: Object.values(statuses)
   };
-
-  console.log(Object.values(timeSubmissions));
 
   const timelineData = {
     categories: [
@@ -82,7 +73,7 @@ const Home = (): JSX.Element => {
     ],
     series: Object.values(timeSubmissions)
   };
-  
+
   const breakdownOptions = {
     theme: {
       series: {
@@ -90,9 +81,9 @@ const Home = (): JSX.Element => {
       }
     },
     chart: {
-          width: 'vw',
-          height: 450,
-          animation: true
+      width: 'vw',
+      height: 450,
+      animation: true
     },
     series: {
       selectable: true,
@@ -169,28 +160,32 @@ const Home = (): JSX.Element => {
     // }
   };
 
-return (
-  <>
-    <Block size='xs-12'>
-      <h1>Admin Dashboard</h1>
-    </Block>
+  return (
+    <>
+      <Block size='xs-12'>
+        <h1>Admin Dashboard</h1>
+      </Block>
+      {submissions ?
+        <>
+          <Block size='xs-6'>
+            <h2>Submission Timeline</h2>
+            <LineChart
+              data={timelineData}
+              options={timelineOptions}
+            />
+          </Block>
 
-    <Block size='xs-6'>
-      <h2>Submission Timeline</h2>
-      <LineChart
-        data={timelineData}
-        options={timelineOptions}
-      />
-    </Block>
 
-    <Block size='xs-6'>
-      <h2>Submission Breakdown</h2>
-      <PieChart
-        data={breakdownData} 
-        options={breakdownOptions} 
-      />
-    </Block>
-  </>
-)
+
+          <Block size='xs-6'>
+            <h2>Submission Breakdown</h2>
+            <PieChart
+              data={breakdownData}
+              options={breakdownOptions}
+            />
+          </Block>
+        </> : <Loader />}
+    </>
+  )
 }
 export default Home
