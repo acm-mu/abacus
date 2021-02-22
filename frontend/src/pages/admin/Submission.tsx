@@ -151,24 +151,22 @@ const Submission = (): JSX.Element => {
               </> :
                 activeItem == 'test-cases' ? <div style={{ display: 'flex' }}>
                   <Menu secondary vertical>
-                    {submission.tests.map((test: any, index: number) =>
+                    {submission.tests.map((test: TestType, index: number) =>
                       <Menu.Item key={`test-case-${index}`} name={`Test Case #${index + 1}`} active={activeTestItem === index} tab={index} onClick={handleTestItemClick} />
                     )}</Menu>
 
-                  {/* <p>{JSON.stringify(submission.tests)}</p> */}
-
-                  {submission.tests.map((test: any, index: number) => (
+                  {submission.tests.map((test: TestType, index: number) => (
                     <React.Fragment key={`test-result-${index}`}>
                       {index == activeTestItem ?
                         <div className='testRun'>
-                          <h3 className={test.result}>{capitalize(test.result)}</h3>
+                          <h3 className={test.result}>{capitalize(test.result || '')}</h3>
                           <b>Input</b>
                           <pre>{formattext(test.in)}</pre>
 
                           <div>
                             <div>
                               <b>Output</b>
-                              <pre>{formattext(test.stdout)}</pre>
+                              <pre>{formattext(test.stdout || '')}</pre>
                             </div>
                             <div>
                               <b>Expected</b>

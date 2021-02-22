@@ -1,7 +1,10 @@
 type TestType = {
   in: string;
   out: string;
-  result: string;
+  stdout?: string;
+  include: boolean;
+  result?: string;
+
 }
 
 type SkeletonType = {
@@ -38,6 +41,7 @@ type ProblemScoreType = {
 type ProblemType = {
   problem_id: string;
   id: string;
+  division: string;
   problem_name: string;
   description: string;
   cpu_time_limit: number;
