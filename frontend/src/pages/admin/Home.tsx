@@ -4,9 +4,6 @@ import { LineChart, PieChart } from '@toast-ui/react-chart'
 import { Block } from '../../components'
 import { SubmissionType, ProblemType } from '../../types'
 import config from '../../environment'
-import { start } from 'repl'
-
-
 
 const Home = (): JSX.Element => {
   const [isLoading, setLoading] = useState<boolean>(true)
@@ -63,6 +60,8 @@ const Home = (): JSX.Element => {
     statuses[sub.status] == undefined ? statuses[sub.status] = {name: sub.status, data: 1} : statuses[sub.status].data++;
 
   });
+
+  console.log(Object.values(statuses));
   
   const breakdownData = {
     categories: ['Submission Status'],
