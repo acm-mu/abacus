@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useHistory, useParams } from 'react-router-dom'
-import { Button, Menu, MenuItemProps, Table } from 'semantic-ui-react'
+import { Button, Label, Menu, MenuItemProps, Table } from 'semantic-ui-react'
 import { Block } from '../../components'
 import { SubmissionType, TestType } from '../../types'
 import config from '../../environment'
 import Moment from 'react-moment'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-import { capitalize, lang, format_text } from "../../utils"
+import { capitalize, syntax_lang, format_text } from "../../utils"
 import "../Submission.scss"
 
 const Submission = (): JSX.Element => {
@@ -119,8 +119,12 @@ const Submission = (): JSX.Element => {
 
             <Menu attached='top' tabular>
               <Menu.Item name='Source Code' tab='source-code' active={activeItem === 'source-code'} onClick={handleItemClick} />
-              <Menu.Item name='Test Run Result' tab='test-cases' active={activeItem === 'test-cases'} onClick={handleItemClick} />
+
+              {submission.status !== "pending" ?
+                <Menu.Item name='Test Run Result' tab='test-cases' active={activeItem === 'test-cases'} onClick={handleItemClick} /> :
+                <Menu.Item><Label>Test Run Pending...</Label></Menu.Item>}
             </Menu>
+
 
             <Block size="xs-12" style={{ padding: '20px', background: 'white', border: '1px solid #d4d4d5', borderTop: 'none' }}>
               {activeItem == 'source-code' ? <>
@@ -145,7 +149,7 @@ const Submission = (): JSX.Element => {
                 <h3>{submission?.filename}</h3>
                 <pre>
                   {submission?.source &&
-                    <SyntaxHighlighter language={lang(submission.language)}>{submission.source}</SyntaxHighlighter>
+                    <SyntaxHighlighter language={syntax_lang(submission.language)}>{submission.source}</SyntaxHighlighter>
                   }
                 </pre>
               </> :

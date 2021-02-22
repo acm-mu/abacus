@@ -1,8 +1,8 @@
 
-const lang = (language: string): string => {
+const syntax_lang = (language: string): string => {
   switch (language) {
     case 'python3':
-      return "Python 3"
+      return "python"
     default:
       return language
   }
@@ -12,4 +12,4 @@ const format_text = (str: string): string => str.replace(/(^.*$)/gm, (c: string)
 const capitalize = (str: string): string => str.trim().replace(/^\w/, (c) => c.toUpperCase());
 
 
-export { lang, capitalize, format_text }
+export { syntax_lang, capitalize, format_text }
