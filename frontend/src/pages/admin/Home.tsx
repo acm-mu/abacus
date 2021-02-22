@@ -46,12 +46,7 @@ const Home = (): JSX.Element => {
     return () => { setMounted(false) }
   }, [isMounted]);
 
-  const statuses = Object.assign({}, ...submissions.map((sub : SubmissionType) => ({
-    [sub.problem.id]: {
-      data: [],
-      name: sub.status
-    }
-  })));
+  const statuses: {[key: string]: {name: string, data: number}} = {};
 
   const timeSubmissions = Object.assign({}, ...problems.map((problem: ProblemType) => ({
     [problem.id]: {
@@ -59,30 +54,13 @@ const Home = (): JSX.Element => {
       name: problem.problem_name
     } 
   })));
-
-  console.log(timeSubmissions);
-
-  console.log(submissions);
-
-  submissions.forEach((sub: { status: any, date: any, problem: any }) => {
+  
+  submissions.forEach((sub: { status: string, date: any, problem: any }) => {
 
     const timeBin = Math.floor((sub.date - startDate)/ (1800));
     timeSubmissions[sub.problem.id].data[timeBin]++;
 
-    switch(sub.status) {
-      case 'accepted':
-        ;
-        break;
-      case 'rejected':
-        ;
-        break;
-      case 'pending':
-        ;
-        break;
-      default:
-        ;
-        break;
-    }
+    statuses[sub.status] == undefined ? statuses[sub.status] = {name: sub.status, data: 1} : statuses[sub.status].data++;
   });
 
   const hour0 = startDate;
@@ -95,24 +73,7 @@ const Home = (): JSX.Element => {
   
   const breakdownData = {
     categories: ['Submission Status'],
-    series: [
-      {
-          name: 'Accepted',
-          data: 10
-      },
-      {
-          name: 'Rejected',
-          data: 15
-      },
-      {
-        name: 'Pending',
-        data: 73
-      },
-      {
-        name: 'Other',
-        data: 2
-      }
-  ]
+    series: Object.values(statuses)
   };
 
   console.log(Object.values(timeSubmissions));
