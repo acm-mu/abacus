@@ -1,10 +1,11 @@
 import { Table, Button, Popup, Loader, ButtonGroup, Label } from 'semantic-ui-react'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { Block } from '../../components'
 import { UserType } from '../../types'
 import config from '../../environment'
 import CreateUser from './CreateUser'
+import { UserContext } from '../../context/user'
 
 interface UserItem extends UserType {
   checked: boolean
@@ -13,6 +14,7 @@ interface UserItem extends UserType {
 type SortKey = 'user_id' | 'display_name' | 'username' | 'role' | 'division'
 
 const Users = (): JSX.Element => {
+  const { user } = useContext(UserContext)
   const [users, setUsers] = useState<UserItem[]>([])
   const [isLoading, setLoading] = useState<boolean>(true)
   const [isMounted, setMounted] = useState<boolean>(false)
@@ -30,6 +32,11 @@ const Users = (): JSX.Element => {
 
   useEffect(() => {
     setMounted(true)
+    loadUsers()
+    return () => { setMounted(false) }
+  }, [isMounted])
+
+  const loadUsers = () => {
     fetch(`${config.API_URL}/users`)
       .then(res => res.json())
       .then(data => {
@@ -39,8 +46,7 @@ const Users = (): JSX.Element => {
           setLoading(false)
         }
       })
-    return () => { setMounted(false) }
-  }, [isMounted])
+  }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUsers(users.map(user => user.user_id == event.target.id ? { ...user, checked: !user.checked } : user))
@@ -50,7 +56,17 @@ const Users = (): JSX.Element => {
     setUsers(users.map(user => ({ ...user, checked: event.target.checked })))
   }
 
+  const createUserCallback = (response: Response) => {
+    if (response.status == 200)
+      loadUsers()
+  }
+
   const deleteSelected = () => {
+    if (users.filter(u => u.checked && u.user_id == user?.user_id).length > 0) {
+      alert("Cannot delete currently logged in user!")
+      return
+    }
+
     const usersToDelete = users.filter(user => user.checked).map(user => user.user_id)
     fetch(`${config.API_URL}/users`, {
       method: 'DELETE',
@@ -69,7 +85,7 @@ const Users = (): JSX.Element => {
     <>
       <Block size='xs-12' transparent>
         <ButtonGroup>
-          <Popup content="Add User" trigger={<CreateUser trigger={<Button icon="plus" />} />} />
+          <Popup content="Add User" trigger={<CreateUser trigger={<Button icon="plus" />} callback={createUserCallback} />} />
           <Popup content="Import from CSV" trigger={<Link to='/admin/users/upload'><Button icon="upload" /></Link>} />
           <Popup content="Export to JSON" trigger={<a href={`${config.API_URL}/users.json`}><Button icon="download" /></a>} />
           {users.filter(user => user.checked).length ?

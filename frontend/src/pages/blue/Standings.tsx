@@ -88,25 +88,25 @@ const Standings = (): JSX.Element => {
                       if (problem.solved) {
                         return (
                           <Table.Cell key={`${team.user_id}-${index}`} className="solved">
-                            {problem.problem_score}
-                            <br />
                             {problem.submissions.length}
+                            <br />
+                            <small>{problem.problem_score}</small>
                           </Table.Cell>
                         );
                       } else if (problem.submissions.length && problem.submissions[problem.submissions.length - 1].status == "pending") {
                         return (
                           <Table.Cell key={`${team.user_id}-${index}`} className="pending">
-                            --
-                            <br />
                             {problem.submissions.length}
+                            <br />
+                            --
                           </Table.Cell>
                         );
                       } else if (problem.submissions.length) {
                         return (
                           <Table.Cell key={`${team.user_id}-${index}`} className="attempted">
-                            --
-                            <br />
                             {problem.submissions.length}
+                            <br />
+                            --
                           </Table.Cell>
                         );
                       } else {

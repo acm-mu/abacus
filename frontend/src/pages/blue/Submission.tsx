@@ -8,6 +8,7 @@ import { UserContext } from '../../context/user'
 import config from '../../environment'
 import { SubmissionType } from '../../types'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
+import { syntax_lang } from '../../utils'
 
 const Submission = (): JSX.Element => {
   const { user } = useContext(UserContext)
@@ -29,11 +30,6 @@ const Submission = (): JSX.Element => {
     return () => { setMounted(false) }
   }, [submission_id, isMounted])
 
-  const lang = (language: string) => {
-    if (["python3"].includes(language)) return "python"
-    return language
-  }
-
   return (
     <>
       {isAuthenticated ?
@@ -41,8 +37,7 @@ const Submission = (): JSX.Element => {
           {submission_id ?
             <>
               <Countdown />
-              <Block size="xs-12">
-                <h1>Submission</h1>
+              <Block transparent size="xs-12">
                 <Table celled>
                   <Table.Header>
                     <Table.Row>
@@ -106,7 +101,7 @@ const Submission = (): JSX.Element => {
                 <h3>{submission?.filename}</h3>
                 <pre>
                   {submission?.source &&
-                    <SyntaxHighlighter language={lang(submission.language)}>{submission.source}</SyntaxHighlighter>
+                    <SyntaxHighlighter language={syntax_lang(submission.language)}>{submission.source}</SyntaxHighlighter>
                   }
                 </pre>
               </Block>

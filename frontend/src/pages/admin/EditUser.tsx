@@ -131,7 +131,7 @@ const EditUser = (): JSX.Element => {
           <Form.Field
             control={Select}
             onChange={handleSelectChange}
-            label='Divison'
+            label='Division'
             name='division'
             options={divisions}
             value={formUser?.division}
