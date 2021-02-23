@@ -63,7 +63,7 @@ const Home = (): JSX.Element => {
 
   const timelineData = {
     categories: [
-      '9 AM',
+      '9:00 AM',
       '9:30 AM',
       '10 AM',
       '10:30 AM',
@@ -110,6 +110,7 @@ const Home = (): JSX.Element => {
       },
       selectable: true,
       zoomable: true,
+      eventDetectType: 'grouped',
     },
     legend: {
       align: 'bottom',
