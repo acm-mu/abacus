@@ -59,7 +59,7 @@ const Navigation: React.FunctionComponent<Props> = (props: Props) => {
 
         <Menu.Menu position="right">
           {isAuthenticated ?
-            <Dropdown item text={user?.username} onClick={() => { history.push(userHistory()) }} simple>
+            <Dropdown item text={user?.display_name} onClick={() => { history.push(userHistory()) }} simple>
               <Dropdown.Menu>
                 <Dropdown.Item onClick={handleLogout} text="Log out" />
               </Dropdown.Menu>
