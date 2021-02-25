@@ -15,13 +15,14 @@ const Navigation: React.FunctionComponent<Props> = (props: Props) => {
   const history = useHistory()
   const { user, setUser } = useContext(UserContext)
   const [isMounted, setMounted] = useState<boolean>(false)
-  const [isAuthenticated, setAuthenticated] = useAuth(user, isMounted)
+  const [isAuthenticated] = useAuth(user, isMounted)
 
   const handleLogout = () => {
     if (isMounted) {
+      // When clicking the logout button, the username onClick fires and redirects to user home. 
+      // Redirect to homepage 20ms later
+      setTimeout(() => history.push('/'), 20)
       setUser(undefined)
-      setAuthenticated(false)
-      history.push('/')
     }
   }
 
@@ -30,7 +31,7 @@ const Navigation: React.FunctionComponent<Props> = (props: Props) => {
     return () => { setMounted(false) }
   })
 
-  const userHistory = () => {
+  const userHome = () => {
     switch (user?.role) {
       case 'admin':
         return '/admin';
@@ -59,7 +60,7 @@ const Navigation: React.FunctionComponent<Props> = (props: Props) => {
 
         <Menu.Menu position="right">
           {isAuthenticated ?
-            <Dropdown item text={user?.display_name} onClick={() => { history.push(userHistory()) }} simple>
+            <Dropdown item text={user?.username} onClick={() => { history.push(userHome()) }} simple>
               <Dropdown.Menu>
                 <Dropdown.Item onClick={handleLogout} text="Log out" />
               </Dropdown.Menu>
