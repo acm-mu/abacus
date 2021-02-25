@@ -93,4 +93,12 @@ type CompetitionSettings = {
   end_date: Date
 }
 
-export type { StandingsUser, TestType, SubmissionType, ProblemType, UserType, ProblemScoreType, CompetitionSettings, ClarificationType, SkeletonType }
+type TeamType = { 
+  division: string, 
+  team_name: string, 
+  registration_date: string, 
+  school_name: string, 
+  num_of_students: number 
+}
+
+export type { StandingsUser, TestType, SubmissionType, ProblemType, UserType, ProblemScoreType, CompetitionSettings, ClarificationType, SkeletonType, TeamType }
