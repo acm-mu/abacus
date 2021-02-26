@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from "react";
+import "./Countdown.scss";
+
+import React, { useEffect, useState } from "react";
+
+import { Block } from "./";
+import { CompetitionSettings } from "../types";
+import FlipClock from "./FlipClock";
 import { Loader } from "semantic-ui-react";
 import Moment from "react-moment";
-import { CompetitionSettings } from "../types";
 import config from '../environment'
-import { Block } from "./";
-import "./Countdown.scss";
 
 const Countdown = (): JSX.Element => {
   const [isMounted, setMounted] = useState(true)
@@ -46,38 +49,40 @@ const Countdown = (): JSX.Element => {
     <Block size='xs-12'>
       {isLoading || !settings ?
         <Loader active inline='centered' content="Loading" /> :
-        <>
-          <div className="upper">
-            <p>
-              <b>Start </b>
-              <Moment date={settings.start_date} format="MM/DD/YYYY, hh:mm:ss A" />
-            </p>
-            <h1>{settings?.competition_name}</h1>
-            <p>
-              <b>End </b>
-              <Moment date={settings.end_date} format="MM/DD/YYYY, hh:mm:ss A" />
-            </p>
-          </div>
+        time < settings.start_date ?
+          <FlipClock count_to={settings.start_date} /> :
+          <>
+            <div className="upper">
+              <p>
+                <b>Start </b>
+                <Moment date={settings.start_date} format="MM/DD/YYYY, hh:mm:ss A" />
+              </p>
+              <h1>{settings?.competition_name}</h1>
+              <p>
+                <b>End </b>
+                <Moment date={settings.end_date} format="MM/DD/YYYY, hh:mm:ss A" />
+              </p>
+            </div>
 
-          <div className="countdown">
-            <div className="progress_bar" style={{ width: calcProgress() }} />
-          </div>
+            <div className="countdown">
+              <div className="progress_bar" style={{ width: calcProgress() }} />
+            </div>
 
-          <div className="lower">
-            <p>
-              <b>Time elapsed </b>
-              {settings.end_date > time ?
-                <Moment format="H:mm:ss" date={settings.start_date} durationFromNow />
-                : <Moment format="H:mm:ss" duration={settings.start_date} date={settings.end_date} />}
-            </p>
-            <p>
-              <b>Time remaining </b>
-              {settings.end_date > time ?
-                <Moment format="H:mm:ss" duration={time} date={settings.end_date} />
-                : "Finished"}
-            </p>
-          </div>
-        </>
+            <div className="lower">
+              <p>
+                <b>Time elapsed </b>
+                {settings.end_date > time ?
+                  <Moment format="H:mm:ss" date={settings.start_date} durationFromNow />
+                  : <Moment format="H:mm:ss" duration={settings.start_date} date={settings.end_date} />}
+              </p>
+              <p>
+                <b>Time remaining </b>
+                {settings.end_date > time ?
+                  <Moment format="H:mm:ss" duration={time} date={settings.end_date} />
+                  : "Finished"}
+              </p>
+            </div>
+          </>
       }
     </Block>
   );
