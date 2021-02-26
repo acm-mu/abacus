@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Countdown, Block } from "../components";
 import { Table, Label, Loader } from 'semantic-ui-react'
 import { TeamType } from '../types'
@@ -43,6 +43,10 @@ const Home = (): JSX.Element => {
   }
 return (
   <><Countdown />
+    <Block size='xs-12'>
+      <h1>Welcome to Abacus</h1>
+      <p>Abacus is a remote code execution application similar to AlgoExpert. It is developed by students at Marquette University.</p>
+    </Block>
     <Block size='xs-12'>
       <h1>Teams</h1>
       <p>Take a look at our teams this year! Don&apos;t see your team? <a href="mailto:acm-registration@mscs.mu.edu">Let us know!</a></p>
