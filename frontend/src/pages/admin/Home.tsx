@@ -4,7 +4,6 @@ import { LineChart, PieChart } from '@toast-ui/react-chart'
 import { Block } from '../../components'
 import { SubmissionType, ProblemType } from '../../types'
 import config from '../../environment'
-import { Loader } from 'semantic-ui-react'
 
 const Home = (): JSX.Element => {
   const [submissions, setSubmissions] = useState<SubmissionType[]>()
@@ -166,27 +165,27 @@ const Home = (): JSX.Element => {
       <Block size='xs-12'>
         <h1>Admin Dashboard</h1>
       </Block>
-        
-          <Block size='xs-6'>
-            <h2>Submission Timeline</h2>
-            {submissions?.length ? 
-            <LineChart
-              data={timelineData}
-              options={timelineOptions}
-            />
-            : <p>There are not any submissions yet!</p> }
-          </Block>
 
-          <Block size='xs-6'>
-            <h2>Submission Breakdown</h2>
-            {submissions?.length ?
-          
-            <PieChart
-              data={breakdownData}
-              options={breakdownOptions}
-            />
-            : <p>There are not any submissions yet!</p> }
-          </Block>
+      <Block size='xs-6'>
+        <h2>Submission Timeline</h2>
+        {submissions?.length ?
+          <LineChart
+            data={timelineData}
+            options={timelineOptions}
+          />
+          : <p>There are not any submissions yet!</p>}
+      </Block>
+
+      <Block size='xs-6'>
+        <h2>Submission Breakdown</h2>
+        {submissions?.length ?
+
+          <PieChart
+            data={breakdownData}
+            options={breakdownOptions}
+          />
+          : <p>There are not any submissions yet!</p>}
+      </Block>
     </>
   )
 }
