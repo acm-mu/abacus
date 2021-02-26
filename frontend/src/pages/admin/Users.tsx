@@ -11,7 +11,7 @@ interface UserItem extends UserType {
   checked: boolean
 }
 
-type SortKey = 'user_id' | 'display_name' | 'username' | 'role' | 'division'
+type SortKey = 'uid' | 'display_name' | 'username' | 'role' | 'division'
 
 const Users = (): JSX.Element => {
   const { user } = useContext(UserContext)
@@ -49,7 +49,7 @@ const Users = (): JSX.Element => {
   }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUsers(users.map(user => user.user_id == event.target.id ? { ...user, checked: !user.checked } : user))
+    setUsers(users.map(user => user.uid == event.target.id ? { ...user, checked: !user.checked } : user))
   }
 
   const checkAll = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,12 +62,12 @@ const Users = (): JSX.Element => {
   }
 
   const deleteSelected = () => {
-    if (users.filter(u => u.checked && u.user_id == user?.user_id).length > 0) {
+    if (users.filter(u => u.checked && u.uid == user?.uid).length > 0) {
       alert("Cannot delete currently logged in user!")
       return
     }
 
-    const usersToDelete = users.filter(user => user.checked).map(user => user.user_id)
+    const usersToDelete = users.filter(user => user.checked).map(user => user.uid)
     fetch(`${config.API_URL}/users`, {
       method: 'DELETE',
       headers: {
@@ -76,7 +76,7 @@ const Users = (): JSX.Element => {
       body: JSON.stringify({ user_id: usersToDelete })
     }).then(res => {
       if (res.status == 200) {
-        setUsers(users.filter(user => !usersToDelete.includes(user.user_id)))
+        setUsers(users.filter(user => !usersToDelete.includes(user.uid)))
       }
     })
   }
@@ -107,15 +107,15 @@ const Users = (): JSX.Element => {
               {users.sort(
                 (u1: UserType, u2: UserType) => u1[sortConfig.key].localeCompare(u2[sortConfig.key]) * (sortConfig.direction == 'ascending' ? 1 : -1))
                 .map((user: UserItem, index: number) =>
-                  <Table.Row key={index} uuid={`${user.user_id}`}>
+                  <Table.Row key={index} uuid={`${user.uid}`}>
                     <Table.Cell>
                       <input
                         type='checkbox'
                         checked={user.checked}
-                        id={user.user_id}
+                        id={user.uid}
                         onChange={handleChange} />
                     </Table.Cell>
-                    <Table.Cell><Link to={`/admin/users/${user.user_id}`}>{user.username}</Link></Table.Cell>
+                    <Table.Cell><Link to={`/admin/users/${user.uid}`}>{user.username}</Link></Table.Cell>
                     <Table.Cell>{user.role}</Table.Cell>
                     <Table.Cell>{user.division}</Table.Cell>
                     <Table.Cell>{user.display_name} {user.school && <Label style={{ float: 'right' }} content={user.school} />}</Table.Cell>

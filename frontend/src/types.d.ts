@@ -25,7 +25,7 @@ type SubmissionType = {
   source: string;
   status: string;
   sub_no: number;
-  submission_id: string;
+  sid: string;
   team: UserType;
   team_id: string;
   tests: TestType[];
@@ -39,10 +39,10 @@ type ProblemScoreType = {
 }
 
 type ProblemType = {
-  problem_id: string;
+  pid: string;
   id: string;
   division: string;
-  problem_name: string;
+  name: string;
   description: string;
   cpu_time_limit: number;
   memory_limit: number;
@@ -51,7 +51,7 @@ type ProblemType = {
 }
 
 type UserType = {
-  user_id: string;
+  uid: string;
   role: string;
   username: string;
   password: string;
@@ -63,7 +63,7 @@ type UserType = {
 }
 
 type StandingsUser = {
-  user_id: string;
+  uid: string;
   role: string;
   username: string;
   display_name: string;

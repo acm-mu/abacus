@@ -9,7 +9,7 @@ import config from '../../environment'
 interface SubmissionItem extends SubmissionType {
   checked: boolean
 }
-type SortKey = 'date' | 'submission_id' | 'sub_no' | 'language' | 'status' | 'runtime' | 'date' | 'score'
+type SortKey = 'date' | 'sid' | 'sub_no' | 'language' | 'status' | 'runtime' | 'date' | 'score'
 
 const Submissions = (): JSX.Element => {
   const [isLoading, setLoading] = useState<boolean>(true)
@@ -43,7 +43,7 @@ const Submissions = (): JSX.Element => {
   }, [isMounted])
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSubmissions(submissions.map(submission => submission.submission_id == event.target.id ? { ...submission, checked: !submission.checked } : submission))
+    setSubmissions(submissions.map(submission => submission.sid == event.target.id ? { ...submission, checked: !submission.checked } : submission))
   }
 
   const checkAll = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,7 +51,7 @@ const Submissions = (): JSX.Element => {
   }
 
   const deleteSelected = () => {
-    const submissionsToDelete = submissions.filter(submission => submission.checked).map(submission => submission.submission_id)
+    const submissionsToDelete = submissions.filter(submission => submission.checked).map(submission => submission.sid)
     fetch(`${config.API_URL}/submissions`, {
       method: 'DELETE',
       headers: {
@@ -60,7 +60,7 @@ const Submissions = (): JSX.Element => {
       body: JSON.stringify({ submission_id: submissionsToDelete })
     }).then(res => {
       if (res.status == 200) {
-        setSubmissions(submissions.filter(submission => !submissionsToDelete.includes(submission.submission_id)))
+        setSubmissions(submissions.filter(submission => !submissionsToDelete.includes(submission.sid)))
       }
     })
   }
@@ -79,7 +79,7 @@ const Submissions = (): JSX.Element => {
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell collapsing><input type='checkbox' onChange={checkAll} /></Table.HeaderCell>
-                <Table.HeaderCell className='sortable' onClick={() => sort('submission_id')}>Submission ID</Table.HeaderCell>
+                <Table.HeaderCell className='sortable' onClick={() => sort('sid')}>Submission ID</Table.HeaderCell>
                 <Table.HeaderCell>Problem</Table.HeaderCell>
                 <Table.HeaderCell>Team</Table.HeaderCell>
                 <Table.HeaderCell className='sortable' onClick={() => sort('sub_no')}>Submission #</Table.HeaderCell>
@@ -94,18 +94,18 @@ const Submissions = (): JSX.Element => {
               {submissions.length ? (submissions.sort(
                 (s1: SubmissionType, s2: SubmissionType) => `${s1[sortConfig.key]}`.localeCompare(`${s2[sortConfig.key]}`) * (sortConfig.direction == 'ascending' ? 1 : -1)
               ).map((submission: SubmissionItem) =>
-                <Table.Row key={submission.submission_id}>
+                <Table.Row key={submission.sid}>
                   <Table.Cell>
                     <input
                       type='checkbox'
                       checked={submission.checked}
-                      id={submission.submission_id}
+                      id={submission.sid}
                       onChange={handleChange} />
                   </Table.Cell>
                   <Table.Cell>
-                    <Link to={`/admin/submissions/${submission.submission_id}`}>{submission.submission_id.substring(0, 7)}</Link></Table.Cell>
-                  <Table.Cell><Link to={`/admin/problems/${submission.problem_id}`}>{submission.problem.problem_name} </Link></Table.Cell>
-                  <Table.Cell><Link to={`/admin/users/${submission.team.user_id}`}>{submission.team.display_name}</Link></Table.Cell>
+                    <Link to={`/admin/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link></Table.Cell>
+                  <Table.Cell><Link to={`/admin/problems/${submission.problem_id}`}>{submission.problem.name} </Link></Table.Cell>
+                  <Table.Cell><Link to={`/admin/users/${submission.team.uid}`}>{submission.team.display_name}</Link></Table.Cell>
                   <Table.Cell>{submission.sub_no + 1}</Table.Cell>
                   <Table.Cell>{submission.language}</Table.Cell>
                   <Table.Cell><span className={`status icn ${submission.status}`} /></Table.Cell>

@@ -22,7 +22,7 @@ const Problem = (): JSX.Element => {
           const problem = Object.values(res)[0] as ProblemType
           setProblem(problem);
           if (user)
-            fetch(`${config.API_URL}/submissions?team_id=${user?.user_id}&problem_id=${problem.problem_id}`)
+            fetch(`${config.API_URL}/submissions?team_id=${user?.uid}&problem_id=${problem.pid}`)
               .then((res => res.json()))
               .then(res => setSubmissions(Object.values(res)))
         }
@@ -37,7 +37,7 @@ const Problem = (): JSX.Element => {
         <h1>
           Problem {problem?.id}
           <br />
-          {problem?.problem_name}
+          {problem?.name}
         </h1>
         <hr />
         <MDEditor.Markdown source={problem?.description || ''} />
@@ -68,7 +68,7 @@ const Problem = (): JSX.Element => {
         <p><b>Problem ID:</b> {problem?.id}</p>
         <p><b>CPU Time limit:</b> {problem?.cpu_time_limit}</p>
         <p><b>Memory limit:</b> {problem?.memory_limit}</p>
-        <p><b>Download:</b> <a href={`${config.API_URL}/sample_files?problem_id=${problem?.problem_id}`}>Sample data files</a></p>
+        <p><b>Download:</b> <a href={`${config.API_URL}/sample_files?problem_id=${problem?.pid}`}>Sample data files</a></p>
       </Block>
     </>
   );

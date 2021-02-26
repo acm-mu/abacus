@@ -22,10 +22,10 @@ const Submission = (): JSX.Element => {
           <Table.Body>
             <Table.Row>
               <Table.Cell rowspan={2}><Link
-                to={`/gold/submissions/${submission?.submission_id}`}>{submission?.submission_id.substring(0, 7)}</Link>
+                to={`/gold/submissions/${submission?.sid}`}>{submission?.sid.substring(0, 7)}</Link>
               </Table.Cell>
               <Table.Cell fromnow="{{ submission.date*1000 }}"></Table.Cell>
-              <Table.Cell><Link to={`/gold/problems/${submission?.problem_id}`}>{submission?.problem.problem_name}</Link></Table.Cell>
+              <Table.Cell><Link to={`/gold/problems/${submission?.problem_id}`}>{submission?.problem.name}</Link></Table.Cell>
               <Table.Cell className={`icn ${submission?.status}`}></Table.Cell>
             </Table.Row>
           </Table.Body>

@@ -46,7 +46,7 @@ const Problems = (): JSX.Element => {
   }, [isMounted])
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setProblems(problems.map(problem => problem.problem_id == event.target.id ? { ...problem, checked: !problem.checked } : problem))
+    setProblems(problems.map(problem => problem.pid == event.target.id ? { ...problem, checked: !problem.checked } : problem))
   }
 
   const checkAll = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,7 +54,7 @@ const Problems = (): JSX.Element => {
   }
 
   const deleteSelected = () => {
-    const problemsToDelete = problems.filter(problem => problem.checked).map(problem => problem.problem_id)
+    const problemsToDelete = problems.filter(problem => problem.checked).map(problem => problem.pid)
     fetch(`${config.API_URL}/problems`, {
       method: 'DELETE',
       headers: {
@@ -63,7 +63,7 @@ const Problems = (): JSX.Element => {
       body: JSON.stringify({ problem_id: problemsToDelete })
     }).then(res => {
       if (res.status == 200) {
-        setProblems(problems.filter(problem => !problemsToDelete.includes(problem.problem_id)))
+        setProblems(problems.filter(problem => !problemsToDelete.includes(problem.pid)))
       }
     })
   }
@@ -97,16 +97,16 @@ const Problems = (): JSX.Element => {
                   <input
                     type='checkbox'
                     checked={problem.checked}
-                    id={problem.problem_id}
+                    id={problem.pid}
                     onChange={handleChange} />
                 </Table.Cell>
-                <Table.Cell><Link to={`/admin/problems/${problem.problem_id}`}>{problem.id}</Link></Table.Cell>
-                <Table.Cell><Link to={`/admin/problems/${problem.problem_id}`}>{problem.problem_name}</Link></Table.Cell>
+                <Table.Cell><Link to={`/admin/problems/${problem.pid}`}>{problem.id}</Link></Table.Cell>
+                <Table.Cell><Link to={`/admin/problems/${problem.pid}`}>{problem.name}</Link></Table.Cell>
                 <Table.Cell>{problem.tests.length}</Table.Cell>
                 {submissions &&
                   <>
-                    <Table.Cell>{problem.problem_id in submissions ? submissions[problem.problem_id].filter((p) => p.score > 0).length : 0}</Table.Cell>
-                    <Table.Cell>{problem.problem_id in submissions ? submissions[problem.problem_id].length : 0}</Table.Cell>
+                    <Table.Cell>{problem.pid in submissions ? submissions[problem.pid].filter((p) => p.score > 0).length : 0}</Table.Cell>
+                    <Table.Cell>{problem.pid in submissions ? submissions[problem.pid].length : 0}</Table.Cell>
                   </>
                 }
               </Table.Row>

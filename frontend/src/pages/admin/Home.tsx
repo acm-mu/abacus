@@ -32,7 +32,7 @@ const Home = (): JSX.Element => {
       .then(data => {
         if (isMounted) {
           const problems: ProblemType[] = Object.values(data)
-          problems.sort((a: ProblemType, b: ProblemType) => a.id.localeCompare(b.id))
+          problems.sort((a: ProblemType, b: ProblemType) => a.pid.localeCompare(b.pid))
           setProblems(Object.values(data))
         }
       })
@@ -42,9 +42,9 @@ const Home = (): JSX.Element => {
   const statuses: { [key: string]: { name: string, data: number } } = {};
 
   const timeSubmissions = Object.assign({}, ...problems.map((problem: ProblemType) => ({
-    [problem.id]: {
+    [problem.pid]: {
       data: [0, 0, 0, 0, 0, 0],
-      name: problem.problem_name
+      name: problem.name
     }
   })));
 

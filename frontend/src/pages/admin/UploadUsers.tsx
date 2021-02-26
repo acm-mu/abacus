@@ -46,7 +46,7 @@ const UploadUsers = (): JSX.Element => {
   }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNewUsers(newUsers.map(user => user.user_id == event.target.id ? { ...user, checked: !user.checked } : user))
+    setNewUsers(newUsers.map(user => user.uid == event.target.id ? { ...user, checked: !user.checked } : user))
   }
 
   const checkAll = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -100,19 +100,19 @@ const UploadUsers = (): JSX.Element => {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {newUsers.filter(user => filterUser(user, users[user.user_id]))
+            {newUsers.filter(user => filterUser(user, users[user.uid]))
               .map((user: UserItem, index: number) => (
                 <Table.Row key={index}>
                   <Table.HeaderCell collapsing>
                     <input
                       type="checkbox"
                       checked={user.checked}
-                      id={user.user_id}
+                      id={user.uid}
                       onChange={handleChange} />
                   </Table.HeaderCell>
                   <Table.Cell>
-                    {user.user_id}
-                    {Object.keys(users).includes(user.user_id) ?
+                    {user.uid}
+                    {Object.keys(users).includes(user.uid) ?
                       <Label color='blue' style={{ float: 'right' }}>Update User</Label> :
                       <Label color='green' style={{ float: 'right' }}>Brand New</Label>}
                   </Table.Cell>

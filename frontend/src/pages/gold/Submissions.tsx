@@ -25,8 +25,8 @@ const Submissions = (): JSX.Element => {
           {submissions ?
             (submissions.map((submission: SubmissionType, index: number) => (
               <Table.Row key={index}>
-                <Table.Cell><Link to={`/gold/submissions/${submission.submission_id}`}>{submission.submission_id.substring(0, 7)}</Link></Table.Cell>
-                <Table.Cell><Link to={`/gold/problems/${submission.problem_id}`}>{submission.problem.problem_name} </Link></Table.Cell>
+                <Table.Cell><Link to={`/gold/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link></Table.Cell>
+                <Table.Cell><Link to={`/gold/problems/${submission.problem_id}`}>{submission.problem.name} </Link></Table.Cell>
                 <Table.Cell>{submission.sub_no + 1}</Table.Cell>
                 <Table.Cell className={`icn ${submission.status}`}></Table.Cell>
                 <Table.Cell><Moment fromNow date={submission.date * 1000} /></Table.Cell>

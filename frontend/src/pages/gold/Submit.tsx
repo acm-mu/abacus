@@ -25,7 +25,7 @@ const Submit = (): JSX.Element => {
           <Form.Group widths='equal'>
             <Form.Field label='Problem' control={Select} />
             {problems.map((problem) => {
-              <option value={problem.problem_id}>{problem.problem_name}</option>
+              <option value={problem.pid}>{problem.name}</option>
             })}
             <Form.Field label='Scratch URL' control={Input}
               placeholder="https://scratch.mit.edu/projects/<project_id>" value={`https://scratch.mit.edu/projects/{project_id}`} />
