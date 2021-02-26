@@ -5,6 +5,7 @@ import { CompetitionSettings } from "../types";
 import config from '../environment'
 import { Block } from "./";
 import "./Countdown.scss";
+import FlipClock from "./FlipClock";
 
 const Countdown = (): JSX.Element => {
   const [settings, setSettings] = useState<CompetitionSettings>()
@@ -42,6 +43,13 @@ const Countdown = (): JSX.Element => {
       {isLoading || !settings ?
         <Loader active inline='centered' content="Loading" /> :
         <>
+        {time < settings.start_date ? 
+        <>
+        <h1>{settings?.competition_name}</h1>
+        <FlipClock count_to={settings.start_date} />
+        </> 
+        :
+        <>
           <div className="upper">
             <p>
               <b>Start</b> <Moment date={settings.start_date} format="MM/DD/YYYY, hh:mm:ss A" />
@@ -76,7 +84,7 @@ const Countdown = (): JSX.Element => {
             </p>
           </div>
         </>
-      }
+      } </> }
     </Block>
   );
 };
