@@ -166,26 +166,27 @@ const Home = (): JSX.Element => {
       <Block size='xs-12'>
         <h1>Admin Dashboard</h1>
       </Block>
-      {submissions ?
-        <>
+        
           <Block size='xs-6'>
             <h2>Submission Timeline</h2>
+            {submissions?.length ? 
             <LineChart
               data={timelineData}
               options={timelineOptions}
             />
+            : <p>There are not any submissions yet!</p> }
           </Block>
-
-
 
           <Block size='xs-6'>
             <h2>Submission Breakdown</h2>
+            {submissions?.length ?
+          
             <PieChart
               data={breakdownData}
               options={breakdownOptions}
             />
+            : <p>There are not any submissions yet!</p> }
           </Block>
-        </> : <Loader />}
     </>
   )
 }
