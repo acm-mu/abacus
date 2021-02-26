@@ -41,6 +41,23 @@ const Home = (): JSX.Element => {
       })
   }
 
+  let color: string;
+
+  switch(teams.division) {
+    case "blue":
+      color = "blue"
+      break
+    case "gold":
+      color = "yellow"
+      break
+    case "eagle":
+      color = "teal"
+      break
+    default:
+      color = "grey"
+      break
+  }
+
 return (
   <><Countdown />
     <Block size='xs-12'>
@@ -61,7 +78,11 @@ return (
             {teams ? teams.map((team: TeamType) => (
                   <Table.Row key={team.team_name}>
                   <Table.Cell>{team.team_name}</Table.Cell>
-                  <Table.Cell>{team.division}</Table.Cell>
+                  <Table.Cell>
+                    <Label color={team.division}>
+                      {_.capitalize(color)}
+                    </Label>
+                  </Table.Cell>
                   <Table.Cell>{team.school_name}</Table.Cell>
                   <Table.Cell>{team.num_of_students}</Table.Cell>
                 </Table.Row>
