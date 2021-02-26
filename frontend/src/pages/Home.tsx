@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { Countdown, Block } from "../components";
-import { Table, Label } from 'semantic-ui-react'
+import { Table, Label, Loader } from 'semantic-ui-react'
 import { TeamType } from '../types'
 import { capitalize } from '../utils';
 
@@ -22,11 +22,11 @@ const Home = (): JSX.Element => {
       .then(data => {
         if (isMounted) { 
           setTeams(Object.values(data))
+          setLoading(false)
         }
       })
   }
 
-  let color: string
   type LabelColor = "blue" | "yellow" | "teal" | "grey"
   
   const labelColor = (division: string): LabelColor => {
@@ -46,8 +46,8 @@ return (
     <Block size='xs-12'>
       <h1>Teams</h1>
       <p>Take a look at our teams this year! Don&apos;t see your team? <a href="mailto:acm-registration@mscs.mu.edu">Let us know!</a></p>
-      
-          {/* <Loader active inline='centered' content="Loading..." />  */}
+      {isLoading ?
+        <Loader active inline='centered' content="Loading..." /> :
           <Table celled>
             <Table.Header>
               <Table.Row>
@@ -74,7 +74,7 @@ return (
                 ))}
             </Table.Body>
           </Table>
-        
+}
       </Block>
   </>
 
