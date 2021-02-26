@@ -1,29 +1,14 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { Countdown, Block } from "../components";
-import { Table, Button, Popup, Loader, ButtonGroup, Label } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
+import { Table, Label } from 'semantic-ui-react'
 import { TeamType } from '../types'
-import config from '../environment'
-import { UserContext } from '../context/user'
-
-type SortKey = 'division' | 'team_name' | 'registration_date' | 'school_name' | 'num_of_students'
+import { capitalize } from '../utils';
 
 const Home = (): JSX.Element => {
 
   const [isLoading, setLoading] = useState<boolean>(true)
   const [teams, setTeams] = useState<TeamType[]>([])
   const [isMounted, setMounted] = useState<boolean>(false)
-  const [sortConfig, setSortConfig] = useState<{ key: SortKey, direction: 'ascending' | 'descending' }>({
-    key: 'registration_date',
-    direction: 'ascending'
-  })
-
-  const sort = (key: SortKey) => {
-    if (sortConfig.key === key && sortConfig.direction === 'ascending')
-      setSortConfig({ key, direction: 'descending' })
-    else
-      setSortConfig({ key, direction: 'ascending' })
-  }
 
   useEffect(() => {
     setMounted(true)
@@ -45,7 +30,7 @@ const Home = (): JSX.Element => {
   type LabelColor = "blue" | "yellow" | "teal" | "grey"
   
   const labelColor = (division: string): LabelColor => {
-    switch(teams.division) {
+    switch(division) {
       case "blue":
         return "blue";
       case "gold":
@@ -56,7 +41,6 @@ const Home = (): JSX.Element => {
         return "grey";
     }
   }
-
 return (
   <><Countdown />
     <Block size='xs-12'>
@@ -67,25 +51,27 @@ return (
           <Table celled>
             <Table.Header>
               <Table.Row>
-                <Table.HeaderCell className='sortable' onClick={() => sort('team_name')}>Team Name</Table.HeaderCell>
-                <Table.HeaderCell className='sortable' onClick={() => sort('division')}>Division</Table.HeaderCell>
-                <Table.HeaderCell className='sortable' onClick={() => sort('school_name')}>School</Table.HeaderCell>
-                <Table.HeaderCell className='sortable' onClick={() => sort('num_of_students')}># of Students</Table.HeaderCell>
+                <Table.HeaderCell>Team Name</Table.HeaderCell>
+                <Table.HeaderCell>Division</Table.HeaderCell>
+                <Table.HeaderCell>School</Table.HeaderCell>
+                <Table.HeaderCell># of Students</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
-            {teams ? teams.map((team: TeamType) => (
-                  <Table.Row key={team.team_name}>
+            {teams.sort(
+              (t1: TeamType, t2: TeamType) => Date.parse(t2.registration_date) - Date.parse(t1.registration_date))
+              .map((team: TeamType, index: number) => (
+                  <Table.Row key={`${team.team_name}-${index}`}>
                   <Table.Cell>{team.team_name}</Table.Cell>
                   <Table.Cell>
                     <Label color={labelColor(team.division)}>
-                      {_.capitalize(color)}
+                      {capitalize(team.division)}
                     </Label>
                   </Table.Cell>
                   <Table.Cell>{team.school_name}</Table.Cell>
                   <Table.Cell>{team.num_of_students}</Table.Cell>
                 </Table.Row>
-                )) : <></>}
+                ))}
             </Table.Body>
           </Table>
         
