@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import { Countdown, Block } from "../components";
 import { Table, Label, Loader } from 'semantic-ui-react'
-import { TeamType } from '../types'
 import { capitalize } from '../utils';
+
+type TeamType = { 
+  division: string, 
+  team_name: string, 
+  registration_date: string, 
+  school_name: string, 
+  num_of_students: number 
+}
 
 const Home = (): JSX.Element => {
 
