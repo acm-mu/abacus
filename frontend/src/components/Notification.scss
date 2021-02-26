@@ -3,16 +3,14 @@
     right: 1%;
     animation: slide 500ms;
     transition: 200ms linear;
-}
+    .close.icon {
+        cursor: pointer;
+    }
 
-.ui.message.notification .close.icon {
-    cursor: pointer;
+    &.fade {
+        animation: fade 200ms;
+    }
 }
-
-.ui.message.fade {
-    animation: fade 200ms;
-}
-
 @keyframes slide {
     0% {
         right: -100%;

@@ -1,99 +1,114 @@
 /* Icon */
-
-.icn:before {
-    font-family: Icons;
-    font-weight: 900;
-    content: '';
-    margin: 0 2px;
-    width: 23px;
-    height: 23px;
-}
-.result.icn:before {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.status.icn:before {
-    margin: 0 5px;
-}
 .icn {
     display: inline-block;
-}
 
-/* Icons */
+    &:before {
+        font-family: Icons;
+        font-weight: 900;
+        content: '';
+        margin: 0 2px;
+        width: 23px;
+        height: 23px;
+    }
 
-.icn.delete {
-    color: var(--red);
-}
+    &.result:before {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-.icn.pending {
-    color: #555;
-    font-weight: bold;
-}
+    &.status:before {
+        margin: 0 5px;
+    }
 
-.icn.wrong_answer,
-.icn.run_time_error,
-.icn.timeout_error {
-    color: red;
-    font-weight: bold;
-}
+    &.delete {
+        color: var(--red);
 
-.icn.accepted {
-    color: #84cd64;
-    font-weight: bold;
-}
+        &:before {
+            content: '\f1f8';
+        }
+    }
 
-.icn.rejected {
-    color: var(--red);
-    font-weight: bold;
-}
+    &.pending {
+        color: #555555;
+        font-weight: bold;
 
-/* Icons:before */
+        &:before {
+            content: '\f128';
+        }
 
-.icn.delete:before {
-    content: '\f1f8';
-}
+        &.status:after {
+            content: 'Pending';
+        }
+    }
 
-.icn.pending:before {
-    content: '\f128';
-}
+    &.wrong_answer {
+        color: var(--red);
+        font-weight: bold;
 
-.icn.rejected:before {
-    content: '\f00d';
-}
+        *:before {
+            content: '\f00d';
+        }
 
-.icn.accepted:before {
-    content: '\f00c';
-}
+        &.status:after {
+            content: 'Wrong Answer';
+        }
+    }
 
-.icn.wrong_answer:before,
-.icn.run_time_error:before,
-.icn.timeout_error:before {
-    content: '\f00d';
+    &.rejected {
+        color: var(--red);
+        font-weight: bold;
+
+        &:before {
+            content: '\f00d';
+        }
+
+        &.status:after {
+            content: 'Wrong Answer';
+        }
+    }
+
+    &.run_time_error {
+        color: var(--red);
+        font-weight: bold;
+
+        &:before {
+            content: '\f00d';
+        }
+
+        &.status:after {
+            content: 'Run Time Error';
+        }
+    }
+
+    &.timeout_error {
+        color: var(--red);
+        font-weight: bold;
+
+        &:before {
+            content: '\f00d';
+        }
+
+        &.status:after {
+            content: 'Time Limit Expired';
+        }
+    }
+
+    &.accepted {
+        color: #84cd64;
+        font-weight: bold;
+
+        &:before {
+            content: '\f00c';
+        }
+
+        &.status:after {
+            content: 'Accepted';
+        }
+    }
 }
 
 /* Icons:after */
-
-.status.pending:after {
-    content: 'Pending';
-}
-
-.status.wrong_answer:after,
-.status.rejected:after {
-    content: 'Wrong Answer';
-}
-
-.status.run_time_error:after {
-    content: 'Run Time Error';
-}
-
-.status.timeout_error:after {
-    content: 'Time Limit Expired';
-}
-
-.status.accepted:after {
-    content: 'Accepted';
-}
 
 section[tabindex] {
     display: none;

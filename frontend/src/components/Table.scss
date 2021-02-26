@@ -1,21 +1,20 @@
-.ui.table td.team_problem_solve {
-    padding: 0;
-    color: #555;
-    text-align: center;
-    font-family: 'Open Sans';
-}
-
-.ui.table td.team_problem_solve.solved {
-    background: var(--light-green) no-repeat center/32px url('/assets/standings/check.svg');
-}
-
-.ui.table td.team_problem_solve.failed {
-    background: var(--light-red) no-repeat center/32px url('/assets/standings/cross.svg');
-    color: #fff;
-}
-
-table {
+.ui.table {
     border: none !important;
+
+    td.team_problem_solve {
+        padding: 0;
+        color: #555;
+        text-align: center;
+        font-family: 'Open Sans';
+    }
+    td.team_problem_solve.solved {
+        background: var(--light-green) no-repeat center/32px url('/assets/standings/check.svg');
+    }
+
+    td.team_problem_solve.failed {
+        background: var(--light-red) no-repeat center/32px url('/assets/standings/cross.svg');
+        color: #fff;
+    }
 }
 
 td,
