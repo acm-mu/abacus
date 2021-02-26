@@ -41,21 +41,20 @@ const Home = (): JSX.Element => {
       })
   }
 
-  let color: string;
-
-  switch(teams.division) {
-    case "blue":
-      color = "blue"
-      break
-    case "gold":
-      color = "yellow"
-      break
-    case "eagle":
-      color = "teal"
-      break
-    default:
-      color = "grey"
-      break
+  let color: string
+  type LabelColor = "blue" | "yellow" | "teal" | "grey"
+  
+  const labelColor = (division: string): LabelColor => {
+    switch(teams.division) {
+      case "blue":
+        return "blue";
+      case "gold":
+        return "yellow";
+      case "eagle":
+        return "teal";
+      default:
+        return "grey";
+    }
   }
 
 return (
@@ -79,7 +78,7 @@ return (
                   <Table.Row key={team.team_name}>
                   <Table.Cell>{team.team_name}</Table.Cell>
                   <Table.Cell>
-                    <Label color={team.division}>
+                    <Label color={labelColor(team.division)}>
                       {_.capitalize(color)}
                     </Label>
                   </Table.Cell>
