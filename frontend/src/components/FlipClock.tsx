@@ -41,15 +41,15 @@ const FlipClock = (props: { count_to: Date }): JSX.Element => {
         return (
           label !== 'Total' ?
             <React.Fragment key={value} >
-              <span onAnimationStart={() => setFlip('flip')} onAnimationEnd={() => setFlip('')} className={`flip-clock__piece ${flip} `}>
-                <b className="flip-clock__card card">
-                  <b className="card__top">{val}</b>
-                  <b className="card__bottom" data-value={val} />
-                  <b className="card__back" data-value={val}>
-                    <b className="card__bottom" data-value={val} />
+              <span onAnimationStart={() => setFlip('flip')} onAnimationEnd={() => setFlip('')} className={`piece ${flip} `}>
+                <b className="card">
+                  <b className="top">{val}</b>
+                  <b className="bottom" data-value={val} />
+                  <b className="back" data-value={val}>
+                    <b className="bottom" data-value={val} />
                   </b>
                 </b>
-                <span className="flip-clock__slot">{label}</span>
+                <span className="slot">{label}</span>
               </span>
             </React.Fragment>
             : <></>

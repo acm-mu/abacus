@@ -7,35 +7,40 @@ import { Block } from "./";
 import "./Countdown.scss";
 
 const Countdown = (): JSX.Element => {
+  const [isMounted, setMounted] = useState(true)
+  const [isLoading, setLoading] = useState(true)
   const [settings, setSettings] = useState<CompetitionSettings>()
   const [time, setTime] = useState<Date>(new Date())
-  const [isLoading, setLoading] = useState<boolean>(true)
-  const [isMounted, setMounted] = useState<boolean>(false)
 
-  const diff = (date1: Date, date2: Date) => date1.getTime() - date2.getTime();
+  const fetchData = async () => {
+    const response = await fetch(`${config.API_URL}/contest`)
+    const data = await response.json()
+    if (isMounted) {
+      setSettings({
+        ...data,
+        start_date: new Date(parseInt(data.start_date) * 1000),
+        end_date: new Date(parseInt(data.end_date) * 1000)
+      })
+      setLoading(false)
+    }
+  }
+
+  const calcProgress = (): string => {
+    if (!settings) return "0"
+    const elapsedTime = time.getTime() - settings.start_date.getTime()
+    const totalTime = settings?.end_date.getTime() - settings?.start_date.getTime()
+    return `${Math.min(elapsedTime / totalTime, 1) * 100}%`
+  }
+
+  const updateTimeInterval = setInterval(() => setTime(new Date()), 200)
 
   useEffect(() => {
-    setMounted(true)
-    fetch(`${config.API_URL}/contest`)
-      .then((res) => res.json())
-      .then((res) => {
-        if (isMounted) {
-          setSettings({
-            ...res,
-            start_date: new Date(parseInt(res.start_date) * 1000),
-            end_date: new Date(parseInt(res.end_date) * 1000)
-          })
-          setLoading(false)
-        }
-      });
-    return () => { setMounted(false) }
-  }, [isMounted])
-
-  setInterval(() => {
-    if (isMounted) {
-      setTime(new Date());
+    fetchData()
+    return () => {
+      setMounted(false)
+      clearInterval(updateTimeInterval)
     }
-  }, 200);
+  }, [])
 
   return (
     <Block size='xs-12'>
@@ -44,21 +49,18 @@ const Countdown = (): JSX.Element => {
         <>
           <div className="upper">
             <p>
-              <b>Start</b> <Moment date={settings.start_date} format="MM/DD/YYYY, hh:mm:ss A" />
+              <b>Start </b>
+              <Moment date={settings.start_date} format="MM/DD/YYYY, hh:mm:ss A" />
             </p>
             <h1>{settings?.competition_name}</h1>
             <p>
-              <b>End</b> <Moment date={settings.end_date} format="MM/DD/YYYY, hh:mm:ss A" />
+              <b>End </b>
+              <Moment date={settings.end_date} format="MM/DD/YYYY, hh:mm:ss A" />
             </p>
           </div>
 
           <div className="countdown">
-            <div
-              className="progress_bar"
-              style={{
-                width: `${Math.min(diff(time, settings?.start_date) / diff(settings.end_date, settings?.start_date), 1) * 100}%`
-              }}
-            />
+            <div className="progress_bar" style={{ width: calcProgress() }} />
           </div>
 
           <div className="lower">

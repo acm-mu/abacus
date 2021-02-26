@@ -9,11 +9,11 @@ type FileDialogProps = {
 
 const FileDialog = (props: FileDialogProps): JSX.Element => {
   return (
-    <div id="file_dialog">
+    <div className="file_dialog">
       <div className="message">
         {props.control(props.file)}
       </div>
-      <input id="sub_files_input" type="file" name="source" onChange={props.onChange} />
+      <input type="file" name="file" onChange={props.onChange} />
     </div>
   )
 }
