@@ -22,7 +22,8 @@ const Home = (): JSX.Element => {
 
     response = await fetch(`${config.API_URL}/problems?division=blue`)
     let problems = await response.json()
-    problems = problems.sort((a: ProblemType, b: ProblemType) => a.pid.localeCompare(b.pid))
+    if (problems.length)
+      problems = problems.sort((a: ProblemType, b: ProblemType) => a.pid.localeCompare(b.pid))
 
     if (isMounted) {
       setSubmissions(Object.values(submissions))
@@ -32,7 +33,8 @@ const Home = (): JSX.Element => {
   }
 
   useEffect(() => {
-    const updateInterval = setInterval(fetchData, 0, 30 * 1000);
+    fetchData()
+    const updateInterval = setInterval(fetchData, 5 * 60 * 1000);
     return () => {
       setMounted(false)
       clearInterval(updateInterval)
