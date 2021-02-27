@@ -27,7 +27,7 @@ const Problems = (): JSX.Element => {
         }
       })
 
-    fetch(`${config.API_URL}/submissions?division=blue&team_id=${user?.user_id}`)
+    fetch(`${config.API_URL}/submissions?division=blue&team_id=${user?.uid}`)
       .then(res => res.json())
       .then(data => {
         if (isMounted) {
@@ -45,14 +45,14 @@ const Problems = (): JSX.Element => {
   }, [isMounted]);
 
   const problemInfo = (problem: ProblemType) => {
-    if (submissions && problem.problem_id in submissions && submissions[problem.problem_id].length) {
-      const subs = submissions[problem.problem_id].sort((s1, s2) => s1.date - s2.date)
+    if (submissions && problem.pid in submissions && submissions[problem.pid].length) {
+      const subs = submissions[problem.pid].sort((s1, s2) => s1.date - s2.date)
       const lastSub = subs[subs.length - 1]
       return (
         <>
           <Table.Cell>{subs.length}</Table.Cell>
           <Table.Cell>
-            <Link to={`/blue/submissions/${lastSub.submission_id}`}>{lastSub.submission_id.substring(0, 7)}</Link>
+            <Link to={`/blue/submissions/${lastSub.sid}`}>{lastSub.sid.substring(0, 7)}</Link>
             {(() => {
               switch (lastSub.status) {
                 case 'accepted':
@@ -91,7 +91,7 @@ const Problems = (): JSX.Element => {
                   <Table.Row key={index}>
                     <Table.HeaderCell collapsing textAlign='center'>{problem.id}</Table.HeaderCell>
                     <Table.Cell>
-                      <Link to={`/blue/problems/${problem.id}`}>{problem.problem_name}</Link>
+                      <Link to={`/blue/problems/${problem.id}`}>{problem.name}</Link>
                     </Table.Cell>
                     {problemInfo(problem)}
                   </Table.Row>

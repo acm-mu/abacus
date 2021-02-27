@@ -19,7 +19,7 @@ const Submissions = (): JSX.Element => {
   useEffect(() => {
     setMounted(true)
     if (isAuthenticated) {
-      const filter = (user && !['judge', 'admin'].includes(user.role)) ? `&team_id=${user.user_id}` : ''
+      const filter = (user && !['judge', 'admin'].includes(user.role)) ? `&team_id=${user.uid}` : ''
 
       fetch(`${config.API_URL}/submissions?division=blue${filter}`)
         .then(res => res.json())
@@ -55,13 +55,13 @@ const Submissions = (): JSX.Element => {
                   {submissions?.length ? (submissions.sort((s1, s2) => s2.date - s1.date).map((submission: SubmissionType, index: number) => (
                     <Table.Row key={index}>
                       <Table.Cell>
-                        <Link to={`/blue/submissions/${submission.submission_id}`}>
-                          {submission.submission_id.substring(0, 7)}
+                        <Link to={`/blue/submissions/${submission.sid}`}>
+                          {submission.sid.substring(0, 7)}
                         </Link>
                       </Table.Cell>
                       <Table.Cell>
                         <Link to={`/blue/problems/${submission.problem.id}`}>
-                          {submission.problem.problem_name}
+                          {submission.problem.name}
                         </Link>
                       </Table.Cell>
                       <Table.Cell> {submission.sub_no + 1} </Table.Cell>

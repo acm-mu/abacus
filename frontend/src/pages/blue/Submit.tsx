@@ -34,7 +34,7 @@ const Submit = (): JSX.Element => {
         if (res) {
           const problem = Object.values(res)[0] as ProblemType
           setProblem(problem)
-          fetch(`${config.API_URL}/submissions?team_id=${user?.user_id}&problem_id=${problem.problem_id}`)
+          fetch(`${config.API_URL}/submissions?team_id=${user?.uid}&problem_id=${problem.pid}`)
             .then((res) => res.json())
             .then(res => {
               if (res) setSubmissions(Object.values(res))
@@ -46,10 +46,10 @@ const Submit = (): JSX.Element => {
   const handleSubmit = async () => {
     if (!(language && file && problem && user)) return
     const formData = new FormData()
-    formData.set('problem_id', problem.problem_id)
+    formData.set('problem_id', problem.pid)
     formData.set('source', file, file.name)
     formData.set('language', language.key)
-    formData.set('team_id', user.user_id)
+    formData.set('team_id', user.uid)
     formData.set('division', user.division)
 
     const res = await fetch(`${config.API_URL}/submissions`, {
@@ -64,7 +64,7 @@ const Submit = (): JSX.Element => {
       return
     }
 
-    history.push(`/blue/submissions/${body.submission_id}`)
+    history.push(`/blue/submissions/${body.sid}`)
   }
 
   const uploadChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -94,7 +94,7 @@ const Submit = (): JSX.Element => {
       <Countdown />
       {!submissions || submissions?.filter((e) => e.status == "accepted").length == 0 ?
         <Block size='xs-12'>
-          <h1>Submit a solution to {problem?.problem_name} </h1>
+          <h1>Submit a solution to {problem?.name} </h1>
 
           <Form onSubmit={handleSubmit}>
             <FileDialog file={file} onChange={uploadChange} control={(file?: File) => (
@@ -119,7 +119,7 @@ const Submit = (): JSX.Element => {
         </Block>
         : <Block size='xs-12' transparent>
           <h2>You Already Solved This Problem!</h2>
-          <Link to={`/blue/submissions/${submissions.filter((e) => e.status == "accepted")[0].submission_id}`}>Go to your solved submission</Link>
+          <Link to={`/blue/submissions/${submissions.filter((e) => e.status == "accepted")[0].sid}`}>Go to your solved submission</Link>
         </Block>}
     </>
   )

@@ -89,11 +89,11 @@ const Submission = (): JSX.Element => {
                 <Table.Body>
                   <Table.Row>
                     <Table.Cell rowSpan={2}>
-                      <Link to={`/admin/submissions/${submission.submission_id}`}>{submission.submission_id.substring(0, 7)}</Link>
+                      <Link to={`/admin/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link>
                     </Table.Cell>
                     <Table.Cell>{submission.team.display_name}</Table.Cell>
                     <Table.Cell><Moment fromNow date={submission?.date * 1000} /></Table.Cell>
-                    <Table.Cell><Link to={`/admin/problems/${submission.problem_id}`}>{submission.problem.problem_name}</Link></Table.Cell>
+                    <Table.Cell><Link to={`/admin/problems/${submission.problem_id}`}>{submission.problem.name}</Link></Table.Cell>
                     <Table.Cell><span className={`icn status ${submission.status}`} /></Table.Cell>
                     <Table.Cell>{Math.floor(submission.runtime)}</Table.Cell>
                     <Table.Cell>{submission.score}</Table.Cell>

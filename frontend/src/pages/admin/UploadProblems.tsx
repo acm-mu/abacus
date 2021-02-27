@@ -50,7 +50,7 @@ const UploadProblems = (): JSX.Element => {
   }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNewProblems(newProblems.map(problem => problem.problem_id == event.target.id ? { ...problem, checked: !problem.checked } : problem))
+    setNewProblems(newProblems.map(problem => problem.pid == event.target.id ? { ...problem, checked: !problem.checked } : problem))
   }
 
   const checkAll = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -102,23 +102,23 @@ const UploadProblems = (): JSX.Element => {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {newProblems.filter(problem => filterProblem(problem, problems[problem.problem_id]))
+            {newProblems.filter(problem => filterProblem(problem, problems[problem.pid]))
               .map((problem: ProblemItem, index: number) => (
                 <Table.Row key={index}>
                   <Table.HeaderCell collapsing>
                     <input
                       type="checkbox"
                       checked={problem.checked}
-                      id={problem.problem_id}
+                      id={problem.pid}
                       onChange={handleChange} />
                   </Table.HeaderCell>
                   <Table.Cell>
-                    {problem.problem_id}
-                    {Object.keys(problems).includes(problem.problem_id) ?
+                    {problem.pid}
+                    {Object.keys(problems).includes(problem.pid) ?
                       <Label color='blue' style={{ float: 'right' }}>Update User</Label> :
                       <Label color='green' style={{ float: 'right' }}>Brand New</Label>}
                   </Table.Cell>
-                  <Table.Cell>{problem.problem_name}</Table.Cell>
+                  <Table.Cell>{problem.name}</Table.Cell>
                 </Table.Row>
               ))}
           </Table.Body>

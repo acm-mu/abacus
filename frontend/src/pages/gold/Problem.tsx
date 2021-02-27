@@ -21,7 +21,7 @@ const Problem = (): JSX.Element => {
           const problem = Object.values(res)[0] as ProblemType
           setProblem(problem)
           if (user)
-            fetch(`${config.API_URL}/submissions?team_id=${user?.user_id}&problem_id=${problem.problem_id}`)
+            fetch(`${config.API_URL}/submissions?team_id=${user?.uid}&problem_id=${problem.pid}`)
               .then(res => res.json())
               .then(res => setSubmissions(Object.values(res)))
         }
@@ -34,7 +34,7 @@ const Problem = (): JSX.Element => {
       <Block size='xs-9'>
         <h1>Problem {problem?.id}
           <br />
-          {problem?.problem_name}
+          {problem?.name}
         </h1>
         <hr />
         <MDEditor.Markdown source={problem?.description || ''} />

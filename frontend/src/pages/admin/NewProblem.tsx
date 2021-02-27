@@ -76,7 +76,7 @@ const NewProblem = (): JSX.Element => {
         <Form>
           <h1>Problem Info</h1>
           <Form.Field label='Problem ID' name='id' control={Input} onChange={handleChange} placeholder="Problem Id" value={problem?.id || ''} />
-          <Form.Field label='Problem Name' name='problem_name' control={Input} onChange={handleChange} placeholder="Problem Name" value={problem?.problem_name || ''} />
+          <Form.Field label='Problem Name' name='problem_name' control={Input} onChange={handleChange} placeholder="Problem Name" value={problem?.name || ''} />
           <Form.Group widths='equal'>
             <Form.Field label='Memory Limit' name='memory_limit' control={Input} onChange={handleChange} value={problem?.memory_limit || -1} />
             <Form.Field label='CPU Time Limit' name='cpu_time_limit' control={Input} onChange={handleChange} value={problem?.cpu_time_limit || -1} />

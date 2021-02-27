@@ -45,7 +45,7 @@ const Problems = (): JSX.Element => {
                   <Table.Row key={index}>
                     <Table.HeaderCell collapsing>{problem.id}</Table.HeaderCell>
                     <Table.Cell>
-                      <Link to={`/gold/problems/${problem.id}`}>{problem.problem_name}</Link>
+                      <Link to={`/gold/problems/${problem.id}`}>{problem.name}</Link>
                     </Table.Cell>
                   </Table.Row>
                 )) : <></>}
