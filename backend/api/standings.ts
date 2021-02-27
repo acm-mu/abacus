@@ -1,17 +1,18 @@
-import { Router, Response } from "express";
-import { ProblemType, SubmissionType } from "types";
+import { Response, Router } from "express";
+import { Problem, Submission } from "../types";
+
 import { contest } from "../contest";
 
 const standings = Router();
 
 standings.get("/standings", async (_, res: Response) => {
   const standings = Object.values(await contest.scanItems('user', { role: 'team', division: 'blue' }) || {})
-  const submissions = Object.values(await contest.scanItems('submission', { division: 'blue' }) || {}) as SubmissionType[]
-  const problems = Object.values(await contest.scanItems('problem', { division: 'blue' }) || {}) as ProblemType[]
+  const submissions = Object.values(await contest.scanItems('submission', { division: 'blue' }) || {}) as Submission[]
+  const problems = Object.values(await contest.scanItems('problem', { division: 'blue' }) || {}) as Problem[]
 
-  const subs: { [key: string]: { [key: string]: SubmissionType[] } } = {}
+  const subs: { [key: string]: { [key: string]: Submission[] } } = {}
 
-  submissions.forEach((submission: SubmissionType) => {
+  submissions.forEach((submission: Submission) => {
     const { team_id, problem_id } = submission;
     if (!(team_id in subs)) subs[team_id] = {}
     if (!(problem_id in subs[team_id])) subs[team_id][problem_id] = []
@@ -25,7 +26,7 @@ standings.get("/standings", async (_, res: Response) => {
     team.problems = {}
     team.time = 0
     team.solved = 0
-    problems.sort((p1, p2) => p1.id.localeCompare(p2.id)).forEach((problem: ProblemType) => {
+    problems.sort((p1, p2) => p1.id.localeCompare(p2.id)).forEach((problem: Problem) => {
       team.problems[problem.id] = {
         solved: false,
         problem_score: 0,
@@ -33,10 +34,10 @@ standings.get("/standings", async (_, res: Response) => {
         submissions: []
       }
       if (team.user_id in subs) {
-        if (problem.problem_id in subs[team.user_id]) {
-          team.problems[problem.id].num_submissions = subs[team.user_id][problem.problem_id].length
-          team.problems[problem.id].submissions = subs[team.user_id][problem.problem_id]
-          subs[team.user_id][problem.problem_id].every((sub: any) => {
+        if (problem.pid in subs[team.user_id]) {
+          team.problems[problem.id].num_submissions = subs[team.user_id][problem.pid].length
+          team.problems[problem.id].submissions = subs[team.user_id][problem.pid]
+          subs[team.user_id][problem.pid].every((sub: any) => {
             if (sub.score > 0) {
               team.problems[problem.id].problem_score = sub.score
               team.problems[problem.id].solved = true

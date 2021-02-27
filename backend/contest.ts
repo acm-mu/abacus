@@ -1,6 +1,6 @@
 import AWS, { AWSError, Lambda, S3 } from "aws-sdk";
 import { AttributeMap, BatchWriteItemOutput, DeleteItemOutput, DocumentClient, GetItemOutput, ItemList, PutItemOutput, ScanInput, ScanOutput, UpdateItemOutput } from "aws-sdk/clients/dynamodb";
-import { ArgsType, CompetitionSettings } from "types";
+import { Args, CompetitionSettings } from "./types";
 
 class ContestService {
   db: DocumentClient;
@@ -45,7 +45,7 @@ class ContestService {
     })
   }
 
-  scanItems(tableName: string, args?: ArgsType): Promise<ItemList | undefined> {
+  scanItems(tableName: string, args?: Args): Promise<ItemList | undefined> {
     return new Promise((resolve, reject) => {
       let params: ScanInput = {
         TableName: tableName
@@ -65,7 +65,7 @@ class ContestService {
     })
   }
 
-  getItem(tableName: string, key: ArgsType): Promise<AttributeMap | undefined> {
+  getItem(tableName: string, key: Args): Promise<AttributeMap | undefined> {
     return new Promise((resolve, reject) => {
       this.db.get({
         TableName: tableName,
@@ -77,7 +77,7 @@ class ContestService {
     })
   }
 
-  putItem(tableName: string, item: ArgsType): Promise<PutItemOutput> {
+  putItem(tableName: string, item: Args): Promise<PutItemOutput> {
     return new Promise((resolve, reject) => {
       this.db.put({
         TableName: tableName,
@@ -89,7 +89,7 @@ class ContestService {
     })
   }
 
-  updateItem(tableName: string, key: ArgsType, args: ArgsType): Promise<UpdateItemOutput> {
+  updateItem(tableName: string, key: Args, args: Args): Promise<UpdateItemOutput> {
     return new Promise((resolve, reject) => {
       const entries = Object.entries(args).filter(entry => !Object.keys(key).includes(entry[0]))
       this.db.update({
@@ -105,7 +105,7 @@ class ContestService {
     })
   }
 
-  deleteItem(tableName: string, key: ArgsType): Promise<DeleteItemOutput> {
+  deleteItem(tableName: string, key: Args): Promise<DeleteItemOutput> {
     return new Promise((resolve, reject) => {
       this.db.delete({
         TableName: tableName,

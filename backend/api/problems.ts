@@ -1,16 +1,17 @@
-import { contest, makeJSON, transpose } from '../contest';
-import { Router, Request, Response } from 'express'
-import { v4 as uuidv4 } from 'uuid'
+import { Request, Response, Router } from 'express'
 import { checkSchema, matchedData, validationResult } from 'express-validator';
-import archiver from 'archiver'
-import { ProblemType } from 'types';
+import { contest, makeJSON, transpose } from '../contest';
+
+// import { Problem } from 'types';
+// import archiver from 'archiver'
+import { v4 as uuidv4 } from 'uuid'
 
 const problems = Router();
 
 problems.get(
   '/problems',
   checkSchema({
-    problem_id: {
+    pid: {
       in: ['body', 'query'],
       isString: true,
       optional: true
@@ -18,11 +19,6 @@ problems.get(
     cpu_time_limit: {
       in: ['body', 'query'],
       isNumeric: true,
-      optional: true
-    },
-    description: {
-      in: ['body', 'query'],
-      isString: true,
       optional: true
     },
     division: {
@@ -40,13 +36,9 @@ problems.get(
       isNumeric: true,
       optional: true
     },
-    problem_name: {
+    name: {
       in: ['body', 'query'],
       isString: true,
-      optional: true
-    },
-    tests: {
-      in: ['body', 'query'],
       optional: true
     }
   }),
@@ -60,7 +52,7 @@ problems.get(
     }
     const data = matchedData(req)
     contest.scanItems('problem', data)
-      .then(response => res.send(transpose(response, 'problem_id')))
+      .then(response => res.send(transpose(response, 'pid')))
       .catch(err => res.status(400).send(err))
   })
 
@@ -245,47 +237,47 @@ function deleteSubmissionsForProblem(problem_id: string) {
     .catch(_ => console.log(`Error finding submissions to delete for problem ${problem_id}`))
 }
 
-const stripFilename = (str: string) => str.replace(/ /g, '_').replace(/[!@#$%^&*\(\)]/g, '');
-const fileExtension = (lang: string) => {
-  switch (lang) {
-    case 'python':
-      return 'py';
-    default:
-      return lang
-  }
-}
+// const stripFilename = (str: string) => str.replace(/ /g, '_').replace(/[!@#$%^&*\(\)]/g, '');
+// const fileExtension = (lang: string) => {
+//   switch (lang) {
+//     case 'python':
+//       return 'py';
+//     default:
+//       return lang
+//   }
+// }
 
-problems.get(
-  '/sample_files',
-  checkSchema({
-    problem_id: {
-      in: 'query',
-      notEmpty: true,
-      errorMessage: 'problem_id is not supplied'
-    }
-  }),
-  async (req: Request, res: Response) => {
-    const errors = validationResult(req).array()
-    if (errors.length > 0) {
-      res.status(400).json({ message: errors[0].msg })
-      return
-    }
-    const data = matchedData(req)
-    const { problem_id } = data
-    console.log(problem_id)
-    contest.getItem('problem', { problem_id })
-      .then((response) => {
-        const problem = response as ProblemType
-        const archive = archiver('zip')
-        for (const skeleton of problem.skeletons)
-          archive.append(skeleton.source, { name: `${stripFilename(problem.problem_name)}.${fileExtension(skeleton.language)}` })
+// problems.get(
+//   '/sample_files',
+//   checkSchema({
+//     problem_id: {
+//       in: 'query',
+//       notEmpty: true,
+//       errorMessage: 'problem_id is not supplied'
+//     }
+//   }),
+//   async (req: Request, res: Response) => {
+//     const errors = validationResult(req).array()
+//     if (errors.length > 0) {
+//       res.status(400).json({ message: errors[0].msg })
+//       return
+//     }
+//     const data = matchedData(req)
+//     const { problem_id } = data
+//     console.log(problem_id)
+//     contest.getItem('problem', { problem_id })
+//       .then((response) => {
+//         const problem = response as Problem
+//         const archive = archiver('zip')
+//         for (const skeleton of problem.skeletons)
+//           archive.append(skeleton.source, { name: `${stripFilename(problem.problem_name)}.${fileExtension(skeleton.language)}` })
 
-        res.attachment(`${stripFilename(problem.problem_name)}.zip`)
-        archive.pipe(res)
-        archive.finalize()
-      })
-      .catch(err => res.status(500).send(err))
-  })
+//         res.attachment(`${stripFilename(problem.problem_name)}.zip`)
+//         archive.pipe(res)
+//         archive.finalize()
+//       })
+//       .catch(err => res.status(500).send(err))
+//   })
 
 problems.get('/problems.json', (_req: Request, res: Response) => {
   contest.scanItems('problem')

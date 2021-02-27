@@ -1,8 +1,10 @@
-import { createHash } from "crypto";
-import { Router, Request, Response } from "express";
+import { Request, Response, Router } from "express";
 import { checkSchema, matchedData, validationResult } from "express-validator";
+import { contest, makeJSON, transpose } from "../contest";
+
+import { authorize } from "../service/AuthService";
+import { createHash } from "crypto";
 import { v4 as uuidv4 } from 'uuid'
-import { contest, transpose, makeJSON } from "../contest";
 
 const users = Router();
 
