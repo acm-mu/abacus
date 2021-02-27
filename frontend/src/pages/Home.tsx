@@ -29,7 +29,8 @@ const Home = (): JSX.Element => {
   }
 
   useEffect(() => {
-    const teamFetchInterval = setInterval(loadTeams, 200);
+    loadTeams()
+    const teamFetchInterval = setInterval(loadTeams, 5 * 60 * 1000);
     return () => {
       clearInterval(teamFetchInterval);
       setMounted(false);
