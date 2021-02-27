@@ -1,42 +1,43 @@
-import React, { useState, useEffect } from 'react'
 import '@toast-ui/chart/dist/toastui-chart.min.css'
+
 import { LineChart, PieChart } from '@toast-ui/react-chart'
+import { ProblemType, SubmissionType } from '../../types'
+import React, { useEffect, useState } from 'react'
+
 import { Block } from '../../components'
-import { SubmissionType, ProblemType } from '../../types'
 import config from '../../environment'
 
 const Home = (): JSX.Element => {
   const [submissions, setSubmissions] = useState<SubmissionType[]>()
   const [problems, setProblems] = useState<ProblemType[]>([])
   const [startDate, setStartDate] = useState<number>(0)
-  const [isMounted, setMounted] = useState<boolean>(false)
+  const [isMounted, setMounted] = useState(true)
+
+  const fetchData = async () => {
+    let response = await fetch(`${config.API_URL}/submissions`)
+    const submissions = await response.json()
+
+    response = await fetch(`${config.API_URL}/contest`)
+    const settings = await response.json()
+
+    response = await fetch(`${config.API_URL}/problems?division=blue`)
+    let problems = await response.json()
+    problems = problems.sort((a: ProblemType, b: ProblemType) => a.pid.localeCompare(b.pid))
+
+    if (isMounted) {
+      setSubmissions(Object.values(submissions))
+      setStartDate(settings.start_date)
+      setProblems(Object.values(problems))
+    }
+  }
 
   useEffect(() => {
-    setMounted(true)
-    fetch(`${config.API_URL}/submissions`)
-      .then(res => res.json())
-      .then(data => {
-        if (isMounted)
-          setSubmissions(Object.values(data))
-
-      })
-    fetch(`${config.API_URL}/contest`)
-      .then(res => res.json())
-      .then(data => {
-        if (isMounted)
-          setStartDate(data.start_date)
-      })
-    fetch(`${config.API_URL}/problems?division=blue`)
-      .then(res => res.json())
-      .then(data => {
-        if (isMounted) {
-          const problems: ProblemType[] = Object.values(data)
-          problems.sort((a: ProblemType, b: ProblemType) => a.pid.localeCompare(b.pid))
-          setProblems(Object.values(data))
-        }
-      })
-    return () => { setMounted(false) }
-  }, [isMounted]);
+    const updateInterval = setInterval(fetchData, 0, 30 * 1000);
+    return () => {
+      setMounted(false)
+      clearInterval(updateInterval)
+    }
+  }, []);
 
   const statuses: { [key: string]: { name: string, data: number } } = {};
 
