@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid'
 import archiver from 'archiver'
 import { isAdminUser, isAuthenticated } from 'service/AuthService';
 
-export const problems = Router();
+const problems = Router();
 
 problems.get(
   '/problems',
@@ -296,3 +296,5 @@ problems.get(
       })
       .catch(err => res.status(500).send(err))
   })
+
+export default problems

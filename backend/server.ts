@@ -7,7 +7,6 @@ import morgan from 'morgan';
 import { Server } from 'socket.io'
 
 import api from "./api";
-import authlib from './authlib'
 
 const PORT = process.env.PORT || 80;
 
@@ -21,7 +20,6 @@ app.use(fileUpload()); // Middleware for uploading files to express (accessible 
 app.use(morgan('dev'));
 
 app.use(api);
-app.use(authlib);
 app.get('/', (_, res) => res.status(200).send(' ')); // Sends 200 OK when AWS EBS pings server for health check
 
 io.on('connection', (socket) => {

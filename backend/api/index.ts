@@ -1,4 +1,5 @@
 import { Router } from "express"
+import auth from "./auth"
 import contest from "./contest"
 import problems from "./problems"
 import standings from "./standings"
@@ -7,6 +8,6 @@ import users from "./users"
 
 const api = Router();
 
-api.use(problems, contest, standings, submissions, users)
+api.use(auth, problems, contest, standings, submissions, users)
 
 export default api
