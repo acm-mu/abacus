@@ -1,6 +1,6 @@
 import { Router, Response, Request } from 'express';
 import { checkSchema, matchedData, validationResult } from 'express-validator';
-import { CompetitionSettings } from 'types';
+import { isAdminUser, isAuthenticated } from 'service/AuthService';
 import { contest } from "../contest";
 
 const router = Router();
@@ -15,6 +15,7 @@ router.get("/contest", async (_, res: Response) => {
 });
 
 router.put('/contest',
+  [isAuthenticated, isAdminUser],
   checkSchema({
     competition_name: {
       in: 'body',

@@ -1,6 +1,5 @@
 import AWS, { AWSError, Lambda, S3 } from "aws-sdk";
 import { AttributeMap, BatchWriteItemOutput, DeleteItemOutput, DocumentClient, GetItemOutput, ItemList, PutItemOutput, ScanInput, ScanOutput, UpdateItemOutput } from "aws-sdk/clients/dynamodb";
-import { Args, CompetitionSettings } from "./types";
 
 class ContestService {
   db: DocumentClient;

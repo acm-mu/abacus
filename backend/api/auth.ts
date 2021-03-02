@@ -1,10 +1,8 @@
-import { Request, Response, Router } from "express";
-import { checkSchema, matchedData } from 'express-validator';
-
-import { contest } from "./contest";
 import { createHash } from 'crypto';
+import { Router, Request, Response } from "express";
+import { checkSchema, matchedData } from 'express-validator';
 import { v4 as uuidv4 } from 'uuid'
-import { Args, User } from "./types";
+import { contest } from "../contest";
 
 const authlib = Router();
 
@@ -44,10 +42,10 @@ authlib.post(
     contest.scanItems('user', args)
       .then(users => {
         if (users?.length == 1) {
-          const user = users[0] as unknown as User
+          const user = users[0] as User
           if (!session_token) {
             session_token = uuidv4().replace(/-/g, '')
-            contest.updateItem('user', { user_id: user.uid }, { session_token })
+            contest.updateItem('user', { uid: user.uid }, user)
               .catch(err => res.status(400).send(err))
           }
           res.send(user)

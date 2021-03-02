@@ -1,9 +1,8 @@
 import { Request, Response, Router } from "express";
 import { checkSchema, matchedData, validationResult } from "express-validator";
 import { contest, makeJSON, transpose } from "../contest";
-
-import { authorize } from "../service/AuthService";
 import { createHash } from "crypto";
+import { isAdminUser, isAuthenticated } from "service/AuthService";
 import { v4 as uuidv4 } from 'uuid'
 
 const users = Router();
@@ -74,6 +73,7 @@ users.get(
 
 users.put(
   '/users',
+  [isAuthenticated, isAdminUser],
   checkSchema({
     user_id: {
       in: 'body',
@@ -151,6 +151,7 @@ users.put(
 
 users.delete(
   '/users',
+  [isAuthenticated, isAdminUser],
   checkSchema({
     user_id: {
       in: 'body',
@@ -199,6 +200,7 @@ function deleteSubmissionsForUser(team_id: string) {
 
 users.post(
   '/users',
+  [isAuthenticated, isAdminUser],
   checkSchema({
     display_name: {
       in: 'body',
@@ -241,6 +243,7 @@ users.post(
     }
   }),
   async (req: Request, res: Response) => {
+    req.user
     const errors = validationResult(req).array()
     if (errors.length > 0) {
       res.status(400).json({
@@ -277,17 +280,19 @@ users.post(
   }
 )
 
-users.get('/users.json', (_req, res) => {
-  contest.scanItems('user')
-    .then(response => {
-      if (response == undefined) {
-        res.status(500).send({ message: "Internal Server Error" })
-      } else {
-        const columns = ['user_id', 'division', 'role', 'username', 'display_name', 'password', 'scratch_username']
-        res.attachment('users.json').send(makeJSON(response, columns))
-      }
-    })
-    .catch(err => res.status(500).send({ message: err }))
-})
+users.get('/users.json',
+  [isAuthenticated, isAdminUser],
+  (_req: Request, res: Response) => {
+    contest.scanItems('user')
+      .then(response => {
+        if (response == undefined) {
+          res.status(500).send({ message: "Internal Server Error" })
+        } else {
+          const columns = ['user_id', 'division', 'role', 'username', 'display_name', 'password', 'scratch_username']
+          res.attachment('users.json').send(makeJSON(response, columns))
+        }
+      })
+      .catch(err => res.status(500).send({ message: err }))
+  })
 
 export default users;

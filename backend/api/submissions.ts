@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { checkSchema, matchedData, validationResult } from "express-validator";
 import { contest, makeJSON, transpose } from "../contest";
 import AWS from "aws-sdk";
+import { isAdminUser, isAuthenticated } from "service/AuthService";
 
 const submissions = Router();
 
@@ -93,6 +94,7 @@ submissions.get(
 
 submissions.put(
   '/submissions',
+  [isAuthenticated, isAdminUser],
   checkSchema({
     submission_id: {
       in: 'body',
@@ -158,6 +160,7 @@ submissions.put(
 
 submissions.delete(
   '/submissions',
+  [isAuthenticated, isAdminUser],
   checkSchema({
     submission_id: {
       in: ['body', 'query'],
@@ -192,6 +195,7 @@ submissions.delete(
 
 submissions.post(
   '/submissions',
+  [isAuthenticated, isAdminUser],
   checkSchema({
     problem_id: {
       in: 'body',
@@ -272,6 +276,7 @@ submissions.post(
 
 submissions.post(
   '/submissions/rerun',
+  [isAuthenticated, isAdminUser],
   checkSchema({
     submission_id: {
       in: ['query', 'body'],
@@ -312,17 +317,20 @@ submissions.post(
   }
 )
 
-submissions.get('/submissions.json', (_req, res) => {
-  contest.scanItems('submission')
-    .then(response => {
-      if (response == undefined) {
-        res.status(500).send({ message: "Internal Server Error" })
-      } else {
-        const columns = ['submission_id', 'date', 'division', 'filename', 'filesize', 'language', 'md5', 'problem_id', 'runtime', 'score', 'source', 'status', 'sub_no', 'team_id', 'tests']
-        res.attachment('submissions.json').send(makeJSON(response, columns))
-      }
-    })
-    .catch(err => res.status(500).send(err))
-})
+submissions.get(
+  '/submissions.json',
+  [isAuthenticated, isAdminUser],
+  (_req: Request, res: Response) => {
+    contest.scanItems('submission')
+      .then(response => {
+        if (response == undefined) {
+          res.status(500).send({ message: "Internal Server Error" })
+        } else {
+          const columns = ['submission_id', 'date', 'division', 'filename', 'filesize', 'language', 'md5', 'problem_id', 'runtime', 'score', 'source', 'status', 'sub_no', 'team_id', 'tests']
+          res.attachment('submissions.json').send(makeJSON(response, columns))
+        }
+      })
+      .catch(err => res.status(500).send(err))
+  })
 
 export default submissions;
