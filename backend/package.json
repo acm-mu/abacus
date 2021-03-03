@@ -5,7 +5,7 @@
     "scripts": {
         "dev": "nodemon --exec ts-node --files src/server.ts",
         "zip": "cp package.json dist/ && cd dist && zip -r backend .",
-        "build": "tsc -p src",
+        "build": "tsc --project src --outDir dist",
         "start": "ts-node src/server.ts"
     },
     "dependencies": {
