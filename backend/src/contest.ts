@@ -1,3 +1,6 @@
+/// <reference types="./@types/abacus" />
+
+import { Args, Settings } from "abacus";
 import AWS, { AWSError, Lambda, S3 } from "aws-sdk";
 import { AttributeMap, BatchWriteItemOutput, DeleteItemOutput, DocumentClient, GetItemOutput, ItemList, PutItemOutput, ScanInput, ScanOutput, UpdateItemOutput } from "aws-sdk/clients/dynamodb";
 
@@ -18,7 +21,7 @@ class ContestService {
     this.lambda = new Lambda();
   }
 
-  async get_settings(): Promise<CompetitionSettings> {
+  async get_settings(): Promise<Settings> {
     return new Promise((resolve, reject) => {
       this.scanItems('setting')
         .then((itemList?: ItemList) => {
@@ -31,7 +34,7 @@ class ContestService {
     })
   }
 
-  save_settings(settings: CompetitionSettings): Promise<BatchWriteItemOutput> {
+  save_settings(settings: Settings): Promise<BatchWriteItemOutput> {
     return new Promise((resolve, reject) => {
       this.db.batchWrite({
         RequestItems: {
@@ -117,11 +120,9 @@ class ContestService {
   }
 }
 
-const contest = new ContestService();
-
 const transpose = (itemList: ItemList | undefined, key: string): { [key: string]: any } => itemList ? Object.assign({}, ...itemList.map((obj: any) => ({ [obj[key]]: obj }))) : {}
 
-const makeJSON = (itemList: ItemList, columns: string[]): string => {
+const makeJSON = (itemList: ItemList, columns: string[] = []): string => {
   itemList.map((e) => {
     Object.keys(e).forEach((key) => {
       if (!columns.includes(key)) {
@@ -132,4 +133,5 @@ const makeJSON = (itemList: ItemList, columns: string[]): string => {
   return JSON.stringify(itemList)
 }
 
-export { contest, transpose, makeJSON };
+export default new ContestService()
+export { transpose, makeJSON };

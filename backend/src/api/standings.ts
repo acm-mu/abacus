@@ -1,6 +1,8 @@
+import { Problem, Submission } from "abacus";
 import { Router, Response, Request } from "express";
-import { isAdminUser, isAuthenticated } from "service/AuthService";
-import { contest } from "../contest";
+
+import { isAdminUser, isAuthenticated } from "../service/AuthService";
+import contest from "../contest";
 
 const standings = Router();
 
@@ -9,8 +11,8 @@ standings.get(
   [isAuthenticated, isAdminUser],
   async (_req: Request, res: Response) => {
     const standings = Object.values(await contest.scanItems('user', { role: 'team', division: 'blue' }) || {})
-    const submissions = Object.values(await contest.scanItems('submission', { division: 'blue' }) || {}) as Submission[]
-    const problems = Object.values(await contest.scanItems('problem', { division: 'blue' }) || {}) as Problem[]
+    const submissions = Object.values(await contest.scanItems('submission', { division: 'blue' }) || {}) as unknown as Submission[]
+    const problems = Object.values(await contest.scanItems('problem', { division: 'blue' }) || {}) as unknown as Problem[]
 
     const subs: { [key: string]: { [key: string]: Submission[] } } = {}
 

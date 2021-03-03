@@ -20,9 +20,9 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "resolveJsonModule": true,
-    "baseUrl": ".",
-    "typeRoots": ["./types"]
+    "baseUrl": "."
   },
   "exclude": ["node_modules"],
-  "include": ["**/*.tsx", "**/*.ts", "api"]
+  "typeRoots": ["./src/@types"],
+  "include": ["**/*.tsx", "**/*.ts"]
 }
