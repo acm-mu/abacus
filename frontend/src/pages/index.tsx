@@ -2,7 +2,6 @@ import React from "react";
 
 import Home from "./Home";
 import About from "./About";
-import Login from "./Login";
 import Help from "./Help";
 import DefaultNavigation from "./DefaultNavigation";
 import Clarifications from './Clarifications';
@@ -18,7 +17,6 @@ const Index = (): JSX.Element => (
       <Switch>
         <Route exact path="/" component={Home} />
         <Route path="/about" component={About} />
-        <Route path="/login" component={Login} />
         <Route path="/help" component={Help} />
         <Route path='/clarifications' component={Clarifications} />
         <Route default component={NotFound} />
