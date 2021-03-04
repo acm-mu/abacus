@@ -1,13 +1,13 @@
+import { Problem } from "abacus";
 import React, { useContext, useEffect, useState } from "react";
 import { Form, Input, Select, Label } from "semantic-ui-react";
+import { AppContext } from "../../AppContext";
 import { Block } from "../../components";
-import { UserContext } from "../../context/user";
 import config from "../../environment"
-import { ProblemType } from "../../types";
 
 const Submit = (): JSX.Element => {
-  const [problems, setProblems] = useState<ProblemType[]>([])
-  const { user } = useContext(UserContext)
+  const [problems, setProblems] = useState<Problem[]>([])
+  const { user } = useContext(AppContext)
 
   useEffect(() => {
     fetch(`${config.API_URL}/problems?division=gold`)

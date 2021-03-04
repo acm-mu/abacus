@@ -2,46 +2,53 @@ import React, { useState, useEffect } from 'react'
 import { Table, Button, Loader, ButtonGroup, Popup } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { Block } from '../../components'
-import { ProblemType, SubmissionType } from '../../types'
 import config from '../../environment'
+import { Problem, Submission } from 'abacus'
 
-interface ProblemItem extends ProblemType {
+interface ProblemItem extends Problem {
   checked: boolean
 }
 
 const Problems = (): JSX.Element => {
   const [isLoading, setLoading] = useState<boolean>(true)
   const [problems, setProblems] = useState<ProblemItem[]>([])
-  const [submissions, setSubmissions] = useState<{ [key: string]: SubmissionType[] }>()
-  const [isMounted, setMounted] = useState<boolean>(false)
+  const [submissions, setSubmissions] = useState<{ [key: string]: Submission[] }>()
+  const [isMounted, setMounted] = useState<boolean>(true)
 
   useEffect(() => {
-    setMounted(true)
-    fetch(`${config.API_URL}/problems?division=blue`)
+    fetch(`${config.API_URL}/problems?division=blue`, {
+      headers: {
+        authorization: `Bearer ${localStorage.accessToken}`
+      }
+    })
       .then(res => res.json())
       .then(data => {
         if (isMounted) {
-          const problems: ProblemType[] = Object.values(data)
-          problems.sort((a: ProblemType, b: ProblemType) => a.id.localeCompare(b.id))
+          const problems: Problem[] = Object.values(data)
+          problems.sort((a: Problem, b: Problem) => a.id.localeCompare(b.id))
           setProblems(problems.map(problem => ({ ...problem, checked: false })))
           setLoading(false)
         }
       })
 
-    fetch(`${config.API_URL}/submissions?division=blue`)
-      .then(res => res.json())
-      .then(data => {
-        if (isMounted) {
-          const submissions: SubmissionType[] = Object.values(data)
-          const subs: { [key: string]: SubmissionType[] } = {}
-          submissions.forEach((sub: SubmissionType) => {
-            const { problem_id } = sub;
-            if (!(problem_id in subs)) subs[problem_id] = []
-            subs[problem_id].push(sub)
-          })
-          setSubmissions(subs)
-        }
-      })
+    // fetch(`${config.API_URL}/submissions?division=blue`, {
+    //   headers: {
+    //     authorization: `Bearer ${localStorage.accessToken}`
+    //   }
+    // })
+    //   .then(res => res.json())
+    //   .then(data => {
+    //     if (isMounted) {
+    //       const submissions: Submission[] = Object.values(data)
+    //       const subs: { [key: string]: Submission[] } = {}
+    //       submissions.forEach((sub: Submission) => {
+    //         const { pid } = sub;
+    //         if (!(pid in subs)) subs[pid] = []
+    //         subs[pid].push(sub)
+    //       })
+    //       setSubmissions(subs)
+    //     }
+    //   })
     return () => { setMounted(false) }
   }, [isMounted])
 
@@ -102,7 +109,7 @@ const Problems = (): JSX.Element => {
                 </Table.Cell>
                 <Table.Cell><Link to={`/admin/problems/${problem.pid}`}>{problem.id}</Link></Table.Cell>
                 <Table.Cell><Link to={`/admin/problems/${problem.pid}`}>{problem.name}</Link></Table.Cell>
-                <Table.Cell>{problem.tests.length}</Table.Cell>
+                <Table.Cell>{problem.tests?.length}</Table.Cell>
                 {submissions &&
                   <>
                     <Table.Cell>{problem.pid in submissions ? submissions[problem.pid].filter((p) => p.score > 0).length : 0}</Table.Cell>

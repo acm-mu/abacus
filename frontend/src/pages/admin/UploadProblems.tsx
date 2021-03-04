@@ -1,11 +1,11 @@
+import { Problem } from 'abacus';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button, Label, Message, Table } from 'semantic-ui-react';
 import { Block, FileDialog } from '../../components';
 import config from "../../environment"
-import { ProblemType } from '../../types';
 
-interface ProblemItem extends ProblemType {
+interface ProblemItem extends Problem {
   checked: boolean
 }
 
@@ -13,7 +13,7 @@ const UploadProblems = (): JSX.Element => {
   const history = useHistory()
   const [file, setFile] = useState<File>()
   const [error, setError] = useState<string>()
-  const [problems, setProblems] = useState<{ [key: string]: ProblemType }>({})
+  const [problems, setProblems] = useState<{ [key: string]: Problem }>({})
   const [newProblems, setNewProblems] = useState<ProblemItem[]>([])
 
   const uploadChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,7 +22,7 @@ const UploadProblems = (): JSX.Element => {
       reader.onload = async (e: ProgressEvent<FileReader>) => {
         const text = e.target?.result as string
         if (text) {
-          setNewProblems(JSON.parse(text).map((problem: ProblemType) => ({ ...problem, checked: true })))
+          setNewProblems(JSON.parse(text).map((problem: Problem) => ({ ...problem, checked: true })))
         }
       }
       reader.readAsText(event.target.files[0])
@@ -36,7 +36,7 @@ const UploadProblems = (): JSX.Element => {
       .then(res => setProblems(res))
   }, [])
 
-  const filterProblem = (p1: ProblemItem, p2: ProblemType) => {
+  const filterProblem = (p1: ProblemItem, p2: Problem) => {
     if (!p2) return true
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { checked: _, ...problem1 } = p1

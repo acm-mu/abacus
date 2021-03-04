@@ -2,17 +2,17 @@ import React, { useState, useEffect } from 'react'
 import { Link, useHistory, useParams } from 'react-router-dom'
 import { Button, Label, Menu, MenuItemProps, Table } from 'semantic-ui-react'
 import { Block } from '../../components'
-import { SubmissionType, TestType } from '../../types'
 import config from '../../environment'
 import Moment from 'react-moment'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { capitalize, syntax_lang, format_text } from "../../utils"
 import "../Submission.scss"
+import { Submission, Test } from 'abacus'
 
-const Submission = (): JSX.Element => {
+const submission = (): JSX.Element => {
   const history = useHistory()
   const { submission_id } = useParams<{ submission_id: string }>()
-  const [submission, setSubmission] = useState<SubmissionType>()
+  const [submission, setSubmission] = useState<Submission>()
 
   const [activeItem, setActiveItem] = useState('source-code')
   const [activeTestItem, setActiveTestItem] = useState(0)
@@ -93,7 +93,7 @@ const Submission = (): JSX.Element => {
                     </Table.Cell>
                     <Table.Cell>{submission.team.display_name}</Table.Cell>
                     <Table.Cell><Moment fromNow date={submission?.date * 1000} /></Table.Cell>
-                    <Table.Cell><Link to={`/admin/problems/${submission.problem_id}`}>{submission.problem.name}</Link></Table.Cell>
+                    <Table.Cell><Link to={`/admin/problems/${submission.pid}`}>{submission.problem.name}</Link></Table.Cell>
                     <Table.Cell><span className={`icn status ${submission.status}`} /></Table.Cell>
                     <Table.Cell>{Math.floor(submission.runtime)}</Table.Cell>
                     <Table.Cell>{submission.score}</Table.Cell>
@@ -101,7 +101,7 @@ const Submission = (): JSX.Element => {
                   </Table.Row>
                   <Table.Row>
                     <Table.Cell colSpan={7}>
-                      {submission?.tests.map((test: TestType, index: number) => {
+                      {submission?.tests.map((test: Test, index: number) => {
                         switch (test.result) {
                           case 'accepted':
                             return <span key={`test-${index}`} className='result icn accepted' />
@@ -155,11 +155,11 @@ const Submission = (): JSX.Element => {
               </> :
                 activeItem == 'test-cases' ? <div style={{ display: 'flex' }}>
                   <Menu secondary vertical>
-                    {submission.tests.map((test: TestType, index: number) =>
+                    {submission.tests.map((test: Test, index: number) =>
                       <Menu.Item key={`test-case-${index}`} name={`Test Case #${index + 1}`} active={activeTestItem === index} tab={index} onClick={handleTestItemClick} />
                     )}</Menu>
 
-                  {submission.tests.map((test: TestType, index: number) => (
+                  {submission.tests.map((test: Test, index: number) => (
                     <React.Fragment key={`test-result-${index}`}>
                       {index == activeTestItem ?
                         <div className='testRun'>
@@ -190,4 +190,4 @@ const Submission = (): JSX.Element => {
   )
 }
 
-export default Submission
+export default submission

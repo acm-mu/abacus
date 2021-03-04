@@ -1,20 +1,29 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Form, Input, Button, Menu, TextArea, Message, MenuItemProps } from "semantic-ui-react"
+import { Form, Input, Button, Menu, TextArea, Message, MenuItemProps, DropdownProps } from "semantic-ui-react"
 import { Block } from '../../components'
-import { ProblemType, TestType } from '../../types'
 import config from '../../environment'
 import MDEditor from '@uiw/react-md-editor'
+import { Test } from 'abacus'
 
 const NewProblem = (): JSX.Element => {
   const history = useHistory()
-  const [problem, setProblem] = useState<ProblemType>()
+  const [problem, setProblem] = useState<any>({
+    id: '',
+    name: '',
+    division: '',
+    description: '',
+    tests: [],
+    cpu_time_limit: -1,
+    memory_limit: -1
+  })
   const [message, setMessage] = useState<{ type: string, message: string }>()
   const handleSubmit = async () => {
     const res = await fetch(`${config.API_URL}/problems`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.accessToken}`
       },
       body: JSON.stringify(problem)
     })
@@ -37,12 +46,17 @@ const NewProblem = (): JSX.Element => {
   const handleDeleteTest = () => {
     if (problem) {
       setActiveTestItem(problem.tests.length - 2)
-      setProblem({ ...problem, tests: problem.tests.filter((_, index: number) => index != activeTestItem) })
+      setProblem({ ...problem, tests: problem.tests.filter((_: any, index: number) => index != activeTestItem) })
     }
   }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
+    if (problem)
+      setProblem({ ...problem, [name]: value })
+  }
+
+  const handleDropdownChange = (e: React.SyntheticEvent<HTMLElement, Event>, { name, value }: DropdownProps) => {
     if (problem)
       setProblem({ ...problem, [name]: value })
   }
@@ -56,7 +70,7 @@ const NewProblem = (): JSX.Element => {
     const { name, value } = event.target
     if (problem)
       setProblem({
-        ...problem, tests: problem.tests.map((test: TestType, index: number) => {
+        ...problem, tests: problem.tests.map((test: Test, index: number) => {
           if (name == `${index}-in`)
             test.in = value
           else if (name == `${index}-out`)
@@ -65,6 +79,11 @@ const NewProblem = (): JSX.Element => {
         })
       })
   }
+
+  const divisions = [
+    { key: 1, text: "Blue", value: 'blue' },
+    { key: 2, text: "Gold", value: 'gold' }
+  ]
 
   return (
     <>
@@ -75,8 +94,12 @@ const NewProblem = (): JSX.Element => {
 
         <Form>
           <h1>Problem Info</h1>
-          <Form.Field label='Problem ID' name='id' control={Input} onChange={handleChange} placeholder="Problem Id" value={problem?.id || ''} />
-          <Form.Field label='Problem Name' name='problem_name' control={Input} onChange={handleChange} placeholder="Problem Name" value={problem?.name || ''} />
+          <Form.Group widths='equal'>
+            <Form.Field label='Problem ID' name='id' control={Input} onChange={handleChange} placeholder="Problem Id" value={problem?.id || ''} />
+            <Form.Field label='Problem Name' name='name' control={Input} onChange={handleChange} placeholder="Problem Name" value={problem?.name || ''} />
+            <Form.Select label='Division' name='division' fluid options={divisions} onChange={handleDropdownChange} placeholder="Division" value={problem?.division || ''} />
+          </Form.Group>
+
           <Form.Group widths='equal'>
             <Form.Field label='Memory Limit' name='memory_limit' control={Input} onChange={handleChange} value={problem?.memory_limit || -1} />
             <Form.Field label='CPU Time Limit' name='cpu_time_limit' control={Input} onChange={handleChange} value={problem?.cpu_time_limit || -1} />
@@ -84,7 +107,7 @@ const NewProblem = (): JSX.Element => {
 
           <h1>Test Data</h1>
           <Menu>
-            {problem?.tests.map((test: TestType, index: number) => (
+            {problem?.tests.map((test: Test, index: number) => (
               <Menu.Item name={`${index + 1}`} key={`${index}-test-tab`} tab={index} active={activeTestItem === index} onClick={handleTestItemClick} />
             ))}
             <Menu.Menu position='right'>
@@ -94,7 +117,7 @@ const NewProblem = (): JSX.Element => {
           </Menu>
 
           {
-            problem?.tests.map((test: TestType, index: number) => (
+            problem?.tests.map((test: Test, index: number) => (
               <div key={`test-${index}`}>
                 {activeTestItem == index ?
                   <Form.Group widths='equal'>

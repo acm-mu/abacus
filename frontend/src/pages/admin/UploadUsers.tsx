@@ -1,19 +1,19 @@
+import { User } from 'abacus';
 import { createHash } from 'crypto';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button, Label, Table } from 'semantic-ui-react';
 import { Block, FileDialog } from '../../components';
 import config from "../../environment"
-import { UserType } from '../../types';
 
-interface UserItem extends UserType {
+interface UserItem extends User {
   checked: boolean
 }
 
 const UploadUsers = (): JSX.Element => {
   const history = useHistory()
   const [file, setFile] = useState<File>()
-  const [users, setUsers] = useState<{ [key: string]: UserType }>({})
+  const [users, setUsers] = useState<{ [key: string]: User }>({})
   const [newUsers, setNewUsers] = useState<UserItem[]>([])
 
   const uploadChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,7 +22,7 @@ const UploadUsers = (): JSX.Element => {
       reader.onload = async (e: ProgressEvent<FileReader>) => {
         const text = e.target?.result as string
         if (text)
-          setNewUsers(JSON.parse(text).map((user: UserType) => ({ ...user, checked: true })))
+          setNewUsers(JSON.parse(text).map((user: User) => ({ ...user, checked: true })))
       }
       reader.readAsText(event.target.files[0])
       setFile(event.target.files[0])
@@ -35,12 +35,10 @@ const UploadUsers = (): JSX.Element => {
       .then(res => setUsers(res))
   }, [])
 
-  const filterUser = (u1: UserItem, u2: UserType) => {
+  const filterUser = (u1: UserItem, u2: User) => {
     if (!u2) return true
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { checked: _checked, session_token: _, ...user1 } = u1
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { session_token: st, ...user2 } = u2
+    const { ...user1 } = u1
+    const { ...user2 } = u2
     user1.password = createHash('sha256').update(user1.password).digest('hex')
     return JSON.stringify(user1, Object.keys(user1).sort()) !== JSON.stringify(user2, Object.keys(user2).sort())
   }

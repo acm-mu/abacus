@@ -1,14 +1,14 @@
+import { Problem, ProblemScore, StandingsUser } from "abacus";
 import React, { useEffect, useState } from "react";
 import { Link } from 'react-router-dom'
 import { Loader, Table } from "semantic-ui-react";
 import { Block, Countdown } from "../../components";
-import { ProblemScoreType, ProblemType, StandingsUser } from "../../types";
 import config from '../../environment'
 
 import "./Standings.scss";
 
 const Standings = (): JSX.Element => {
-  const [problems, setProblems] = useState<ProblemType[]>();
+  const [problems, setProblems] = useState<Problem[]>();
   const [standings, setStandings] = useState<StandingsUser[]>();
   const [loading, setLoading] = useState<boolean>(true)
   const [isMounted, setMounted] = useState<boolean>(false)
@@ -19,7 +19,7 @@ const Standings = (): JSX.Element => {
       .then((res) => res.json())
       .then((problems) => {
         problems = Object.values(problems)
-        problems.sort((a: ProblemType, b: ProblemType) => a.id.localeCompare(b.id))
+        problems.sort((a: Problem, b: Problem) => a.id.localeCompare(b.id))
         if (isMounted)
           setProblems(problems)
       });
@@ -67,7 +67,7 @@ const Standings = (): JSX.Element => {
                 <Table.HeaderCell>Team</Table.HeaderCell>
                 <Table.HeaderCell collapsing>SLV.</Table.HeaderCell>
                 <Table.HeaderCell collapsing>TIME</Table.HeaderCell>
-                {problems ? problems.map((problem: ProblemType) => (
+                {problems ? problems.map((problem: Problem) => (
                   <Table.HeaderCell key={problem.id} collapsing>
                     <Link to={`/blue/problems/${problem.id}`}>{problem.id}</Link>
                   </Table.HeaderCell>
@@ -84,7 +84,7 @@ const Standings = (): JSX.Element => {
                   <Table.Cell>{team.solved}</Table.Cell>
                   <Table.Cell>{team.time}</Table.Cell>
                   {Object.values(team.problems).map(
-                    (problem: ProblemScoreType, index: number) => {
+                    (problem: ProblemScore, index: number) => {
                       if (problem.solved) {
                         return (
                           <Table.Cell key={`${team.uid}-${index}`} className="solved">

@@ -3,22 +3,20 @@ import Moment from "react-moment";
 import { Loader, Table } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { Block, Countdown, Unauthorized } from "../../components";
-import { SubmissionType } from "../../types";
 import config from '../../environment'
 import "../../components/Icons.scss";
-import { UserContext } from "../../context/user";
-import { useAuth } from "../../authlib";
+import { AppContext } from "../../AppContext";
+import { Submission } from "abacus";
 
 const Submissions = (): JSX.Element => {
-  const { user } = useContext(UserContext);
+  const { user } = useContext(AppContext);
   const [isMounted, setMounted] = useState<boolean>(false)
-  const [isAuthenticated] = useAuth(user, isMounted)
   const [isLoading, setLoading] = useState<boolean>(true)
-  const [submissions, setSubmissions] = useState<SubmissionType[]>();
+  const [submissions, setSubmissions] = useState<Submission[]>();
 
   useEffect(() => {
     setMounted(true)
-    if (isAuthenticated) {
+    if (user) {
       const filter = (user && !['judge', 'admin'].includes(user.role)) ? `&team_id=${user.uid}` : ''
 
       fetch(`${config.API_URL}/submissions?division=blue${filter}`)
@@ -29,11 +27,11 @@ const Submissions = (): JSX.Element => {
         });
     }
     return () => { setMounted(false) }
-  }, [isAuthenticated, isMounted]);
+  }, [user, isMounted]);
 
   return (
     <>
-      {isAuthenticated ?
+      {user ?
         <>
           <Countdown />
           <Block transparent size="xs-12">
@@ -52,7 +50,7 @@ const Submissions = (): JSX.Element => {
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                  {submissions?.length ? (submissions.sort((s1, s2) => s2.date - s1.date).map((submission: SubmissionType, index: number) => (
+                  {submissions?.length ? (submissions.sort((s1, s2) => s2.date - s1.date).map((submission: Submission, index: number) => (
                     <Table.Row key={index}>
                       <Table.Cell>
                         <Link to={`/blue/submissions/${submission.sid}`}>

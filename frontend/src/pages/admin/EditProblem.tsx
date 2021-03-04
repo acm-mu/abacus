@@ -2,15 +2,15 @@ import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Form, Input, Menu, Button, TextArea, MenuItemProps, Message } from 'semantic-ui-react'
 import Editor from '@monaco-editor/react'
-import { ProblemType, SkeletonType, TestType } from '../../types'
 import { Block } from '../../components'
 import config from '../../environment'
 import MDEditor from '@uiw/react-md-editor'
+import { Problem, Skeleton, Test } from 'abacus'
 
 type ProblemStateProps = {
   problem: {
-    problem: ProblemType | undefined;
-    setProblem: React.Dispatch<React.SetStateAction<ProblemType | undefined>>
+    problem?: Problem;
+    setProblem: React.Dispatch<React.SetStateAction<Problem | undefined>>
   }
 }
 
@@ -58,7 +58,7 @@ const TestData = (props: ProblemStateProps) => {
     event.target.style.height = `${event.target.scrollHeight}px`
     if (problem)
       setProblem({
-        ...problem, tests: problem.tests.map((test: TestType, index: number) => {
+        ...problem, tests: problem.tests?.map((test: Test, index: number) => {
           if (name == `${index}-in`)
             test.in = value
           else if (name == `${index}-out`)
@@ -70,7 +70,7 @@ const TestData = (props: ProblemStateProps) => {
 
   return (<Form>
     <Menu>
-      {problem?.tests.map((test: TestType, index: number) => (
+      {problem?.tests?.map((test: Test, index: number) => (
         <Menu.Item name={`${index + 1}`} key={`${index}-test-tab`} tab={index} active={activeTestItem === index} onClick={handleTestItemClick} />
       ))}
       <Menu.Menu position='right'>
@@ -79,7 +79,7 @@ const TestData = (props: ProblemStateProps) => {
       </Menu.Menu>
     </Menu>
 
-    {problem?.tests.map((test: TestType, index: number) => (
+    {problem?.tests?.map((test: Test, index: number) => (
       <div key={`test-${index}`}>
         {activeTestItem == index ?
           <Form.Group widths='equal'>
@@ -117,7 +117,7 @@ const Skeletons = (props: ProblemStateProps) => {
   const handleSkeletonChange = (language: string, value?: string) => {
     if (problem && value)
       setProblem({
-        ...problem, skeletons: problem.skeletons.map((skeleton: SkeletonType) => {
+        ...problem, skeletons: problem.skeletons?.map((skeleton: Skeleton) => {
           if (language == skeleton.language)
             skeleton.source = value
           return skeleton
@@ -127,11 +127,11 @@ const Skeletons = (props: ProblemStateProps) => {
 
   return (<>
     <Menu>
-      {problem?.skeletons?.map((skeleton: SkeletonType, index: number) => (
+      {problem?.skeletons?.map((skeleton: Skeleton, index: number) => (
         <Menu.Item key={`skeleton-${index}`} name={skeleton.language} tab={skeleton.language} active={activeSkeleton == skeleton.language} onClick={handleSkeletonClick} />
       ))}
     </Menu>
-    {problem?.skeletons?.map((skeleton: SkeletonType, index: number) => (
+    {problem?.skeletons?.map((skeleton: Skeleton, index: number) => (
       <div key={`editor=${index}`}>
         {skeleton.language == activeSkeleton ?
           <Editor
@@ -152,7 +152,7 @@ const Skeletons = (props: ProblemStateProps) => {
 
 const EditProblems = (): JSX.Element => {
   const { problem_id } = useParams<{ problem_id: string }>()
-  const [problem, setProblem] = useState<ProblemType>()
+  const [problem, setProblem] = useState<Problem>()
 
   const [activeItem, setActiveItem] = useState<string>('problem-info')
   const handleItemClick = (event: React.MouseEvent, data: MenuItemProps) => setActiveItem(data.tab)
@@ -160,7 +160,11 @@ const EditProblems = (): JSX.Element => {
   const [message, setMessage] = useState<{ type: string, message: string }>()
 
   useEffect(() => {
-    fetch(`${config.API_URL}/problems?problem_id=${problem_id}`)
+    fetch(`${config.API_URL}/problems?pid=${problem_id}&columns=description,skeletons,tests`, {
+      headers: {
+        authorization: `Bearer ${localStorage.accessToken}`
+      }
+    })
       .then(res => res.json())
       .then(data => {
         data = Object.values(data)[0]

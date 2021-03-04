@@ -2,10 +2,10 @@ import React, { useContext, useEffect, useState } from 'react'
 
 import { Block, Countdown, FileDialog } from '../../components'
 import { Form, Button } from 'semantic-ui-react'
-import { ProblemType, SubmissionType } from '../../types'
 import { Link, useHistory, useParams } from 'react-router-dom'
 import config from '../../environment'
-import { UserContext } from '../../context/user'
+import { Problem, Submission } from 'abacus'
+import { AppContext } from '../../AppContext'
 
 interface Language {
   key: string;
@@ -19,9 +19,9 @@ const languages: Language[] = [
 ]
 
 const Submit = (): JSX.Element => {
-  const { user } = useContext(UserContext)
-  const [submissions, setSubmissions] = useState<SubmissionType[]>()
-  const [problem, setProblem] = useState<ProblemType>()
+  const { user } = useContext(AppContext);
+  const [submissions, setSubmissions] = useState<Submission[]>()
+  const [problem, setProblem] = useState<Problem>()
   const [language, setLanguage] = useState<Language>()
   const [file, setFile] = useState<File>()
   const history = useHistory()
@@ -32,7 +32,7 @@ const Submit = (): JSX.Element => {
       .then(res => res.json())
       .then(res => {
         if (res) {
-          const problem = Object.values(res)[0] as ProblemType
+          const problem = Object.values(res)[0] as Problem
           setProblem(problem)
           fetch(`${config.API_URL}/submissions?team_id=${user?.uid}&problem_id=${problem.pid}`)
             .then((res) => res.json())
@@ -49,15 +49,15 @@ const Submit = (): JSX.Element => {
     formData.set('problem_id', problem.pid)
     formData.set('source', file, file.name)
     formData.set('language', language.key)
-    formData.set('team_id', user.uid)
-    formData.set('division', user.division)
+    formData.set('team_id', user?.uid)
+    formData.set('division', user?.division || '')
 
     const res = await fetch(`${config.API_URL}/submissions`, {
       method: 'POST',
       body: formData
     })
 
-    const body: SubmissionType = await res.json()
+    const body: Submission = await res.json()
 
     if (res.status != 200) {
       alert("An error occurred! Please try again")

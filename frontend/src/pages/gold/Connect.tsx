@@ -1,11 +1,11 @@
 import React, { useContext, useState } from "react"
 import { Input, Form, Button } from "semantic-ui-react"
+import { AppContext } from "../../AppContext"
 import { Block } from "../../components"
-import { UserContext } from "../../context/user"
 import config from '../../environment'
 
 const Connect = (): JSX.Element => {
-  const { user } = useContext(UserContext)
+  const { user } = useContext(AppContext)
   const [username, setUsername] = useState<string>()
   const [disabled, setDisabled] = useState<boolean>(true)
 

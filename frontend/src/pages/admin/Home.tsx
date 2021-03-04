@@ -1,15 +1,15 @@
 import '@toast-ui/chart/dist/toastui-chart.min.css'
 
 import { LineChart, PieChart } from '@toast-ui/react-chart'
-import { ProblemType, SubmissionType } from '../../types'
+import { Problem, Submission } from 'abacus'
 import React, { useEffect, useState } from 'react'
 
 import { Block } from '../../components'
 import config from '../../environment'
 
 const Home = (): JSX.Element => {
-  const [submissions, setSubmissions] = useState<SubmissionType[]>()
-  const [problems, setProblems] = useState<ProblemType[]>([])
+  const [submissions, setSubmissions] = useState<Submission[]>()
+  const [problems, setProblems] = useState<Problem[]>([])
   const [startDate, setStartDate] = useState<number>(0)
   const [isMounted, setMounted] = useState(true)
 
@@ -23,7 +23,7 @@ const Home = (): JSX.Element => {
     response = await fetch(`${config.API_URL}/problems?division=blue`)
     let problems = await response.json()
     if (problems.length)
-      problems = problems.sort((a: ProblemType, b: ProblemType) => a.pid.localeCompare(b.pid))
+      problems = problems.sort((a: Problem, b: Problem) => a.pid.localeCompare(b.pid))
 
     if (isMounted) {
       setSubmissions(Object.values(submissions))
@@ -43,14 +43,14 @@ const Home = (): JSX.Element => {
 
   const statuses: { [key: string]: { name: string, data: number } } = {};
 
-  const timeSubmissions = Object.assign({}, ...problems.map((problem: ProblemType) => ({
+  const timeSubmissions = Object.assign({}, ...problems.map((problem: Problem) => ({
     [problem.pid]: {
       data: [0, 0, 0, 0, 0, 0],
       name: problem.name
     }
   })));
 
-  submissions?.forEach((sub: SubmissionType) => {
+  submissions?.forEach((sub: Submission) => {
     const timeBin = Math.floor((sub.date - startDate) / (1800));
     timeSubmissions[sub.problem.id].data[timeBin]++;
 

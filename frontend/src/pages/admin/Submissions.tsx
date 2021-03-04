@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react'
 import { Button, ButtonGroup, Loader, Popup, Table } from 'semantic-ui-react'
 import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
-import { SubmissionType } from '../../types'
 import { Block } from '../../components'
 import config from '../../environment'
+import { Submission } from 'abacus'
 
-interface SubmissionItem extends SubmissionType {
+interface SubmissionItem extends Submission {
   checked: boolean
 }
 type SortKey = 'date' | 'sid' | 'sub_no' | 'language' | 'status' | 'runtime' | 'date' | 'score'
@@ -34,7 +34,7 @@ const Submissions = (): JSX.Element => {
       .then(res => res.json())
       .then(data => {
         if (isMounted) {
-          const submissions: SubmissionType[] = Object.values(data)
+          const submissions: Submission[] = Object.values(data)
           setSubmissions(submissions.map(submission => ({ ...submission, checked: false })))
           setLoading(false)
         }
@@ -92,7 +92,7 @@ const Submissions = (): JSX.Element => {
             </Table.Header>
             <Table.Body>
               {submissions.length ? (submissions.sort(
-                (s1: SubmissionType, s2: SubmissionType) => `${s1[sortConfig.key]}`.localeCompare(`${s2[sortConfig.key]}`) * (sortConfig.direction == 'ascending' ? 1 : -1)
+                (s1: Submission, s2: Submission) => `${s1[sortConfig.key]}`.localeCompare(`${s2[sortConfig.key]}`) * (sortConfig.direction == 'ascending' ? 1 : -1)
               ).map((submission: SubmissionItem) =>
                 <Table.Row key={submission.sid}>
                   <Table.Cell>
@@ -104,7 +104,7 @@ const Submissions = (): JSX.Element => {
                   </Table.Cell>
                   <Table.Cell>
                     <Link to={`/admin/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link></Table.Cell>
-                  <Table.Cell><Link to={`/admin/problems/${submission.problem_id}`}>{submission.problem.name} </Link></Table.Cell>
+                  <Table.Cell><Link to={`/admin/problems/${submission.pid}`}>{submission.problem.name} </Link></Table.Cell>
                   <Table.Cell><Link to={`/admin/users/${submission.team.uid}`}>{submission.team.display_name}</Link></Table.Cell>
                   <Table.Cell>{submission.sub_no + 1}</Table.Cell>
                   <Table.Cell>{submission.language}</Table.Cell>
