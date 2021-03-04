@@ -1,19 +1,17 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Icon, Label, Table } from "semantic-ui-react";
 import { Link } from "react-router-dom";
-import { Block, Countdown, Unauthorized } from "../../components";
-import { ProblemType, SubmissionType } from '../../types'
+import { Block, Countdown } from "../../components";
 import '../../components/Table.scss'
 import config from '../../environment'
-import { UserContext } from "../../context/user";
-import { useAuth } from "../../authlib";
+import { Problem, Submission } from "abacus";
+import { AppContext } from "../../AppContext";
 
 const Problems = (): JSX.Element => {
-  const { user } = useContext(UserContext)
+  const { user } = useContext(AppContext);
   const [isMounted, setMounted] = useState<boolean>(false)
-  const [isAuthenticated] = useAuth(user, isMounted)
-  const [problems, setProblems] = useState<ProblemType[]>();
-  const [submissions, setSubmissions] = useState<{ [key: string]: SubmissionType[] }>()
+  const [problems, setProblems] = useState<Problem[]>();
+  const [submissions, setSubmissions] = useState<{ [key: string]: Submission[] }>()
 
   useEffect(() => {
     setMounted(true)
@@ -22,7 +20,7 @@ const Problems = (): JSX.Element => {
       .then((probs) => {
         if (isMounted) {
           probs = Object.values(probs)
-          probs.sort((a: ProblemType, b: ProblemType) => a.id.localeCompare(b.id))
+          probs.sort((a: Problem, b: Problem) => a.id.localeCompare(b.id))
           setProblems(probs)
         }
       })
@@ -31,12 +29,12 @@ const Problems = (): JSX.Element => {
       .then(res => res.json())
       .then(data => {
         if (isMounted) {
-          const submissions: SubmissionType[] = Object.values(data)
-          const subs: { [key: string]: SubmissionType[] } = {}
-          submissions.forEach((sub: SubmissionType) => {
-            const { problem_id } = sub
-            if (!(problem_id in subs)) subs[problem_id] = []
-            subs[problem_id].push(sub)
+          const submissions: Submission[] = Object.values(data)
+          const subs: { [key: string]: Submission[] } = {}
+          submissions.forEach((sub: Submission) => {
+            const { pid } = sub
+            if (!(pid in subs)) subs[pid] = []
+            subs[pid].push(sub)
           })
           setSubmissions(subs)
         }
@@ -44,7 +42,7 @@ const Problems = (): JSX.Element => {
     return () => { setMounted(false) }
   }, [isMounted]);
 
-  const problemInfo = (problem: ProblemType) => {
+  const problemInfo = (problem: Problem) => {
     if (submissions && problem.pid in submissions && submissions[problem.pid].length) {
       const subs = submissions[problem.pid].sort((s1, s2) => s1.date - s2.date)
       const lastSub = subs[subs.length - 1]
@@ -73,35 +71,30 @@ const Problems = (): JSX.Element => {
 
   return (
     <>
-      {isAuthenticated ?
-        <>
-          <Countdown />
-          <Block size="xs-12" transparent>
-            <Table celled>
-              <Table.Header>
-                <Table.Row>
-                  <Table.HeaderCell></Table.HeaderCell>
-                  <Table.HeaderCell>Problem Name</Table.HeaderCell>
-                  <Table.HeaderCell># of Submissions</Table.HeaderCell>
-                  <Table.HeaderCell>Latest Submission</Table.HeaderCell>
-                </Table.Row>
-              </Table.Header>
-              <Table.Body>
-                {problems ? problems.map((problem: ProblemType, index: number) =>
-                  <Table.Row key={index}>
-                    <Table.HeaderCell collapsing textAlign='center'>{problem.id}</Table.HeaderCell>
-                    <Table.Cell>
-                      <Link to={`/blue/problems/${problem.id}`}>{problem.name}</Link>
-                    </Table.Cell>
-                    {problemInfo(problem)}
-                  </Table.Row>
-                ) : <></>}
-              </Table.Body>
-            </Table>
-          </Block>
-        </> :
-        <Unauthorized />
-      }
+      <Countdown />
+      <Block size="xs-12" transparent>
+        <Table celled>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell></Table.HeaderCell>
+              <Table.HeaderCell>Problem Name</Table.HeaderCell>
+              <Table.HeaderCell># of Submissions</Table.HeaderCell>
+              <Table.HeaderCell>Latest Submission</Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {problems ? problems.map((problem: Problem) =>
+              <Table.Row key={problem.pid}>
+                <Table.HeaderCell collapsing textAlign='center'>{problem.id}</Table.HeaderCell>
+                <Table.Cell>
+                  <Link to={`/blue/problems/${problem.id}`}>{problem.name}</Link>
+                </Table.Cell>
+                {problemInfo(problem)}
+              </Table.Row>
+            ) : <></>}
+          </Table.Body>
+        </Table>
+      </Block>
     </>
   );
 };
