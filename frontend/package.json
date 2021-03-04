@@ -12,7 +12,7 @@
         "@types/react-dom": "^16.9.10",
         "@types/react-syntax-highlighter": "^13.5.0",
         "@types/socket.io-client": "^1.4.35",
-        "@uiw/react-md-editor": "^2.1.8",
+        "@uiw/react-md-editor": "^1.13.3",
         "moment": "^2.29.1",
         "react": "^17.0.1",
         "react-dom": "^17.0.1",
