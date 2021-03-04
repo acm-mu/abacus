@@ -8,75 +8,63 @@ declare module "abacus" {
     start_date: number;
     end_date: number
   }
-
-  export interface Test {
-    in: string;
-    out: string;
-    result: string;
-  }
-
-  export interface Skeleton {
-    language: string;
-    source: string;
-  }
-
   export interface Submission {
+    sid: string;
     date: number;
     filename: string;
     filesize: number;
+    source: string;
     language: string;
     md5: string;
-    problem_id: string;
+    pid: string;
     runtime: number;
     score: number;
     status: string;
     sub_no: number;
-    submission_id: string;
-    team_id: string;
+    tid: string;
     tests: Test[];
   }
-
-  export interface ProblemScore {
-    num_submissions: number;
-    problem_score: number;
-    solved: boolean;
-    submissions: Submission[];
-  }
-
   export interface Problem {
-    problem_id: string;
+    pid: string;
     id: string;
-    problem_name: string;
+    division: string;
+    name: string;
     description: string;
     cpu_time_limit: number;
     memory_limit: number;
-    tests: Test[];
-    skeletons: Skeleton[];
   }
-
   export interface User {
     uid: string;
     role: string;
     username: string;
     password: string;
     display_name: string;
-    division: string;
+    division?: string;
     school?: string;
     scratch_username?: string;
-    session_token: string;
   }
-
+  export interface Test {
+    in: string;
+    out: string;
+    result: string;
+  }
+  export interface Skeleton {
+    language: string;
+    source: string;
+  }
+  export interface ProblemScore {
+    num_submissions: number;
+    problem_score: number;
+    solved: boolean;
+    submissions: Submission[];
+  }
   export interface StandingsUser {
-    user_id: string;
-    role: string;
-    username: string;
     display_name: string;
-    division: string;
-    school?: string;
-    scratch_username?: string;
+    uid: string;
+    username: string;
     solved: number;
     time: number;
-    problems: [ProblemScore];
+    problems: { [key: string]: ProblemScore };
   }
 
   export interface Args { [key: string]: any }

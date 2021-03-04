@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
 import { matchedData, ParamSchema, validationResult } from "express-validator";
-import contest, { transpose } from '../../contest';
+import contest, { transpose } from '../../abacus/contest';
 
 export const schema: Record<string, ParamSchema> = {
-  user_id: {
+  uid: {
     in: ['body', 'query'],
     isString: true,
     optional: true,
-    errorMessage: 'String user_id is invalid'
+    errorMessage: 'String uid is invalid'
   },
   display_name: {
     in: ['body', 'query'],
@@ -58,8 +58,18 @@ export const getUsers = async (req: Request, res: Response) => {
     res.status(400).json({ message: errors[0].msg })
     return
   }
+  const params = matchedData(req)
+
+  if (req.user.role == 'team')
+    params.uid = req.user.uid
+  if (req.user.role == 'judge') {
+    params.role = 'team'
+    params.division = req.user.division
+  }
+
   try {
-    const users = await contest.scanItems('user', matchedData(req))
+    const users = await contest.scanItems('user', params)
+    users?.map(user => delete user.password)
     res.send(transpose(users, 'uid'))
   } catch (err) {
     res.sendStatus(500)

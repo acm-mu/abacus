@@ -1,28 +1,23 @@
+import { Problem, User } from 'abacus';
 import { Request, Response } from 'express';
 import { UploadedFile } from 'express-fileupload';
 import { matchedData, ParamSchema, validationResult } from "express-validator";
 import { v4 as uuidv4 } from 'uuid';
 
-import contest from '../../contest';
+import contest from '../../abacus/contest';
 
 export const schema: Record<string, ParamSchema> = {
   pid: {
     in: 'body',
     isString: true,
     notEmpty: true,
-    errorMessage: 'problem_id is not supplied'
+    errorMessage: 'pid is not supplied'
   },
-  team_id: {
+  tid: {
     in: 'body',
     isString: true,
     notEmpty: true,
-    errorMessage: 'team_id is not supplied'
-  },
-  division: {
-    in: 'body',
-    isString: true,
-    notEmpty: true,
-    errorMessage: 'division is not supplied'
+    errorMessage: 'tid is not supplied'
   },
   language: {
     in: 'body',
@@ -43,36 +38,50 @@ export const postSubmissions = async (req: Request, res: Response) => {
     return
   }
 
-  const { problem_id, team_id, division, language } = matchedData(req)
+  try {
+    const { pid, tid, language } = matchedData(req)
 
-  const submissions = await contest.scanItems('submission', { team_id, problem_id })
+    const user = await contest.getItem('user', { uid: tid }) as unknown as User
+    if (!user) {
+      res.status(400).send('Team does not exist!')
+      return
+    }
 
-  const { name: filename, size: filesize, md5, data } = req.files!.source as UploadedFile
-  const submission_id = uuidv4().replace(/-/g, '')
-  const submission = {
-    submission_id,
-    problem_id,
-    team_id,
-    division,
-    language,
-    filename,
-    filesize,
-    md5,
-    sub_no: submissions?.length,
-    status: 'pending',
-    score: 0,
-    date: Date.now() / 1000,
-    runtime: 0,
-    tests: [],
-    source: data.toString('utf-8')
+    const problem = await contest.getItem('problem', { pid: pid }) as unknown as Problem
+    if (!problem) {
+      res.status(400).send('Problem does not exist!')
+      return
+    }
+    if (user?.division != problem.division) {
+      res.status(400).send('Wrong division!')
+      return
+    }
+
+    const submissions = await contest.scanItems('submission', { tid, pid })
+
+    const { name: filename, size: filesize, md5, data } = req.files!.source as UploadedFile
+
+    const submission = {
+      sid: uuidv4().replace(/-/g, ''),
+      pid,
+      tid,
+      division: problem.division,
+      language,
+      filename,
+      filesize,
+      md5,
+      sub_no: submissions?.length,
+      status: 'pending',
+      score: 0,
+      date: Date.now() / 1000,
+      runtime: 0,
+      source: data.toString('utf-8')
+    }
+
+    await contest.putItem('submission', submission)
+    res.send(submission)
+  } catch (err) {
+    console.error(err)
+    res.sendStatus(500)
   }
-
-  contest.getItem('problem', { problem_id })
-    .then((result: any) => {
-      submission.tests = result.tests
-      contest.putItem('submission', submission)
-        .then(_ => res.send(submission))
-        .catch(err => res.status(500).send(err))
-    })
-    .catch(err => res.status(500).send(err))
 }

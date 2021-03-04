@@ -3,7 +3,7 @@ import { Request, Response } from 'express'
 import { matchedData, ParamSchema, validationResult } from "express-validator";
 import { v4 as uuidv4 } from 'uuid'
 
-import contest from "../../contest"
+import contest from "../../abacus/contest"
 
 export const schema: Record<string, ParamSchema> = {
   display_name: {
@@ -58,7 +58,7 @@ export const postUsers = async (req: Request, res: Response) => {
   item.password = createHash('sha256').update(item.password).digest('hex')
 
   const users = await contest.scanItems('user', { username: item.username }) || {}
-  if (Object.values(users).length > 1) {
+  if (Object.values(users).length) {
     res.status(400).json({ message: 'Username is taken!' })
     return
   }

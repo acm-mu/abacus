@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import contest, { makeJSON } from '../../contest';
+import contest, { makeJSON } from '../../abacus/contest';
 
 export const exportSubmissions = async (_: Request, res: Response) => {
   try {

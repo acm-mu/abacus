@@ -2,14 +2,14 @@ import { Request, Response } from 'express';
 import { matchedData, ParamSchema, validationResult } from "express-validator";
 import { v4 as uuidv4 } from 'uuid';
 
-import contest from '../../contest';
+import contest from '../../abacus/contest';
 
 export const schema: Record<string, ParamSchema> = {
-  description: {
+  id: {
     in: 'body',
     isString: true,
     notEmpty: true,
-    errorMessage: 'description is not supplied'
+    errorMessage: 'id is not supplied'
   },
   division: {
     in: 'body',
@@ -17,25 +17,11 @@ export const schema: Record<string, ParamSchema> = {
     notEmpty: true,
     errorMessage: 'division is not supplied'
   },
-  id: {
+  name: {
     in: 'body',
     isString: true,
     notEmpty: true,
-    errorMessage: 'id is not supplied'
-  },
-  problem_name: {
-    in: 'body',
-    isString: true,
-    notEmpty: true,
-    errorMessage: 'problem_name is not supplied'
-  },
-  tests: {
-    in: 'body',
-    optional: true
-  },
-  skeletons: {
-    in: 'body',
-    optional: true
+    errorMessage: 'name is not supplied'
   },
   memory_limit: {
     in: 'body',
@@ -45,6 +31,24 @@ export const schema: Record<string, ParamSchema> = {
   cpu_time_limit: {
     in: 'body',
     isNumeric: true,
+    optional: true
+  },
+  description: {
+    in: 'body',
+    isString: true,
+    notEmpty: true,
+    errorMessage: 'description is not supplied'
+  },
+  skeletons: {
+    in: 'body',
+    optional: true
+  },
+  solutions: {
+    in: 'body',
+    optional: true
+  },
+  tests: {
+    in: 'body',
     optional: true
   }
 }
@@ -57,8 +61,15 @@ export const postProblems = async (req: Request, res: Response) => {
   }
 
   const item = matchedData(req)
-  item.skeletons = [{ source: '# Python skeleton goes here', language: 'python' }, { source: '// Java skeleton goes here', language: 'java' }]
   item.pid = uuidv4().replace(/-/g, '')
+  item.skeletons = [{ source: '# Python skeleton goes here', language: 'python' }, { source: '// Java skeleton goes here', language: 'java' }]
+  item.solutions = [{ source: '# Python solution goes here', language: 'python' }, { source: '// Java solution goes here', language: 'java' }]
+
+  const problems = await contest.scanItems('problem', { id: item.id }) || {}
+  if (Object.values(problems).length > 0) {
+    res.status(400).json({ message: "Problem id is taken!" })
+    return
+  }
 
   try {
     await contest.putItem('problem', item)

@@ -1,14 +1,14 @@
 import { createHash } from 'crypto';
 import { Request, Response } from 'express';
 import { matchedData, ParamSchema, validationResult } from "express-validator";
-import contest from "../../contest"
+import contest from "../../abacus/contest"
 
 export const schema: Record<string, ParamSchema> = {
-  user_id: {
+  uid: {
     in: 'body',
     isString: true,
     notEmpty: true,
-    errorMessage: 'String user_id is not supplied'
+    errorMessage: "'uid' is not provided"
   },
   display_name: {
     in: 'body',
@@ -63,18 +63,22 @@ export const putUsers = async (req: Request, res: Response) => {
   }
 
   const item = matchedData(req)
-  item.password = createHash('sha256').update(item.password).digest('hex')
+  if (item.password)
+    item.password = createHash('sha256').update(item.password).digest('hex')
 
   try {
-    const users = await contest.scanItems('user', { username: item.username }) || {}
-    if (Object.values(users).length > 1) {
-      res.status(400).json({ message: "Username is taken!" })
-      return
+    if (item.username) {
+      const users = await contest.scanItems('user', { username: item.username }) || {}
+      if (Object.values(users).length > 0) {
+        res.status(400).json({ message: "Username is taken!" })
+        return
+      }
     }
 
     await contest.updateItem('user', { uid: item.uid }, item)
     res.send(item)
   } catch (err) {
+    console.error(err)
     res.sendStatus(500)
   }
 }

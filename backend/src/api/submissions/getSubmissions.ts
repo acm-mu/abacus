@@ -1,14 +1,14 @@
 import { Request, Response } from 'express'
 import { matchedData, ParamSchema, validationResult } from "express-validator"
-import contest, { transpose } from '../../contest'
+import contest, { transpose } from '../../abacus/contest'
 
 export const schema: Record<string, ParamSchema> = {
-  submission_id: {
+  sid: {
     in: ['query', 'body'],
     isString: true,
     notEmpty: true,
     optional: true,
-    errorMessage: 'submission_id is invalid'
+    errorMessage: 'sid is invalid'
   },
   division: {
     in: ['query', 'body'],
@@ -24,12 +24,12 @@ export const schema: Record<string, ParamSchema> = {
     optional: true,
     errorMessage: 'language is invalid'
   },
-  problem_id: {
+  pid: {
     in: ['query', 'body'],
     isString: true,
     notEmpty: true,
     optional: true,
-    errorMessage: 'problem_id is invalid'
+    errorMessage: 'pid is invalid'
   },
   status: {
     in: ['query', 'body'],
@@ -45,12 +45,12 @@ export const schema: Record<string, ParamSchema> = {
     optional: true,
     errorMessage: 'sub_no is invalid'
   },
-  team_id: {
+  tid: {
     in: ['query', 'body'],
     isString: true,
     notEmpty: true,
     optional: true,
-    errorMessage: 'team_id is invalid'
+    errorMessage: 'tid is invalid'
   }
 }
 
@@ -64,13 +64,21 @@ export const getSubmissions = async (req: Request, res: Response) => {
   const teams = transpose(await contest.scanItems('user', { role: 'team' }), 'uid')
 
   try {
-    const submissions = await contest.scanItems('submission', matchedData(req))
+    const item = matchedData(req)
+
+    if (req.user.role == 'judge') {
+      item.division = req.user.division
+    } else if (req.user.role == 'team') {
+      item.tid = req.user.uid
+    }
+
+    const submissions = await contest.scanItems('submission', item)
 
     submissions?.map((submission: any) => {
-      submission.problem = problems[submission.problem_id]
-      const team = teams[submission.team_id]
+      submission.problem = problems[submission.pid]
+      const team = teams[submission.tid]
       submission.team = {
-        user_id: team.user_id,
+        uid: team.uid,
         username: team.username,
         display_name: team.display_name,
         division: team.division

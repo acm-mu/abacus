@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
 import { ParamSchema, validationResult } from "express-validator";
-import contest from '../../contest';
+import contest from '../../abacus/contest';
 
 export const schema: Record<string, ParamSchema> = {
   pid: {
     in: 'body',
     notEmpty: true,
-    errorMessage: 'problem_id is not supplied'
+    errorMessage: 'pid is not supplied'
   }
 }
 
@@ -42,7 +42,7 @@ export const deleteProblems = async (req: Request, res: Response) => {
   } else {
     deleteSubmissionsForProblem(req.body.pid)
     try {
-      await contest.deleteItem('problem', { problem_id: req.body.problem_id })
+      await contest.deleteItem('problem', { pid: req.body.pid })
       res.json({ message: "Problem successfully deleted" })
     } catch (err) { res.sendStatus(500) }
   }

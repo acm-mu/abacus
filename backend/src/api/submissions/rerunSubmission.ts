@@ -2,14 +2,14 @@ import { Converter } from 'aws-sdk/clients/dynamodb';
 import { InvocationResponse } from 'aws-sdk/clients/lambda';
 import { Request, Response } from 'express';
 import { matchedData, ParamSchema, validationResult } from "express-validator"
-import contest from '../../contest'
+import contest from '../../abacus/contest'
 
 export const schema: Record<string, ParamSchema> = {
-  submission_id: {
-    in: ['query', 'body'],
+  sid: {
+    in: 'body',
     isString: true,
     notEmpty: true,
-    errorMessage: 'submission_id is invalid'
+    errorMessage: 'sid is invalid'
   }
 }
 

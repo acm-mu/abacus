@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
 import { matchedData, ParamSchema, validationResult } from "express-validator";
-import contest from '../../contest';
+import contest from '../../abacus/contest';
 
 export const schema: Record<string, ParamSchema> = {
-  submission_id: {
+  sid: {
     in: 'body',
     isString: true,
     notEmpty: true,
-    errorMessage: 'submission_id is not supplied'
+    errorMessage: 'sid is not supplied'
   },
   division: {
     in: 'body',
@@ -23,12 +23,12 @@ export const schema: Record<string, ParamSchema> = {
     optional: true,
     errorMessage: 'language is invalid'
   },
-  problem_id: {
+  pid: {
     in: 'body',
     isString: true,
     notEmpty: true,
     optional: true,
-    errorMessage: 'problem_id is invalid'
+    errorMessage: 'pid is invalid'
   },
   status: {
     in: 'body',
@@ -44,12 +44,12 @@ export const schema: Record<string, ParamSchema> = {
     optional: true,
     errorMessage: 'sub_no is invalid'
   },
-  team_id: {
+  tid: {
     in: 'body',
     isString: true,
     notEmpty: true,
     optional: true,
-    errorMessage: 'team_id is invalid'
+    errorMessage: 'tid is invalid'
   }
 }
 
