@@ -64,7 +64,6 @@ class ContestService {
             params.ExpressionAttributeNames = { ...params.ExpressionAttributeNames, ...Object.assign({}, ...columns.map((e) => ({ [`#${e}`]: `${e}` }))) }
           else
             params.ExpressionAttributeNames = Object.assign({}, ...columns.map((e) => ({ [`#${e}`]: `${e}` })))
-          console.log(params)
         }
       }
       this.db.scan(params, (err: AWSError, data: ScanOutput) => {
