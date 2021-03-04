@@ -15,7 +15,12 @@ const PORT = process.env.PORT || 80;
 
 const app = express();
 const server = createServer(app);
-const io = new Server(server, { serveClient: false });
+const io = new Server(server, {
+  serveClient: false,
+  cors: {
+    origin: "*"
+  }
+});
 
 app.use(cors()); // Enables CORS on all endpoints
 app.use(bodyParser.json()); // Middleware to parse body of requests as JSON
