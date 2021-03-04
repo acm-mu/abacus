@@ -1,10 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
-
 import { Link, useHistory } from "react-router-dom";
 import { Container, Dropdown, Menu } from "semantic-ui-react";
-import { useAuth } from "../authlib";
-import { UserContext } from "../context/user";
+import { AppContext } from "../AppContext";
 import fulllogoy from '../assets/fulllogoy.png'
+import LoginModal from "./Login";
 
 type Props = {
   children: React.ReactNode;
@@ -13,16 +12,19 @@ type Props = {
 
 const Navigation: React.FunctionComponent<Props> = (props: Props) => {
   const history = useHistory()
-  const { user, setUser } = useContext(UserContext)
+  const { user, setUser, loaded } = useContext(AppContext)
   const [isMounted, setMounted] = useState<boolean>(false)
-  const [isAuthenticated] = useAuth(user, isMounted)
 
   const handleLogout = () => {
     if (isMounted) {
+      localStorage.removeItem('accessToken')
       // When clicking the logout button, the username onClick fires and redirects to user home. 
       // Redirect to homepage 20ms later
-      setTimeout(() => history.push('/'), 20)
-      setUser(undefined)
+      setTimeout(() => {
+        setUser(undefined)
+        history.push('/')
+      }, 1)
+
     }
   }
 
@@ -58,18 +60,20 @@ const Navigation: React.FunctionComponent<Props> = (props: Props) => {
 
         {props.children}
 
-        <Menu.Menu position="right">
-          {isAuthenticated ?
-            <Dropdown item text={user?.display_name} onClick={() => { history.push(userHome()) }} simple>
+        {loaded && <Menu.Menu position="right">
+          {user ?
+            <Dropdown item simple
+              text={user.display_name}
+              onClick={() => { history.push(userHome()) }}>
               <Dropdown.Menu>
                 <Dropdown.Item onClick={handleLogout} text="Log out" />
               </Dropdown.Menu>
             </Dropdown> :
-            <Menu.Item as={Link} to="/login" content="Log in" />
+            <LoginModal trigger={<Menu.Item content="Log in" />} />
           }
-        </Menu.Menu>
+        </Menu.Menu>}
       </Container>
-    </Menu>
+    </Menu >
   );
 };
 
