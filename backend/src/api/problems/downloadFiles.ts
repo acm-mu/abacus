@@ -1,18 +1,18 @@
-import { Problem } from 'abacus';
-import archiver from 'archiver';
+// import { Problem } from 'abacus';
+// import archiver from 'archiver';
 import { Request, Response } from 'express';
 import { matchedData, ParamSchema, validationResult } from "express-validator";
 import contest from '../../abacus/contest';
 
-const stripFilename = (str: string) => str.replace(/ /g, '_').replace(/[!@#$%^&*\(\)]/g, '');
-const fileExtension = (lang: string) => {
-  switch (lang) {
-    case 'python':
-      return 'py';
-    default:
-      return lang
-  }
-}
+// const stripFilename = (str: string) => str.replace(/ /g, '_').replace(/[!@#$%^&*\(\)]/g, '');
+// const fileExtension = (lang: string) => {
+//   switch (lang) {
+//     case 'python':
+//       return 'py';
+//     default:
+//       return lang
+//   }
+// }
 
 export const schema: Record<string, ParamSchema> = {
   pid: {
@@ -22,13 +22,13 @@ export const schema: Record<string, ParamSchema> = {
   }
 }
 
-export const downloadFiles = async (req: Request, res: Response) => {
-  const errors = validationResult(req).array()
-  if (errors.length > 0) {
-    res.status(400).json({ message: errors[0].msg })
-    return
-  }
-  const { pid } = matchedData(req)
+export const downloadFiles = async (_req: Request, _res: Response) => {
+  // const errors = validationResult(req).array()
+  // if (errors.length > 0) {
+  //   res.status(400).json({ message: errors[0].msg })
+  //   return
+  // }
+  // const { pid } = matchedData(req)
 
   try {
     const problem = await contest.getItem('problem', { pid }) as unknown as Problem
