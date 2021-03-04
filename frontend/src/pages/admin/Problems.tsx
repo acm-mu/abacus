@@ -31,24 +31,24 @@ const Problems = (): JSX.Element => {
         }
       })
 
-    // fetch(`${config.API_URL}/submissions?division=blue`, {
-    //   headers: {
-    //     authorization: `Bearer ${localStorage.accessToken}`
-    //   }
-    // })
-    //   .then(res => res.json())
-    //   .then(data => {
-    //     if (isMounted) {
-    //       const submissions: Submission[] = Object.values(data)
-    //       const subs: { [key: string]: Submission[] } = {}
-    //       submissions.forEach((sub: Submission) => {
-    //         const { pid } = sub;
-    //         if (!(pid in subs)) subs[pid] = []
-    //         subs[pid].push(sub)
-    //       })
-    //       setSubmissions(subs)
-    //     }
-    //   })
+    fetch(`${config.API_URL}/submissions?division=blue`, {
+      headers: {
+        authorization: `Bearer ${localStorage.accessToken}`
+      }
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (isMounted) {
+          const submissions: Submission[] = Object.values(data)
+          const subs: { [key: string]: Submission[] } = {}
+          submissions.forEach((sub: Submission) => {
+            const { pid } = sub;
+            if (!(pid in subs)) subs[pid] = []
+            subs[pid].push(sub)
+          })
+          setSubmissions(subs)
+        }
+      })
     return () => { setMounted(false) }
   }, [isMounted])
 
