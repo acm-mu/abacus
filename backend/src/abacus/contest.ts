@@ -1,5 +1,3 @@
-/// <reference types="./@types/abacus" />
-
 import { Args, Settings } from "abacus";
 import AWS, { AWSError, Lambda, S3 } from "aws-sdk";
 import { AttributeMap, BatchWriteItemOutput, DeleteItemOutput, DocumentClient, GetItemOutput, ItemList, PutItemOutput, ScanInput, ScanOutput, UpdateItemOutput } from "aws-sdk/clients/dynamodb";
@@ -47,7 +45,7 @@ class ContestService {
     })
   }
 
-  scanItems(tableName: string, args?: Args): Promise<ItemList | undefined> {
+  scanItems(tableName: string, args?: Args, columns?: string[]): Promise<ItemList | undefined> {
     return new Promise((resolve, reject) => {
       let params: ScanInput = {
         TableName: tableName
@@ -58,6 +56,15 @@ class ContestService {
           params.FilterExpression = entries.map((e) => (`#${e[0]} = :${e[0]}`)).join(" AND ")
           params.ExpressionAttributeNames = Object.assign({}, ...entries.map((x) => ({ [`#${x[0]}`]: x[0] })))
           params.ExpressionAttributeValues = Object.assign({}, ...entries.map((x) => ({ [`:${x[0]}`]: x[1] })))
+
+        }
+        if (columns) {
+          params.ProjectionExpression = columns.map((e) => `#${e}`).join(", ")
+          if (params.ExpressionAttributeNames)
+            params.ExpressionAttributeNames = { ...params.ExpressionAttributeNames, ...Object.assign({}, ...columns.map((e) => ({ [`#${e}`]: `${e}` }))) }
+          else
+            params.ExpressionAttributeNames = Object.assign({}, ...columns.map((e) => ({ [`#${e}`]: `${e}` })))
+          console.log(params)
         }
       }
       this.db.scan(params, (err: AWSError, data: ScanOutput) => {
