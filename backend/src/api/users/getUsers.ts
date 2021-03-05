@@ -60,9 +60,9 @@ export const getUsers = async (req: Request, res: Response) => {
   }
   const params = matchedData(req)
 
-  if (req.user.role == 'team')
-    params.uid = req.user.uid
-  if (req.user.role == 'judge') {
+  if (req.user?.role == 'team')
+    params.uid = req.user?.uid
+  if (req.user?.role == 'judge') {
     params.role = 'team'
     params.division = req.user.division
   }
