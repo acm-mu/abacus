@@ -26,7 +26,7 @@ const ProblemInfo = (props: ProblemStateProps) => {
   return (
     <Form>
       <Form.Field label='Problem ID' name='id' control={Input} onChange={handleChange} value={problem?.id || ''} />
-      <Form.Field label='Problem Name' name='problem_name' control={Input} onChange={handleChange} value={problem?.name || ''} />
+      <Form.Field label='Problem Name' name='name' control={Input} onChange={handleChange} value={problem?.name || ''} />
       <Form.Group widths='equal'>
         <Form.Field label='Memory Limit' name='memory_limit' control={Input} onChange={handleChange} value={problem?.memory_limit || -1} />
         <Form.Field label='CPU Time Limit' name='cpu_time_limit' control={Input} onChange={handleChange} value={problem?.cpu_time_limit || -1} />
