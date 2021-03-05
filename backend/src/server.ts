@@ -40,12 +40,6 @@ app.get('/ping', (_, res) => {
   res.send('Pong!')
 })
 
-// io.on('connection', (socket) => {
-//   socket.on('ping', () => {
-//     socket.emit('pong')
-//   })
-// })
-
 server.listen(PORT, () => {
   console.log(`🚀 Server is running at :${PORT}`);
 });
