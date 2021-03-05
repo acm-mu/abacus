@@ -5,6 +5,7 @@ import fileUpload from 'express-fileupload';
 import { createServer } from 'http'
 import morgan from 'morgan';
 import { Server } from 'socket.io'
+import { v4 as uuidv4 } from 'uuid'
 
 import api from "./api";
 
@@ -30,12 +31,20 @@ app.use(morgan('dev'));
 app.use(api);
 app.get('/', (_, res) => res.status(200).send(' ')); // Sends 200 OK when AWS EBS pings server for health check
 
-io.on('connection', (socket) => {
-  console.log('Client connected...')
-  socket.on('ping', () => {
-    socket.emit('pong')
-  })
+const sendNotification = (header: string, content: string) => {
+  io.sockets.emit('notification', { header, content, id: uuidv4() })
+}
+
+app.get('/ping', (_, res) => {
+  sendNotification("New Message!", "You got mail!");
+  res.send('Pong!')
 })
+
+// io.on('connection', (socket) => {
+//   socket.on('ping', () => {
+//     socket.emit('pong')
+//   })
+// })
 
 server.listen(PORT, () => {
   console.log(`🚀 Server is running at :${PORT}`);

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { Footer } from "./components";
+import { Footer, Notifications } from "./components";
 import "./App.scss";
 
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
@@ -13,10 +13,10 @@ import config from './environment'
 import io from 'socket.io-client';
 
 const App = (): JSX.Element => {
-
   const [user, setUser] = useState()
   const [settings, setSettings] = useState()
   const [loaded, setLoaded] = useState(false)
+  const [socket, setSocket] = useState<SocketIOClient.Socket>()
 
   const checkAuth = async () => {
     const res = await fetch(`${config.API_URL}/auth`,
@@ -42,6 +42,7 @@ const App = (): JSX.Element => {
   }
 
   useEffect(() => {
+    setSocket(io(config.API_URL))
     checkAuth()
     loadSettings()
   }, [])
@@ -49,13 +50,14 @@ const App = (): JSX.Element => {
   const appContext: AppContextType = {
     user,
     setUser,
-    socket: io(config.API_URL),
+    socket,
     loaded,
     settings
   }
 
   return (
     <AppContext.Provider value={appContext} >
+      <Notifications />
       <Router>
         <Switch>
           <Route path='/admin' component={Admin} />
