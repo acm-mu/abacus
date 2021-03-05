@@ -44,9 +44,4 @@ export const postAuth = async (req: Request, res: Response) => {
   } catch (err) {
     res.sendStatus(500)
   }
-
-  /*
-  jwt.sign(user, process.env.ACCESS_TOKEN_SECRET)
-  */
-
 }
