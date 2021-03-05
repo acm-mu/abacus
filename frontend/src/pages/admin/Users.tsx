@@ -5,7 +5,7 @@ import { Block } from '../../components'
 import config from '../../environment'
 import CreateUser from './CreateUser'
 import { User } from 'abacus'
-import { AppContext } from '../../AppContext'
+import AppContext from '../../AppContext'
 interface UserItem extends User {
   checked: boolean
 }

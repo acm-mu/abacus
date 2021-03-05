@@ -18,7 +18,7 @@ import EditUser from "./EditUser";
 import UploadUsers from "./UploadUsers";
 import UploadProblems from "./UploadProblems";
 import LoginModal from "../../components/Login";
-import { AppContext } from "../../AppContext";
+import AppContext from "../../AppContext";
 import DefaultNavigation from "../DefaultNavigation";
 
 const Admin = (): JSX.Element => {

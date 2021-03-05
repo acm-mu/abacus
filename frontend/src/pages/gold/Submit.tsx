@@ -1,7 +1,7 @@
 import { Problem } from "abacus";
 import React, { useContext, useEffect, useState } from "react";
 import { Form, Input, Select, Label } from "semantic-ui-react";
-import { AppContext } from "../../AppContext";
+import AppContext from "../../AppContext";
 import { Block } from "../../components";
 import config from "../../environment"
 

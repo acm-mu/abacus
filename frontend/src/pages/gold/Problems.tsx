@@ -4,7 +4,7 @@ import { Block, Countdown, Unauthorized } from '../../components'
 import config from '../../environment'
 import { Link } from 'react-router-dom'
 import { Problem } from 'abacus'
-import { AppContext } from '../../AppContext'
+import AppContext from '../../AppContext'
 
 const Problems = (): JSX.Element => {
   const [isMounted, setMounted] = useState<boolean>(false)

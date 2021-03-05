@@ -5,7 +5,7 @@ import { Form, Button } from 'semantic-ui-react'
 import { Link, useHistory, useParams } from 'react-router-dom'
 import config from '../../environment'
 import { Problem, Submission } from 'abacus'
-import { AppContext } from '../../AppContext'
+import AppContext from '../../AppContext'
 
 interface Language {
   key: string;

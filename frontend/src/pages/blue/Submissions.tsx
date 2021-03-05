@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { Block, Countdown, Unauthorized } from "../../components";
 import config from '../../environment'
 import "../../components/Icons.scss";
-import { AppContext } from "../../AppContext";
+import AppContext from "../../AppContext";
 import { Submission } from "abacus";
 
 const Submissions = (): JSX.Element => {

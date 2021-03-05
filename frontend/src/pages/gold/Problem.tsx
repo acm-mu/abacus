@@ -5,7 +5,7 @@ import { Block, Countdown } from '../../components'
 import config from "../../environment"
 import MDEditor from '@uiw/react-md-editor'
 import { Problem, Submission } from 'abacus'
-import { AppContext } from '../../AppContext'
+import AppContext from '../../AppContext'
 
 const problem = (): JSX.Element => {
   const [problem, setProblem] = useState<Problem>()

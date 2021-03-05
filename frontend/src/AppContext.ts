@@ -9,7 +9,7 @@ export interface AppContextType {
   loaded: boolean;
 }
 
-export const AppContext = createContext<AppContextType>({
+const AppContext = createContext<AppContextType>({
   user: undefined,
   setUser: () => {
     return
@@ -18,3 +18,5 @@ export const AppContext = createContext<AppContextType>({
   socket: undefined,
   loaded: false
 })
+
+export default AppContext

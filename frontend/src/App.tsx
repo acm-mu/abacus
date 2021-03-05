@@ -8,7 +8,7 @@ import Admin from "./pages/admin/";
 import Blue from './pages/blue/';
 import Gold from './pages/gold/'
 import Index from './pages'
-import { AppContext, AppContextType } from "./AppContext";
+import AppContext from "./AppContext";
 import config from './environment'
 import io from 'socket.io-client';
 

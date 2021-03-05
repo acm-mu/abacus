@@ -7,7 +7,7 @@ import { Problem, Submission } from "abacus";
 
 import config from '../../environment'
 import "./Problem.scss";
-import { AppContext } from "../../AppContext";
+import AppContext from "../../AppContext";
 
 const problem = (): JSX.Element => {
   const { user } = useContext(AppContext);

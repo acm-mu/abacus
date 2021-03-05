@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Button, Form, Message, Modal } from "semantic-ui-react";
-import { AppContext } from "../AppContext";
+import AppContext from "../AppContext";
 import fulllogo from '../assets/fulllogo.png'
 import config from '../environment'
 

@@ -5,7 +5,7 @@ import { Block, Countdown } from "../../components";
 import '../../components/Table.scss'
 import config from '../../environment'
 import { Problem, Submission } from "abacus";
-import { AppContext } from "../../AppContext";
+import AppContext from "../../AppContext";
 
 const Problems = (): JSX.Element => {
   const { user } = useContext(AppContext);

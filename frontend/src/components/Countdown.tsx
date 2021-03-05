@@ -4,7 +4,7 @@ import Moment from "react-moment";
 import { Block } from "./";
 import "./Countdown.scss";
 import FlipClock from "./FlipClock";
-import { AppContext } from "../AppContext";
+import AppContext from "../AppContext";
 
 const Countdown = (): JSX.Element => {
   const { loaded, settings } = useContext(AppContext)

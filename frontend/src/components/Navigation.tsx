@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { Container, Dropdown, Menu } from "semantic-ui-react";
-import { AppContext } from "../AppContext";
+import AppContext from "../AppContext";
 import fulllogoy from '../assets/fulllogoy.png'
 import LoginModal from "./Login";
 

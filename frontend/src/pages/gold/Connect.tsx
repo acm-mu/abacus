@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react"
 import { Input, Form, Button } from "semantic-ui-react"
-import { AppContext } from "../../AppContext"
+import AppContext from "../../AppContext"
 import { Block } from "../../components"
 import config from '../../environment'
 
