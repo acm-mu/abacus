@@ -6,16 +6,20 @@ import config from '../../environment'
 import MDEditor from '@uiw/react-md-editor'
 import { Test } from 'abacus'
 
+interface NewProblemType {
+  id: string,
+  name: string,
+  division?: string,
+  description: string,
+  tests: Test[],
+  cpu_time_limit?: number,
+  memory_limit?: number
+}
+
 const NewProblem = (): JSX.Element => {
   const history = useHistory()
-  const [problem, setProblem] = useState<any>({
-    id: '',
-    name: '',
-    division: '',
-    description: '',
-    tests: [],
-    cpu_time_limit: -1,
-    memory_limit: -1
+  const [problem, setProblem] = useState<NewProblemType>({
+    id: '', name: '', description: '', tests: []
   })
   const [message, setMessage] = useState<{ type: string, message: string }>()
   const handleSubmit = async () => {
@@ -46,7 +50,7 @@ const NewProblem = (): JSX.Element => {
   const handleDeleteTest = () => {
     if (problem) {
       setActiveTestItem(problem.tests.length - 2)
-      setProblem({ ...problem, tests: problem.tests.filter((_: any, index: number) => index != activeTestItem) })
+      setProblem({ ...problem, tests: problem.tests.filter((_: Test, index: number) => index != activeTestItem) })
     }
   }
 
