@@ -32,6 +32,7 @@ declare module "abacus" {
     description: string;
     cpu_time_limit: number;
     memory_limit: number;
+    skeletons?: Skeleton[];
   }
   export interface User {
     uid: string;
