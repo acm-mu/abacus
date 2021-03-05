@@ -22,14 +22,12 @@ const Users = (): JSX.Element => {
     direction: 'ascending'
   })
 
-  const sort = (col: SortKey) => {
-    if (column === col && direction === 'ascending')
-      setSortConfig({ column: col, direction: 'descending' })
-    else
-      setSortConfig({ column: col, direction: 'ascending' })
+  const sort = (newColumn: SortKey) => {
+    const newDirection = column === newColumn && direction === 'ascending' ? 'descending' : 'ascending'
+    setSortConfig({ column: newColumn, direction: newDirection })
 
     setUsers(users.sort((u1: User, u2: User) =>
-      (u1[col] || 'ZZ').localeCompare(u2[col] || 'ZZ') * (direction == 'ascending' ? 1 : -1)
+      (u1[newColumn] || 'ZZ').localeCompare(u2[newColumn] || 'ZZ') * (direction == 'ascending' ? 1 : -1)
     ))
   }
 
@@ -47,8 +45,9 @@ const Users = (): JSX.Element => {
       })
       const data = await res.json()
       if (isMounted) {
-        const users: User[] = Object.values(data)
-        setUsers(users.map(user => ({ ...user, checked: false })))
+        setUsers((Object.values(data) as User[])
+          .map(user => ({ ...user, checked: false }))
+          .sort((ul: User, u2: User) => (ul.username.localeCompare(u2.username))))
         setLoading(false)
       }
     } catch (err) {
@@ -79,9 +78,10 @@ const Users = (): JSX.Element => {
     fetch(`${config.API_URL}/users`, {
       method: 'DELETE',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${localStorage.accessToken}`
       },
-      body: JSON.stringify({ user_id: usersToDelete })
+      body: JSON.stringify({ uid: usersToDelete })
     }).then(res => {
       if (res.status == 200) {
         setUsers(users.filter(user => !usersToDelete.includes(user.uid)))
