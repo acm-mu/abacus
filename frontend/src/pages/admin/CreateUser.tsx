@@ -26,8 +26,7 @@ const CreateUser = ({ trigger, callback }: CreateUserProps): JSX.Element => {
   ]
   const divisions = [
     { key: 'blue', text: 'Blue', value: 'blue' },
-    { key: 'gold', text: 'Gold', value: 'gold' },
-    { key: 'na', text: 'N/A', value: 'na' }
+    { key: 'gold', text: 'Gold', value: 'gold' }
   ]
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,7 +43,8 @@ const CreateUser = ({ trigger, callback }: CreateUserProps): JSX.Element => {
     const res = await fetch(`${config.API_URL}/users`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${localStorage.accessToken}`
       },
       body: JSON.stringify({ ...user, school: user.role == 'team' ? user.school : '' })
     })
@@ -53,7 +53,8 @@ const CreateUser = ({ trigger, callback }: CreateUserProps): JSX.Element => {
 
     if (res.status == 200) {
       setOpen(false)
-    } else if (res.status == 400) {
+    } else {
+      console.error(res)
       const body = await res.json()
       setError(body.message)
     }
@@ -101,15 +102,16 @@ const CreateUser = ({ trigger, callback }: CreateUserProps): JSX.Element => {
                 placeholder='School'
                 required
               />}
-            <Form.Field
-              control={Select}
-              onChange={handleSelectChange}
-              label='Division'
-              name='division'
-              options={divisions}
-              value={user.division}
-              placeholder='Division'
-              required />
+            {['team', 'judge'].includes(user.role) &&
+              <Form.Field
+                control={Select}
+                onChange={handleSelectChange}
+                label='Division'
+                name='division'
+                options={divisions}
+                value={user.division}
+                placeholder='Division'
+                required />}
             <Form.Field
               control={Input}
               onChange={handleChange}
