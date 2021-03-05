@@ -8,8 +8,6 @@ export const syntax_lang = (language: string): string => {
   }
 }
 
-// export const format_text = (str: string): string => str.replace(/(^.*$)/gm, (c: string) => isNaN(+c) ? `"${c}"` : c)
-
 // Capitalizes the first letter of a string
 export const capitalize = (str: string): string => str.trim().replace(/^\w/, (c) => c.toUpperCase());
 
@@ -17,4 +15,4 @@ export const capitalize = (str: string): string => str.trim().replace(/^\w/, (c)
 export const capitalize_all = (str: string): string => str.trim().replace(/\w*/g, (word) => capitalize(word));
 
 
-export { default as useFetch } from './useFetch';
+export { useFetch, useFetchPost } from './useFetch';
