@@ -12,12 +12,12 @@ const submission = (): JSX.Element => {
   // const { user } = useContext(AppContext)
   const [isMounted, setMounted] = useState<boolean>(false)
   const [submission, setSubmission] = useState<Submission>()
-  const { submission_id } = useParams<{ submission_id: string }>()
+  const { sid } = useParams<{ sid: string }>()
 
   useEffect(() => {
     setMounted(true)
-    if (submission_id) {
-      fetch(`${config.API_URL}/submissions?submission_id=${submission_id}`)
+    if (sid) {
+      fetch(`${config.API_URL}/submissions?sid=${sid}`)
         .then(res => res.json())
         .then(res => {
           if (isMounted)
@@ -25,11 +25,11 @@ const submission = (): JSX.Element => {
         })
     }
     return () => { setMounted(false) }
-  }, [submission_id, isMounted])
+  }, [sid, isMounted])
 
   return (
     <>
-      {submission_id ?
+      {sid ?
         <>
           <Countdown />
           <Block transparent size="xs-12">

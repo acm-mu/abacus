@@ -25,7 +25,7 @@ const Problems = (): JSX.Element => {
         }
       })
 
-    fetch(`${config.API_URL}/submissions?division=blue&team_id=${user?.uid}`)
+    fetch(`${config.API_URL}/submissions?division=blue&tid=${user?.uid}`)
       .then(res => res.json())
       .then(data => {
         if (isMounted) {

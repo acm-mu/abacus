@@ -21,7 +21,7 @@ const problem = (): JSX.Element => {
           const problem = Object.values(res)[0] as Problem
           setProblem(problem)
           if (user)
-            fetch(`${config.API_URL}/submissions?team_id=${user?.uid}&pid=${problem.pid}`)
+            fetch(`${config.API_URL}/submissions?tid=${user?.uid}&pid=${problem.pid}`)
               .then(res => res.json())
               .then(res => setSubmissions(Object.values(res)))
         }

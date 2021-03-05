@@ -11,7 +11,7 @@ import { Submission, Test } from 'abacus'
 
 const submission = (): JSX.Element => {
   const history = useHistory()
-  const { submission_id } = useParams<{ submission_id: string }>()
+  const { sid } = useParams<{ sid: string }>()
   const [submission, setSubmission] = useState<Submission>()
 
   const [activeItem, setActiveItem] = useState('source-code')
@@ -22,7 +22,7 @@ const submission = (): JSX.Element => {
   }, [])
 
   const loadSubmission = () => {
-    fetch(`${config.API_URL}/submissions?submission_id=${submission_id}`)
+    fetch(`${config.API_URL}/submissions?sid=${sid}`)
       .then(res => res.json())
       .then(data => {
         data = Object.values(data)[0]
@@ -36,7 +36,7 @@ const submission = (): JSX.Element => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ submission_id })
+      body: JSON.stringify({ sid })
     }).then(res => {
       if (res.status == 200) {
         history.push("/admin/submissions")
@@ -50,11 +50,11 @@ const submission = (): JSX.Element => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ submission_id })
+      body: JSON.stringify({ sid })
     }).then(res => res.json())
       .then(res => {
-        if (submission_id in res.submissions)
-          setSubmission({ team: submission?.team, problem: submission?.problem, ...res.submissions[submission_id], })
+        if (sid in res.submissions)
+          setSubmission({ team: submission?.team, problem: submission?.problem, ...res.submissions[sid], })
       })
   }
 

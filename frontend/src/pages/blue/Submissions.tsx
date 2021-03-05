@@ -17,7 +17,7 @@ const Submissions = (): JSX.Element => {
   useEffect(() => {
     setMounted(true)
     if (user) {
-      const filter = (user && !['judge', 'admin'].includes(user.role)) ? `&team_id=${user.uid}` : ''
+      const filter = (user && !['judge', 'admin'].includes(user.role)) ? `&tid=${user.uid}` : ''
 
       fetch(`${config.API_URL}/submissions?division=blue${filter}`)
         .then(res => res.json())

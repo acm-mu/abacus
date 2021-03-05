@@ -13,17 +13,17 @@ const problem = (): JSX.Element => {
   const { user } = useContext(AppContext);
   const [problem, setProblem] = useState<Problem>();
   const [submissions, setSubmissions] = useState<Submission[]>()
-  const { problem_id } = useParams<{ problem_id: string }>()
+  const { pid } = useParams<{ pid: string }>()
 
   useEffect(() => {
-    fetch(`${config.API_URL}/problems?division=blue&id=${problem_id}`)
+    fetch(`${config.API_URL}/problems?division=blue&id=${pid}`)
       .then((res) => res.json())
       .then((res) => {
         if (res) {
           const problem = Object.values(res)[0] as Problem
           setProblem(problem);
           if (user)
-            fetch(`${config.API_URL}/submissions?team_id=${user?.uid}&problem_id=${problem.pid}`)
+            fetch(`${config.API_URL}/submissions?tid=${user?.uid}&pid=${problem.pid}`)
               .then((res => res.json()))
               .then(res => setSubmissions(Object.values(res)))
         }
@@ -69,7 +69,7 @@ const problem = (): JSX.Element => {
         <p><b>Problem ID:</b> {problem?.id}</p>
         <p><b>CPU Time limit:</b> {problem?.cpu_time_limit}</p>
         <p><b>Memory limit:</b> {problem?.memory_limit}</p>
-        <p><b>Download:</b> <a href={`${config.API_URL}/sample_files?problem_id=${problem?.pid}`}>Sample data files</a></p>
+        <p><b>Download:</b> <a href={`${config.API_URL}/sample_files?pid=${problem?.pid}`}>Sample data files</a></p>
       </Block>
     </>
   );

@@ -8,7 +8,7 @@ import { User } from "abacus"
 const EditUser = (): JSX.Element => {
   const [user, setUser] = useState<User>()
   const [formUser, setFormUser] = useState({
-    user_id: '',
+    uid: '',
     username: '',
     role: '',
     division: '',
@@ -17,7 +17,7 @@ const EditUser = (): JSX.Element => {
     password: ''
   })
   const [message, setMessage] = useState<{ type: string, message: string }>()
-  const { user_id } = useParams<{ user_id: string }>()
+  const { uid } = useParams<{ uid: string }>()
 
   const roles = [
     { key: 'team', text: 'Team', value: 'team' },
@@ -26,8 +26,7 @@ const EditUser = (): JSX.Element => {
   ]
   const divisions = [
     { key: 'blue', text: 'Blue', value: 'blue' },
-    { key: 'gold', text: 'Gold', value: 'gold' },
-    { key: 'na', text: 'N/A', value: 'na' }
+    { key: 'gold', text: 'Gold', value: 'gold' }
   ]
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,7 +43,8 @@ const EditUser = (): JSX.Element => {
     const res = await fetch(`${config.API_URL}/users`, {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${localStorage.accessToken}`
       },
       body: JSON.stringify({ ...formUser, school: formUser.role == 'team' ? formUser.school : '', })
     })
@@ -61,7 +61,11 @@ const EditUser = (): JSX.Element => {
 
   const [isMounted, setMounted] = useState(true)
   useEffect(() => {
-    fetch(`${config.API_URL}/users?user_id=${user_id}`)
+    fetch(`${config.API_URL}/users?uid=${uid}`, {
+      headers: {
+        authorization: `Bearer ${localStorage.accessToken}`
+      }
+    })
       .then(res => res.json())
       .then(data => {
         if (isMounted) {

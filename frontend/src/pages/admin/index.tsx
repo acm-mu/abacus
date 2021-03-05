@@ -41,12 +41,12 @@ const Admin = (): JSX.Element => {
           <Route path='/admin/settings' component={Settings} />
           <Route path='/admin/problems/new' component={NewProblem} />
           <Route path='/admin/problems/upload' component={UploadProblems} />
-          <Route path='/admin/problems/:problem_id' component={EditProblem} />
+          <Route path='/admin/problems/:pid' component={EditProblem} />
           <Route path='/admin/problems' component={Problems} />
           <Route path='/admin/users/upload' component={UploadUsers} />
-          <Route path='/admin/users/:user_id' component={EditUser} />
+          <Route path='/admin/users/:uid' component={EditUser} />
           <Route path='/admin/users' component={Users} />
-          <Route path='/admin/submissions/:submission_id' component={Submission} />
+          <Route path='/admin/submissions/:sid' component={Submission} />
           <Route path='/admin/submissions' component={Submissions} />
           <Route default component={NotFound} />
         </Switch>

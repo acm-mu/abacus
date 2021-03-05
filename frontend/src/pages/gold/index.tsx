@@ -21,10 +21,10 @@ const Gold = (): JSX.Element => (
         <Route path='/gold/connect' component={Connect} />
         <Route path='/gold/submit' component={Submit} />
         <Route path='/gold/problems' component={Problems} />
-        <Route path='/gold/problems/:problem_id' component={Problem} />
-        <Route path='/gold/problems/:problem_id/submit' component={SubmitProblem} />
+        <Route path='/gold/problems/:pid' component={Problem} />
+        <Route path='/gold/problems/:pid/submit' component={SubmitProblem} />
         <Route path='/gold/submissions' component={Submissions} />
-        <Route path='/gold/submissions/:submission_id' component={Submission} />
+        <Route path='/gold/submissions/:sid' component={Submission} />
         <Route default component={NotFound} />
       </Switch>
     </Container>

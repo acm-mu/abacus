@@ -151,7 +151,7 @@ const Skeletons = (props: ProblemStateProps) => {
 }
 
 const EditProblems = (): JSX.Element => {
-  const { problem_id } = useParams<{ problem_id: string }>()
+  const { pid } = useParams<{ pid: string }>()
   const [problem, setProblem] = useState<Problem>()
 
   const [activeItem, setActiveItem] = useState<string>('problem-info')
@@ -160,7 +160,7 @@ const EditProblems = (): JSX.Element => {
   const [message, setMessage] = useState<{ type: string, message: string }>()
 
   useEffect(() => {
-    fetch(`${config.API_URL}/problems?pid=${problem_id}&columns=description,skeletons,tests`, {
+    fetch(`${config.API_URL}/problems?pid=${pid}&columns=description,skeletons,tests`, {
       headers: {
         authorization: `Bearer ${localStorage.accessToken}`
       }

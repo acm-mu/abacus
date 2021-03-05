@@ -57,7 +57,7 @@ const Submissions = (): JSX.Element => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ submission_id: submissionsToDelete })
+      body: JSON.stringify({ sid: submissionsToDelete })
     }).then(res => {
       if (res.status == 200) {
         setSubmissions(submissions.filter(submission => !submissionsToDelete.includes(submission.sid)))

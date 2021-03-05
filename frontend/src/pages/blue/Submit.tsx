@@ -26,15 +26,15 @@ const Submit = (): JSX.Element => {
   const [file, setFile] = useState<File>()
   const history = useHistory()
 
-  const { problem_id } = useParams<{ problem_id: string }>()
+  const { pid } = useParams<{ pid: string }>()
   useEffect(() => {
-    fetch(`${config.API_URL}/problems?division=blue&id=${problem_id}`)
+    fetch(`${config.API_URL}/problems?division=blue&id=${pid}`)
       .then(res => res.json())
       .then(res => {
         if (res) {
           const problem = Object.values(res)[0] as Problem
           setProblem(problem)
-          fetch(`${config.API_URL}/submissions?team_id=${user?.uid}&problem_id=${problem.pid}`)
+          fetch(`${config.API_URL}/submissions?tid=${user?.uid}&pid=${problem.pid}`)
             .then((res) => res.json())
             .then(res => {
               if (res) setSubmissions(Object.values(res))
@@ -46,10 +46,10 @@ const Submit = (): JSX.Element => {
   const handleSubmit = async () => {
     if (!(language && file && problem && user)) return
     const formData = new FormData()
-    formData.set('problem_id', problem.pid)
+    formData.set('pid', problem.pid)
     formData.set('source', file, file.name)
     formData.set('language', language.key)
-    formData.set('team_id', user?.uid)
+    formData.set('tid', user?.uid)
     formData.set('division', user?.division || '')
 
     const res = await fetch(`${config.API_URL}/submissions`, {

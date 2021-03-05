@@ -25,7 +25,7 @@ const Connect = (): JSX.Element => {
       alert("Missing username!")
       return
     }
-    formData.set('user_id', user.uid)
+    formData.set('uid', user.uid)
     formData.set('scratch_username', username)
     fetch(`${config.API_URL}/users`, {
       method: "PUT",

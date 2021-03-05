@@ -67,7 +67,7 @@ const Problems = (): JSX.Element => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ problem_id: problemsToDelete })
+      body: JSON.stringify({ pid: problemsToDelete })
     }).then(res => {
       if (res.status == 200) {
         setProblems(problems.filter(problem => !problemsToDelete.includes(problem.pid)))
