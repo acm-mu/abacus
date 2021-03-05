@@ -12,7 +12,7 @@ type Props = {
 
 const Navigation: React.FunctionComponent<Props> = (props: Props) => {
   const history = useHistory()
-  const { user, setUser, loaded } = useContext(AppContext)
+  const { user, setUser } = useContext(AppContext)
   const [isMounted, setMounted] = useState<boolean>(false)
 
   const handleLogout = () => {
@@ -60,7 +60,7 @@ const Navigation: React.FunctionComponent<Props> = (props: Props) => {
 
         {props.children}
 
-        {loaded && <Menu.Menu position="right">
+        {<Menu.Menu position="right">
           {user ?
             <Dropdown item simple
               text={user.display_name}

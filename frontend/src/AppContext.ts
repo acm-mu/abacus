@@ -6,17 +6,13 @@ export interface AppContextType {
   setUser: Dispatch<SetStateAction<undefined>>;
   socket?: SocketIOClient.Socket;
   settings?: Settings;
-  loaded: boolean;
 }
 
 const AppContext = createContext<AppContextType>({
   user: undefined,
-  setUser: () => {
-    return
-  },
+  setUser: () => { return },
   settings: undefined,
-  socket: undefined,
-  loaded: false
+  socket: undefined
 })
 
 export default AppContext

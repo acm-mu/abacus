@@ -7,7 +7,7 @@ import FlipClock from "./FlipClock";
 import AppContext from "../AppContext";
 
 const Countdown = (): JSX.Element => {
-  const { loaded, settings } = useContext(AppContext)
+  const { settings } = useContext(AppContext)
   const [time, setTime] = useState<Date>(new Date())
   const [isMounted, setMounted] = useState<boolean>(true)
 
@@ -25,7 +25,7 @@ const Countdown = (): JSX.Element => {
 
   return (
     <Block size='xs-12'>
-      {loaded && settings ?
+      {settings ?
         <>
           {time < settings.start_date ?
             <>

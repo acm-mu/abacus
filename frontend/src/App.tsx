@@ -8,14 +8,14 @@ import Admin from "./pages/admin/";
 import Blue from './pages/blue/';
 import Gold from './pages/gold/'
 import Index from './pages'
-import AppContext from "./AppContext";
+import AppContext, { AppContextType } from "./AppContext";
 import config from './environment'
 import io from 'socket.io-client';
 
 const App = (): JSX.Element => {
   const [user, setUser] = useState()
   const [settings, setSettings] = useState()
-  const [loaded, setLoaded] = useState(false)
+  const [isLoading, setLoading] = useState(true)
   const [socket, setSocket] = useState<SocketIOClient.Socket>()
 
   const checkAuth = async () => {
@@ -27,7 +27,7 @@ const App = (): JSX.Element => {
       })
     const user = await res.json()
     setUser(user)
-    setLoaded(true)
+    setLoading(false)
   }
 
   const loadSettings = async () => {
@@ -51,12 +51,11 @@ const App = (): JSX.Element => {
     user,
     setUser,
     socket,
-    loaded,
     settings
   }
 
-  return (
-    <AppContext.Provider value={appContext} >
+  return (<>{isLoading ||
+    <AppContext.Provider value={appContext}>
       <Notifications />
       <Router>
         <Switch>
@@ -68,7 +67,7 @@ const App = (): JSX.Element => {
       </Router>
       <Footer />
     </AppContext.Provider>
-  )
+  }</>)
 }
 
 export default App;

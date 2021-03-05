@@ -22,9 +22,9 @@ import AppContext from "../../AppContext";
 import DefaultNavigation from "../DefaultNavigation";
 
 const Admin = (): JSX.Element => {
-  const { user, loaded } = useContext(AppContext)
+  const { user } = useContext(AppContext)
 
-  if (loaded && !user) return (<>
+  if (!user) return (<>
     <DefaultNavigation />
     <Container text className='main'>
       <LoginModal open={true} />
