@@ -4,21 +4,23 @@ const axios = require("axios");
 const db = new AWS.DynamoDB.DocumentClient();
 
 exports.handler = async (event) => {
-  const submissions = {}
+  const submissions = {};
   for (const record of event.Records) {
     // Only run for new items
     if (record.eventName != "INSERT") continue;
 
     // Find submission from event metadata
     const submission = AWS.DynamoDB.Converter.unmarshall(record.dynamodb.NewImage);
-    const { submission_id } = submission;
+    const { sid, pid } = submission;
 
     // Get problem and competition details
-    const problem = await getItem('problem', { problem_id: submission.problem_id });
-    const settings = Object.assign({}, ...(await scanItems('setting')).map(((x) => ({ [x.key]: x.value }))));
+    const { tests: problem_tests } = await getItem('problem_test', { pid });
+    const settings = Object.assign({}, ...(await scanItems('setting')).map(((x) => ({
+      [x.key]: x.value
+    }))));
 
     // Update status to 'pending'
-    await updateItem('submission', { submission_id }, { status: 'pending' });
+    await updateItem('submission', { sid }, { status: 'pending' });
 
     // Extract details and set defaults
     const { language, source, date: submission_date } = submission;
@@ -26,7 +28,7 @@ exports.handler = async (event) => {
     let runtime = -1;
 
     // Copy tests from problem
-    submission.tests = problem.tests;
+    submission.tests = problem_tests;
 
     // Run tests
     for (const test of submission.tests) {
@@ -54,6 +56,9 @@ exports.handler = async (event) => {
       }
     }
 
+    submission.status = status
+    submission.runtime = runtime
+
     // Calculate Score
     if (status == "accepted") {
       const { start_date, points_per_no, points_per_yes, points_per_minute } = settings;
@@ -65,9 +70,9 @@ exports.handler = async (event) => {
     }
 
     // Save submission to database
-    await updateItem('submission', { submission_id }, { ...submission, status, runtime });
+    await updateItem('submission', { sid }, { ...submission });
 
-    submissions[submission_id] = submission
+    submissions[sid] = submission;
   }
 
   return { statusCode: 200, submissions };
@@ -103,8 +108,12 @@ function updateItem(tableName, key, args) {
       TableName: tableName,
       Key: key,
       UpdateExpression: "SET " + (entries.map((e) => (`#${e[0]} = :${e[0]}`)).join(", ")),
-      ExpressionAttributeNames: Object.assign({}, ...entries.map((x) => ({ [`#${x[0]}`]: x[0] }))),
-      ExpressionAttributeValues: Object.assign({}, ...entries.map((x) => ({ [`:${x[0]}`]: x[1] })))
+      ExpressionAttributeNames: Object.assign({}, ...entries.map((x) => ({
+        [`#${x[0]}`]: x[0]
+      }))),
+      ExpressionAttributeValues: Object.assign({}, ...entries.map((x) => ({
+        [`:${x[0]}`]: x[1]
+      })))
     }, (err, data) => {
       if (err) reject(err);
       else resolve(data);

@@ -1,0 +1,87 @@
+import { Problem, User } from 'abacus';
+import { Request, Response } from 'express';
+import { UploadedFile } from 'express-fileupload';
+import { matchedData, ParamSchema, validationResult } from "express-validator";
+import { v4 as uuidv4 } from 'uuid';
+
+import contest from '../../abacus/contest';
+
+export const schema: Record<string, ParamSchema> = {
+  pid: {
+    in: 'body',
+    isString: true,
+    notEmpty: true,
+    errorMessage: 'pid is not supplied'
+  },
+  tid: {
+    in: 'body',
+    isString: true,
+    notEmpty: true,
+    errorMessage: 'tid is not supplied'
+  },
+  language: {
+    in: 'body',
+    isString: true,
+    notEmpty: true,
+    errorMessage: 'language is not supplied'
+  }
+}
+
+export const postSubmissions = async (req: Request, res: Response) => {
+  const errors = validationResult(req).array()
+  if (errors.length > 0) {
+    res.status(400).json({ message: errors[0].msg })
+    return
+  }
+  if (req.files?.source == undefined) {
+    res.status(400).json({ message: "source file not supplied" })
+    return
+  }
+
+  try {
+    const { pid, tid, language } = matchedData(req)
+
+    const user = await contest.getItem('user', { uid: tid }) as unknown as User
+    if (!user) {
+      res.status(400).send('Team does not exist!')
+      return
+    }
+
+    const problem = await contest.getItem('problem', { pid: pid }) as unknown as Problem
+    if (!problem) {
+      res.status(400).send('Problem does not exist!')
+      return
+    }
+    if (user?.division != problem.division) {
+      res.status(400).send('Wrong division!')
+      return
+    }
+
+    const submissions = await contest.scanItems('submission', { tid, pid })
+
+    const { name: filename, size: filesize, md5, data } = req.files!.source as UploadedFile
+
+    const submission = {
+      sid: uuidv4().replace(/-/g, ''),
+      pid,
+      tid,
+      division: problem.division,
+      language,
+      filename,
+      filesize,
+      md5,
+      sub_no: submissions?.length,
+      status: 'pending',
+      score: 0,
+      date: Date.now() / 1000,
+      runtime: 0,
+      source: data.toString('utf-8')
+    }
+
+    await contest.putItem('submission', submission)
+    res.send(submission)
+  } catch (err) {
+    console.error(err)
+    res.sendStatus(500)
+  }
+}

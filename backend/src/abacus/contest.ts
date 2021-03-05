@@ -1,6 +1,6 @@
+import { Args, Settings } from "abacus";
 import AWS, { AWSError, Lambda, S3 } from "aws-sdk";
 import { AttributeMap, BatchWriteItemOutput, DeleteItemOutput, DocumentClient, GetItemOutput, ItemList, PutItemOutput, ScanInput, ScanOutput, UpdateItemOutput } from "aws-sdk/clients/dynamodb";
-import { ArgsType, CompetitionSettings } from "types";
 
 class ContestService {
   db: DocumentClient;
@@ -19,7 +19,7 @@ class ContestService {
     this.lambda = new Lambda();
   }
 
-  async get_settings(): Promise<CompetitionSettings> {
+  async get_settings(): Promise<Settings> {
     return new Promise((resolve, reject) => {
       this.scanItems('setting')
         .then((itemList?: ItemList) => {
@@ -32,7 +32,7 @@ class ContestService {
     })
   }
 
-  save_settings(settings: CompetitionSettings): Promise<BatchWriteItemOutput> {
+  save_settings(settings: Settings): Promise<BatchWriteItemOutput> {
     return new Promise((resolve, reject) => {
       this.db.batchWrite({
         RequestItems: {
@@ -45,7 +45,7 @@ class ContestService {
     })
   }
 
-  scanItems(tableName: string, args?: ArgsType): Promise<ItemList | undefined> {
+  scanItems(tableName: string, args?: Args, columns?: string[]): Promise<ItemList | undefined> {
     return new Promise((resolve, reject) => {
       let params: ScanInput = {
         TableName: tableName
@@ -56,6 +56,15 @@ class ContestService {
           params.FilterExpression = entries.map((e) => (`#${e[0]} = :${e[0]}`)).join(" AND ")
           params.ExpressionAttributeNames = Object.assign({}, ...entries.map((x) => ({ [`#${x[0]}`]: x[0] })))
           params.ExpressionAttributeValues = Object.assign({}, ...entries.map((x) => ({ [`:${x[0]}`]: x[1] })))
+
+        }
+        if (columns) {
+          params.ProjectionExpression = columns.map((e) => `#${e}`).join(", ")
+          if (params.ExpressionAttributeNames)
+            params.ExpressionAttributeNames = { ...params.ExpressionAttributeNames, ...Object.assign({}, ...columns.map((e) => ({ [`#${e}`]: `${e}` }))) }
+          else
+            params.ExpressionAttributeNames = Object.assign({}, ...columns.map((e) => ({ [`#${e}`]: `${e}` })))
+          console.log(params)
         }
       }
       this.db.scan(params, (err: AWSError, data: ScanOutput) => {
@@ -65,7 +74,7 @@ class ContestService {
     })
   }
 
-  getItem(tableName: string, key: ArgsType): Promise<AttributeMap | undefined> {
+  getItem(tableName: string, key: Args): Promise<AttributeMap | undefined> {
     return new Promise((resolve, reject) => {
       this.db.get({
         TableName: tableName,
@@ -77,7 +86,7 @@ class ContestService {
     })
   }
 
-  putItem(tableName: string, item: ArgsType): Promise<PutItemOutput> {
+  putItem(tableName: string, item: Args): Promise<PutItemOutput> {
     return new Promise((resolve, reject) => {
       this.db.put({
         TableName: tableName,
@@ -89,7 +98,7 @@ class ContestService {
     })
   }
 
-  updateItem(tableName: string, key: ArgsType, args: ArgsType): Promise<UpdateItemOutput> {
+  updateItem(tableName: string, key: Args, args: Args): Promise<UpdateItemOutput> {
     return new Promise((resolve, reject) => {
       const entries = Object.entries(args).filter(entry => !Object.keys(key).includes(entry[0]))
       this.db.update({
@@ -105,7 +114,7 @@ class ContestService {
     })
   }
 
-  deleteItem(tableName: string, key: ArgsType): Promise<DeleteItemOutput> {
+  deleteItem(tableName: string, key: Args): Promise<DeleteItemOutput> {
     return new Promise((resolve, reject) => {
       this.db.delete({
         TableName: tableName,
@@ -118,11 +127,9 @@ class ContestService {
   }
 }
 
-const contest = new ContestService();
-
 const transpose = (itemList: ItemList | undefined, key: string): { [key: string]: any } => itemList ? Object.assign({}, ...itemList.map((obj: any) => ({ [obj[key]]: obj }))) : {}
 
-const makeJSON = (itemList: ItemList, columns: string[]): string => {
+const makeJSON = (itemList: ItemList, columns: string[] = []): string => {
   itemList.map((e) => {
     Object.keys(e).forEach((key) => {
       if (!columns.includes(key)) {
@@ -133,4 +140,5 @@ const makeJSON = (itemList: ItemList, columns: string[]): string => {
   return JSON.stringify(itemList)
 }
 
-export { contest, transpose, makeJSON };
+export default new ContestService()
+export { transpose, makeJSON };
