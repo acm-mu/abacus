@@ -68,5 +68,5 @@ declare module "abacus" {
     problems: { [key: string]: ProblemScore };
   }
 
-  export interface Args { [key: string]: any }
+  export interface Args { [key: string]: unknown }
 }
