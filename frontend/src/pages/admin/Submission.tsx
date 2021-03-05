@@ -5,9 +5,11 @@ import { Block } from '../../components'
 import config from '../../environment'
 import Moment from 'react-moment'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-import { capitalize, syntax_lang, format_text } from "../../utils"
+import { capitalize, syntax_lang } from "../../utils"
 import "../Submission.scss"
 import { Submission, Test } from 'abacus'
+
+const format_text = (str: string): string => str.replace(/(^.*$)/gm, (c: string) => isNaN(+c) ? `"${c}"` : c)
 
 const submission = (): JSX.Element => {
   const history = useHistory()
