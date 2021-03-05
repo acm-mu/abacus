@@ -1,22 +1,21 @@
 import { useState } from "react"
 
-interface useFetchProps {
-  url: string;
-  init: RequestInit | undefined;
-};
-
 interface useFetchResponse {
-  data: any | undefined;
+  data: unknown | undefined;
   isLoading: boolean;
-  error: any | undefined;
+  error: unknown | undefined;
 };
 
-const useFetch = ({url, init} : useFetchProps => {
+const useFetch = (url: string, init?: RequestInit): useFetchResponse => {
   const [data, setData] = useState()
   const [isLoading, setLoading] = useState(true)
   const [error, setError] = useState()
 
   fetch(url, {
+    headers: {
+      authorization: `Bearer ${localStorage.accessToken}`,
+      'Content-Type': 'application/json'
+    },
     ...init
   })
     .then(response => {
@@ -25,8 +24,20 @@ const useFetch = ({url, init} : useFetchProps => {
       }
       throw response
     })
+    .then(data => {
+      setData(data)
+    })
+    .catch(error => {
+      console.log("Error fetching data: ", error);
+      setError(error)
+    })
+    .finally(() => {
+      setLoading(false)
+    })
 
   return { data, isLoading, error }
 }
 
-export default useFetch
+const useFetchPost = (url: string, init?: RequestInit): useFetchResponse => useFetch(url, { method: 'POST', ...init })
+
+export { useFetch, useFetchPost }
