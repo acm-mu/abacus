@@ -4,7 +4,7 @@
     },
     "scripts": {
         "dev": "nodemon --exec ts-node --files src/server.ts",
-        "zip": "cp package.json dist/ && cd dist && zip -r backend .",
+        "zip": "cp package.json dist/ && cd dist && zip -r backend/* .",
         "build": "tsc",
         "start": "node server.js"
     },
