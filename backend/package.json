@@ -6,7 +6,7 @@
         "dev": "nodemon --exec ts-node --files src/server.ts",
         "zip": "cp package.json dist/ && cd dist && zip -r backend .",
         "build": "tsc",
-        "start": "node server.ts"
+        "start": "node server.js"
     },
     "dependencies": {
         "archiver": "^5.2.0",
