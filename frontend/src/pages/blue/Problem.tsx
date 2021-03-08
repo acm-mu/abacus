@@ -44,9 +44,7 @@ const problem = (): JSX.Element => {
       <Countdown />
       <Block size='xs-9' className='problem'>
         <h1>
-          Problem {problem?.id}
-          <br />
-          {problem?.name}
+          Problem {problem?.id}: {problem?.name}
         </h1>
         <hr />
         <MDEditor.Markdown source={problem?.description || ''} />
