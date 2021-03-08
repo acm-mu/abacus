@@ -17,9 +17,7 @@ const Notifications = (): JSX.Element => {
 
   useEffect(() => {
     socket?.on('notification', (notification: Notification) => {
-      console.log(notification.id)
       setTimeout(() => {
-        console.log("Show")
         setNotifications({ ...notifications, [notification.id]: { ...notification, visible: true } })
       }, 200)
       setNotifications({ ...notifications, [notification.id]: notification })

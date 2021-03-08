@@ -46,7 +46,7 @@ const EditUser = (): JSX.Element => {
       setMessage({ type: 'success', message: "User saved successfully!" })
       setUser(body)
       setFormUser({ ...body, password: '' })
-    } else if (response.status == 400) {
+    } else {
       const body = await response.json()
       setMessage({ type: 'error', message: body.message })
     }

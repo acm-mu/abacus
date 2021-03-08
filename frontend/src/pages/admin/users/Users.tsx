@@ -2,7 +2,6 @@ import { Table, Button, Loader, Message } from 'semantic-ui-react'
 import React, { ChangeEvent, useState, useEffect, useContext } from 'react'
 import { saveAs } from 'file-saver';
 import { Link } from 'react-router-dom'
-import { Block } from '../../../components'
 import config from '../../../environment'
 import CreateUser from './CreateUser'
 import { User } from 'abacus'
@@ -70,33 +69,32 @@ const Users = (): JSX.Element => {
       loadUsers()
   }
 
-  const deleteSelected = () => {
+  const deleteSelected = async () => {
     if (users.filter(u => u.checked && u.uid == user?.uid).length > 0) {
       alert("Cannot delete currently logged in user!")
       return
     }
 
     const usersToDelete = users.filter(user => user.checked).map(user => user.uid)
-    fetch(`${config.API_URL}/users`, {
+    const response = await fetch(`${config.API_URL}/users`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-        authorization: `Bearer ${localStorage.accessToken}`
+        Authorization: `Bearer ${localStorage.accessToken}`
       },
       body: JSON.stringify({ uid: usersToDelete })
-    }).then(res => {
-      if (res.status == 200) {
-        setUsers(users.filter(user => !usersToDelete.includes(user.uid)))
-      }
     })
+
+    if (response.ok) {
+      setUsers(users.filter(user => !usersToDelete.includes(user.uid)))
+    }
   }
 
   if (isLoading) return <Loader active inline='centered' content="Loading..." />
 
   if (error) return <Message content={error} />
 
-  return <Block size='xs-12' transparent>
-
+  return <>
     <CreateUser trigger={<Button content="Add User" primary />} callback={createUserCallback} />
     <Link to='/admin/users/upload'><Button content="Upload Users" /></Link>
     <Button content="Download Users" onClick={downloadUsers} />
@@ -147,7 +145,7 @@ const Users = (): JSX.Element => {
           </Table.Row>)}
       </Table.Body>
     </Table>
-  </Block>
+  </>
 }
 
 export default Users
