@@ -1,8 +1,8 @@
 import { Problem } from 'abacus';
 import archiver from 'archiver';
 import { Request, Response } from 'express';
-import { ParamSchema } from "express-validator";
-// import contest from '../../contest';
+import { matchedData, ParamSchema, validationResult } from "express-validator";
+import contest from '../../abacus/contest';
 
 const stripFilename = (str: string) => str.replace(/ /g, '_').replace(/[!@#$%^&*\(\)]/g, '');
 const fileExtension = (lang: string) => {
@@ -30,14 +30,20 @@ export const downloadFiles = async (req: Request, res: Response) => {
   }
   const { pid } = matchedData(req)
 
-  // try {
-  //   const problem = await contest.getItem('problem', { pid }) as unknown as Problem
-  //   const archive = archiver('zip')
-  //   for (const skeleton of problem.skeletons)
-  //     archive.append(skeleton.source, { name: `${stripFilename(problem.name)}.${fileExtension(skeleton.language)}` })
+  try {
+    const problem = await contest.getItem('problem', { pid }) as unknown as Problem
+    const archive = archiver('zip')
+    if (problem.skeletons) {
+      for (const skeleton of problem.skeletons) {
+        archive.append(skeleton.source, { name: `${stripFilename(problem.name)}.${fileExtension(skeleton.language)}` })
+      }
+    }
 
-  //   res.attachment(`${stripFilename(problem.name)}.zip`)
-  //   archive.pipe(res)
-  //   archive.finalize()
-  // } catch (err) { res.sendStatus(500) }
+    res.attachment(`${stripFilename(problem.name)}.zip`)
+    archive.pipe(res)
+    archive.finalize()
+  } catch (err) {
+    console.error(err)
+    res.sendStatus(500)
+  }
 }
