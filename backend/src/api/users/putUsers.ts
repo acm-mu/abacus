@@ -63,8 +63,12 @@ export const putUsers = async (req: Request, res: Response) => {
   }
 
   const item = matchedData(req)
-  if (item.password)
+  if (item.username) {
+    item.username = item.username.toLowerCase()
+  }
+  if (item.password) {
     item.password = createHash('sha256').update(item.password).digest('hex')
+  }
 
   try {
     if (item.username) {

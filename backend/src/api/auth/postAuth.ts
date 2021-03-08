@@ -27,6 +27,7 @@ export const postAuth = async (req: Request, res: Response) => {
   }
 
   const bodyData = matchedData(req)
+  bodyData.username = bodyData.username.toLowerCase()
   bodyData.password = createHash('sha256').update(bodyData.password).digest('hex')
 
   try {

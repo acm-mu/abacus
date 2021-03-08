@@ -55,6 +55,7 @@ export const postUsers = async (req: Request, res: Response) => {
   }
 
   const item = matchedData(req)
+  item.username = item.username.toLowerCase()
   item.password = createHash('sha256').update(item.password).digest('hex')
 
   const users = await contest.scanItems('user', { username: item.username }) || {}
