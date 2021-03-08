@@ -36,7 +36,7 @@ const sendNotification = (header: string, content: string) => {
 }
 
 app.get('/ping', (_, res) => {
-  sendNotification("New Message!", "You got mail!");
+  sendNotification("Pong!", "Responding to ping");
   res.send('Pong!')
 })
 
