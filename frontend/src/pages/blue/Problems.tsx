@@ -30,6 +30,8 @@ const Problems = (): JSX.Element => {
                 <Table.Cell>
                   <Link to={`/blue/problems/${problem.id}`}>{problem.name}</Link>
                 </Table.Cell>
+                <Table.Cell></Table.Cell>
+                <Table.Cell></Table.Cell>
               </Table.Row>
             ) : <></>}
           </Table.Body>

@@ -15,21 +15,29 @@ const problem = (): JSX.Element => {
   const [submissions, setSubmissions] = useState<Submission[]>()
   const { pid } = useParams<{ pid: string }>()
 
+  const [isMounted, setMounted] = useState(true)
+
   useEffect(() => {
-    fetch(`${config.API_URL}/problems?division=blue&id=${pid}`)
-      .then((res) => res.json())
-      .then((res) => {
-        if (res) {
-          const problem = Object.values(res)[0] as Problem
-          setProblem(problem);
-          if (user)
-            fetch(`${config.API_URL}/submissions?tid=${user?.uid}&pid=${problem.pid}`)
-              .then((res => res.json()))
-              .then(res => setSubmissions(Object.values(res)))
-        }
-      });
+    loadProblem()
+    return () => { setMounted(false) }
   }, []);
 
+  const loadProblem = async () => {
+    const response = await fetch(`${config.API_URL}/problems?division=blue&columns=description&id=${pid}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.accessToken}`
+      }
+    })
+    if (response.ok && isMounted) {
+      const problem = Object.values(await response.json())[0] as Problem
+      setProblem(problem)
+      if (user) {
+        const submissions = await fetch(`${config.API_URL}/submissions?tid=${user?.uid}&pid=${problem.pid}`)
+        if (isMounted)
+          setSubmissions(Object.values(await submissions.json()))
+      }
+    }
+  }
 
   return (
     <>
@@ -45,7 +53,7 @@ const problem = (): JSX.Element => {
       </Block>
       <Block size='xs-3'>
         <div style={{ display: "flex", justifyContent: "space-evenly" }}>
-          {!submissions || submissions?.filter((e) => e.status == "accepted").length == 0 ?
+          {!submissions || submissions.filter((e) => e.status == "accepted").length == 0 ?
             <Popup
               trigger={
                 <Button
