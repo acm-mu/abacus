@@ -19,15 +19,15 @@ jobs:
           node-version: 12.x
 
       - name: Install dependencies from package.json
-        run: npm install
+        run: yarn install
         working-directory: backend
 
       - name: Build project
-        run: npm run build
+        run: yarn build
         working-directory: backend
 
       - name: Package project into zip file
-        run: npm run zip
+        run: yarn run zip
         working-directory: backend
 
       - name: Configure AWS credentials

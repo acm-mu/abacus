@@ -20,11 +20,11 @@ jobs:
 
       - name: Install dependencies
         working-directory: frontend
-        run: npm install
+        run: yarn install
 
       - name: Build project
         working-directory: frontend
-        run: npm run build
+        run: yarn build
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -35,4 +35,4 @@ jobs:
 
       - name: Deploy build to S3 bucket
         working-directory: frontend
-        run: aws s3 sync ./build s3://codeabac.us
+        run: aws s3 sync --delete ./build s3://codeabac.us
