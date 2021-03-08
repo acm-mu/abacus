@@ -40,6 +40,7 @@ const LoginModal = ({ trigger, open }: LoginModalProps): JSX.Element => {
     } catch (err) {
       console.error(err)
     }
+    setFormData({ username: '', password: '' })
   }
 
   return (<>
