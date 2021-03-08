@@ -23,7 +23,3 @@ export const compare = (o1: string | number, o2: string | number): number => {
   }
   return 0
 }
-
-
-
-export { useFetch, useFetchPost } from './useFetch';

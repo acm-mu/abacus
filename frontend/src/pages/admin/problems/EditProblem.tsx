@@ -1,6 +1,6 @@
-import React, { ChangeEvent, useState, useEffect } from 'react'
+import React, { ChangeEvent, MouseEvent, useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Form, Input, Menu, Button, TextArea, MenuItemProps, Message } from 'semantic-ui-react'
+import { Form, Input, Menu, Button, TextArea, MenuItemProps, Message, Loader } from 'semantic-ui-react'
 import Editor from '@monaco-editor/react'
 import { Block } from '../../../components'
 import config from '../../../environment'
@@ -8,38 +8,27 @@ import MDEditor from '@uiw/react-md-editor'
 import { Problem, Skeleton, Test } from 'abacus'
 
 interface ProblemStateProps {
-  problem: {
-    problem?: Problem;
-    setProblem: React.Dispatch<React.SetStateAction<Problem | undefined>>
-  }
+  problem?: Problem;
+  setProblem: React.Dispatch<React.SetStateAction<Problem | undefined>>
 }
 
-const ProblemInfo = (props: ProblemStateProps) => {
-  const { problem, setProblem } = props.problem
+const ProblemInfo = ({ problem, setProblem }: ProblemStateProps) => {
+  const handleChange = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>) => problem && setProblem({ ...problem, [name]: value })
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target
-    if (problem)
-      setProblem({ ...problem, [name]: value })
-  }
-
-  return (
-    <Form>
-      <Form.Field label='Problem ID' name='id' control={Input} onChange={handleChange} value={problem?.id || ''} />
-      <Form.Field label='Problem Name' name='name' control={Input} onChange={handleChange} value={problem?.name || ''} />
-      <Form.Group widths='equal'>
-        <Form.Field label='Memory Limit' name='memory_limit' control={Input} onChange={handleChange} value={problem?.memory_limit || -1} />
-        <Form.Field label='CPU Time Limit' name='cpu_time_limit' control={Input} onChange={handleChange} value={problem?.cpu_time_limit || -1} />
-      </Form.Group>
-    </Form>
-  )
+  return <Form>
+    <Form.Field label='Problem ID' name='id' control={Input} onChange={handleChange} value={problem?.id || ''} />
+    <Form.Field label='Problem Name' name='name' control={Input} onChange={handleChange} value={problem?.name || ''} />
+    <Form.Group widths='equal'>
+      <Form.Field label='Memory Limit' name='memory_limit' control={Input} onChange={handleChange} value={problem?.memory_limit || -1} />
+      <Form.Field label='CPU Time Limit' name='cpu_time_limit' control={Input} onChange={handleChange} value={problem?.cpu_time_limit || -1} />
+    </Form.Group>
+  </Form>
 }
 
-const TestData = (props: ProblemStateProps) => {
-  const { problem, setProblem } = props.problem
+const TestData = ({ problem, setProblem }: ProblemStateProps) => {
   const [activeTestItem, setActiveTestItem] = useState(0)
 
-  const handleTestItemClick = (event: React.MouseEvent, data: MenuItemProps) => setActiveTestItem(data.tab)
+  const handleTestItemClick = (event: MouseEvent, data: MenuItemProps) => setActiveTestItem(data.tab)
   const handleNewTest = () => {
     if (problem) {
       setProblem({ ...problem, tests: [...problem.tests, { in: '', out: '', include: false }] })
@@ -67,7 +56,7 @@ const TestData = (props: ProblemStateProps) => {
       })
   }
 
-  return (<Form>
+  return <Form>
     <Menu>
       {problem?.tests?.map((test: Test, index: number) => (
         <Menu.Item name={`${index + 1}`} key={`${index}-test-tab`} tab={index} active={activeTestItem === index} onClick={handleTestItemClick} />
@@ -88,12 +77,10 @@ const TestData = (props: ProblemStateProps) => {
           : <></>}
       </div>
     ))}
-  </Form>)
+  </Form>
 }
 
-const Description = (props: ProblemStateProps) => {
-  const { problem, setProblem } = props.problem
-
+const Description = ({ problem, setProblem }: ProblemStateProps) => {
   const handleTextareaChange = (value: string | undefined) => {
     if (problem && value)
       setProblem({ ...problem, description: value })
@@ -102,16 +89,12 @@ const Description = (props: ProblemStateProps) => {
   return <MDEditor
     value={problem?.description || ''}
     onChange={handleTextareaChange}
-    height="500"
-  />
-
+    height="500" />
 }
 
-const Skeletons = (props: ProblemStateProps) => {
-  const { problem, setProblem } = props.problem
-
+const Skeletons = ({ problem, setProblem }: ProblemStateProps) => {
   const [activeSkeleton, setActiveSkeleton] = useState('python')
-  const handleSkeletonClick = (event: React.MouseEvent, data: MenuItemProps) => setActiveSkeleton(data.tab)
+  const handleSkeletonClick = (event: MouseEvent, data: MenuItemProps) => setActiveSkeleton(data.tab)
 
   const handleSkeletonChange = (language: string, value?: string) => {
     if (problem && value)
@@ -124,7 +107,7 @@ const Skeletons = (props: ProblemStateProps) => {
       })
   }
 
-  return (<>
+  return <>
     <Menu>
       {problem?.skeletons?.map((skeleton: Skeleton, index: number) => (
         <Menu.Item key={`skeleton-${index}`} name={skeleton.language} tab={skeleton.language} active={activeSkeleton == skeleton.language} onClick={handleSkeletonClick} />
@@ -142,11 +125,10 @@ const Skeletons = (props: ProblemStateProps) => {
             value={skeleton.source}
             options={{ minimap: { enabled: false } }}
             onChange={(value?: string) => handleSkeletonChange(skeleton.language, value)}
-          />
-          : <></>}
+          /> : <></>}
       </div>
     ))}
-  </>)
+  </>
 }
 
 const EditProblems = (): JSX.Element => {
@@ -157,19 +139,26 @@ const EditProblems = (): JSX.Element => {
   const handleItemClick = (event: React.MouseEvent, data: MenuItemProps) => setActiveItem(data.tab)
 
   const [message, setMessage] = useState<{ type: string, message: string }>()
+  const [isMounted, setMounted] = useState(true)
+  const [isLoading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch(`${config.API_URL}/problems?pid=${pid}&columns=description,skeletons,tests`, {
+    loadProblem()
+    return () => { setMounted(false) }
+  }, [])
+
+  const loadProblem = async () => {
+    const response = await fetch(`${config.API_URL}/problems?pid=${pid}&columns=description,skeletons,tests`, {
       headers: {
-        authorization: `Bearer ${localStorage.accessToken}`
+        Authorization: `Bearer ${localStorage.accessToken}`
       }
     })
-      .then(res => res.json())
-      .then(data => {
-        data = Object.values(data)[0]
-        setProblem(data)
-      })
-  }, [])
+    if (!isMounted) return
+    const problem = Object.values(await response.json())[0] as Problem
+
+    setProblem(problem)
+    setLoading(false)
+  }
 
   const handleSubmit = async () => {
     const response = await fetch(`${config.API_URL}/problems`, {
@@ -188,7 +177,9 @@ const EditProblems = (): JSX.Element => {
     }
   }
 
-  return (<>
+  if (isLoading) return <Loader active inline='centered' content="Loading" />
+
+  return <>
     <h1>{problem?.name}</h1>
 
     <Menu attached='top' tabular>
@@ -202,14 +193,14 @@ const EditProblems = (): JSX.Element => {
       {message?.type == 'error' ? <Message error content={message.message} /> :
         message?.type == 'success' ? <Message success content={message.message} /> : <></>}
 
-      {activeItem == 'problem-info' ? <ProblemInfo problem={{ problem, setProblem }} /> :
-        activeItem == 'test-data' ? <TestData problem={{ problem, setProblem }} /> :
-          activeItem == 'description' ? <Description problem={{ problem, setProblem }} /> :
-            activeItem == 'skeletons' ? <Skeletons problem={{ problem, setProblem }} /> : <></>}
+      {activeItem == 'problem-info' ? <ProblemInfo problem={problem} setProblem={setProblem} /> :
+        activeItem == 'test-data' ? <TestData problem={problem} setProblem={setProblem} /> :
+          activeItem == 'description' ? <Description problem={problem} setProblem={setProblem} /> :
+            activeItem == 'skeletons' ? <Skeletons problem={problem} setProblem={setProblem} /> : <></>}
 
       <Button primary onClick={handleSubmit}>Save</Button>
     </Block>
-  </>)
+  </>
 }
 
 export default EditProblems

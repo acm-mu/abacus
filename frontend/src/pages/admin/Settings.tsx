@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import { Button, Form, Input, Message } from 'semantic-ui-react'
 import { Block } from '../../components'
 import config from '../../environment'
@@ -22,23 +22,28 @@ const Settings = (): JSX.Element => {
     points_per_compilation_error: '0',
     points_per_minute: '0'
   })
+  const [isMounted, setMounted] = useState(true)
   const [message, setMessage] = useState<{ type: string, message: string }>()
 
   useEffect(() => {
-    fetch(`${config.API_URL}/contest`)
-      .then(res => res.json())
-      .then(data => setSettings({
-        ...data,
-        start_date: toLocalDateString(data.start_date),
-        start_time: toLocalTimeString(data.start_date),
-        end_date: toLocalDateString(data.end_date),
-        end_time: toLocalTimeString(data.end_date)
-      }))
+    loadSettings()
+    return () => { setMounted(false) }
   }, [])
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target
-    setSettings({ ...settings, [name]: value })
+  const handleChange = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>) => setSettings({ ...settings, [name]: value })
+
+  const loadSettings = async () => {
+    const response = await fetch(`${config.API_URL}/contest`)
+    const data = await response.json()
+    if (!isMounted) return
+
+    setSettings({
+      ...data,
+      start_date: toLocalDateString(data.start_date),
+      start_time: toLocalTimeString(data.start_date),
+      end_date: toLocalDateString(data.end_date),
+      end_time: toLocalTimeString(data.end_date)
+    })
   }
 
   const handleSubmit = async () => {
@@ -51,15 +56,18 @@ const Settings = (): JSX.Element => {
     formData.set('start_date', `${Date.parse(`${settings.start_date} ${settings.start_time}`) / 1000.0}`)
     formData.set('end_date', `${Date.parse(`${settings.end_date} ${settings.end_time}`) / 1000.0}`)
 
-    const res = await fetch(`${config.API_URL}/contest`, {
+    const response = await fetch(`${config.API_URL}/contest`, {
       method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${localStorage.accessToken}`
+      },
       body: formData
     })
 
-    if (res.status == 200) {
+    if (response.ok) {
       setMessage({ type: 'success', message: "Settings saved successfully!" })
-    } else if (res.status == 400) {
-      const body = await res.json()
+    } else {
+      const body = await response.json()
       setMessage({ type: 'error', message: body.message })
     }
   }
