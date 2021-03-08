@@ -1,6 +1,6 @@
 import { User } from 'abacus';
 import { createHash } from 'crypto';
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button, Label, Table } from 'semantic-ui-react';
 import { Block, FileDialog } from '../../../components';
@@ -13,24 +13,28 @@ interface UserItem extends User {
 const UploadUsers = (): JSX.Element => {
   const history = useHistory()
   const [file, setFile] = useState<File>()
-  const [users, setUsers] = useState<{ [key: string]: User }>({})
-  const [newUsers, setNewUsers] = useState<UserItem[]>([])
+  const [users, setUsers] = useState<{ [key: string]: User }>()
+  const [newUsers, setNewUsers] = useState<UserItem[]>()
 
-  const uploadChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event?.target?.files?.length) {
+  const uploadChange = ({ target: { files } }: ChangeEvent<HTMLInputElement>) => {
+    if (files?.length) {
       const reader = new FileReader();
-      reader.onload = async (e: ProgressEvent<FileReader>) => {
-        const text = e.target?.result as string
+      reader.onload = async ({ target }: ProgressEvent<FileReader>) => {
+        const text = target?.result as string
         if (text)
           setNewUsers(JSON.parse(text).map((user: User) => ({ ...user, checked: true })))
       }
-      reader.readAsText(event.target.files[0])
-      setFile(event.target.files[0])
+      reader.readAsText(files[0])
+      setFile(files[0])
     }
   }
 
   useEffect(() => {
-    fetch(`${config.API_URL}/users`)
+    fetch(`${config.API_URL}/users`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.accessToken}`
+      }
+    })
       .then(res => res.json())
       .then(res => setUsers(res))
   }, [])
@@ -43,30 +47,28 @@ const UploadUsers = (): JSX.Element => {
     return JSON.stringify(user1, Object.keys(user1).sort()) !== JSON.stringify(user2, Object.keys(user2).sort())
   }
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNewUsers(newUsers.map(user => user.uid == event.target.id ? { ...user, checked: !user.checked } : user))
-  }
-
-  const checkAll = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNewUsers(newUsers.map(user => ({ ...user, checked: event.target.checked })))
-  }
+  const handleChange = ({ target: { checked, id } }: ChangeEvent<HTMLInputElement>) => setNewUsers(newUsers?.map(user => user.uid == id ? { ...user, checked } : user))
+  const checkAll = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => setNewUsers(newUsers?.map(user => ({ ...user, checked })))
 
   const handleSubmit = async () => {
     if (newUsers) {
       for (const user of newUsers.filter(u => u.checked)) {
-        await fetch(`${config.API_URL}/users`, {
+        const response = await fetch(`${config.API_URL}/users`, {
           method: 'PUT',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.accessToken}`
           },
           body: JSON.stringify(user)
         })
+        if (response.ok) {
+          history.push("/admin/users")
+        }
       }
-      history.push("/admin/users")
     }
   }
 
-  return (<Block size='xs-12' transparent>
+  return <Block size='xs-12' transparent>
     <h1>Upload Users</h1>
 
     <FileDialog file={file} onChange={uploadChange} control={(file?: File) => (
@@ -81,51 +83,50 @@ const UploadUsers = (): JSX.Element => {
           <i>(Or click and choose file)</i>
         </p>
     )} />
-    {newUsers?.length ?
-      <>
-        <Table>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell collapsing>
-                <input type="checkbox" onChange={checkAll} />
-              </Table.HeaderCell>
-              <Table.HeaderCell>User Id</Table.HeaderCell>
-              <Table.HeaderCell>Role</Table.HeaderCell>
-              <Table.HeaderCell>Division</Table.HeaderCell>
-              <Table.HeaderCell>Username</Table.HeaderCell>
-              <Table.HeaderCell>Password</Table.HeaderCell>
-              <Table.HeaderCell>DisplayName</Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {newUsers.filter(user => filterUser(user, users[user.uid]))
-              .map((user: UserItem, index: number) => (
-                <Table.Row key={index}>
-                  <Table.HeaderCell collapsing>
-                    <input
-                      type="checkbox"
-                      checked={user.checked}
-                      id={user.uid}
-                      onChange={handleChange} />
-                  </Table.HeaderCell>
-                  <Table.Cell>
-                    {user.uid}
-                    {Object.keys(users).includes(user.uid) ?
-                      <Label color='blue' style={{ float: 'right' }}>Update User</Label> :
-                      <Label color='green' style={{ float: 'right' }}>Brand New</Label>}
-                  </Table.Cell>
-                  <Table.Cell>{user.role}</Table.Cell>
-                  <Table.Cell>{user.division}</Table.Cell>
-                  <Table.Cell>{user.username}</Table.Cell>
-                  <Table.Cell>{user.password}</Table.Cell>
-                  <Table.Cell>{user.display_name}</Table.Cell>
-                </Table.Row>
-              ))}
-          </Table.Body>
-        </Table>
-        <Button primary onClick={handleSubmit}>Import user(s)</Button>
-      </> : <></>}
-  </Block>)
+    {newUsers ? <>
+      <Table>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell collapsing>
+              <input type="checkbox" onChange={checkAll} />
+            </Table.HeaderCell>
+            <Table.HeaderCell>User Id</Table.HeaderCell>
+            <Table.HeaderCell>Role</Table.HeaderCell>
+            <Table.HeaderCell>Division</Table.HeaderCell>
+            <Table.HeaderCell>Username</Table.HeaderCell>
+            <Table.HeaderCell>Password</Table.HeaderCell>
+            <Table.HeaderCell>DisplayName</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {newUsers.filter(user => users ? filterUser(user, users[user.uid]) : true)
+            .map((user: UserItem, index: number) => (
+              <Table.Row key={index}>
+                <Table.HeaderCell collapsing>
+                  <input
+                    type="checkbox"
+                    checked={user.checked}
+                    id={user.uid}
+                    onChange={handleChange} />
+                </Table.HeaderCell>
+                <Table.Cell>
+                  {user.uid}
+                  {Object.keys(users || {}).includes(user.uid) ?
+                    <Label color='blue' style={{ float: 'right' }}>Update User</Label> :
+                    <Label color='green' style={{ float: 'right' }}>Brand New</Label>}
+                </Table.Cell>
+                <Table.Cell>{user.role}</Table.Cell>
+                <Table.Cell>{user.division}</Table.Cell>
+                <Table.Cell>{user.username}</Table.Cell>
+                <Table.Cell>{user.password}</Table.Cell>
+                <Table.Cell>{user.display_name}</Table.Cell>
+              </Table.Row>
+            ))}
+        </Table.Body>
+      </Table>
+      <Button primary onClick={handleSubmit}>Import user(s)</Button>
+    </> : <></>}
+  </Block>
 }
 
 export default UploadUsers

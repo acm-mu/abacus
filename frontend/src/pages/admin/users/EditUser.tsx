@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { ChangeEvent, useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { Button, Form, Input, Menu, Message, Select } from "semantic-ui-react"
 import config from '../../../environment'
@@ -29,18 +29,11 @@ const EditUser = (): JSX.Element => {
     { key: 'gold', text: 'Gold', value: 'gold' }
   ]
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target
-    setFormUser({ ...formUser, [name]: value })
-  }
-
-  const handleSelectChange = (_: never, result: HTMLInputElement) => {
-    const { name, value } = result
-    setFormUser({ ...formUser, [name]: value })
-  }
+  const handleChange = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>) => setFormUser({ ...formUser, [name]: value })
+  const handleSelectChange = (_: never, { name, value }: HTMLInputElement) => setFormUser({ ...formUser, [name]: value })
 
   const handleSubmit = async () => {
-    const res = await fetch(`${config.API_URL}/users`, {
+    const response = await fetch(`${config.API_URL}/users`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -48,13 +41,13 @@ const EditUser = (): JSX.Element => {
       },
       body: JSON.stringify({ ...formUser, school: formUser.role == 'team' ? formUser.school : '', })
     })
-    if (res.status == 200) {
-      const body = await res.json()
+    if (response.ok) {
+      const body = await response.json()
       setMessage({ type: 'success', message: "User saved successfully!" })
       setUser(body)
       setFormUser({ ...body, password: '' })
-    } else if (res.status == 400) {
-      const body = await res.json()
+    } else if (response.status == 400) {
+      const body = await response.json()
       setMessage({ type: 'error', message: body.message })
     }
   }
@@ -81,23 +74,23 @@ const EditUser = (): JSX.Element => {
     <>
       <h1>{user?.display_name}</h1>
       <Block size='xs-12' transparent>
+        {message ?
+          <>
+            {(() => {
+              switch (message.type) {
+                case 'error':
+                  return <Message error icon='warning circle' header="An error has occurred!" content={message.message} />
+                case 'success':
+                  return <Message success icon='check' header='Success!' content={message.message} />
+              }
+            })()}
+          </> : <></>}
         <Menu attached='top' tabular>
           <Menu.Item active>User Info</Menu.Item>
         </Menu>
-
-        <Form style={{ padding: '20px', background: 'white', border: '1px solid #d4d4d5', borderTop: 'none' }}>
+        <Form style={{ padding: '20px', background: 'white', border: '1px solid #d4d4d5', borderTop: 'none' }} onSubmit={handleSubmit} >
           <h2>Edit User</h2>
-          {message ?
-            <>
-              {(() => {
-                switch (message.type) {
-                  case 'error':
-                    return <Message error>{message.message}</Message>
-                  case 'success':
-                    return <Message success>{message.message}</Message>
-                }
-              })()}
-            </> : <></>}
+
           <Form.Field
             control={Input}
             onChange={handleChange}
@@ -150,7 +143,7 @@ const EditUser = (): JSX.Element => {
             value={formUser?.password}
             placeholder='Password'
             required />
-          <Button primary onClick={handleSubmit}>Save</Button>
+          <Button primary type="submit">Save</Button>
         </Form>
       </Block>
     </>

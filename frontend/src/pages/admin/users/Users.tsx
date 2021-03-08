@@ -24,7 +24,7 @@ const Users = (): JSX.Element => {
   const [isLoading, setLoading] = useState(true)
   const [error, setError] = useState()
 
-  const [isMounted, setMounted] = useState<boolean>(true)
+  const [isMounted, setMounted] = useState(true)
   const [{ column, direction }, setSortConfig] = useState<SortConfig>({
     column: 'username',
     direction: 'ascending'
@@ -65,9 +65,8 @@ const Users = (): JSX.Element => {
   const handleChange = ({ target: { id, checked } }: ChangeEvent<HTMLInputElement>) => setUsers(users.map(user => user.uid == id ? { ...user, checked } : user))
   const checkAll = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => setUsers(users.map(user => ({ ...user, checked })))
 
-
   const createUserCallback = (response: Response) => {
-    if (response.status == 200)
+    if (response.ok)
       loadUsers()
   }
 
