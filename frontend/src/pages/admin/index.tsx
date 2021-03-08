@@ -24,8 +24,6 @@ import DefaultNavigation from "../DefaultNavigation";
 const Admin = (): JSX.Element => {
   const { user } = useContext(AppContext)
 
-  console.log(user)
-
   if (!user) return (<>
     <DefaultNavigation />
     <Container text className='main'>
