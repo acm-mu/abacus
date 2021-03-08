@@ -59,6 +59,19 @@ export const postSubmissions = async (req: Request, res: Response) => {
 
     const submissions = await contest.scanItems('submission', { tid, pid })
 
+    if (submissions) {
+      for (const submission of submissions) {
+        if (submission.status === 'accepted') {
+          res.status(400).send("Team has already solved problem")
+          return
+        }
+        if (submission.status === 'pending') {
+          res.status(400).send("Cannot submit while there are submissions for this problem in the pending state")
+          return
+        }
+      }
+    }
+
     const { name: filename, size: filesize, md5, data } = req.files!.source as UploadedFile
 
     const submission = {

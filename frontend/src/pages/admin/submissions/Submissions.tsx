@@ -57,20 +57,19 @@ const Submissions = (): JSX.Element => {
   const handleChange = ({ target: { id, checked } }: ChangeEvent<HTMLInputElement>) => setSubmissions(submissions.map(submission => submission.sid == id ? { ...submission, checked } : submission))
   const checkAll = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => setSubmissions(submissions.map(submission => ({ ...submission, checked })))
 
-  const deleteSelected = () => {
+  const deleteSelected = async () => {
     const submissionsToDelete = submissions.filter(submission => submission.checked).map(submission => submission.sid)
-    fetch(`${config.API_URL}/submissions`, {
+    const response = await fetch(`${config.API_URL}/submissions`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.accessToken}`
       },
       body: JSON.stringify({ sid: submissionsToDelete })
-    }).then(res => {
-      if (res.status == 200) {
-        setSubmissions(submissions.filter(submission => !submissionsToDelete.includes(submission.sid)))
-      }
     })
+    if (response.ok) {
+      loadSubmissions()
+    }
   }
 
   if (isLoading) return <Loader active inline='centered' content="Loading" />
@@ -79,7 +78,7 @@ const Submissions = (): JSX.Element => {
     <>
       <Button content="Download Submissions" onClick={downloadSubmissions} />
       {submissions.filter(submission => submission.checked).length ?
-        <Button icon='trash' negative onClick={deleteSelected} /> : <></>}
+        <Button content="Delete Submission(s)" negative onClick={deleteSelected} /> : <></>}
 
       <Table singleLine>
         <Table.Header>
