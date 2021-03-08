@@ -8,16 +8,18 @@ type CreateUserProps = {
 }
 
 const CreateUser = ({ trigger, callback }: CreateUserProps): JSX.Element => {
-  const [open, setOpen] = useState<boolean>(false)
-  const [error, setError] = useState<string>()
-  const [user, setUser] = useState({
+  const empty = {
     username: '',
     role: '',
     division: '',
     school: '',
     display_name: '',
     password: ''
-  })
+  }
+
+  const [open, setOpen] = useState<boolean>(false)
+  const [error, setError] = useState<string>()
+  const [user, setUser] = useState(empty)
 
   const roles = [
     { key: 'team', text: 'Team', value: 'team' },
@@ -55,7 +57,11 @@ const CreateUser = ({ trigger, callback }: CreateUserProps): JSX.Element => {
     <Modal
       closeIcon
       onClose={() => setOpen(false)}
-      onOpen={() => setOpen(true)}
+      onOpen={() => {
+        setError(undefined)
+        setUser(empty)
+        setOpen(true)
+      }}
       open={open}
       trigger={trigger}
     >
