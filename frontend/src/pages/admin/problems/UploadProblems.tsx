@@ -1,5 +1,5 @@
 import { Problem } from 'abacus';
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button, Label, Message, Table } from 'semantic-ui-react';
 import { Block, FileDialog } from '../../../components';
@@ -16,8 +16,8 @@ const UploadProblems = (): JSX.Element => {
   const [problems, setProblems] = useState<{ [key: string]: Problem }>({})
   const [newProblems, setNewProblems] = useState<ProblemItem[]>([])
 
-  const uploadChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event?.target?.files?.length) {
+  const uploadChange = ({ target: { files } }: ChangeEvent<HTMLInputElement>) => {
+    if (files?.length) {
       const reader = new FileReader();
       reader.onload = async (e: ProgressEvent<FileReader>) => {
         const text = e.target?.result as string
@@ -25,8 +25,8 @@ const UploadProblems = (): JSX.Element => {
           setNewProblems(JSON.parse(text).map((problem: Problem) => ({ ...problem, checked: true })))
         }
       }
-      reader.readAsText(event.target.files[0])
-      setFile(event.target.files[0])
+      reader.readAsText(files[0])
+      setFile(files[0])
     }
   }
 
@@ -49,12 +49,12 @@ const UploadProblems = (): JSX.Element => {
     return false
   }
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNewProblems(newProblems.map(problem => problem.pid == event.target.id ? { ...problem, checked: !problem.checked } : problem))
+  const handleChange = ({ target: { id, checked } }: ChangeEvent<HTMLInputElement>) => {
+    setNewProblems(newProblems.map(problem => problem.pid == id ? { ...problem, checked } : problem))
   }
 
-  const checkAll = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNewProblems(newProblems.map(problem => ({ ...problem, checked: event.target.checked })))
+  const checkAll = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => {
+    setNewProblems(newProblems.map(problem => ({ ...problem, checked })))
   }
 
   const handleSubmit = async () => {

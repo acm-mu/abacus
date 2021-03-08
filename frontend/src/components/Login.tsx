@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { ChangeEvent, useContext, useState } from "react";
 import { Button, Form, Message, Modal } from "semantic-ui-react";
 import AppContext from "../AppContext";
 import fulllogo from '../assets/fulllogo.png'
@@ -15,11 +15,7 @@ const LoginModal = ({ trigger, open }: LoginModalProps): JSX.Element => {
   const [formData, setFormData] = useState({ username: '', password: '' })
   const [isOpen, setOpen] = useState(open || false)
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target
-    setFormData({ ...formData, [name]: value })
-  }
-
+  const handleChange = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, [name]: value })
   const handleSubmit = async () => {
     try {
       const response = await fetch(`${config.API_URL}/auth`, {

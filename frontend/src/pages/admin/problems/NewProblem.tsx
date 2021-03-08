@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { SyntheticEvent, ChangeEvent, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Form, Input, Button, Menu, TextArea, Message, MenuItemProps, DropdownProps } from "semantic-ui-react"
 import { Block } from '../../../components'
@@ -40,7 +40,7 @@ const NewProblem = (): JSX.Element => {
   }
 
   const [activeTestItem, setActiveTestItem] = useState(0)
-  const handleTestItemClick = (event: React.MouseEvent, data: MenuItemProps) => setActiveTestItem(data.tab)
+  const handleTestItemClick = (event: MouseEvent, data: MenuItemProps) => setActiveTestItem(data.tab)
   const handleNewTest = () => {
     if (problem) {
       setProblem({ ...problem, tests: [...problem.tests, { in: '', out: '', result: '', include: false }] })
@@ -54,13 +54,12 @@ const NewProblem = (): JSX.Element => {
     }
   }
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target
+  const handleChange = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>) => {
     if (problem)
       setProblem({ ...problem, [name]: value })
   }
 
-  const handleDropdownChange = (e: React.SyntheticEvent<HTMLElement, Event>, { name, value }: DropdownProps) => {
+  const handleDropdownChange = (e: SyntheticEvent<HTMLElement, Event>, { name, value }: DropdownProps) => {
     if (problem)
       setProblem({ ...problem, [name]: value })
   }
@@ -70,8 +69,7 @@ const NewProblem = (): JSX.Element => {
       setProblem({ ...problem, description: value })
   }
 
-  const handleTestChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const { name, value } = event.target
+  const handleTestChange = ({ target: { name, value } }: ChangeEvent<HTMLTextAreaElement>) => {
     if (problem)
       setProblem({
         ...problem, tests: problem.tests.map((test: Test, index: number) => {

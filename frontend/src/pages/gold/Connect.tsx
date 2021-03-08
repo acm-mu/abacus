@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react"
+import React, { ChangeEvent, useContext, useState } from "react"
 import { Input, Form, Button } from "semantic-ui-react"
 import AppContext from "../../AppContext"
 import { Block } from "../../components"
@@ -9,9 +9,9 @@ const Connect = (): JSX.Element => {
   const [username, setUsername] = useState<string>()
   const [disabled, setDisabled] = useState<boolean>(true)
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUsername(event.target.value)
-    fetch(`https://api.scratch.mit.edu/users/${event.target.value}`)
+  const handleChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
+    setUsername(value)
+    fetch(`https://api.scratch.mit.edu/users/${value}`)
       .then(res => setDisabled(res.status != 200))
   }
 
