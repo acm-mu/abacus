@@ -25,7 +25,7 @@ const Gold = (): JSX.Element => (
         <Route path='/gold/problems/:pid/submit' component={SubmitProblem} />
         <Route path='/gold/submissions' component={Submissions} />
         <Route path='/gold/submissions/:sid' component={Submission} />
-        <Route default component={NotFound} />
+        <Route component={NotFound} />
       </Switch>
     </Container>
   </>

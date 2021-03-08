@@ -24,7 +24,7 @@ const Blue = (): JSX.Element => (
         <Route path='/blue/standings' component={Standings} />
         <Route path='/blue/submissions/:sid' component={Submission} />
         <Route path='/blue/submissions' component={Submissions} />
-        <Route default component={NotFound} />
+        <Route component={NotFound} />
       </Switch>
     </Container>
   </>

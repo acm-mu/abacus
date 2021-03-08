@@ -48,7 +48,7 @@ const Admin = (): JSX.Element => {
           <Route path='/admin/users' component={Users} />
           <Route path='/admin/submissions/:sid' component={Submission} />
           <Route path='/admin/submissions' component={Submissions} />
-          <Route default component={NotFound} />
+          <Route component={NotFound} />
         </Switch>
       </Container>
     </>

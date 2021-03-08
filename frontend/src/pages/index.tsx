@@ -17,7 +17,7 @@ const Index = (): JSX.Element => (
         <Route exact path="/" component={Home} />
         <Route path="/about" component={About} />
         <Route path="/help" component={Help} />
-        <Route default component={NotFound} />
+        <Route component={NotFound} />
       </Switch>
     </Container>
   </>
