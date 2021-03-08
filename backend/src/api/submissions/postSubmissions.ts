@@ -74,6 +74,7 @@ export const postSubmissions = async (req: Request, res: Response) => {
       status: 'pending',
       score: 0,
       date: Date.now() / 1000,
+      tests: problem.tests,
       runtime: 0,
       source: data.toString('utf-8')
     }
