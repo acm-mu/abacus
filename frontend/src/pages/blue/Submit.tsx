@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { ChangeEvent, useContext, useEffect, useState } from 'react'
 
 import { Block, Countdown, FileDialog } from '../../components'
 import { Form, Button } from 'semantic-ui-react'
@@ -26,22 +26,26 @@ const Submit = (): JSX.Element => {
   const [file, setFile] = useState<File>()
   const history = useHistory()
 
+  const [isMounted, setMounted] = useState(true)
+
   const { pid } = useParams<{ pid: string }>()
   useEffect(() => {
-    fetch(`${config.API_URL}/problems?division=blue&id=${pid}`)
-      .then(res => res.json())
-      .then(res => {
-        if (res) {
-          const problem = Object.values(res)[0] as Problem
-          setProblem(problem)
-          fetch(`${config.API_URL}/submissions?tid=${user?.uid}&pid=${problem.pid}`)
-            .then((res) => res.json())
-            .then(res => {
-              if (res) setSubmissions(Object.values(res))
-            })
-        }
-      })
+    loadProblem()
+    return () => { setMounted(false) }
   }, [])
+
+  const loadProblem = async () => {
+    let response = await fetch(`${config.API_URL}/problems?division=blue&id=${pid}`)
+
+    const problem = Object.values(await response.json())[0] as Problem
+    setProblem(problem)
+
+    if (!isMounted) return
+
+    response = await fetch(`${config.API_URL}/submissions?tid=${user?.uid}&pid=${problem.pid}`)
+
+    setSubmissions(Object.values(await response.json()))
+  }
 
   const handleSubmit = async () => {
     if (!(language && file && problem && user)) return
@@ -54,6 +58,9 @@ const Submit = (): JSX.Element => {
 
     const res = await fetch(`${config.API_URL}/submissions`, {
       method: 'POST',
+      headers: {
+        Authorization: `Bearer ${localStorage.accessToken}`
+      },
       body: formData
     })
 
@@ -67,7 +74,7 @@ const Submit = (): JSX.Element => {
     history.push(`/blue/submissions/${body.sid}`)
   }
 
-  const uploadChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const uploadChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event?.target?.files?.length) {
       const file = event.target.files[0]
       const ext = file.name.substring(file.name.lastIndexOf("."), file.name.length)
