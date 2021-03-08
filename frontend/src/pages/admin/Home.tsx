@@ -2,7 +2,8 @@ import '@toast-ui/chart/dist/toastui-chart.min.css'
 
 import { LineChart, PieChart } from '@toast-ui/react-chart'
 import { Problem, Submission } from 'abacus'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import AppContext from '../../AppContext'
 
 import { Block } from '../../components'
 import config from '../../environment'
@@ -10,24 +11,23 @@ import config from '../../environment'
 const Home = (): JSX.Element => {
   const [submissions, setSubmissions] = useState<Submission[]>()
   const [problems, setProblems] = useState<Problem[]>([])
-  const [startDate, setStartDate] = useState<number>(0)
   const [isMounted, setMounted] = useState(true)
 
+  const { settings } = useContext(AppContext)
+
   const fetchData = async () => {
-    let response = await fetch(`${config.API_URL}/submissions`)
-    const submissions = await response.json()
+    let response = await fetch(`${config.API_URL}/submissions`, { headers: { Authorization: `Bearer ${localStorage.accessToken}` } })
+    let submissions = Object.values(await response.json()) as Submission[]
 
-    response = await fetch(`${config.API_URL}/contest`)
-    const settings = await response.json()
+    submissions = submissions.filter((submission: Submission) => submission.date > Number(settings?.start_date) && submission.date < Number(settings?.end_date))
 
-    response = await fetch(`${config.API_URL}/problems?division=blue`)
+    response = await fetch(`${config.API_URL}/problems?division=blue`, { headers: { Authorization: `Bearer ${localStorage.accessToken}` } })
     let problems = await response.json()
     if (problems.length)
       problems = problems.sort((a: Problem, b: Problem) => a.pid.localeCompare(b.pid))
 
     if (isMounted) {
-      setSubmissions(Object.values(submissions))
-      setStartDate(settings.start_date)
+      setSubmissions(submissions)
       setProblems(Object.values(problems))
     }
   }
@@ -51,11 +51,11 @@ const Home = (): JSX.Element => {
   })));
 
   submissions?.forEach((sub: Submission) => {
+    const startDate = Number(settings?.start_date) || 0
     const timeBin = Math.floor((sub.date - startDate) / (1800));
     timeSubmissions[sub.problem.id].data[timeBin]++;
 
     statuses[sub.status] == undefined ? statuses[sub.status] = { name: sub.status, data: 1 } : statuses[sub.status].data++;
-
   });
 
   const breakdownData = {
