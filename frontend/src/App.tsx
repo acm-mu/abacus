@@ -25,8 +25,9 @@ const App = (): JSX.Element => {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`
         }
       })
-    const user = await res.json()
-    setUser(user)
+    if (res.ok) {
+      setUser(await res.json())
+    }
     setLoading(false)
   }
 
@@ -54,20 +55,20 @@ const App = (): JSX.Element => {
     settings
   }
 
-  return (<>{isLoading ||
-    <AppContext.Provider value={appContext}>
-      <Notifications />
-      <Router>
-        <Switch>
-          <Route path='/admin' component={Admin} />
-          <Route path="/blue" component={Blue} />
-          <Route path="/gold" component={Gold} />
-          <Route path="/" component={Index} />
-        </Switch>
-      </Router>
-      <Footer />
-    </AppContext.Provider>
-  }</>)
+  if (isLoading) return <></>
+
+  return <AppContext.Provider value={appContext}>
+    <Notifications />
+    <Router>
+      <Switch>
+        <Route path='/admin' component={Admin} />
+        <Route path="/blue" component={Blue} />
+        <Route path="/gold" component={Gold} />
+        <Route path="/" component={Index} />
+      </Switch>
+    </Router>
+    <Footer />
+  </AppContext.Provider>
 }
 
 export default App;
