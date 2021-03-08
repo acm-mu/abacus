@@ -136,7 +136,10 @@ const EditProblems = (): JSX.Element => {
   const [problem, setProblem] = useState<Problem>()
 
   const [activeItem, setActiveItem] = useState<string>('problem-info')
-  const handleItemClick = (event: React.MouseEvent, data: MenuItemProps) => setActiveItem(data.tab)
+  const handleItemClick = (event: MouseEvent, data: MenuItemProps) => {
+    setMessage(undefined)
+    setActiveItem(data.tab)
+  }
 
   const [message, setMessage] = useState<{ type: string, message: string }>()
   const [isMounted, setMounted] = useState(true)
