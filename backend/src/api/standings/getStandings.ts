@@ -47,7 +47,7 @@ export const getStandings = async (_req: Request, res: Response) => {
           team.problems[problem.id].num_submissions = subs[team.uid][problem.pid].length
           team.problems[problem.id].submissions = subs[team.uid][problem.pid]
           subs[team.uid][problem.pid].every((sub: any) => {
-            if (sub.score > 0) {
+            if (sub.status === "accepted") {
               team.problems[problem.id].problem_score = sub.score
               team.problems[problem.id].solved = true
               team.solved++
