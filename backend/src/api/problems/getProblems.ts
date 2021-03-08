@@ -56,12 +56,11 @@ export const getProblems = async (req: Request, res: Response) => {
   let columns = ['pid', 'division', 'id', 'name']
   /// IF OTHER COLUMNS AUTHENTICATE FOR JUDGE / ADMIN
   if (query.columns) {
-    columns = columns.concat(query.columns)
+    columns = columns.concat(query.columns.split(','))
     delete query.columns
   }
 
   try {
-    console.log(type)
     let problems: any = await contest.scanItems('problem', query, columns)
     if (type !== "list")
       problems = transpose(problems, 'pid')

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { ChangeEvent, useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Form, Input, Menu, Button, TextArea, MenuItemProps, Message } from 'semantic-ui-react'
 import Editor from '@monaco-editor/react'
@@ -7,7 +7,7 @@ import config from '../../../environment'
 import MDEditor from '@uiw/react-md-editor'
 import { Problem, Skeleton, Test } from 'abacus'
 
-type ProblemStateProps = {
+interface ProblemStateProps {
   problem: {
     problem?: Problem;
     setProblem: React.Dispatch<React.SetStateAction<Problem | undefined>>
@@ -53,9 +53,8 @@ const TestData = (props: ProblemStateProps) => {
     }
   }
 
-  const handleTestChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const { name, value } = event.target
-    event.target.style.height = `${event.target.scrollHeight}px`
+  const handleTestChange = ({ target: { name, value, style, scrollHeight } }: ChangeEvent<HTMLTextAreaElement>) => {
+    style.height = `${scrollHeight}px`
     if (problem)
       setProblem({
         ...problem, tests: problem.tests?.map((test: Test, index: number) => {
@@ -173,17 +172,18 @@ const EditProblems = (): JSX.Element => {
   }, [])
 
   const handleSubmit = async () => {
-    const res = await fetch(`${config.API_URL}/problems`, {
+    const response = await fetch(`${config.API_URL}/problems`, {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.accessToken}`
       },
       body: JSON.stringify(problem)
     })
-    if (res.status == 200) {
+    if (response.ok) {
       setMessage({ type: 'success', message: "Problem saved successfully!" })
-    } else if (res.status == 400) {
-      const body = await res.json()
+    } else {
+      const body = await response.json()
       setMessage({ type: 'error', message: body.message })
     }
   }
