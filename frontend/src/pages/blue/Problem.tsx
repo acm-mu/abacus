@@ -2,33 +2,42 @@ import React, { useState, useEffect, useContext } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Button, Popup } from "semantic-ui-react";
 import { Block, Countdown } from '../../components'
-import { ProblemType, SubmissionType } from '../../types'
+import MDEditor from "@uiw/react-md-editor";
+import { Problem, Submission } from "abacus";
+
 import config from '../../environment'
 import "./Problem.scss";
-import { UserContext } from "../../context/user";
-import MDEditor from "@uiw/react-md-editor";
+import AppContext from "../../AppContext";
 
-const Problem = (): JSX.Element => {
-  const [problem, setProblem] = useState<ProblemType>();
-  const [submissions, setSubmissions] = useState<SubmissionType[]>()
-  const { user } = useContext(UserContext)
-  const { problem_id } = useParams<{ problem_id: string }>()
+const problem = (): JSX.Element => {
+  const { user } = useContext(AppContext);
+  const [problem, setProblem] = useState<Problem>();
+  const [submissions, setSubmissions] = useState<Submission[]>()
+  const { pid } = useParams<{ pid: string }>()
+
+  const [isMounted, setMounted] = useState(true)
 
   useEffect(() => {
-    fetch(`${config.API_URL}/problems?division=blue&id=${problem_id}`)
-      .then((res) => res.json())
-      .then((res) => {
-        if (res) {
-          const problem = Object.values(res)[0] as ProblemType
-          setProblem(problem);
-          if (user)
-            fetch(`${config.API_URL}/submissions?team_id=${user?.uid}&problem_id=${problem.pid}`)
-              .then((res => res.json()))
-              .then(res => setSubmissions(Object.values(res)))
-        }
-      });
+    loadProblem()
+    return () => { setMounted(false) }
   }, []);
 
+  const loadProblem = async () => {
+    const response = await fetch(`${config.API_URL}/problems?division=blue&columns=description&id=${pid}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.accessToken}`
+      }
+    })
+    if (response.ok && isMounted) {
+      const problem = Object.values(await response.json())[0] as Problem
+      setProblem(problem)
+      if (user) {
+        const submissions = await fetch(`${config.API_URL}/submissions?tid=${user?.uid}&pid=${problem.pid}`)
+        if (isMounted)
+          setSubmissions(Object.values(await submissions.json()))
+      }
+    }
+  }
 
   return (
     <>
@@ -44,7 +53,7 @@ const Problem = (): JSX.Element => {
       </Block>
       <Block size='xs-3'>
         <div style={{ display: "flex", justifyContent: "space-evenly" }}>
-          {!submissions || submissions?.filter((e) => e.status == "accepted").length == 0 ?
+          {!submissions || submissions.filter((e) => e.status == "accepted").length == 0 ?
             <Popup
               trigger={
                 <Button
@@ -68,10 +77,10 @@ const Problem = (): JSX.Element => {
         <p><b>Problem ID:</b> {problem?.id}</p>
         <p><b>CPU Time limit:</b> {problem?.cpu_time_limit}</p>
         <p><b>Memory limit:</b> {problem?.memory_limit}</p>
-        <p><b>Download:</b> <a href={`${config.API_URL}/sample_files?problem_id=${problem?.pid}`}>Sample data files</a></p>
+        <p><b>Download:</b> <a href={`${config.API_URL}/sample_files?pid=${problem?.pid}`}>Sample data files</a></p>
       </Block>
     </>
   );
 }
 
-export default Problem;
+export default problem;

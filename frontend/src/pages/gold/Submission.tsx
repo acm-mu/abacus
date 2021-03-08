@@ -1,11 +1,11 @@
+import { Submission } from "abacus"
 import React, { useState } from "react"
 import { Link } from "react-router-dom"
 import { Table, Label } from "semantic-ui-react"
 import { Block } from "../../components"
-import { SubmissionType } from "../../types"
 
-const Submission = (): JSX.Element => {
-  const [submission] = useState<SubmissionType>()
+const submission = (): JSX.Element => {
+  const [submission] = useState<Submission>()
   return (
     <>
       <Block size='xs-12'>
@@ -25,7 +25,7 @@ const Submission = (): JSX.Element => {
                 to={`/gold/submissions/${submission?.sid}`}>{submission?.sid.substring(0, 7)}</Link>
               </Table.Cell>
               <Table.Cell fromnow="{{ submission.date*1000 }}"></Table.Cell>
-              <Table.Cell><Link to={`/gold/problems/${submission?.problem_id}`}>{submission?.problem.name}</Link></Table.Cell>
+              <Table.Cell><Link to={`/gold/problems/${submission?.pid}`}>{submission?.problem.name}</Link></Table.Cell>
               <Table.Cell className={`icn ${submission?.status}`}></Table.Cell>
             </Table.Row>
           </Table.Body>
@@ -42,4 +42,4 @@ const Submission = (): JSX.Element => {
     </>)
 }
 
-export default Submission
+export default submission

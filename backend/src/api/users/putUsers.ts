@@ -63,13 +63,18 @@ export const putUsers = async (req: Request, res: Response) => {
   }
 
   const item = matchedData(req)
-  if (item.password)
+  if (item.username) {
+    item.username = item.username.toLowerCase()
+  }
+  if (item.password) {
     item.password = createHash('sha256').update(item.password).digest('hex')
+  }
 
   try {
     if (item.username) {
-      const users = await contest.scanItems('user', { username: item.username }) || {}
-      if (Object.values(users).length > 0) {
+      let users = Object.values(await contest.scanItems('user', { username: item.username }) || {})
+      users = users.filter((user) => user.uid != item.uid)
+      if (users.length > 0) {
         res.status(400).json({ message: "Username is taken!" })
         return
       }

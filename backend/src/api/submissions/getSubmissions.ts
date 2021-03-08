@@ -66,9 +66,9 @@ export const getSubmissions = async (req: Request, res: Response) => {
   try {
     const item = matchedData(req)
 
-    if (req.user.role == 'judge') {
+    if (req?.user?.role == 'judge') {
       item.division = req.user.division
-    } else if (req.user.role == 'team') {
+    } else if (req?.user?.role == 'team') {
       item.tid = req.user.uid
     }
 

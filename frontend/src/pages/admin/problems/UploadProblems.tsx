@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import { Problem } from 'abacus';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button, Label, Message, Table } from 'semantic-ui-react';
-import { Block, FileDialog } from '../../components';
-import config from "../../environment"
-import { ProblemType } from '../../types';
+import { Block, FileDialog } from '../../../components';
+import config from "../../../environment"
 
-interface ProblemItem extends ProblemType {
+interface ProblemItem extends Problem {
   checked: boolean
 }
 
@@ -13,20 +13,20 @@ const UploadProblems = (): JSX.Element => {
   const history = useHistory()
   const [file, setFile] = useState<File>()
   const [error, setError] = useState<string>()
-  const [problems, setProblems] = useState<{ [key: string]: ProblemType }>({})
+  const [problems, setProblems] = useState<{ [key: string]: Problem }>({})
   const [newProblems, setNewProblems] = useState<ProblemItem[]>([])
 
-  const uploadChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event?.target?.files?.length) {
+  const uploadChange = ({ target: { files } }: ChangeEvent<HTMLInputElement>) => {
+    if (files?.length) {
       const reader = new FileReader();
       reader.onload = async (e: ProgressEvent<FileReader>) => {
         const text = e.target?.result as string
         if (text) {
-          setNewProblems(JSON.parse(text).map((problem: ProblemType) => ({ ...problem, checked: true })))
+          setNewProblems(JSON.parse(text).map((problem: Problem) => ({ ...problem, checked: true })))
         }
       }
-      reader.readAsText(event.target.files[0])
-      setFile(event.target.files[0])
+      reader.readAsText(files[0])
+      setFile(files[0])
     }
   }
 
@@ -36,7 +36,7 @@ const UploadProblems = (): JSX.Element => {
       .then(res => setProblems(res))
   }, [])
 
-  const filterProblem = (p1: ProblemItem, p2: ProblemType) => {
+  const filterProblem = (p1: ProblemItem, p2: Problem) => {
     if (!p2) return true
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { checked: _, ...problem1 } = p1
@@ -49,12 +49,12 @@ const UploadProblems = (): JSX.Element => {
     return false
   }
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNewProblems(newProblems.map(problem => problem.pid == event.target.id ? { ...problem, checked: !problem.checked } : problem))
+  const handleChange = ({ target: { id, checked } }: ChangeEvent<HTMLInputElement>) => {
+    setNewProblems(newProblems.map(problem => problem.pid == id ? { ...problem, checked } : problem))
   }
 
-  const checkAll = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNewProblems(newProblems.map(problem => ({ ...problem, checked: event.target.checked })))
+  const checkAll = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => {
+    setNewProblems(newProblems.map(problem => ({ ...problem, checked })))
   }
 
   const handleSubmit = async () => {

@@ -1,10 +1,10 @@
 import React, { useContext } from 'react'
+import AppContext from '../../AppContext'
 import { Block } from '../../components'
-import { UserContext } from '../../context/user'
 import Connect from './Connect'
 
 const Home = (): JSX.Element => {
-  const { user } = useContext(UserContext)
+  const { user } = useContext(AppContext)
   return (
     <>
       {user?.scratch_username ? <></> :

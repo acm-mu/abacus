@@ -12,7 +12,7 @@ class ContestService {
   }
 
   init_aws() {
-    AWS.config.region = 'us-east-2';
+    AWS.config.region = process.env.AWS_REGION || 'us-east-1';
 
     this.db = new DocumentClient();
     this.s3 = new S3();
@@ -64,7 +64,6 @@ class ContestService {
             params.ExpressionAttributeNames = { ...params.ExpressionAttributeNames, ...Object.assign({}, ...columns.map((e) => ({ [`#${e}`]: `${e}` }))) }
           else
             params.ExpressionAttributeNames = Object.assign({}, ...columns.map((e) => ({ [`#${e}`]: `${e}` })))
-          console.log(params)
         }
       }
       this.db.scan(params, (err: AWSError, data: ScanOutput) => {

@@ -10,10 +10,11 @@ const authenticate = (req: Request, _: Response): Promise<User | undefined> => {
     if (!token) return reject()
 
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET || '',
-      async (err, { username, password }: any) => {
-        if (err) return reject()
+      async (err, data: any) => {
+        if (err || !data) return reject()
 
         try {
+          const { username, password } = data
           const users = await contest.scanItems('user', { username, password }) as unknown as User[]
           if (users.length) {
             req.user = users[0]

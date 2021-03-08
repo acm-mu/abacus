@@ -1,6 +1,6 @@
-import React, { useState } from "react"
+import React, { ChangeEvent, useState } from "react"
 import { Modal, Form, Input, Select, Button, Message } from "semantic-ui-react"
-import config from '../../environment'
+import config from '../../../environment'
 
 type CreateUserProps = {
   trigger: JSX.Element;
@@ -8,16 +8,18 @@ type CreateUserProps = {
 }
 
 const CreateUser = ({ trigger, callback }: CreateUserProps): JSX.Element => {
-  const [open, setOpen] = useState<boolean>(false)
-  const [error, setError] = useState<string>()
-  const [user, setUser] = useState({
+  const empty = {
     username: '',
     role: '',
     division: '',
     school: '',
     display_name: '',
     password: ''
-  })
+  }
+
+  const [open, setOpen] = useState<boolean>(false)
+  const [error, setError] = useState<string>()
+  const [user, setUser] = useState(empty)
 
   const roles = [
     { key: 'team', text: 'Team', value: 'team' },
@@ -26,35 +28,27 @@ const CreateUser = ({ trigger, callback }: CreateUserProps): JSX.Element => {
   ]
   const divisions = [
     { key: 'blue', text: 'Blue', value: 'blue' },
-    { key: 'gold', text: 'Gold', value: 'gold' },
-    { key: 'na', text: 'N/A', value: 'na' }
+    { key: 'gold', text: 'Gold', value: 'gold' }
   ]
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target
-    setUser({ ...user, [name]: value })
-  }
-
-  const handleSelectChange = (_: never, result: HTMLInputElement) => {
-    const { name, value } = result
-    setUser({ ...user, [name]: value })
-  }
+  const handleChange = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>) => setUser({ ...user, [name]: value })
+  const handleSelectChange = (_: never, { name, value }: HTMLInputElement) => setUser({ ...user, [name]: value })
 
   const handleSubmit = async () => {
-    const res = await fetch(`${config.API_URL}/users`, {
+    const response = await fetch(`${config.API_URL}/users`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${localStorage.accessToken}`
       },
       body: JSON.stringify({ ...user, school: user.role == 'team' ? user.school : '' })
     })
-    if (callback)
-      callback(res)
+    callback && callback(response)
 
-    if (res.status == 200) {
+    if (response.ok) {
       setOpen(false)
-    } else if (res.status == 400) {
-      const body = await res.json()
+    } else {
+      const body = await response.json()
       setError(body.message)
     }
   }
@@ -63,7 +57,11 @@ const CreateUser = ({ trigger, callback }: CreateUserProps): JSX.Element => {
     <Modal
       closeIcon
       onClose={() => setOpen(false)}
-      onOpen={() => setOpen(true)}
+      onOpen={() => {
+        setError(undefined)
+        setUser(empty)
+        setOpen(true)
+      }}
       open={open}
       trigger={trigger}
     >
@@ -101,15 +99,16 @@ const CreateUser = ({ trigger, callback }: CreateUserProps): JSX.Element => {
                 placeholder='School'
                 required
               />}
-            <Form.Field
-              control={Select}
-              onChange={handleSelectChange}
-              label='Division'
-              name='division'
-              options={divisions}
-              value={user.division}
-              placeholder='Division'
-              required />
+            {['team', 'judge'].includes(user.role) &&
+              <Form.Field
+                control={Select}
+                onChange={handleSelectChange}
+                label='Division'
+                name='division'
+                options={divisions}
+                value={user.division}
+                placeholder='Division'
+                required />}
             <Form.Field
               control={Input}
               onChange={handleChange}

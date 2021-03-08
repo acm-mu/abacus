@@ -18,13 +18,13 @@ const Blue = (): JSX.Element => (
       <Switch>
         <Route exact path='/blue/' component={Home} />
         <Route path='/blue/problem/' component={Problem} />
-        <Route path='/blue/problems/:problem_id/submit' component={Submit} />
-        <Route path='/blue/problems/:problem_id' component={Problem} />
+        <Route path='/blue/problems/:pid/submit' component={Submit} />
+        <Route path='/blue/problems/:pid' component={Problem} />
         <Route path='/blue/problems' component={Problems} />
         <Route path='/blue/standings' component={Standings} />
-        <Route path='/blue/submissions/:submission_id' component={Submission} />
+        <Route path='/blue/submissions/:sid' component={Submission} />
         <Route path='/blue/submissions' component={Submissions} />
-        <Route default component={NotFound} />
+        <Route component={NotFound} />
       </Switch>
     </Container>
   </>

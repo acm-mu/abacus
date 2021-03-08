@@ -1,17 +1,17 @@
-import React, { useContext, useState } from "react"
+import React, { ChangeEvent, useContext, useState } from "react"
 import { Input, Form, Button } from "semantic-ui-react"
+import AppContext from "../../AppContext"
 import { Block } from "../../components"
-import { UserContext } from "../../context/user"
 import config from '../../environment'
 
 const Connect = (): JSX.Element => {
-  const { user } = useContext(UserContext)
+  const { user } = useContext(AppContext)
   const [username, setUsername] = useState<string>()
   const [disabled, setDisabled] = useState<boolean>(true)
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUsername(event.target.value)
-    fetch(`https://api.scratch.mit.edu/users/${event.target.value}`)
+  const handleChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
+    setUsername(value)
+    fetch(`https://api.scratch.mit.edu/users/${value}`)
       .then(res => setDisabled(res.status != 200))
   }
 
@@ -25,7 +25,7 @@ const Connect = (): JSX.Element => {
       alert("Missing username!")
       return
     }
-    formData.set('user_id', user.uid)
+    formData.set('uid', user.uid)
     formData.set('scratch_username', username)
     fetch(`${config.API_URL}/users`, {
       method: "PUT",

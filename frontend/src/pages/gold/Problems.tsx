@@ -1,17 +1,15 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { Table } from 'semantic-ui-react'
 import { Block, Countdown, Unauthorized } from '../../components'
-import { ProblemType } from '../../types'
 import config from '../../environment'
-import { useAuth } from '../../authlib'
-import { UserContext } from '../../context/user'
 import { Link } from 'react-router-dom'
+import { Problem } from 'abacus'
+import AppContext from '../../AppContext'
 
 const Problems = (): JSX.Element => {
   const [isMounted, setMounted] = useState<boolean>(false)
-  const { user } = useContext(UserContext)
-  const [isAuthenticated] = useAuth(user, isMounted)
-  const [problems, setProblems] = useState<ProblemType[]>()
+  const { user } = useContext(AppContext)
+  const [problems, setProblems] = useState<Problem[]>()
 
   useEffect(() => {
     setMounted(true)
@@ -20,7 +18,7 @@ const Problems = (): JSX.Element => {
       .then(probs => {
         if (isMounted) {
           probs = Object.values(probs)
-          probs.sort((a: ProblemType, b: ProblemType) => a.id.localeCompare(b.id))
+          probs.sort((a: Problem, b: Problem) => a.id.localeCompare(b.id))
           setProblems(probs)
         }
       })
@@ -29,7 +27,7 @@ const Problems = (): JSX.Element => {
 
   return (
     <>
-      {isAuthenticated ?
+      {user ?
         <>
           <Countdown />
           <Block size='xs-12' transparent>
@@ -41,7 +39,7 @@ const Problems = (): JSX.Element => {
                 </Table.Row>
               </Table.Header>
               <Table.Body>
-                {problems ? problems.map((problem: ProblemType, index: number) => (
+                {problems ? problems.map((problem: Problem, index: number) => (
                   <Table.Row key={index}>
                     <Table.HeaderCell collapsing>{problem.id}</Table.HeaderCell>
                     <Table.Cell>

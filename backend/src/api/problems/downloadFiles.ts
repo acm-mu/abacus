@@ -32,17 +32,19 @@ export const downloadFiles = async (req: Request, res: Response) => {
 
   try {
     const problem = await contest.getItem('problem', { pid }) as unknown as Problem
-
     if (problem.skeletons) {
       const archive = archiver('zip')
-      for (const skeleton of problem.skeletons)
+      for (const skeleton of problem.skeletons) {
         archive.append(skeleton.source, { name: `${stripFilename(problem.name)}.${fileExtension(skeleton.language)}` })
-
+      }
       res.attachment(`${stripFilename(problem.name)}.zip`)
       archive.pipe(res)
       archive.finalize()
     } else {
       res.sendStatus(404)
     }
-  } catch (err) { res.sendStatus(500) }
+  } catch (err) {
+    console.error(err)
+    res.sendStatus(500)
+  }
 }

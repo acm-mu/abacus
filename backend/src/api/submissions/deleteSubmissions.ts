@@ -19,17 +19,23 @@ export const deleteSubmissions = async (req: Request, res: Response) => {
 
   if (req.body.sid instanceof Array) {
     let [success, failed] = [0, 0]
-    for (const { sid } of req.body.sid) {
+    for (const sid of req.body.sid) {
       try {
         await contest.deleteItem('submission', { sid })
         success++
-      } catch (err) { failed++ }
+      } catch (err) {
+        console.error(err)
+        failed++
+      }
     }
     res.json({ message: `Successfully deleted ${success} submission(s) (${failed} failed).` })
   } else {
     try {
       await contest.deleteItem('submission', { sid: req.body.sid })
       res.json({ message: "Submission successfully deleted" })
-    } catch (err) { res.sendStatus(500) }
+    } catch (err) {
+      console.error(err)
+      res.sendStatus(500)
+    }
   }
 }

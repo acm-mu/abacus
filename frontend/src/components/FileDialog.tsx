@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { ChangeEvent } from 'react'
 import "./FileDialog.scss"
 
 type FileDialogProps = {
   file: File | undefined;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
   control: (file: File | undefined) => JSX.Element;
 }
 

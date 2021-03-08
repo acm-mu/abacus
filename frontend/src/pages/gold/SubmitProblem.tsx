@@ -4,27 +4,14 @@ import { Form, Input } from 'semantic-ui-react'
 import { Block } from '../../components'
 
 const SubmitProblem = (): JSX.Element => (
-  <>
-    <Block size='xs-12'>
-      <Form>
-        <Form.Field label='Scratch URL'>
-          <Input placeholder="https://scratch.mit.edu/projects/<project_id>" value="{{ scratch_url }}" />
-        </Form.Field>
-      </Form>
-    </Block>
 
-    <Block size='xs-12'>
-      <img id='scratch_image' />
-      <h3 id='project_title'></h3>
-      <i id='project_id'></i>
-      <p id='project_description'></p>
-      <p id='visibility'></p>
-      <p id='public'></p>
-      <p id='is_published'></p>
-      <p id='author'></p>
-      <p id='history'></p>
-    </Block>
-  </>
+  <Block size='xs-12'>
+    <Form>
+      <Form.Field label='Scratch URL'>
+        <Input placeholder="https://scratch.mit.edu/projects/<project_id>" value="{{ scratch_url }}" />
+      </Form.Field>
+    </Form>
+  </Block>
 )
 {/* <!-- 
     author: {id: 66595561, scratchteam: false, history: {…}, profile: {…}}

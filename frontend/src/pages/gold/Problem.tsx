@@ -2,26 +2,26 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Button, Popup } from 'semantic-ui-react'
 import { Block, Countdown } from '../../components'
-import { UserContext } from '../../context/user'
-import { ProblemType, SubmissionType } from '../../types'
 import config from "../../environment"
 import MDEditor from '@uiw/react-md-editor'
+import { Problem, Submission } from 'abacus'
+import AppContext from '../../AppContext'
 
-const Problem = (): JSX.Element => {
-  const [problem, setProblem] = useState<ProblemType>()
-  const [submissions, setSubmissions] = useState<SubmissionType[]>()
-  const { user } = useContext(UserContext)
-  const { problem_id } = useParams<{ problem_id: string }>()
+const problem = (): JSX.Element => {
+  const [problem, setProblem] = useState<Problem>()
+  const [submissions, setSubmissions] = useState<Submission[]>()
+  const { user } = useContext(AppContext)
+  const { pid } = useParams<{ pid: string }>()
 
   useEffect(() => {
-    fetch(`${config.API_URL}/problems?division=gold&id=${problem_id}`)
+    fetch(`${config.API_URL}/problems?division=gold&id=${pid}`)
       .then(res => res.json())
       .then(res => {
         if (res) {
-          const problem = Object.values(res)[0] as ProblemType
+          const problem = Object.values(res)[0] as Problem
           setProblem(problem)
           if (user)
-            fetch(`${config.API_URL}/submissions?team_id=${user?.uid}&problem_id=${problem.pid}`)
+            fetch(`${config.API_URL}/submissions?tid=${user?.uid}&pid=${problem.pid}`)
               .then(res => res.json())
               .then(res => setSubmissions(Object.values(res)))
         }
@@ -65,4 +65,4 @@ const Problem = (): JSX.Element => {
   )
 }
 
-export default Problem
+export default problem

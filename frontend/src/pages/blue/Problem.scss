@@ -10,18 +10,17 @@
     text-align: center;
 }
 
+
 /* markdown */
 
 .wmde-markdown {
     font-family: Lato, 'Helvetica Neue', Arial, Helvetica, sans-serif;
-
     pre {
         padding: 0.5em 0;
         background: white;
         border: 1px solid #d3daea;
         border-radius: 4px;
     }
-
     pre code {
         background: linear-gradient(to bottom, #fff 0%, #fff 50%, #f5f7fa 50%, #f5f7fa 100%);
         background-size: 100% 2.5em;
@@ -31,7 +30,6 @@
         line-height: 1.25em;
         font-size: 1em;
     }
-
     code {
         font-family: monospace;
         padding: 2px 4px;

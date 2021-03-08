@@ -37,9 +37,7 @@ const Home = (): JSX.Element => {
     }
   })
 
-  type LabelColor = "blue" | "yellow" | "teal" | "grey"
-
-  const labelColor = (division: string): LabelColor => {
+  const labelColor = (division: string): 'blue' | 'yellow' | 'teal' | 'grey' => {
     switch (division) {
       case "blue":
         return "blue";

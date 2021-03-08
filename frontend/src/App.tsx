@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { Footer } from "./components";
+import { Footer, Notifications } from "./components";
 import "./App.scss";
 
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
@@ -8,35 +8,67 @@ import Admin from "./pages/admin/";
 import Blue from './pages/blue/';
 import Gold from './pages/gold/'
 import Index from './pages'
-import { SocketContext, socket } from './context/socket'
-import { UserContext, reloadFromLocalStorage, saveToLocalStorage } from "./context/user";
-import { UserType } from "./types";
+import AppContext, { AppContextType } from "./AppContext";
+import config from './environment'
+import io from 'socket.io-client';
 
 const App = (): JSX.Element => {
-  const [user, setUser] = useState<UserType | undefined>(reloadFromLocalStorage)
+  const [user, setUser] = useState()
+  const [settings, setSettings] = useState()
+  const [isLoading, setLoading] = useState(true)
+  const [socket, setSocket] = useState<SocketIOClient.Socket>()
 
-  const value = {
-    user, setUser: (user: UserType | undefined) => {
-      saveToLocalStorage(user)
-      setUser(user)
+  const checkAuth = async () => {
+    const res = await fetch(`${config.API_URL}/auth`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+        }
+      })
+    if (res.ok) {
+      setUser(await res.json())
     }
+    setLoading(false)
   }
 
-  return (
-    <SocketContext.Provider value={socket}>
-      <UserContext.Provider value={value}>
-        <Router>
-          <Switch>
-            <Route path='/admin' component={Admin} />
-            <Route path="/blue" component={Blue} />
-            <Route path="/gold" component={Gold} />
-            <Route path="/" component={Index} />
-          </Switch>
-        </Router>
-        <Footer />
-      </UserContext.Provider>
-    </SocketContext.Provider >
-  )
+  const loadSettings = async () => {
+    const response = await fetch(`${config.API_URL}/contest`)
+    const data = await response.json()
+
+    setSettings({
+      ...data,
+      start_date: new Date(parseInt(data.start_date) * 1000),
+      end_date: new Date(parseInt(data.end_date) * 1000)
+    })
+  }
+
+  useEffect(() => {
+    setSocket(io(config.API_URL))
+    checkAuth()
+    loadSettings()
+  }, [])
+
+  const appContext: AppContextType = {
+    user,
+    setUser,
+    socket,
+    settings
+  }
+
+  if (isLoading) return <></>
+
+  return <AppContext.Provider value={appContext}>
+    <Notifications />
+    <Router>
+      <Switch>
+        <Route path='/admin' component={Admin} />
+        <Route path="/blue" component={Blue} />
+        <Route path="/gold" component={Gold} />
+        <Route path="/" component={Index} />
+      </Switch>
+    </Router>
+    <Footer />
+  </AppContext.Provider>
 }
 
 export default App;

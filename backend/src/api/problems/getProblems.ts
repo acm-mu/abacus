@@ -32,6 +32,16 @@ export const schema: Record<string, ParamSchema> = {
     in: ['body', 'query'],
     isString: true,
     optional: true
+  },
+  columns: {
+    in: ['body', 'query'],
+    optional: true,
+    isString: true
+  },
+  type: {
+    in: ['body', 'query'],
+    optional: true,
+    isString: true
   }
 }
 
@@ -42,13 +52,19 @@ export const getProblems = async (req: Request, res: Response) => {
     return
   }
 
+  const { type, ...query } = matchedData(req)
   let columns = ['pid', 'division', 'id', 'name']
-  if (req.body.columns)
-    columns = columns.concat(req.body.columns)
+  /// IF OTHER COLUMNS AUTHENTICATE FOR JUDGE / ADMIN
+  if (query.columns) {
+    columns = columns.concat(query.columns.split(','))
+    delete query.columns
+  }
 
   try {
-    const problems = await contest.scanItems('problem', matchedData(req), columns)
-    res.send(transpose(problems, 'pid'))
+    let problems: any = await contest.scanItems('problem', query, columns)
+    if (type !== "list")
+      problems = transpose(problems, 'pid')
+    res.send(problems)
   } catch (err) {
     console.error(err);
     res.sendStatus(500)
