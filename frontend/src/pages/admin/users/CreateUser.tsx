@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { ChangeEvent, useState } from "react"
 import { Modal, Form, Input, Select, Button, Message } from "semantic-ui-react"
 import config from '../../../environment'
 
@@ -29,18 +29,11 @@ const CreateUser = ({ trigger, callback }: CreateUserProps): JSX.Element => {
     { key: 'gold', text: 'Gold', value: 'gold' }
   ]
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target
-    setUser({ ...user, [name]: value })
-  }
-
-  const handleSelectChange = (_: never, result: HTMLInputElement) => {
-    const { name, value } = result
-    setUser({ ...user, [name]: value })
-  }
+  const handleChange = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>) => setUser({ ...user, [name]: value })
+  const handleSelectChange = (_: never, { name, value }: HTMLInputElement) => setUser({ ...user, [name]: value })
 
   const handleSubmit = async () => {
-    const res = await fetch(`${config.API_URL}/users`, {
+    const response = await fetch(`${config.API_URL}/users`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -48,14 +41,12 @@ const CreateUser = ({ trigger, callback }: CreateUserProps): JSX.Element => {
       },
       body: JSON.stringify({ ...user, school: user.role == 'team' ? user.school : '' })
     })
-    if (callback)
-      callback(res)
+    callback && callback(response)
 
-    if (res.status == 200) {
+    if (response.ok) {
       setOpen(false)
     } else {
-      console.error(res)
-      const body = await res.json()
+      const body = await response.json()
       setError(body.message)
     }
   }
