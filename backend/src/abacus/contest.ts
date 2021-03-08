@@ -12,7 +12,7 @@ class ContestService {
   }
 
   init_aws() {
-    AWS.config.region = 'us-east-2';
+    AWS.config.region = process.env.AWS_REGION || 'us-east-1';
 
     this.db = new DocumentClient();
     this.s3 = new S3();
