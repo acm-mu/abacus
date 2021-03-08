@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { Table, Button, Loader, ButtonGroup, Popup } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
-import { Block } from '../../components'
-import config from '../../environment'
+import { Block } from '../../../components'
+import config from '../../../environment'
 import { Problem, Submission } from 'abacus'
 
 interface ProblemItem extends Problem {

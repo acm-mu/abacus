@@ -5,24 +5,26 @@ import { Switch, Route } from 'react-router-dom'
 import { Container } from "semantic-ui-react";
 
 import Home from './Home'
-import Problems from './Problems'
-import Users from './Users'
+import Problems from './problems/Problems'
+import Users from './users/Users'
 import AdminNavigation from './AdminNavigation'
-import Submissions from './Submissions'
-import Submission from './Submission'
-import EditProblem from './EditProblem'
-import NewProblem from './NewProblem'
+import Submissions from './submissions/Submissions'
+import Submission from './submissions/Submission'
+import EditProblem from './problems/EditProblem'
+import NewProblem from './problems/NewProblem'
 import Settings from './Settings'
 import { NotFound, Unauthorized } from "../../components";
-import EditUser from "./EditUser";
-import UploadUsers from "./UploadUsers";
-import UploadProblems from "./UploadProblems";
+import EditUser from "./users/EditUser";
+import UploadUsers from "./users/UploadUsers";
+import UploadProblems from "./problems/UploadProblems";
 import LoginModal from "../../components/Login";
 import AppContext from "../../AppContext";
 import DefaultNavigation from "../DefaultNavigation";
 
 const Admin = (): JSX.Element => {
   const { user } = useContext(AppContext)
+
+  console.log(user)
 
   if (!user) return (<>
     <DefaultNavigation />

@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Form, Input, Button, Menu, TextArea, Message, MenuItemProps, DropdownProps } from "semantic-ui-react"
-import { Block } from '../../components'
-import config from '../../environment'
+import { Block } from '../../../components'
+import config from '../../../environment'
 import MDEditor from '@uiw/react-md-editor'
 import { Test } from 'abacus'
 

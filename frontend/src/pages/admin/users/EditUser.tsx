@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { Button, Form, Input, Menu, Message, Select } from "semantic-ui-react"
-import config from '../../environment'
-import { Block } from "../../components"
+import config from '../../../environment'
+import { Block } from "../../../components"
 import { User } from "abacus"
 
 const EditUser = (): JSX.Element => {

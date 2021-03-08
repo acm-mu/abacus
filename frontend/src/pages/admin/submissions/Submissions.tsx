@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { Button, ButtonGroup, Loader, Popup, Table } from 'semantic-ui-react'
 import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
-import { Block } from '../../components'
-import config from '../../environment'
+import { Block } from '../../../components'
+import config from '../../../environment'
 import { Submission } from 'abacus'
 
 interface SubmissionItem extends Submission {
