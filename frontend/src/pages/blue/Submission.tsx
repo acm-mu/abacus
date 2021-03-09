@@ -1,12 +1,12 @@
+import { Submission } from 'abacus'
 import React, { useEffect, useState } from 'react'
 import Moment from 'react-moment'
 import { Link, useParams } from 'react-router-dom'
 import { Loader, Table } from 'semantic-ui-react'
-import { Block, Countdown, NotFound } from '../../components'
-import config from '../../environment'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-import { syntax_lang } from '../../utils'
-import { Submission } from 'abacus'
+import { Block, Countdown, NotFound } from 'components'
+import config from 'environment'
+import { syntax_lang } from 'utils'
 
 const submission = (): JSX.Element => {
   const { sid } = useParams<{ sid: string }>()

@@ -1,8 +1,8 @@
 import React, { ChangeEvent, useContext, useState } from "react"
 import { Input, Form, Button } from "semantic-ui-react"
-import AppContext from "../../AppContext"
-import { Block } from "../../components"
-import config from '../../environment'
+import AppContext from "AppContext"
+import { Block } from "components"
+import config from 'environment'
 
 const Connect = (): JSX.Element => {
   const { user } = useContext(AppContext)

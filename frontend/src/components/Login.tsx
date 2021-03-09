@@ -1,8 +1,8 @@
 import React, { ChangeEvent, useContext, useState } from "react";
 import { Button, Form, Message, Modal } from "semantic-ui-react";
-import AppContext from "../AppContext";
-import fulllogo from '../assets/fulllogo.png'
-import config from '../environment'
+import AppContext from "AppContext";
+import config from 'environment'
+import fulllogo from 'assets/fulllogo.png'
 
 interface LoginModalProps {
   trigger?: JSX.Element

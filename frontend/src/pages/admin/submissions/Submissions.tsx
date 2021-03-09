@@ -1,10 +1,10 @@
+import { Submission } from 'abacus'
 import React, { ChangeEvent, useState, useEffect } from 'react'
 import { Button, Loader, Table } from 'semantic-ui-react'
 import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
-import config from '../../../environment'
-import { Submission } from 'abacus'
-import { compare } from '../../../utils'
+import config from 'environment'
+import { compare } from 'utils'
 
 interface SubmissionItem extends Submission {
   checked: boolean

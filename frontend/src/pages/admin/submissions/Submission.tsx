@@ -1,13 +1,13 @@
+import { Submission, Test } from 'abacus'
 import React, { MouseEvent, useState, useEffect } from 'react'
 import { Link, useHistory, useParams } from 'react-router-dom'
 import { Button, Label, Loader, Menu, MenuItemProps, Table } from 'semantic-ui-react'
-import { Block, NotFound } from '../../../components'
-import config from '../../../environment'
 import Moment from 'react-moment'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-import { capitalize, syntax_lang } from "../../../utils"
-import "../../Submission.scss"
-import { Submission, Test } from 'abacus'
+import { Block, NotFound } from 'components'
+import config from 'environment'
+import { capitalize, syntax_lang } from "utils"
+import "pages/Submission.scss"
 
 const format_text = (str: string): string => str.replace(/(^.*$)/gm, (c: string) => isNaN(+c) ? `"${c}"` : c)
 

@@ -1,5 +1,5 @@
-import React from "react";
-import { Block } from "../components";
+import React from 'react';
+import { Block } from 'components';
 
 const Help = (): JSX.Element => {
 

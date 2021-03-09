@@ -1,12 +1,12 @@
-import React from "react";
+import React from 'react';
+import { Container } from 'semantic-ui-react';
+import { Route, Switch } from 'react-router-dom';
 
-import Home from "./Home";
-import About from "./About";
-import Help from "./Help";
-import DefaultNavigation from "./DefaultNavigation";
-import { Container } from "semantic-ui-react";
-import { Route, Switch } from "react-router-dom";
-import { NotFound } from "../components";
+import Home from './Home';
+import About from './About';
+import Help from './Help';
+import DefaultNavigation from './DefaultNavigation';
+import { NotFound } from 'components';
 
 const Index = (): JSX.Element => (
   <>
@@ -23,4 +23,7 @@ const Index = (): JSX.Element => (
   </>
 );
 
-export default Index
+export { Index }
+export { default as Gold } from './gold'
+export { default as Admin } from './admin'
+export { default as Blue } from './blue'

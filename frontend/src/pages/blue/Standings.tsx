@@ -2,9 +2,8 @@ import { Problem, ProblemScore, StandingsUser } from "abacus";
 import React, { useEffect, useState } from "react";
 import { Link } from 'react-router-dom'
 import { Loader, Table } from "semantic-ui-react";
-import { Block, Countdown } from "../../components";
-import config from '../../environment'
-
+import { Block, Countdown } from "components";
+import config from 'environment'
 import "./Standings.scss";
 
 const Standings = (): JSX.Element => {

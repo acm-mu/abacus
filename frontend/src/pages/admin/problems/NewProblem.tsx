@@ -1,10 +1,10 @@
+import { Test } from 'abacus'
 import React, { SyntheticEvent, MouseEvent, ChangeEvent, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Form, Input, Button, Menu, TextArea, Message, MenuItemProps, DropdownProps } from "semantic-ui-react"
-import { Block } from '../../../components'
-import config from '../../../environment'
 import MDEditor from '@uiw/react-md-editor'
-import { Test } from 'abacus'
+import { Block } from 'components'
+import config from 'environment'
 
 interface NewProblemType {
   id: string,

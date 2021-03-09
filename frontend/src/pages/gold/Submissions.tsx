@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
-import { Block } from '../../components'
+import { Block } from 'components'
 
 const Submissions = (): JSX.Element => {
   const [submissions] = useState<Submission[]>()

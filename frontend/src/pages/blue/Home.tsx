@@ -1,7 +1,7 @@
 import React from 'react'
-import { Block } from '../../components'
-import java from '../../assets/java.png'
-import python from '../../assets/python.png'
+import { Block } from 'components'
+import java from 'assets/java.png'
+import python from 'assets/python.png'
 
 const Home = (): JSX.Element => (
   <Block size='xs-12'>

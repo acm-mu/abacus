@@ -1,11 +1,11 @@
+import { Problem, Skeleton, Test } from 'abacus'
 import React, { ChangeEvent, MouseEvent, useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Form, Input, Menu, Button, TextArea, MenuItemProps, Message, Loader } from 'semantic-ui-react'
 import Editor from '@monaco-editor/react'
-import { Block } from '../../../components'
-import config from '../../../environment'
 import MDEditor from '@uiw/react-md-editor'
-import { Problem, Skeleton, Test } from 'abacus'
+import { Block } from 'components'
+import config from 'environment'
 
 interface ProblemStateProps {
   problem?: Problem;

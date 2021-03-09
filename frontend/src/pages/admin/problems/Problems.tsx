@@ -1,9 +1,8 @@
+import { Problem, Submission } from 'abacus'
 import React, { ChangeEvent, useState, useEffect } from 'react'
 import { Table, Button, Loader } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
-
-import config from '../../../environment'
-import { Problem, Submission } from 'abacus'
+import config from 'environment'
 
 interface ProblemItem extends Problem {
   checked: boolean

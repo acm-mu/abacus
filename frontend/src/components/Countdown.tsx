@@ -1,10 +1,10 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Loader } from "semantic-ui-react";
 import Moment from "react-moment";
-import { Block } from "./";
+import { Block, FlipClock } from "components";
+import AppContext from "AppContext";
+
 import "./Countdown.scss";
-import FlipClock from "./FlipClock";
-import AppContext from "../AppContext";
 
 const Countdown = (): JSX.Element => {
   const { settings } = useContext(AppContext)

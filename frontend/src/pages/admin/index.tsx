@@ -13,13 +13,13 @@ import Submission from './submissions/Submission'
 import EditProblem from './problems/EditProblem'
 import NewProblem from './problems/NewProblem'
 import Settings from './Settings'
-import { NotFound, Unauthorized } from "../../components";
+import { NotFound, Unauthorized } from "components";
 import EditUser from "./users/EditUser";
 import UploadUsers from "./users/UploadUsers";
 import UploadProblems from "./problems/UploadProblems";
-import LoginModal from "../../components/Login";
-import AppContext from "../../AppContext";
-import DefaultNavigation from "../DefaultNavigation";
+import LoginModal from "components/Login";
+import AppContext from "AppContext";
+import DefaultNavigation from "pages/DefaultNavigation";
 
 const Admin = (): JSX.Element => {
   const { user } = useContext(AppContext)

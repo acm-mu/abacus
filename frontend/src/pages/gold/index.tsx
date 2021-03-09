@@ -1,6 +1,7 @@
 import React from "react";
 import { Container } from "semantic-ui-react";
 import { Switch, Route } from "react-router-dom";
+import { NotFound } from "components";
 import GoldNavigation from "./GoldNavigation";
 import Home from "./Home";
 import Connect from "./Connect";
@@ -10,7 +11,6 @@ import Problem from "./Problem";
 import SubmitProblem from "./SubmitProblem";
 import Submission from "./Submission";
 import Submissions from "./Submissions";
-import { NotFound } from "../../components";
 
 const Gold = (): JSX.Element => (
   <>

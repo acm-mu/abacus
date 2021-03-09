@@ -1,7 +1,6 @@
 import React from 'react'
-
 import { Form, Input } from 'semantic-ui-react'
-import { Block } from '../../components'
+import { Block } from 'components'
 
 const SubmitProblem = (): JSX.Element => (
 

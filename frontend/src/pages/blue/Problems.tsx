@@ -1,10 +1,11 @@
+import { Problem } from "abacus";
 import React, { useEffect, useState } from "react";
 import { Loader, Table } from "semantic-ui-react";
 import { Link } from "react-router-dom";
-import { Block, Countdown } from "../../components";
-import '../../components/Table.scss'
-import config from '../../environment'
-import { Problem } from "abacus";
+import { Block, Countdown } from "components";
+import config from 'environment'
+import 'components/Table.scss'
+
 
 const Problems = (): JSX.Element => {
   const [isMounted, setMounted] = useState(true)

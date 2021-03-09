@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
-import AppContext from '../../AppContext'
-import { Block } from '../../components'
+import AppContext from 'AppContext'
+import { Block } from 'components'
 import Connect from './Connect'
 
 const Home = (): JSX.Element => {
