@@ -1,5 +1,5 @@
 import { Response, Request } from 'express';
-import contest from "../../abacus/contest"
+import contest from "contest"
 
 export default async (_: Request, res: Response) => {
   try {

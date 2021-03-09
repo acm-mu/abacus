@@ -1,8 +1,7 @@
 import { Request, Response } from 'express';
 import { matchedData, ParamSchema, validationResult } from "express-validator";
 import { v4 as uuidv4 } from 'uuid';
-
-import contest from '../../abacus/contest';
+import contest from 'contest';
 
 export const schema: Record<string, ParamSchema> = {
   id: {
