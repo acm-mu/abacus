@@ -1,10 +1,19 @@
 import React from "react";
 import { Block } from "../components";
 
-const About = (): JSX.Element => (
-  <Block center size="xs-3">
-    <h1>Help Page</h1>
-  </Block>
-);
+const Help = (): JSX.Element => {
 
-export default About;
+  return (
+    <>
+      <Block size="xs-12">
+        <h1>Help Page</h1>
+      </Block>
+
+      <Block size="xs-12">
+        <h2>Frequently Asked Questions</h2>
+      </Block>
+    </>
+  )
+};
+
+export default Help;

@@ -21,12 +21,12 @@ jobs:
 
       - name: Install dependencies
         working-directory: frontend
-        run: npm install
+        run: yarn install
 
       - name: Build project
         working-directory: frontend
-        run: npm run build
+        run: yarn build
 
       - name: Test project
         working-directory: frontend
-        run: npm run test
+        run: yarn test
