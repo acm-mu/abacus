@@ -14,14 +14,17 @@ const Countdown = (): JSX.Element => {
   const diff = (date1: Date, date2: Date) => date1.getTime() - date2.getTime();
 
   useEffect(() => {
-    return () => setMounted(false)
-  }, [])
+    const updateInterval = setInterval(() => {
+      if (isMounted) {
+        setTime(new Date());
+      }
+    }, 200);
 
-  setInterval(() => {
-    if (isMounted) {
-      setTime(new Date());
+    return () => {
+      clearInterval(updateInterval)
+      setMounted(false)
     }
-  }, 200);
+  }, [])
 
   return (
     <Block size='xs-12'>
