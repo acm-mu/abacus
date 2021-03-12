@@ -1,18 +1,12 @@
 import React, { useState } from "react";
 import { Block } from "../components";
-import { Accordion, Icon } from 'semantic-ui-react';
+import { Accordion, AccordionTitleProps, Icon } from 'semantic-ui-react';
 
 const Help = (): JSX.Element => {
 
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState<number | string | undefined>(0);
 
-  const handleClick = (e: any, titleProps: any) => {
-    const { index } = titleProps
-
-    const newIndex = activeIndex === index ? -1 : index;
-
-    setActiveIndex(newIndex)
-  }
+  const handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, { index }: AccordionTitleProps) => setActiveIndex(activeIndex === index ? -1 : index)
 
   return (
     <>
@@ -34,8 +28,8 @@ const Help = (): JSX.Element => {
           <Accordion.Content active={activeIndex === 0}>
             <p>
               Abacus is a code-execution platform similar to <a href="https://www.algoexpert.io/product" target="_blank" rel="noreferrer">AlgoExpert</a>.
-              It was written and developed entirely by student-members of the <a href="https://mu.acm.org" target="_blank" rel="noreferrer">Marquette University ACM Chapter</a> specifcially for the
-              <a href="https://mu.acm.org/competition" target="_blank" rel="noreferrer">Wisconsin-Dairyland Programming Competition</a>. The goal was to make a platform-independent web application that would
+              It was written and developed entirely by student-members of the <a href="https://mu.acm.org" target="_blank" rel="noreferrer">Marquette University ACM Chapter</a> specifically for the
+              <a href="https://mu.acm.org/competition" target="_blank" rel="noreferrer"> Wisconsin-Dairyland Programming Competition</a>. The goal was to make a platform-independent web application that would
               allow the entire competition to run virtually as a result of the COVID-19 pandemic.
             </p>
           </Accordion.Content>
@@ -51,8 +45,8 @@ const Help = (): JSX.Element => {
           <Accordion.Content active={activeIndex === 1}>
             <p>
               Abacus is the hub of the <a href="https://mu.acm.org/competition" target="_blank" rel="noreferrer">Wisconsin-Dairyland Programming Competition</a>. It allows students to upload their solutions
-              to contest problems, have them graded, and gain feedback on their submissions. It also allows the students to view the competiton problems, see a scoreboard of where
-              they are placed at any given point in the compeition, and ask questions to judges and other officials about contest problems or individual solutions.
+              to contest problems, have them graded, and gain feedback on their submissions. It also allows the students to view the competition problems, see a scoreboard of where
+              they are placed at any given point in the competition, and ask questions to judges and other officials about contest problems or individual solutions.
             </p>
             <p>
               Abacus is not just for students! Teachers can also view problems, the competition scoreboard, and other information about the teams competing.
@@ -69,9 +63,9 @@ const Help = (): JSX.Element => {
           </Accordion.Title>
           <Accordion.Content active={activeIndex === 2}>
             <p>
-              We know the accessibility to technology looks different for all competitiors. The goal with Abacus was to create a platform that could be accessible
+              We know the accessibility to technology looks different for all competitors. The goal with Abacus was to create a platform that could be accessible
               to all regardless of their technology situation. Any student with a computer, a basic internet connection, and any
-              <a href="https://browsehappy.com/" target="_blank" rel="noreferrer">modern browser</a> can access and use Abacus. There is no
+              <a href="https://browsehappy.com/" target="_blank" rel="noreferrer"> modern browser</a> can access and use Abacus. There is no
               online code editor built into Abacus, but students can use a platform like <a href="https://www.repl.it" target="_blank" rel="noreferrer">replit</a>
               , <a href="https://www.jdoodle.com/" target="_blank" rel="noreferrer">JDoodle</a>
               , or <a href="https://www.programiz.com/" target="_blank" rel="noreferrer">Programiz</a>. They will just have to download or copy their code and upload it
@@ -99,7 +93,7 @@ const Help = (): JSX.Element => {
               submit a solution to a practice problem, see how feedback works, and much more.
             </p>
             <p>
-              This also allows us to field any comments, questions, or concerns of the competitiors or teachers before the competiton date. This includes any technical support,
+              This also allows us to field any comments, questions, or concerns of the competitors or teachers before the competition date. This includes any technical support,
               questions about how to use Abacus, etc.
             </p>
           </Accordion.Content>
@@ -110,7 +104,7 @@ const Help = (): JSX.Element => {
             onClick={handleClick}
           >
             <Icon name='dropdown' />
-          What happens if I have techincal difficulties on the day of the competition?
+          What happens if I have technical difficulties on the day of the competition?
           </Accordion.Title>
           <Accordion.Content active={activeIndex === 4}>
             <p>
