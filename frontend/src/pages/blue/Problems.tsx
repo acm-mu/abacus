@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Loader, Table } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { Block, Countdown } from "../../components";
 import '../../components/Table.scss'
 import config from '../../environment'
 import { Problem } from "abacus";
+import AppContext from "../../AppContext";
 
 const Problems = (): JSX.Element => {
+  const { settings } = useContext(AppContext);
   const [isMounted, setMounted] = useState(true)
   const [isLoading, setLoading] = useState(true)
   const [problems, setProblems] = useState<Problem[]>()
@@ -32,11 +34,24 @@ const Problems = (): JSX.Element => {
     setLoading(false)
   }
 
+  if (!settings || new Date() < settings.start_date) {
+    return (
+      <>
+        <Countdown />
+        <Block size='xs-12'>
+          <h1>Competition not yet started!</h1>
+          <p>Problem&apos;s will become available as soon as the competition begins.</p>
+        </Block>
+      </>
+    )
+  }
+
   if (isLoading) return <Loader active inline='centered' content="Loading" />
 
   return (
     <>
       <Countdown />
+
       <Block size="xs-12" transparent>
         <Table celled>
           <Table.Header>
@@ -48,16 +63,20 @@ const Problems = (): JSX.Element => {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {problems ? problems.map((problem: Problem) =>
-              <Table.Row key={problem.pid}>
-                <Table.HeaderCell collapsing textAlign='center'>{problem.id}</Table.HeaderCell>
-                <Table.Cell>
-                  <Link to={`/blue/problems/${problem.id}`}>{problem.name}</Link>
-                </Table.Cell>
-                {/* <Table.Cell></Table.Cell>
+            {!(problems?.length) ?
+              <Table.Row>
+                <Table.Cell colspan={2} style={{ textAlign: 'center' }}>We can&apos;t find any problems. If you believe this is an error please contact us.</Table.Cell>
+              </Table.Row> :
+              problems.map((problem: Problem) =>
+                <Table.Row key={problem.pid}>
+                  <Table.HeaderCell collapsing textAlign='center'>{problem.id}</Table.HeaderCell>
+                  <Table.Cell>
+                    <Link to={`/blue/problems/${problem.id}`}>{problem.name}</Link>
+                  </Table.Cell>
+                  {/* <Table.Cell></Table.Cell>
                 <Table.Cell></Table.Cell> */}
-              </Table.Row>
-            ) : <></>}
+                </Table.Row>
+              )}
           </Table.Body>
         </Table>
       </Block>
