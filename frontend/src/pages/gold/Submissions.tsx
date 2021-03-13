@@ -2,7 +2,7 @@ import { Submission } from 'abacus'
 import React, { useContext, useState } from 'react'
 import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
-import { Loader, Table } from 'semantic-ui-react'
+import { Table } from 'semantic-ui-react'
 import AppContext from '../../AppContext'
 import { Block, Unauthorized } from '../../components'
 
