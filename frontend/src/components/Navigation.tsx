@@ -3,6 +3,7 @@ import { Link, useHistory } from "react-router-dom";
 import { Container, Dropdown, Menu } from "semantic-ui-react";
 import AppContext from "../AppContext";
 import fulllogoy from '../assets/fulllogoy.png'
+import { userHome } from "../utils";
 import LoginModal from "./Login";
 
 type Props = {
@@ -33,24 +34,6 @@ const Navigation: React.FunctionComponent<Props> = (props: Props) => {
     return () => { setMounted(false) }
   })
 
-  const userHome = () => {
-    switch (user?.role) {
-      case 'admin':
-        return '/admin';
-      case 'team':
-        switch (user.division) {
-          case 'gold':
-            return '/gold';
-          case 'blue':
-            return '/blue'
-          default:
-            return '/'
-        }
-      default:
-        return '/';
-    }
-  }
-
   return (
     <Menu className={`fixed ${props.className}`} inverted>
       <Container>
@@ -64,7 +47,7 @@ const Navigation: React.FunctionComponent<Props> = (props: Props) => {
           {user ?
             <Dropdown item simple
               text={user.display_name}
-              onClick={() => { history.push(userHome()) }}>
+              onClick={() => { history.push(userHome(user)) }}>
               <Dropdown.Menu>
                 <Dropdown.Item onClick={handleLogout} text="Log out" />
               </Dropdown.Menu>
