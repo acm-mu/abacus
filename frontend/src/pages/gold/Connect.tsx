@@ -33,12 +33,14 @@ const Connect = (): JSX.Element => {
     })
   }
   return (
-    <Block size='xs-12' >
-      <p>You have not yet attached your Scratch® account to your profile. Please enter it below.</p>
-      <Form onSubmit={handleSubmit}>
-        <Input placeholder="Scratch Username" onChange={handleChange} action={<Button content='Connect' color='orange' disabled={disabled} />} />
-      </Form>
-    </Block>
+    <>
+      {user && <Block size='xs-12' >
+        <p>You have not yet attached your Scratch® account to your profile. Please enter it below.</p>
+        <Form onSubmit={handleSubmit}>
+          <Input placeholder="Scratch Username" onChange={handleChange} action={<Button content='Connect' color='orange' disabled={disabled} />} />
+        </Form>
+      </Block>}
+    </>
   )
 }
 

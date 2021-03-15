@@ -1,12 +1,18 @@
 import { Submission } from 'abacus'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
-import { Block } from '../../components'
+import AppContext from '../../AppContext'
+import { Block, Unauthorized } from '../../components'
 
 const Submissions = (): JSX.Element => {
+  const { user } = useContext(AppContext)
   const [submissions] = useState<Submission[]>()
+
+  if (!user) return <Unauthorized />
+  // if (isLoading) return <Loader active inline='centered' content="Loading" />
+
   return (
 
     <Block size='xs-12' transparent>

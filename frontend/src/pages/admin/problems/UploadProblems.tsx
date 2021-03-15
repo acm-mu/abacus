@@ -63,7 +63,8 @@ const UploadProblems = (): JSX.Element => {
         await fetch(`${config.API_URL}/problems`, {
           method: 'PUT',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.accessToken}`
           },
           body: JSON.stringify(problem)
         })
