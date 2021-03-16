@@ -6,14 +6,15 @@ import AppContext from "AppContext";
 
 const GoldNavigation = (): JSX.Element => {
   const { user } = useContext(AppContext)
+  const hasAccessTo = () => user?.role == 'admin' || user?.role == 'judge' || user?.division == 'gold'
 
   return (
     <Navigation className="gold-div">
       <Menu.Item as={NavLink} exact to="/gold" content="Home" />
-      {user ? <Menu.Item as={NavLink} to="/gold/problems" content="Problems" /> : <></>}
+      {hasAccessTo() ? <Menu.Item as={NavLink} to="/gold/problems" content="Problems" /> : <></>}
       <Menu.Item as={NavLink} to="/gold/standings" content="Standings" />
-      {user ? <Menu.Item as={NavLink} to="/gold/submissions" content="Submissions" /> : <></>}
-      {user ? <Menu.Item as={NavLink} to="/gold/clarifications" content="Clarifications" /> : <></>}
+      {hasAccessTo() ? <Menu.Item as={NavLink} to="/gold/submissions" content="Submissions" /> : <></>}
+      {hasAccessTo() ? <Menu.Item as={NavLink} to="/gold/clarifications" content="Clarifications" /> : <></>}
     </Navigation>
   )
 }
