@@ -1,11 +1,10 @@
+import { Problem, Submission } from 'abacus'
 import React, { ChangeEvent, useContext, useEffect, useState } from 'react'
-
-import { Block, Countdown, FileDialog } from '../../components'
 import { Form, Button } from 'semantic-ui-react'
 import { Link, useHistory, useParams } from 'react-router-dom'
-import config from '../../environment'
-import { Problem, Submission } from 'abacus'
-import AppContext from '../../AppContext'
+import { Block, Countdown, FileDialog } from 'components'
+import config from 'environment'
+import AppContext from 'AppContext'
 
 interface Language {
   key: string;

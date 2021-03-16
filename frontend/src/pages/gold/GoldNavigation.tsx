@@ -1,7 +1,7 @@
 import React from "react";
 import { Menu } from "semantic-ui-react";
 import { NavLink } from "react-router-dom";
-import { Navigation } from "../../components";
+import { Navigation } from "components";
 
 const GoldNavigation = (): JSX.Element => (
   <Navigation className="gold-div">

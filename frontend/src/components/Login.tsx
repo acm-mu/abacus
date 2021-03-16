@@ -1,10 +1,10 @@
 import React, { ChangeEvent, useContext, useState } from "react";
 import { useHistory } from "react-router";
 import { Button, Form, Message, Modal } from "semantic-ui-react";
-import AppContext from "../AppContext";
-import fulllogo from '../assets/fulllogo.png'
-import config from '../environment'
-import { userHome } from "../utils";
+import AppContext from "AppContext";
+import config from 'environment'
+import fulllogo from 'assets/fulllogo.png'
+import { userHome } from "utils";
 
 interface LoginModalProps {
   trigger?: JSX.Element

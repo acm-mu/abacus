@@ -1,11 +1,11 @@
-import { Table, Button, Loader, Message } from 'semantic-ui-react'
+import { User } from 'abacus'
 import React, { ChangeEvent, useState, useEffect, useContext } from 'react'
+import { Table, Button, Loader, Message } from 'semantic-ui-react'
 import { saveAs } from 'file-saver';
 import { Link } from 'react-router-dom'
-import config from '../../../environment'
+import config from 'environment'
+import AppContext from 'AppContext'
 import CreateUser from './CreateUser'
-import { User } from 'abacus'
-import AppContext from '../../../AppContext'
 
 interface UserItem extends User {
   checked: boolean

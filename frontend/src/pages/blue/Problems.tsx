@@ -1,11 +1,12 @@
+import { Problem } from "abacus";
 import React, { useContext, useEffect, useState } from "react";
 import { Loader, Table } from "semantic-ui-react";
 import { Link } from "react-router-dom";
-import { Block, Countdown } from "../../components";
-import '../../components/Table.scss'
-import config from '../../environment'
-import { Problem } from "abacus";
-import AppContext from "../../AppContext";
+import { Block, Countdown } from "components";
+import config from 'environment'
+import 'components/Table.scss'
+import AppContext from "AppContext";
+
 
 const Problems = (): JSX.Element => {
   const { settings } = useContext(AppContext);

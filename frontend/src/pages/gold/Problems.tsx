@@ -1,10 +1,10 @@
+import { Problem } from 'abacus'
 import React, { useState, useEffect, useContext } from 'react'
 import { Table } from 'semantic-ui-react'
-import { Block, Countdown, Unauthorized } from '../../components'
-import config from '../../environment'
 import { Link } from 'react-router-dom'
-import { Problem } from 'abacus'
-import AppContext from '../../AppContext'
+import { Block, Countdown, Unauthorized } from 'components'
+import config from 'environment'
+import AppContext from 'AppContext'
 
 const Problems = (): JSX.Element => {
   const [isMounted, setMounted] = useState<boolean>(false)

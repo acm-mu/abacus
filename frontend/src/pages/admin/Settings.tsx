@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import { Button, Form, Input, Message } from 'semantic-ui-react'
-import { Block } from '../../components'
-import config from '../../environment'
+import { Block } from 'components'
+import config from 'environment'
 
 const timezoneOffset = () => (new Date()).getTimezoneOffset() * 60 * 1000
 

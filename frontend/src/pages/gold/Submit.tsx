@@ -1,9 +1,9 @@
 import { Problem } from "abacus";
 import React, { useContext, useEffect, useState } from "react";
 import { Form, Input, Select, Label } from "semantic-ui-react";
-import AppContext from "../../AppContext";
-import { Block } from "../../components";
-import config from "../../environment"
+import AppContext from "AppContext";
+import { Block } from "components";
+import config from "environment"
 
 const Submit = (): JSX.Element => {
   const [problems, setProblems] = useState<Problem[]>([])

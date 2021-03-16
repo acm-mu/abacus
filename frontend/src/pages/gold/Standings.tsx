@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
-import AppContext from '../../AppContext';
-import { Block, Countdown } from '../../components'
+import AppContext from 'AppContext';
+import { Block, Countdown } from 'components'
 
 const Standings = (): JSX.Element => {
   const { settings } = useContext(AppContext);

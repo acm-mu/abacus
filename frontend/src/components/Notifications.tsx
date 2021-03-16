@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Message } from 'semantic-ui-react';
-import AppContext from '../AppContext';
+import AppContext from 'AppContext';
 import './Notifications.scss';
 
 interface Notification {

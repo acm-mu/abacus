@@ -1,8 +1,8 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import "semantic-ui-css/semantic.min.css";
-import App from "./App";
-import reportWebVitals from "./reportWebVitals";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import 'semantic-ui-css/semantic.min.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   // <React.StrictMode> Disable StrictMode because components from semantic-ui-react do not comply and throw errors

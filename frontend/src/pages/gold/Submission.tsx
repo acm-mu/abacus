@@ -2,7 +2,7 @@ import { Submission } from "abacus"
 import React, { useState } from "react"
 import { Link } from "react-router-dom"
 import { Table, Label } from "semantic-ui-react"
-import { Block } from "../../components"
+import { Block } from "components"
 
 const submission = (): JSX.Element => {
   const [submission] = useState<Submission>()
