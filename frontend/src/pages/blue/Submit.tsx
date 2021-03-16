@@ -5,17 +5,7 @@ import { Link, useHistory, useParams } from 'react-router-dom'
 import { Block, Countdown, FileDialog } from 'components'
 import config from 'environment'
 import AppContext from 'AppContext'
-
-interface Language {
-  key: string;
-  value: string;
-  text: string;
-  file_extension: string;
-}
-const languages: Language[] = [
-  { key: 'python3', value: 'Python 3', text: 'Python 3', file_extension: '.py' },
-  { key: 'java', value: 'Java', text: 'Java', file_extension: '.java' },
-]
+import { Language, languages } from 'utils'
 
 const Submit = (): JSX.Element => {
   const { user } = useContext(AppContext);
@@ -95,6 +85,7 @@ const Submit = (): JSX.Element => {
       event.preventDefault()
     }
   }
+
   return (
     <>
       <Countdown />

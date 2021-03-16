@@ -4,8 +4,8 @@ import { Loader, Table } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { Block, Countdown } from "components";
 import config from 'environment'
-import 'components/Table.scss'
 import AppContext from "AppContext";
+import 'components/Table.scss'
 
 
 const Problems = (): JSX.Element => {
@@ -28,10 +28,11 @@ const Problems = (): JSX.Element => {
 
     if (!isMounted) return
 
-    let problems = Object.values(await response.json()) as Problem[]
-
-    problems = problems.sort((p1: Problem, p2: Problem) => p1.id.localeCompare(p2.id))
-    setProblems(problems)
+    if (response.ok) {
+      let problems = Object.values(await response.json()) as Problem[]
+      problems = problems.sort((p1: Problem, p2: Problem) => p1.id.localeCompare(p2.id))
+      setProblems(problems)
+    }
     setLoading(false)
   }
 

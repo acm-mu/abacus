@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Button, Popup } from "semantic-ui-react";
 import MDEditor from "@uiw/react-md-editor";
-import { Block, Countdown } from 'components'
+import { Block, Countdown, NotFound } from 'components'
 import config from 'environment'
 import AppContext from "AppContext";
 import "./Problem.scss";
@@ -37,6 +37,8 @@ const problem = (): JSX.Element => {
       }
     }
   }
+
+  if (!problem) return <NotFound />
 
   return (
     <>

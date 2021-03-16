@@ -50,11 +50,13 @@ const Home = (): JSX.Element => {
   })));
 
   submissions?.forEach((sub: Submission) => {
-    const startDate = Number(settings?.start_date) || 0
-    const timeBin = Math.floor((sub.date - startDate) / (1800));
-    timeSubmissions[sub.problem.id].data[timeBin]++;
+    if (sub.problem) {
+      const startDate = Number(settings?.start_date) || 0
+      const timeBin = Math.floor((sub.date - startDate) / (1800));
+      timeSubmissions[sub.problem.id].data[timeBin]++;
 
-    statuses[sub.status] == undefined ? statuses[sub.status] = { name: sub.status, data: 1 } : statuses[sub.status].data++;
+      statuses[sub.status] == undefined ? statuses[sub.status] = { name: sub.status, data: 1 } : statuses[sub.status].data++;
+    }
   });
 
   const breakdownData = {
