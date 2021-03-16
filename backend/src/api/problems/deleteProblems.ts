@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { ParamSchema, validationResult } from "express-validator";
-import contest from 'contest';
+import contest from '../../contest';
 
 export const schema: Record<string, ParamSchema> = {
   pid: {

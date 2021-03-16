@@ -2,7 +2,7 @@ import { Converter } from 'aws-sdk/clients/dynamodb';
 import { InvocationResponse } from 'aws-sdk/clients/lambda';
 import { Request, Response } from 'express';
 import { matchedData, ParamSchema, validationResult } from "express-validator"
-import contest from 'contest'
+import contest from '../../contest'
 
 export const schema: Record<string, ParamSchema> = {
   sid: {

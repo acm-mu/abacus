@@ -1,8 +1,8 @@
 import { createHash } from 'crypto'
 import { Request, Response } from 'express'
 import { matchedData, ParamSchema, validationResult } from 'express-validator'
-import contest from 'contest'
 import jwt from 'jsonwebtoken';
+import contest from '../../contest'
 
 export const schema: Record<string, ParamSchema> = {
   username: {

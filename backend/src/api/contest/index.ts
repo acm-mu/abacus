@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { checkSchema } from "express-validator"
-import { isAdminUser } from "authlib"
+import { isAdminUser } from "../../authlib"
 import getContest from "./getContest"
 import { putContest, schema } from "./putContest"
 

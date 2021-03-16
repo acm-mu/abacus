@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { UploadedFile } from 'express-fileupload';
 import { matchedData, ParamSchema, validationResult } from "express-validator";
 import { v4 as uuidv4 } from 'uuid';
-import contest from 'contest';
+import contest from '../../contest';
 
 export const schema: Record<string, ParamSchema> = {
   pid: {

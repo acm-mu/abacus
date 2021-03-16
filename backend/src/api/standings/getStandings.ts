@@ -1,6 +1,6 @@
 import { Problem, Submission } from 'abacus'
 import { Request, Response } from 'express'
-import contest from 'contest'
+import contest from '../../contest'
 
 export const getStandings = async (_req: Request, res: Response) => {
   const standings = await contest.scanItems('user', { role: 'team', division: 'blue' }) || {}

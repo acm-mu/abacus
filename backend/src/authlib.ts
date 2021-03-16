@@ -1,7 +1,7 @@
 import { User } from "abacus";
 import { Request, Response, NextFunction } from "express";
 import jwt from 'jsonwebtoken';
-import contest from 'contest'
+import contest from './contest'
 
 const authenticate = (req: Request, _: Response): Promise<User | undefined> => {
   return new Promise<User | undefined>((resolve, reject) => {

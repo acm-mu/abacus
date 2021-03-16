@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { matchedData, ParamSchema, validationResult } from "express-validator";
-import contest, { transpose } from 'contest';
+import contest, { transpose } from '../../contest';
 
 export const schema: Record<string, ParamSchema> = {
   uid: {
