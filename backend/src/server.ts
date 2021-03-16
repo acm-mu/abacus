@@ -6,10 +6,10 @@ import { createServer } from 'http'
 import morgan from 'morgan';
 import { Server } from 'socket.io'
 import { v4 as uuidv4 } from 'uuid'
+
 import api from "./api";
 
 import * as dotenv from 'dotenv'
-
 dotenv.config()
 
 const PORT = process.env.PORT || 80;

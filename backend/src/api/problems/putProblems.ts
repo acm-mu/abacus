@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { matchedData, ParamSchema, validationResult } from "express-validator";
+
 import contest from '../../abacus/contest';
 
 export const schema: Record<string, ParamSchema> = {
