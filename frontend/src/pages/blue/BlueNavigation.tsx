@@ -6,7 +6,7 @@ import AppContext from "AppContext";
 
 const BlueNavigation = (): JSX.Element => {
   const { user } = useContext(AppContext);
-  const hasAccessTo = () => user?.role == 'admin' || user?.role == 'judge' || user?.division == 'blue'
+  const hasAccessTo = () => user?.role == 'admin' || user?.division == 'blue'
 
   return (
     <Navigation className="blue-div">

@@ -6,7 +6,7 @@ import AppContext from "AppContext";
 
 const GoldNavigation = (): JSX.Element => {
   const { user } = useContext(AppContext)
-  const hasAccessTo = () => user?.role == 'admin' || user?.role == 'judge' || user?.division == 'gold'
+  const hasAccessTo = () => user?.role == 'admin' || user?.division == 'gold'
 
   return (
     <Navigation className="gold-div">
