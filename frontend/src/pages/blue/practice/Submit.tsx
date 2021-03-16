@@ -1,7 +1,6 @@
 import { Submission } from 'abacus'
-import AppContext from 'AppContext'
 import { Block, Countdown, FileDialog } from 'components'
-import React, { ChangeEvent, useContext, useState } from 'react'
+import React, { ChangeEvent, useState } from 'react'
 import { useHistory } from 'react-router'
 import { Link } from 'react-router-dom'
 import { Button, Form } from 'semantic-ui-react'
@@ -10,7 +9,6 @@ import { v4 as uuidv4 } from 'uuid'
 import problem from './problem.json';
 
 const SubmitPractice = (): JSX.Element => {
-  const { user } = useContext(AppContext)
   const [loading, setLoading] = useState(false)
   const submissions: Submission[] = []
 
