@@ -1,8 +1,10 @@
 import React, { ChangeEvent, useContext, useState } from "react";
+import { useHistory } from "react-router";
 import { Button, Form, Message, Modal } from "semantic-ui-react";
 import AppContext from "AppContext";
 import config from 'environment'
 import fulllogo from 'assets/fulllogo.png'
+import { userHome } from "utils";
 
 interface LoginModalProps {
   trigger?: JSX.Element
@@ -11,6 +13,7 @@ interface LoginModalProps {
 
 const LoginModal = ({ trigger, open }: LoginModalProps): JSX.Element => {
   const { setUser } = useContext(AppContext)
+  const history = useHistory()
   const [error, setError] = useState<string>()
   const [formData, setFormData] = useState({ username: '', password: '' })
   const [isOpen, setOpen] = useState(open || false)
@@ -29,6 +32,7 @@ const LoginModal = ({ trigger, open }: LoginModalProps): JSX.Element => {
         const { accessToken, ...user } = await response.json()
         localStorage.setItem('accessToken', accessToken)
         setUser(user)
+        history.push(userHome(user))
       } else {
         const { message } = await response.json()
         setError(message)

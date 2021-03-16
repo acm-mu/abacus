@@ -1,3 +1,5 @@
+import { User } from "abacus";
+
 // Convert's stored language values in to syntax highlighter friendly values
 export const syntax_lang = (language: string): string => {
   switch (language) {
@@ -5,6 +7,17 @@ export const syntax_lang = (language: string): string => {
       return "python"
     default:
       return language
+  }
+}
+
+export const userHome = (user: User): string => {
+  switch (user?.role) {
+    case 'admin':
+      return '/admin'
+    case 'team':
+      return `/${user.division}`
+    default:
+      return '/'
   }
 }
 
