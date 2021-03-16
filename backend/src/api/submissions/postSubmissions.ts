@@ -57,6 +57,16 @@ export const postSubmissions = async (req: Request, res: Response) => {
       return
     }
 
+    const settings = await contest.get_settings()
+    const now = Date.now()
+    if (now < settings.start_date * 1000) {
+      res.status(400).send('Competition has not started yet!')
+      return
+    } else if (now > settings.end_date * 1000) {
+      res.status(400).send('Competition has ended!')
+      return
+    }
+
     const submissions = await contest.scanItems('submission', { tid, pid })
 
     if (submissions) {
