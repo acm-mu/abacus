@@ -25,11 +25,7 @@ const About = (): JSX.Element => (
         to solve problems similar in scope to Advanced Placement Computer
         Science exam questions. Points will be awarded based on the number of
         problems correctly solved and the time taken to solve, with appropriate
-        penalties for incorrect submissions. Development environments available
-        will most likely include Eclipse, NetBeans, WordPad + JDK, Cygwin tools,
-        BlueJ, and IntelliJ. You may find it useful to review our Competition
-        Rules, and Java Preparation Notes (Python Preparation Notes coming
-        soon).
+        penalties for incorrect submissions.
       </p>
 
       <h2>Open/Scratch Division (Gold)</h2>
