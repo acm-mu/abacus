@@ -8,7 +8,7 @@ import Help from './Help';
 import DefaultNavigation from './DefaultNavigation';
 import { NotFound } from 'components';
 
-const Index = (): JSX.Element => (
+export const Index = (): JSX.Element => (
   <>
     <DefaultNavigation />
 
@@ -23,7 +23,6 @@ const Index = (): JSX.Element => (
   </>
 );
 
-export { Index }
 export { default as Gold } from './gold'
 export { default as Admin } from './admin'
 export { default as Blue } from './blue'

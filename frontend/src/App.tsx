@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import io from 'socket.io-client';
 
-import Index, { Admin, Blue, Gold } from 'pages'
+import { Index, Admin, Blue, Gold } from 'pages'
 import AppContext, { AppContextType } from 'AppContext';
 import config from 'environment'
 import { Footer, Notifications } from 'components';
