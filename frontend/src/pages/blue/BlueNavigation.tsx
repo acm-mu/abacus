@@ -7,6 +7,7 @@ import AppContext from "AppContext";
 const BlueNavigation = (): JSX.Element => {
   const { settings } = useContext(AppContext)
   const { user } = useContext(AppContext);
+
   const hasAccessTo = () => user?.role == 'admin' || user?.division == 'blue'
   const isBeforeCompetition = () => !settings || new Date() < settings.start_date
 
