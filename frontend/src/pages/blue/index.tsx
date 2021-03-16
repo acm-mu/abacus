@@ -10,6 +10,7 @@ import Standings from './Standings'
 import Submissions from './Submissions'
 import Submission from './Submission'
 import Submit from './Submit'
+import Clarifications from "../Clarifications";
 
 const Blue = (): JSX.Element => (
   <>
@@ -24,6 +25,7 @@ const Blue = (): JSX.Element => (
         <Route path='/blue/standings' component={Standings} />
         <Route path='/blue/submissions/:sid' component={Submission} />
         <Route path='/blue/submissions' component={Submissions} />
+        <Route path='/blue/clarifications' component={Clarifications} />
         <Route component={NotFound} />
       </Switch>
     </Container>

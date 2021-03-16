@@ -11,6 +11,8 @@ import Problem from "./Problem";
 import SubmitProblem from "./SubmitProblem";
 import Submission from "./Submission";
 import Submissions from "./Submissions";
+import Standings from "./Standings";
+import Clarifications from "pages/Clarifications";
 
 const Gold = (): JSX.Element => (
   <>
@@ -25,6 +27,8 @@ const Gold = (): JSX.Element => (
         <Route path='/gold/problems/:pid/submit' component={SubmitProblem} />
         <Route path='/gold/submissions' component={Submissions} />
         <Route path='/gold/submissions/:sid' component={Submission} />
+        <Route path='/gold/standings' component={Standings} />
+        <Route path='/gold/clarifications' component={Clarifications} />
         <Route component={NotFound} />
       </Switch>
     </Container>

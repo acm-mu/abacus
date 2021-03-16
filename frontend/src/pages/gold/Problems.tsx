@@ -8,7 +8,7 @@ import AppContext from 'AppContext'
 
 const Problems = (): JSX.Element => {
   const [isMounted, setMounted] = useState<boolean>(false)
-  const { user } = useContext(AppContext)
+  const { user, settings } = useContext(AppContext)
   const [problems, setProblems] = useState<Problem[]>()
 
   useEffect(() => {
@@ -23,7 +23,19 @@ const Problems = (): JSX.Element => {
         }
       })
     return () => { setMounted(false) }
-  }, [isMounted])
+  }, [])
+
+  if (!settings || new Date() < settings.start_date) {
+    return (
+      <>
+        <Countdown />
+        <Block center size='xs-12'>
+          <h1>Competition not yet started!</h1>
+          <p>Problem&apos;s will become available as soon as the competition begins.</p>
+        </Block>
+      </>
+    )
+  }
 
   return (
     <>

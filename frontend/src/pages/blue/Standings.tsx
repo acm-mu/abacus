@@ -1,12 +1,14 @@
 import { Problem, ProblemScore, StandingsUser } from "abacus";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from 'react-router-dom'
 import { Loader, Table } from "semantic-ui-react";
 import { Block, Countdown } from "components";
 import config from 'environment'
 import "./Standings.scss";
+import AppContext from "AppContext";
 
 const Standings = (): JSX.Element => {
+  const { settings } = useContext(AppContext);
   const [problems, setProblems] = useState<Problem[]>();
   const [standings, setStandings] = useState<StandingsUser[]>();
   const [loading, setLoading] = useState<boolean>(true)
@@ -34,7 +36,19 @@ const Standings = (): JSX.Element => {
         }
       });
     return () => { setMounted(false) }
-  }, [isMounted]);
+  }, []);
+
+  if (!settings || new Date() < settings.start_date) {
+    return (
+      <>
+        <Countdown />
+        <Block center size='xs-12'>
+          <h1>Competition not yet started!</h1>
+          <p>Standings will become available when the competition begins, and submissions start rolling in.</p>
+        </Block>
+      </>
+    )
+  }
 
   return (
     <>
