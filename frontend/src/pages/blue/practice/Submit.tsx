@@ -57,7 +57,7 @@ const SubmitPractice = (): JSX.Element => {
   }
 
   const handleSubmit = async () => {
-    if (!(language && file && user)) return
+    if (!(language && file)) return
 
     setLoading(true)
 
@@ -79,7 +79,7 @@ const SubmitPractice = (): JSX.Element => {
         sid,
         problem,
         pid: problem.id,
-        tid: user.uid,
+        tid: "LOCAL",
         division: 'blue',
         language: language.key,
         filename,
