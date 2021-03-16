@@ -111,7 +111,7 @@ const Submissions = (): JSX.Element => {
                 </Table.Cell>
                 <Table.Cell>
                   <Link to={`/admin/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link></Table.Cell>
-                <Table.Cell><Link to={`/admin/problems/${submission.pid}`}>{submission.problem.name} </Link></Table.Cell>
+                <Table.Cell><Link to={`/admin/problems/${submission.pid}`}>{submission.problem?.name} </Link></Table.Cell>
                 <Table.Cell><Link to={`/admin/users/${submission.team.uid}`}>{submission.team.display_name}</Link></Table.Cell>
                 <Table.Cell>{submission.sub_no + 1}</Table.Cell>
                 <Table.Cell>{submission.language}</Table.Cell>

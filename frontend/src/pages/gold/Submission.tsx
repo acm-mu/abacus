@@ -25,7 +25,7 @@ const submission = (): JSX.Element => {
                 to={`/gold/submissions/${submission?.sid}`}>{submission?.sid.substring(0, 7)}</Link>
               </Table.Cell>
               <Table.Cell fromnow="{{ submission.date*1000 }}"></Table.Cell>
-              <Table.Cell><Link to={`/gold/problems/${submission?.pid}`}>{submission?.problem.name}</Link></Table.Cell>
+              <Table.Cell><Link to={`/gold/problems/${submission?.pid}`}>{submission?.problem?.name}</Link></Table.Cell>
               <Table.Cell className={`icn ${submission?.status}`}></Table.Cell>
             </Table.Row>
           </Table.Body>
