@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Block } from "../components";
+import { Block } from "components";
 import { Accordion, AccordionTitleProps, Icon } from 'semantic-ui-react';
 
 const Help = (): JSX.Element => {

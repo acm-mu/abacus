@@ -2,11 +2,10 @@ import { Problem, ProblemScore, StandingsUser } from "abacus";
 import React, { useContext, useEffect, useState } from "react";
 import { Link } from 'react-router-dom'
 import { Loader, Table } from "semantic-ui-react";
-import AppContext from "../../AppContext";
-import { Block, Countdown } from "../../components";
-import config from '../../environment'
-
+import { Block, Countdown } from "components";
+import config from 'environment'
 import "./Standings.scss";
+import AppContext from "AppContext";
 
 const Standings = (): JSX.Element => {
   const { settings } = useContext(AppContext);

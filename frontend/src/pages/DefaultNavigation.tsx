@@ -1,7 +1,7 @@
-import React from "react";
-import { Menu, Dropdown } from "semantic-ui-react";
-import { Navigation } from "../components";
-import { NavLink } from "react-router-dom";
+import React from 'react';
+import { Menu, Dropdown } from 'semantic-ui-react';
+import { NavLink } from 'react-router-dom';
+import { Navigation } from 'components';
 
 const DefaultNavigation = (): JSX.Element => (
   <Navigation>

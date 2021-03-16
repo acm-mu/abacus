@@ -1,11 +1,12 @@
+import { Problem, Submission } from 'abacus'
 import React, { useContext, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Button, Popup } from 'semantic-ui-react'
-import { Block, Countdown } from '../../components'
-import config from "../../environment"
 import MDEditor from '@uiw/react-md-editor'
-import { Problem, Submission } from 'abacus'
-import AppContext from '../../AppContext'
+
+import { Block, Countdown } from 'components'
+import config from "environment"
+import AppContext from 'AppContext'
 
 const problem = (): JSX.Element => {
   const [problem, setProblem] = useState<Problem>()

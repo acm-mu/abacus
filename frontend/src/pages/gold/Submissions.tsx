@@ -3,8 +3,8 @@ import React, { useContext, useState } from 'react'
 import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
-import AppContext from '../../AppContext'
-import { Block, Unauthorized } from '../../components'
+import { Block, Unauthorized } from 'components'
+import AppContext from 'AppContext'
 
 const Submissions = (): JSX.Element => {
   const { user } = useContext(AppContext)

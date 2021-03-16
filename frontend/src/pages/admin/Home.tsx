@@ -1,12 +1,11 @@
-import '@toast-ui/chart/dist/toastui-chart.min.css'
 
-import { LineChart, PieChart } from '@toast-ui/react-chart'
 import { Problem, Submission } from 'abacus'
 import React, { useContext, useEffect, useState } from 'react'
-import AppContext from '../../AppContext'
-
-import { Block } from '../../components'
-import config from '../../environment'
+import { LineChart, PieChart } from '@toast-ui/react-chart'
+import AppContext from 'AppContext'
+import { Block } from 'components'
+import config from 'environment'
+import '@toast-ui/chart/dist/toastui-chart.min.css'
 
 const Home = (): JSX.Element => {
   const [submissions, setSubmissions] = useState<Submission[]>()

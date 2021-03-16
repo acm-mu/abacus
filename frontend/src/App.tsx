@@ -1,16 +1,13 @@
-import React, { useEffect, useState } from "react";
-
-import { Footer, Notifications } from "./components";
-import "./App.scss";
-
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Admin from "./pages/admin/";
-import Blue from './pages/blue/';
-import Gold from './pages/gold/'
-import Index from './pages'
-import AppContext, { AppContextType } from "./AppContext";
-import config from './environment'
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import io from 'socket.io-client';
+
+import { Index, Admin, Blue, Gold } from 'pages'
+import AppContext, { AppContextType } from 'AppContext';
+import config from 'environment'
+import { Footer, Notifications } from 'components';
+
+import './App.scss';
 
 const App = (): JSX.Element => {
   const [user, setUser] = useState()
@@ -62,9 +59,9 @@ const App = (): JSX.Element => {
     <Router>
       <Switch>
         <Route path='/admin' component={Admin} />
-        <Route path="/blue" component={Blue} />
-        <Route path="/gold" component={Gold} />
-        <Route path="/" component={Index} />
+        <Route path='/blue' component={Blue} />
+        <Route path='/gold' component={Gold} />
+        <Route path='/' component={Index} />
       </Switch>
     </Router>
     <Footer />

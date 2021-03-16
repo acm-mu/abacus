@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
-import AppContext from '../AppContext';
-import { Unauthorized } from '../components';
+import AppContext from 'AppContext';
+import { Unauthorized } from 'components';
 
 const Clarifications = (): JSX.Element => {
   const { user } = useContext(AppContext);

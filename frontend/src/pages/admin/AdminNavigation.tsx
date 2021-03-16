@@ -1,7 +1,7 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import { Menu } from 'semantic-ui-react'
-import { Navigation } from '../../components'
+import { Navigation } from 'components'
 
 const AdminNavigation = (): JSX.Element => (
   <Navigation className="admin-div">

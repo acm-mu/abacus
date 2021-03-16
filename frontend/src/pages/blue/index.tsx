@@ -1,7 +1,7 @@
 import React from "react";
 import { Switch, Route } from 'react-router-dom'
 import { Container } from "semantic-ui-react";
-import { NotFound } from '../../components'
+import { NotFound } from 'components'
 import BlueNavigation from './BlueNavigation'
 import Home from './Home'
 import Problem from './Problem'

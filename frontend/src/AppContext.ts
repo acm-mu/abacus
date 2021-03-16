@@ -1,5 +1,5 @@
-import { Settings, User } from "abacus";
-import { createContext, Dispatch, SetStateAction } from "react";
+import { Settings, User } from 'abacus';
+import { createContext, Dispatch, SetStateAction } from 'react';
 
 export interface AppContextType {
   user?: User;

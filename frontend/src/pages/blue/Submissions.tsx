@@ -1,12 +1,12 @@
+import { Submission } from "abacus";
 import React, { useContext, useEffect, useState } from "react";
 import Moment from "react-moment";
 import { Loader, Table } from "semantic-ui-react";
 import { Link } from "react-router-dom";
-import { Block, Countdown, Unauthorized } from "../../components";
-import config from '../../environment'
-import "../../components/Icons.scss";
-import AppContext from "../../AppContext";
-import { Submission } from "abacus";
+import { Block, Countdown, Unauthorized } from "components";
+import config from 'environment'
+import AppContext from "AppContext";
+import "components/Icons.scss";
 
 const Submissions = (): JSX.Element => {
   const { user } = useContext(AppContext);

@@ -1,5 +1,5 @@
 import React from "react";
-import notfound from "../assets/404.png"
+import notfound from "assets/404.png"
 
 const NotFound = (): JSX.Element => (
   <img

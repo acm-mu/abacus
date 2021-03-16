@@ -3,8 +3,8 @@ import { createHash } from 'crypto';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button, Label, Table } from 'semantic-ui-react';
-import { Block, FileDialog } from '../../../components';
-import config from "../../../environment"
+import { Block, FileDialog } from 'components';
+import config from "environment"
 
 interface UserItem extends User {
   checked: boolean

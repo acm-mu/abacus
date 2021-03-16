@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { Countdown, Block } from "../components";
 import { Table, Label, Loader } from 'semantic-ui-react'
-import { capitalize } from '../utils';
+import { Countdown, Block } from 'components';
+import { capitalize } from 'utils';
 
 type TeamType = {
   division: string,
