@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { ParamSchema, validationResult } from "express-validator"
-import contest from '../../contest';
+import contest from '../../abacus/contest';
 
 export const schema: Record<string, ParamSchema> = {
   sid: {

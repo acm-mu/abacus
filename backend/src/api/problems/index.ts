@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { checkSchema } from "express-validator";
-import { isAdminUser, isAuthenticated } from "../../authlib";
+import { isAdminUser, isAuthenticated } from "../../abacus/authlib";
 import { deleteProblems, schema as deleteSchema } from "./deleteProblems";
 import { downloadFiles, schema as downloadSchema } from "./downloadFiles";
 import { getProblems, schema as getSchema } from "./getProblems";

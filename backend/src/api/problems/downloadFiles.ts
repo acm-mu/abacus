@@ -2,7 +2,7 @@ import { Problem } from 'abacus';
 import archiver from 'archiver';
 import { Request, Response } from 'express';
 import { matchedData, ParamSchema, validationResult } from "express-validator";
-import contest from '../../contest';
+import contest from '../../abacus/contest';
 
 const stripFilename = (str: string) => str.replace(/ /g, '_').replace(/[!@#$%^&*\(\)]/g, '');
 const fileExtension = (lang: string) => {
