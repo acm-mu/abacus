@@ -21,6 +21,17 @@ export const userHome = (user: User): string => {
   }
 }
 
+export interface Language {
+  key: string;
+  value: string;
+  text: string;
+  file_extension: string;
+}
+export const languages: Language[] = [
+  { key: 'python3', value: 'Python 3', text: 'Python 3', file_extension: '.py' },
+  { key: 'java', value: 'Java', text: 'Java', file_extension: '.java' },
+]
+
 // Capitalizes the first letter of a string
 export const capitalize = (str: string): string => str.trim().replace(/^\w/, (c) => c.toUpperCase());
 

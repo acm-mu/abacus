@@ -1,40 +1,27 @@
-import { Submission } from 'abacus'
-import React, { useEffect, useState } from 'react'
-import Moment from 'react-moment'
-import { Link, useParams } from 'react-router-dom'
-import { Loader, Table } from 'semantic-ui-react'
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-import { Block, Countdown, NotFound } from 'components'
-import config from 'environment'
-import { syntax_lang } from 'utils'
+import { Submission } from "abacus"
+import React, { useEffect, useState } from "react"
+import { Block, Countdown, NotFound } from "components"
+import { useParams } from "react-router"
+import SyntaxHighlighter from "react-syntax-highlighter/dist/esm/default-highlight"
+import { Loader, Table } from "semantic-ui-react"
+import Moment from "react-moment"
+import { Link } from "react-router-dom"
+import { syntax_lang } from "utils"
 
-const submission = (): JSX.Element => {
-  const { sid } = useParams<{ sid: string }>()
+const PracticeSubmission = (): JSX.Element => {
   const [submission, setSubmission] = useState<Submission>()
-  const [isMounted, setMounted] = useState<boolean>(true)
   const [isLoading, setLoading] = useState(true)
+  const { sid } = useParams<{ sid: string }>()
 
   useEffect(() => {
-    loadSubmission()
-    return () => { setMounted(false) }
+    const submissions = localStorage.submissions ? JSON.parse(localStorage.submissions) : {}
+    if (sid in submissions) {
+      setSubmission(submissions[sid])
+    }
+    setLoading(false)
   }, [])
 
-  const loadSubmission = async () => {
-    const response = await fetch(`${config.API_URL}/submissions?sid=${sid}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.accessToken}`
-      }
-    })
-
-    if (!isMounted) return
-
-    setSubmission(Object.values(await response.json())[0] as Submission)
-
-    setLoading(false)
-  }
-
-  if (isLoading) return <Loader active inline='centered' content="Loading..." />
-
+  if (isLoading) return <Loader active inline='centered' />
   if (!submission) return <NotFound />
 
   return <>
@@ -56,9 +43,9 @@ const submission = (): JSX.Element => {
         </Table.Header>
         <Table.Body>
           <Table.Row>
-            <Table.Cell rowSpan={2}><Link to={`/blue/submissions/${submission?.sid}`}>{submission?.sid.substring(0, 7)}</Link></Table.Cell>
+            <Table.Cell rowSpan={2}><Link to={`/blue/practice/${submission?.sid}`}>{submission?.sid.substring(0, 7)}</Link></Table.Cell>
             <Table.Cell>{submission && <Moment fromNow date={submission.date * 1000} />}</Table.Cell>
-            <Table.Cell><Link to={`/blue/problems/${submission?.problem?.id}`}>{submission?.problem?.name}</Link></Table.Cell>
+            <Table.Cell><Link to={`/blue/practice`}>{submission?.problem?.name}</Link></Table.Cell>
             <Table.Cell><span className={`status icn ${submission?.status}`} /></Table.Cell>
             <Table.Cell>{Math.floor(submission?.runtime || 0)}</Table.Cell>
             <Table.Cell>{submission?.language}</Table.Cell>
@@ -110,4 +97,4 @@ const submission = (): JSX.Element => {
   </>
 }
 
-export default submission
+export default PracticeSubmission

@@ -62,6 +62,10 @@ export const getProblems = async (req: Request, res: Response) => {
 
   try {
     let problems: any = await contest.scanItems('problem', query, columns)
+    if (!problems.length) {
+      res.sendStatus(404)
+      return
+    }
     if (type !== "list")
       problems = transpose(problems, 'pid')
     res.send(problems)

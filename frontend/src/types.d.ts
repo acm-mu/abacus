@@ -11,6 +11,7 @@ declare module "abacus" {
   export interface Submission {
     sid: string;
     date: number;
+    division: string;
     filename: string;
     filesize: number;
     source: string;
@@ -23,7 +24,7 @@ declare module "abacus" {
     status: string;
     sub_no: number;
     tid: string;
-    team: Team;
+    team?: Team;
     tests: Test[];
   }
   export interface Problem {

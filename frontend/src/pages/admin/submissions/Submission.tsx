@@ -102,7 +102,7 @@ const submission = (): JSX.Element => {
             </Table.Cell>
             <Table.Cell>{submission.team.display_name}</Table.Cell>
             <Table.Cell><Moment fromNow date={submission?.date * 1000} /></Table.Cell>
-            <Table.Cell><Link to={`/admin/problems/${submission.pid}`}>{submission.problem.name}</Link></Table.Cell>
+            <Table.Cell><Link to={`/admin/problems/${submission.pid}`}>{submission.problem?.name}</Link></Table.Cell>
             <Table.Cell><span className={`icn status ${submission.status}`} /></Table.Cell>
             <Table.Cell>{Math.floor(submission.runtime)}</Table.Cell>
             <Table.Cell>{submission.score}</Table.Cell>

@@ -11,6 +11,7 @@ import Submissions from './Submissions'
 import Submission from './Submission'
 import Submit from './Submit'
 import Clarifications from "../Clarifications";
+import Practice from "./practice";
 
 const Blue = (): JSX.Element => (
   <>
@@ -26,6 +27,7 @@ const Blue = (): JSX.Element => (
         <Route path='/blue/submissions/:sid' component={Submission} />
         <Route path='/blue/submissions' component={Submissions} />
         <Route path='/blue/clarifications' component={Clarifications} />
+        <Route path='/blue/practice' component={Practice} />
         <Route component={NotFound} />
       </Switch>
     </Container>

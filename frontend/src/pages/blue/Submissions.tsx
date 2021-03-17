@@ -58,8 +58,8 @@ const Submissions = (): JSX.Element => {
                   </Link>
                 </Table.Cell>
                 <Table.Cell>
-                  <Link to={`/blue/problems/${submission.problem.id}`}>
-                    {submission.problem.name}
+                  <Link to={`/blue/problems/${submission.problem?.id}`}>
+                    {submission.problem?.name}
                   </Link>
                 </Table.Cell>
                 <Table.Cell> {submission.sub_no + 1} </Table.Cell>
