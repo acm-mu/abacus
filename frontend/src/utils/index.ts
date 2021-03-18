@@ -21,6 +21,17 @@ export const userHome = (user: User): string => {
   }
 }
 
+export const divisions = [
+  { key: 1, text: "Blue", value: 'blue' },
+  { key: 2, text: "Gold", value: 'gold' }
+]
+
+export const roles = [
+  { key: 'team', text: 'Team', value: 'team' },
+  { key: 'judge', text: 'Judge', value: 'judge' },
+  { key: 'admin', text: 'Admin', value: 'admin' }
+]
+
 export interface Language {
   key: string;
   value: string;
@@ -31,6 +42,8 @@ export const languages: Language[] = [
   { key: 'python3', value: 'Python 3', text: 'Python 3', file_extension: '.py' },
   { key: 'java', value: 'Java', text: 'Java', file_extension: '.java' },
 ]
+
+export const format_text = (str: string): string => str.replace(/(^.*$)/gm, (c: string) => isNaN(+c) ? `"${c}"` : c)
 
 // Capitalizes the first letter of a string
 export const capitalize = (str: string): string => str.trim().replace(/^\w/, (c) => c.toUpperCase());

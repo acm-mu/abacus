@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom'
 import { Form, Input, Button, Menu, TextArea, Message, MenuItemProps, DropdownProps } from "semantic-ui-react"
 import MDEditor from '@uiw/react-md-editor'
 import { Block } from 'components'
+import { divisions } from 'utils'
 import config from 'environment'
 
 interface NewProblemType {
@@ -54,38 +55,25 @@ const NewProblem = (): JSX.Element => {
     }
   }
 
-  const handleChange = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>) => {
-    if (problem)
-      setProblem({ ...problem, [name]: value })
-  }
+  const handleChange = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>) => problem &&
+    setProblem({ ...problem, [name]: value })
 
-  const handleDropdownChange = (e: SyntheticEvent<HTMLElement, Event>, { name, value }: DropdownProps) => {
-    if (problem)
-      setProblem({ ...problem, [name]: value })
-  }
+  const handleDropdownChange = (e: SyntheticEvent<HTMLElement, Event>, { name, value }: DropdownProps) => problem &&
+    setProblem({ ...problem, [name]: value })
 
-  const handleTextareaChange = (value?: string) => {
-    if (problem && value)
-      setProblem({ ...problem, description: value })
-  }
+  const handleTextareaChange = (value?: string) => problem && value &&
+    setProblem({ ...problem, description: value })
 
-  const handleTestChange = ({ target: { name, value } }: ChangeEvent<HTMLTextAreaElement>) => {
-    if (problem)
-      setProblem({
-        ...problem, tests: problem.tests.map((test: Test, index: number) => {
-          if (name == `${index}-in`)
-            test.in = value
-          else if (name == `${index}-out`)
-            test.out = value
-          return test
-        })
+  const handleTestChange = ({ target: { name, value } }: ChangeEvent<HTMLTextAreaElement>) => problem &&
+    setProblem({
+      ...problem, tests: problem.tests.map((test: Test, index: number) => {
+        if (name == `${index}-in`)
+          test.in = value
+        else if (name == `${index}-out`)
+          test.out = value
+        return test
       })
-  }
-
-  const divisions = [
-    { key: 1, text: "Blue", value: 'blue' },
-    { key: 2, text: "Gold", value: 'gold' }
-  ]
+    })
 
   return (
     <>

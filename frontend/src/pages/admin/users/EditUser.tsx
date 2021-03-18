@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom"
 import { Button, Form, Input, Menu, Message, Select } from "semantic-ui-react"
 import config from 'environment'
 import { Block } from "components"
+import { divisions, roles } from "utils"
 
 const EditUser = (): JSX.Element => {
   const [user, setUser] = useState<User>()
@@ -18,16 +19,6 @@ const EditUser = (): JSX.Element => {
   })
   const [message, setMessage] = useState<{ type: string, message: string }>()
   const { uid } = useParams<{ uid: string }>()
-
-  const roles = [
-    { key: 'team', text: 'Team', value: 'team' },
-    { key: 'judge', text: 'Judge', value: 'judge' },
-    { key: 'admin', text: 'Admin', value: 'admin' }
-  ]
-  const divisions = [
-    { key: 'blue', text: 'Blue', value: 'blue' },
-    { key: 'gold', text: 'Gold', value: 'gold' }
-  ]
 
   const handleChange = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>) => setFormUser({ ...formUser, [name]: value })
   const handleSelectChange = (_: never, { name, value }: HTMLInputElement) => setFormUser({ ...formUser, [name]: value })

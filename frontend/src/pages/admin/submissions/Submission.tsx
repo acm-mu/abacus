@@ -6,10 +6,8 @@ import Moment from 'react-moment'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { Block, NotFound } from 'components'
 import config from 'environment'
-import { capitalize, syntax_lang } from "utils"
+import { capitalize, syntax_lang, format_text } from "utils"
 import "pages/Submission.scss"
-
-const format_text = (str: string): string => str.replace(/(^.*$)/gm, (c: string) => isNaN(+c) ? `"${c}"` : c)
 
 const submission = (): JSX.Element => {
   const history = useHistory()
