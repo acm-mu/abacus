@@ -49,11 +49,9 @@ const SubmitPractice = (): JSX.Element => {
       test.stdout = json.output;
 
       if (json.output != test.out) {
-        console.log("Result: REJECTED");
         status = "rejected";
         test['result'] = "rejected";
       } else {
-        console.log("Result: ACCEPTED");
         test['result'] = "accepted";
       }
     }
@@ -75,7 +73,7 @@ const SubmitPractice = (): JSX.Element => {
 
     let submissions: { [key: string]: Submission } = {}
     if (localStorage.submissions != undefined) {
-      submissions = JSON.parse(localStorage.submissions).filter(({ sid }: { sid: string }) => sid == id)
+      submissions = JSON.parse(localStorage.submissions)
     }
 
     fileReader.onloadend = async () => {
@@ -94,7 +92,7 @@ const SubmitPractice = (): JSX.Element => {
         filename,
         filesize,
         md5: '',
-        sub_no: Object.values(submissions).length,
+        sub_no: Object.values(submissions).filter(({ pid }: { pid: string }) => pid == id).length,
         status: 'pending',
         score: 0,
         date: Date.now() / 1000,
