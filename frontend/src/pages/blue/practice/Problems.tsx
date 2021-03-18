@@ -28,10 +28,10 @@ const PracticeProblems = ({ problems, submissions }: PracticeProblemsProps): JSX
 
     <Block size="xs-12">
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <h1>Practice Problems</h1>
+        <h1>Blue Division Prep</h1>
         {showClearButton ? <div><Button onClick={clearHistory} content="Clear History" /></div> : <></>}
       </div>
-      <p>Here you can practice using our platform with some of the problems from our previous competitions.</p>
+      <p>Here you can practice using our platform with some of the problems from previous year&lsquo;s problems.</p>
       <p>Some things that will be different during the competition</p>
       <ul>
         <li>Submissions will be reviewed by judges before released to teams to monitor for irregularities / cheating.</li>
