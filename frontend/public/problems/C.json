@@ -1,0 +1,25 @@
+{
+    "pid": "C",
+    "description": "# Toggle Grid\n### Problem Description\n\nSyrin's biggest responsibility is that she is in charge of purchasing the lights. She has been given an instruction set on how the pattern of lights will be displayed. She realizes that she can save money on string lights by buying discounted lights with missing or broken bulbs. All she needs is to figure out how many lights will be on after all instructions in a given instruction set are applied.\n\nSyrin knows that the instructions will be applied to a 100x100 grid of lights, and they will be one of the following operations: `turn on`, `turn off`, or `toggle`. Each instruction will target a specific rectangular section of lights, described by the starting `x-coordinate`, starting `y-coordinate`, `width`, and `height`. Each instruction needs to be performed on every light within the bounds of this rectangular section.\n\nTo solve this problem, **finish writing a program that counts the number of lights in a grid which are  turned on after a instructions are applied to the grid.**\n\nAll lights in the grid are turned off before the instruction set is executed.\n\nThe instructions are given with integer codes: `0` for \"turn lights off\", `1` for \"turn lights on\", and `2` for \"toggle lights\".\n\n## Writing Your Solution\n\nThe given code skeleton implements much of the program for you.\n\nYou should write the `execute` function of the skeleton to process one instruction at a time. This function should adjust the lights in the two-dimensional array `grid`, setting lights to `0` if they are turned off, or `1` if they are turned on.\n\nThe `main` method will run `execute` for each instruction. Then, it runs the provided `count` method to count the number of lights in `grid` which are turned on.\n\nEnter your part of the solution in the body of this method in the given code skeleton:\n\n### Method Signature\n\n#### Java\n\n```public static void execute(int code, int startX, int startY, int width, int height)```\n\n#### Python\n\n```def execute(code, startX, startY, width, height):```\n\n### Sample Method Calls\n\n`execute(1, 0, 0, 10, 10)`\n\nturns all lights in `grid` between (and including) `grid[0][0]` and `grid[9][9]` to `1` (meaning these lights are turned on).\n\n## Testing Your Program from the Console\n\n### Console Input Format\n\n* the first line contains the number of test cases, `t`\n* for each test, a line contains `i`, the number of instructions for that test\n* for each instruction, a line contains the following five integer inputs, comma-separated: `code`, `startX`, `startY`, `width`, and `height`\n\n### Assumptions\n\n* 0 <= `t` <= 10\n* 0 <= `i` <= 5\n* 0 <= `code` <= 2\n* 0 <= `startX`, `startY`, `width`, `height` <= 100\n\n### Console Output Format\n\n* for each test, a single line with the number of lights on after all instructions are processed\n\n### Sample Run\n\n#### Input:\n\n```\n3\n1\n1,0,0,10,10\n2\n1,0,0,10,10\n0,5,5,5,5\n2\n1,0,0,10,10\n2,0,0,5,5\n```\n\n#### Output:\n\n```\n100\n75\n75\n```\n",
+    "id": "C",
+    "name": "Toggle Grid",
+    "division": "blue",
+    "tests": [{
+            "result": "",
+            "include": false,
+            "in": "3\n1\n1,10,10,10,10\n1\n1,75,75,25,25\n2\n1,10,10,10,10\n2,10,10,25,25",
+            "out": "100\n625\n525"
+        },
+        {
+            "result": "",
+            "include": false,
+            "in": "1\n2\n1,25,25,50,50\n0,40,40,20,20",
+            "out": "2100"
+        },
+        {
+            "in": "3\n2\n1,1,1,30,30\n2,5,5,10,10\n2\n1,25,25,50,50\n2,35,35,10,10\n2\n1,0,0,50,50\n2,0,0,50,50",
+            "include": false,
+            "out": "800\n2400\n0"
+        }
+    ]
+}
