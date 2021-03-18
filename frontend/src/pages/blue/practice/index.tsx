@@ -1,31 +1,56 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Switch } from "react-router-dom";
-import { Route } from "react-router";
+import { Route, useParams } from "react-router";
+import SubmitPractice from "./Submit";
+import AppContext from "AppContext";
+import { Block, NotFound } from "components";
 
 import PracticeSubmission from "./Submission";
-import SubmitPractice from "./Submit";
 import PracticeProblem from "./Problem";
-import AppContext from "AppContext";
-import { Block } from "components";
+import PracticeProblems from "./Problems";
+import { Submission } from "abacus";
 
+export type Problem = {
+  id: string;
+  name: string;
+  year: number;
+}
 
 const Practice = (): JSX.Element => {
+  const [isMounted, setMounted] = useState(true)
   const { settings } = useContext(AppContext)
+  const [problems, setProblems] = useState<{ [key: string]: Problem }>({})
+  const submissions: { [key: string]: Submission } = localStorage.submissions ? JSON.parse(localStorage.submissions) : {}
+
+  const loadProblems = async () => {
+    const response = await fetch('/problems/index.json')
+    if (!isMounted) return
+    setProblems(await response.json())
+  }
+
+  useEffect(() => {
+    loadProblems()
+    return () => { setMounted(false) }
+  }, [])
 
   if (!settings || (new Date()) > settings.start_date) {
-    return <>
-      <Block size='xs-12'>
-        <h1>⏰ Practice Period Has Ended! ⏰</h1>
-        <p>The practice period has closed because either the competition is in progress, or has ended.</p>
-      </Block>
-    </>
+    return <Block size='xs-12'>
+      <h1>⏰ Practice Period Has Ended! ⏰</h1>
+      <p>The practice period has closed because either the competition is in progress, or has ended.</p>
+    </Block>
   }
-  return (
-    <Switch>
-      <Route path='/blue/practice/submit' component={SubmitPractice} />
-      <Route path='/blue/practice/:sid' component={PracticeSubmission} />
-      <Route path='/blue/practice' component={PracticeProblem} />
-    </Switch>
-  )
+
+  return <Switch>
+    <Route path='/blue/practice/:id/submit' component={SubmitPractice} />
+    <Route exact path='/blue/practice' component={() => <PracticeProblems problems={problems} submissions={submissions} />} />
+    <Route path='/blue/practice/:id' component={() => {
+      const { id } = useParams<{ id: string }>()
+
+      if (id in submissions) return <PracticeSubmission submission={submissions[id]} />
+      else if (id in problems) return <PracticeProblem submissions={Object.values(submissions).filter(submission => submission.pid == id)} />
+      else return <NotFound />
+    }} />
+  </Switch>
+
 }
 export default Practice;

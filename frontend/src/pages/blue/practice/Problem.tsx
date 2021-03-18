@@ -1,26 +1,38 @@
-import { Block, Countdown } from 'components';
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Button, Popup, Table } from 'semantic-ui-react';
-import config from 'environment'
+import { Problem, Submission } from 'abacus';
+import { Link, useParams } from 'react-router-dom';
+import { Breadcrumb, Button, Loader, Table } from 'semantic-ui-react';
 import MDEditor from '@uiw/react-md-editor';
-import "../Problem.scss";
-import Moment from 'react-moment';
-import { Submission } from 'abacus';
-import problem from './problem.json';
 
-const PracticeProblem = (): JSX.Element => {
-  const [submissions, setSubmissions] = useState<Submission[]>()
+import { Block, Countdown } from 'components'; import Moment from 'react-moment';
+import "../Problem.scss";
+
+interface PracticeProblemProps {
+  submissions: Submission[]
+}
+
+const PracticeProblem = ({ submissions }: PracticeProblemProps): JSX.Element => {
+  const { id } = useParams<{ id: string }>()
+  const [problem, setProblem] = useState<Problem>()
 
   useEffect(() => {
-    const submissions = localStorage.submissions ? JSON.parse(localStorage.submissions) : []
-    setSubmissions(Object.values(submissions))
+    fetch(`/problems/${id}.json`)
+      .then(res => res.json())
+      .then(data => setProblem(data))
   }, [])
 
+  if (!problem) return <Loader active inline='centered' />
   return <>
+    <Block transparent size='xs-12'>
+      <Breadcrumb>
+        <Breadcrumb.Section as={Link} to='/blue/practice'>Practice</Breadcrumb.Section>
+        <Breadcrumb.Divider />
+        <Breadcrumb.Section active>{problem.name}</Breadcrumb.Section>
+      </Breadcrumb>
+    </Block>
+
     <Countdown />
-    {submissions?.length ? <Block size="xs-12">
-      <h3>Previous Attempts</h3>
+    {submissions?.length ? <Block transparent size="xs-12">
       <Table>
         <Table.Header>
           <Table.Row>
@@ -57,25 +69,17 @@ const PracticeProblem = (): JSX.Element => {
 
     <Block size='xs-3'>
       <div style={{ display: "flex", justifyContent: "space-evenly" }}>
-        <Popup
-          trigger={
-            <Button
-              as={Link}
-              to={`/blue/practice/submit`}
-              content="Submit"
-              icon="upload"
-            />
-          }
+        <Button
+          as={Link}
+          to={`/blue/practice/${id}/submit`}
           content="Submit"
-          position="top center"
-          inverted />
+          icon="upload"
+        />
       </div>
       <p><b>Problem ID: </b>{problem.id}</p>
       <p><b>CPU Time limit: </b>{problem.cpu_time_limit}</p>
       <p><b>Memory limit: </b>{problem.memory_limit}</p>
-      <p><b>Download:</b> <a href={`${config.API_URL}/sample_files?pid=practice problem`}>Sample data files</a></p>
     </Block>
   </>
 }
-
 export default PracticeProblem
