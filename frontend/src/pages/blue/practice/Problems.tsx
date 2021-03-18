@@ -21,7 +21,8 @@ const PracticeProblems = ({ problems, submissions }: PracticeProblemsProps): JSX
     <Countdown />
     <Block transparent size='xs-12'>
       <Breadcrumb>
-        <Breadcrumb.Section active>Practice</Breadcrumb.Section>
+        <Breadcrumb.Section active content="Practice" />
+        <Breadcrumb.Divider />
       </Breadcrumb>
     </Block>
 
@@ -31,6 +32,11 @@ const PracticeProblems = ({ problems, submissions }: PracticeProblemsProps): JSX
         {showClearButton ? <div><Button onClick={clearHistory} content="Clear History" /></div> : <></>}
       </div>
       <p>Here you can practice using our platform with some of the problems from our previous competitions.</p>
+      <p>Some things that will be different during the competition</p>
+      <ul>
+        <li>Submissions will be reviewed by judges before released to teams to monitor for irregularities / cheating.</li>
+        <li>Teams will not be able to see their test run output during the competition.</li>
+      </ul>
       <Table celled>
         <Table.Header>
           <Table.Row>
