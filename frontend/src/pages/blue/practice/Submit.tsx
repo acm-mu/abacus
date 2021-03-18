@@ -39,7 +39,8 @@ const SubmitPractice = (): JSX.Element => {
         body: JSON.stringify({
           language: submission.language,
           source: submission.source,
-          stdin: test.in
+          stdin: test.in,
+          timeout: 15
         })
       });
 
