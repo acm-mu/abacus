@@ -35,7 +35,7 @@ const SubmitPractice = (): JSX.Element => {
       // Await response from piston execution
       const res = await fetch("https://piston.codeabac.us/execute", {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Allow-Origin': '*' },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           language: submission.language,
           source: submission.source,
