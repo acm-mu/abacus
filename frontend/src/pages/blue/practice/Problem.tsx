@@ -21,14 +21,21 @@ const PracticeProblem = ({ submissions }: PracticeProblemProps): JSX.Element => 
       .then(data => setProblem(data))
   }, [])
 
+  const downloadFiles = () => {
+    if (problem?.skeletons)
+      for (const skeleton of problem.skeletons) {
+        saveAs(new File([skeleton.source], skeleton.file_name, { type: 'text/plain;charset=utf-8' }))
+      }
+  }
+
   if (!problem) return <Loader active inline='centered' />
   return <>
     <Countdown />
     <Block transparent size='xs-12'>
       <Breadcrumb>
-        <Breadcrumb.Section as={Link} to='/blue/practice'>Practice</Breadcrumb.Section>
+        <Breadcrumb.Section as={Link} to='/blue/practice' content="Practice" />
         <Breadcrumb.Divider />
-        <Breadcrumb.Section active>{problem.name}</Breadcrumb.Section>
+        <Breadcrumb.Section active content={problem.name} />
       </Breadcrumb>
     </Block>
     {submissions?.length ? <Block transparent size="xs-12">
@@ -66,18 +73,20 @@ const PracticeProblem = ({ submissions }: PracticeProblemProps): JSX.Element => 
       <MDEditor.Markdown source={problem.description} />
     </Block>
 
-    <Block size='xs-3'>
-      <div style={{ display: "flex", justifyContent: "space-evenly" }}>
+    <Block size='xs-3' style={{ textAlign: 'center' }}>
+      {problem?.tests ?
         <Button
           as={Link}
+          primary
           to={`/blue/practice/${id}/submit`}
           content="Submit"
           icon="upload"
-        />
-      </div>
-      <p><b>Problem ID: </b>{problem.id}</p>
-      <p><b>CPU Time limit: </b>{problem.cpu_time_limit}</p>
-      <p><b>Memory limit: </b>{problem.memory_limit}</p>
+        /> : <></>}
+      {problem.skeletons ?
+        <Button
+          onClick={downloadFiles}
+          content="Sample Files"
+          icon="download" /> : <></>}
     </Block>
   </>
 }
