@@ -62,8 +62,11 @@ export const postProblems = async (req: Request, res: Response) => {
 
   const item = matchedData(req)
   item.pid = uuidv4().replace(/-/g, '')
-  item.skeletons = [{ source: '# Python skeleton goes here', language: 'python' }, { source: '// Java skeleton goes here', language: 'java' }]
-  item.solutions = [{ source: '# Python solution goes here', language: 'python' }, { source: '// Java solution goes here', language: 'java' }]
+
+  const filename = item.name.replace(/[ !@#$%^&*()-]/g, '')
+
+  item.skeletons = [{ source: '# Python skeleton goes here', file_name: `${filename}.py`, language: 'python' }, { source: '// Java skeleton goes here', file_name: `${filename}.py`, language: 'java' }]
+  item.solutions = [{ source: '# Python solution goes here', file_name: `${filename}.java`, language: 'python' }, { source: '// Java solution goes here', file_name: `${filename}.java`, language: 'java' }]
 
   const problems = await contest.scanItems('problem', { id: item.id }) || {}
   if (Object.values(problems).length > 0) {

@@ -1,7 +1,7 @@
 import { Problem, Skeleton, Test } from 'abacus'
 import React, { ChangeEvent, MouseEvent, useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Form, Input, Menu, Button, TextArea, MenuItemProps, Message, Loader } from 'semantic-ui-react'
+import { Form, Input, Menu, Button, TextArea, MenuItemProps, Message, Loader, InputOnChangeData } from 'semantic-ui-react'
 import Editor from '@monaco-editor/react'
 import MDEditor from '@uiw/react-md-editor'
 import { Block } from 'components'
@@ -99,11 +99,26 @@ const Skeletons = ({ problem, setProblem }: ProblemStateProps) => {
   const handleSkeletonChange = (language: string, value?: string) => {
     if (problem && value)
       setProblem({
-        ...problem, skeletons: problem.skeletons?.map((skeleton: Skeleton) => {
-          if (language == skeleton.language)
-            skeleton.source = value
-          return skeleton
-        })
+        ...problem,
+        skeletons: problem.skeletons?.map((skeleton: Skeleton) =>
+          language == skeleton.language ? {
+            ...skeleton,
+            source: value
+          } : skeleton
+        )
+      })
+  }
+
+  const handleChange = (language: string, { value: file_name }: InputOnChangeData) => {
+    if (problem)
+      setProblem({
+        ...problem,
+        skeletons: problem.skeletons?.map((skeleton: Skeleton) =>
+          language == skeleton.language ? {
+            ...skeleton,
+            file_name
+          } : skeleton
+        )
       })
   }
 
@@ -113,21 +128,30 @@ const Skeletons = ({ problem, setProblem }: ProblemStateProps) => {
         <Menu.Item key={`skeleton-${index}`} name={skeleton.language} tab={skeleton.language} active={activeSkeleton == skeleton.language} onClick={handleSkeletonClick} />
       ))}
     </Menu>
-    {problem?.skeletons?.map((skeleton: Skeleton, index: number) => (
-      <div key={`editor=${index}`}>
-        {skeleton.language == activeSkeleton ?
-          <Editor
-            key={`editor-${index}`}
-            language={skeleton.language}
-            width="100%"
-            height="500px"
-            theme="vs"
-            value={skeleton.source}
-            options={{ minimap: { enabled: false } }}
-            onChange={(value?: string) => handleSkeletonChange(skeleton.language, value)}
-          /> : <></>}
-      </div>
-    ))}
+    {problem?.skeletons?.map((skeleton: Skeleton, index: number) =>
+      skeleton.language == activeSkeleton ?
+        <>
+          <div key={`editor=${index}`} style={{ margin: '15px 0' }}>
+            <Editor
+              key={`editor-${index}`}
+              language={skeleton.language}
+              width="100%"
+              height="500px"
+              theme="vs"
+              value={skeleton.source}
+              options={{ minimap: { enabled: false } }}
+              onChange={(value?: string) => handleSkeletonChange(skeleton.language, value)}
+            />
+          </div>
+          <Input
+            label='Filename'
+            size='small'
+            name='filename'
+            value={skeleton.file_name}
+            onChange={(event, data) => { handleChange(skeleton.language, data) }}
+            style={{ margin: '15px' }} />
+        </> : <></>
+    )}
   </>
 }
 

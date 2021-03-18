@@ -70,7 +70,13 @@ const Problems = (): JSX.Element => {
     setLoading(false)
   }
 
-  const downloadProblems = () => saveAs(new File([JSON.stringify(problems, null, '\t')], 'problems.json', { type: 'text/json;charset=utf-8' }))
+  const downloadProblems = async () => {
+    const response = await fetch(`${config.API_URL}/problems?columns=description,skeletons,solutions,tests`)
+    if (response.ok) {
+      const problems = await response.json()
+      saveAs(new File([JSON.stringify(problems, null, '\t')], 'problems.json', { type: 'text/json;charset=utf-8' }))
+    }
+  }
   const handleChange = ({ target: { id, checked } }: ChangeEvent<HTMLInputElement>) => setProblems(problems.map(problem => problem.pid == id ? { ...problem, checked } : problem))
   const checkAll = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => setProblems(problems.map(problem => ({ ...problem, checked })))
 
