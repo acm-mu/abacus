@@ -23,6 +23,7 @@ const PracticeProblem = ({ submissions }: PracticeProblemProps): JSX.Element => 
 
   if (!problem) return <Loader active inline='centered' />
   return <>
+    <Countdown />
     <Block transparent size='xs-12'>
       <Breadcrumb>
         <Breadcrumb.Section as={Link} to='/blue/practice'>Practice</Breadcrumb.Section>
@@ -30,8 +31,6 @@ const PracticeProblem = ({ submissions }: PracticeProblemProps): JSX.Element => 
         <Breadcrumb.Section active>{problem.name}</Breadcrumb.Section>
       </Breadcrumb>
     </Block>
-
-    <Countdown />
     {submissions?.length ? <Block transparent size="xs-12">
       <Table>
         <Table.Header>

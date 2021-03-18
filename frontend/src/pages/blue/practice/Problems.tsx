@@ -11,13 +11,13 @@ interface PracticeProblemsProps {
 }
 
 const PracticeProblems = ({ problems, submissions }: PracticeProblemsProps): JSX.Element => <>
+  <Countdown />
   <Block transparent size='xs-12'>
     <Breadcrumb>
       <Breadcrumb.Section active>Practice</Breadcrumb.Section>
     </Breadcrumb>
   </Block>
 
-  <Countdown />
   <Block size="xs-12">
     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
       <h1>Practice Problems</h1>
