@@ -82,7 +82,7 @@ const PracticeProblem = ({ submissions }: PracticeProblemProps): JSX.Element => 
           content="Submit"
           icon="upload"
         /> : <></>}
-      {problem.skeletons ?
+      {problem.skeletons?.length ?
         <Button
           onClick={downloadFiles}
           content="Sample Files"

@@ -1,9 +1,4 @@
 {
-    "pid": "F",
-    "id": "F",
-    "description": "# Rugby\n### Problem Description\n\nClyle has extraordinary luck (he won the lottery as proof) and has now won another raffle. This time, it's to be the Highlanders official team statistician for one game. He cannot believe it and is so excited he doesn't sleep the night before the game.\n\nClyle ends up falling asleep during the game and can’t recall what happened. He says that if he was given possibilities of the scoring summary, how the team finished with the `total` score, he could remember more about the game. After every game, the scores are listed in the local newspaper. The ways to score in rugby are as follows:\n\n```\nTry (T): 4 points \nGoal Kick (GK): 2 points\nPenalty (P): 2 points\nDrop Goal (DG): 1 point\n```\n\nThere is no limit on the number of times a team can score in any one way.\n\nTo solve this problem, **write a program which takes the final team score as an integer and returns the number of combinations of scores that would result in that final team score.**\n\nFor example, there are exactly 3 ways to score 3 points:\n* a drop goal, and a penalty\n* a drop goal, and a goal kick\n* three drop goals\n\n## Writing Your Solution\nEnter your solution in the body of this method in the given code skeleton:\n\n### Method Signature \n#### Java\n\n```public static int countCombos(int score)```\n\n#### Python\n\n```def countCombos(score)```\n\n### Sample Method Calls\n`countCombos(3)`\nreturns `3`\n\n`countCombos(4)`\nreturns `7`\n\n---\n## Testing Your Program from the Console\n### Console Input Format\n* the first line contains `t`, the number of tests\n* for each test, a line contains `score`, the input final score\n\n### Assumptions\n* 1 <= `t` <= 10\n* 0 <= `score` <= 16\n\n### Console Output Format\n* for each test, a single line with the number of combinations that form `score` from the ways to score in rugby\n\n### Sample Run\n\n#### Input:\n```\n4\n0\n1\n3\n5\n```\n\n#### Output:\n```\n1\n1\n3\n7\n```\n",
-    "name": "Rugby",
-    "division": "blue",
     "tests": [{
             "result": "",
             "include": false,
@@ -22,5 +17,22 @@
             "in": "5\n0\n1\n2\n3\n4",
             "out": "1\n1\n3\n3\n7"
         }
-    ]
+    ],
+    "pid": "F",
+    "description": "### Problem Description\n\nClyle has extraordinary luck (he won the lottery as proof) and has now won another raffle. This time, it's to be the Highlanders official team statistician for one game. He cannot believe it and is so excited he doesn't sleep the night before the game.\n\nClyle ends up falling asleep during the game and can’t recall what happened. He says that if he was given possibilities of the scoring summary, how the team finished with the `total` score, he could remember more about the game. After every game, the scores are listed in the local newspaper. The ways to score in rugby are as follows:\n\n```\nTry (T): 4 points \nGoal Kick (GK): 2 points\nPenalty (P): 2 points\nDrop Goal (DG): 1 point\n```\n\nThere is no limit on the number of times a team can score in any one way.\n\nTo solve this problem, **write a program which takes the final team score as an integer and returns the number of combinations of scores that would result in that final team score.**\n\nFor example, there are exactly 3 ways to score 3 points:\n* a drop goal, and a penalty\n* a drop goal, and a goal kick\n* three drop goals\n\n## Writing Your Solution\nEnter your solution in the body of this method in the given code skeleton:\n\n### Method Signature \n#### Java\n\n```public static int countCombos(int score)```\n\n#### Python\n\n```def countCombos(score)```\n\n### Sample Method Calls\n`countCombos(3)`\nreturns `3`\n\n`countCombos(4)`\nreturns `7`\n\n---\n## Testing Your Program from the Console\n### Console Input Format\n* the first line contains `t`, the number of tests\n* for each test, a line contains `score`, the input final score\n\n### Assumptions\n* 1 <= `t` <= 10\n* 0 <= `score` <= 16\n\n### Console Output Format\n* for each test, a single line with the number of combinations that form `score` from the ways to score in rugby\n\n### Sample Run\n\n#### Input:\n```\n4\n0\n1\n3\n5\n```\n\n#### Output:\n```\n1\n1\n3\n7\n```\n",
+    "id": "F",
+    "name": "Rugby",
+    "skeletons": [{
+            "language": "python",
+            "file_name": "Rugby.py",
+            "source": "def countCombos(score):\n\t\"\"\"\n        TODO: Write a function that counts all combinations of points\n\ta team can score to reach a given total 'score'.\n        \n        Parameters:\n        score --> The total score for all points to add up to.\n\t\t\n        Returns:\n        The number of combinations possible.\n        \"\"\"\n\t\n        # Hint: one way to solve this problem is to write a \"generateCombos\" method to return\n        # all the combonations, then count them.\n\n\treturn 0\n\n# It is unnecessary to edit the \"main\" method of each problem's provided code skeleton.\n# The main method is written for you in order to help you conform to input and output formatting requirements.\ndef main():\n    for _ in range(int(input())):\n        print(countCombos(int(input())))\n\nmain()\n"
+        },
+        {
+            "NewValue1": "PracticeProblem.java",
+            "language": "java",
+            "source": "import java.util.*;\n\npublic class Rugby {\n\n\t/*It is unnecessary to edit the \"main\" method of each problem's provided code skeleton.\n\t * The main method is written for you in order to help you conform to input and output formatting requirements.\n\t */\n\tpublic static void main(String[] args) {\n\t    Scanner in = new Scanner(System.in);\n\t    int cases = in.nextInt();\n\t    for(;cases > 0; cases--) {\n\t\t\tSystem.out.println(countCombos(in.nextInt()));\n\t    }\n    }\n\n\t/**  \n\t *  TODO: Write a function that counts all combinations of points\n\t \t\ta team can score to reach a given total 'score'.\n\n\t\t@param score --> The total score for all points to add up to.\n\t\t@return the number of combinations possible. *\n\t*/\n\tpublic static int countCombos(int score) {\n\n\t\t// Hint: one way to solve this problem is to write a \"generateCombos\" method to return\n\t\t// all the combonations, then count them:\n\t\treturn generateCombos(score).size();\n\t}\n}\n",
+            "file_name": "Rugby.java"
+        }
+    ],
+    "division": "blue"
 }
