@@ -2,7 +2,7 @@ import { Submission, Test } from "abacus"
 import React, { MouseEvent, useState } from "react"
 import { Block, Countdown } from "components"
 import SyntaxHighlighter from "react-syntax-highlighter/dist/esm/default-highlight"
-import { Breadcrumb, Label, Menu, MenuItemProps, Table } from "semantic-ui-react"
+import { Breadcrumb, Label, Menu, MenuItemProps, Message, Table } from "semantic-ui-react"
 import Moment from "react-moment"
 import { Link } from "react-router-dom"
 import { capitalize, format_text, syntax_lang } from "utils"
@@ -22,11 +22,11 @@ const PracticeSubmission = ({ submission }: PracticeSubmissionProps): JSX.Elemen
     <Countdown />
     <Block transparent size='xs-12'>
       <Breadcrumb>
-        <Breadcrumb.Section as={Link} to='/blue/practice'>Practice</Breadcrumb.Section>
+        <Breadcrumb.Section as={Link} to='/blue/practice' content="Practice" />
         <Breadcrumb.Divider />
-        <Breadcrumb.Section as={Link} to={`/blue/practice/${submission.problem.id}`}>{submission.problem.name}</Breadcrumb.Section>
+        <Breadcrumb.Section as={Link} to={`/blue/practice/${submission.problem.id}`} content={submission.problem.name} />
         <Breadcrumb.Divider />
-        <Breadcrumb.Section active>{submission.sid.substring(0, 7)}</Breadcrumb.Section>
+        <Breadcrumb.Section active content={submission.sid.substring(0, 7)} />
       </Breadcrumb>
     </Block>
     <Block transparent size='xs-12' >
@@ -103,35 +103,38 @@ const PracticeSubmission = ({ submission }: PracticeSubmissionProps): JSX.Elemen
           }
         </pre>
       </> :
-        activeItem == 'test-cases' ? <div style={{ display: 'flex' }}>
-          <Menu secondary vertical>
-            {submission.tests.map((test: Test, index: number) =>
-              <Menu.Item key={`test-case-${index}`} name={`Test Case #${index + 1}`} active={activeTestItem === index} tab={index} onClick={handleTestItemClick} />
-            )}</Menu>
+        activeItem == 'test-cases' ? <>
+          <Message warning icon='warning triangle' header='Heads Up!' content='This section will not be visible during the competition' />
+          <div style={{ display: 'flex' }}>
+            <Menu secondary vertical>
+              {submission.tests.map((test: Test, index: number) =>
+                <Menu.Item key={`test-case-${index}`} name={`Test Case #${index + 1}`} active={activeTestItem === index} tab={index} onClick={handleTestItemClick} />
+              )}</Menu>
 
-          {submission.tests.map((test: Test, index: number) => (
-            <React.Fragment key={`test-result-${index}`}>
-              {index == activeTestItem ?
-                <div className='testRun'>
-                  <h3 className={test.result}>{capitalize(test.result || '')}</h3>
-                  <b>Input</b>
-                  <pre>{format_text(test.in)}</pre>
+            {submission.tests.map((test: Test, index: number) => (
+              <React.Fragment key={`test-result-${index}`}>
+                {index == activeTestItem ?
+                  <div className='testRun'>
+                    <h3 className={test.result}>{capitalize(test.result || '')}</h3>
+                    <b>Input</b>
+                    <pre>{format_text(test.in)}</pre>
 
-                  <div>
                     <div>
-                      <b>Output</b>
-                      <pre>{format_text(test.stdout || '')}</pre>
-                    </div>
-                    <div>
-                      <b>Expected</b>
-                      <pre>{format_text(test.out)}</pre>
+                      <div>
+                        <b>Output</b>
+                        <pre>{format_text(test.stdout || '')}</pre>
+                      </div>
+                      <div>
+                        <b>Expected</b>
+                        <pre>{format_text(test.out)}</pre>
+                      </div>
                     </div>
                   </div>
-                </div>
-                : <></>}
-            </React.Fragment>
-          ))}
-        </div>
+                  : <></>}
+              </React.Fragment>
+            ))}
+          </div>
+        </>
           : <></>}
     </Block>
   </>
