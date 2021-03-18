@@ -1,0 +1,26 @@
+{
+    "pid": "E",
+    "description": "# Look & Say\n### Problem Description\n\nHe boots his computer back up and notices a file called lookandsay.txt in his documents.  After researching look & say sequences, he finds the following information:  \n\nLook & say sequences are generated recursively, using the previous value as input for the next step. For each step, replace each series of consecutive digits (like `222`) with the number of digits (`3`) followed by the digit itself (`2`). For example:\n\n* `1` becomes `11` (1 copy of digit 1).\n* `11` becomes `21` (2 copies of digit 1).\n* `21` becomes `1211` (one 2 followed by one 1).\n* `1211` becomes `111221` (one 1, one 2, and two 1s).\n* `111221` becomes `312211` (three 1s, two 2s, and one 1).\n\n\nTo solve this problem, **finish writing a program that applies the look & say algorithm 3 times and returns the sum of the digits of the 3rd result.**\n\n## Writing Your Solution\n\nThe given code skeleton implements much of the program for you. You should write the `lookandsay` function of the skeleton to execute the lookandsay algorithm a single time. The `main` method will run `lookandsay` 3 times. Then, it runs the provided `sum` method to total the digits of 3rd result.\n\nEnter your part of the solution in the body of this method in the given code skeleton:\n\n### Method Signature\n\n#### Java\n\n```public static String lookandsay(String input)```\n\n#### Python\n\n```def lookandsay(input)```\n\n### Sample Method Calls\n\n`lookandsay(\"1\")` returns `\"11\"`\n\n`lookandsay(\"11\")` returns `\"21\"`\n\n`lookandsay(\"21\")` returns `\"1211\"`\n\nSupposing that these were the three method calls made by `main`, then the `sum(\"1211\")` call returns `5`.\n\n## Testing Your Program from the Console\n### Console Input Format\n* the first line contains `t`, the number of tests\n* for each test, a single line contains the starting input, `input`\n\n### Assumptions\n* `input` is a non-empty string containing numerical digits\n* 1 <= length of `input` <= 20\n\n### Console Output Format\n* for each test, a single line containing the sum of the digits of the result of the 3rd execution of the lookandsay algorithm\n\n### Sample Run\n#### Input:\n```\n4\n1\n13\n111221\n849583\n```\n#### Output:\n```\n5\n11\n16\n67\n```\n",
+    "id": "E",
+    "name": "Look & Say",
+    "division": "blue",
+    "tests": [{
+            "result": "",
+            "include": false,
+            "in": "5\n29324\n382\n1\n1010101\n54321",
+            "out": "45\n28\n5\n29\n37"
+        },
+        {
+            "result": "",
+            "include": false,
+            "in": "5\n83028\n2039\n0824\n02\n3802",
+            "out": "46\n34\n34\n12\n33"
+        },
+        {
+            "result": "",
+            "include": false,
+            "in": "5\n42345\n11112222\n3422448999\n999999999\n498232",
+            "out": "43\n21\n62\n13\n58"
+        }
+    ]
+}
