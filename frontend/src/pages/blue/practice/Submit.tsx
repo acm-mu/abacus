@@ -1,20 +1,31 @@
-import { Submission } from 'abacus'
-import { Block, Countdown, FileDialog } from 'components'
-import React, { ChangeEvent, useState } from 'react'
-import { useHistory } from 'react-router'
+import { Problem, Submission } from 'abacus'
+import { Block, Countdown, FileDialog, NotFound } from 'components'
+import React, { ChangeEvent, useEffect, useState } from 'react'
+import { useHistory, useParams } from 'react-router'
 import { Link } from 'react-router-dom'
-import { Button, Form } from 'semantic-ui-react'
+import { Breadcrumb, Button, Form, Loader } from 'semantic-ui-react'
 import { Language, languages } from 'utils'
 import { v4 as uuidv4 } from 'uuid'
-import problem from './problem.json';
 
 const SubmitPractice = (): JSX.Element => {
+  const { id } = useParams<{ id: string }>()
   const [loading, setLoading] = useState(false)
+  const [isPageLoading, setPageLoading] = useState(true)
   const submissions: Submission[] = []
+  const [problem, setProblem] = useState<Problem>()
 
   const [language, setLanguage] = useState<Language>()
   const [file, setFile] = useState<File>()
   const history = useHistory()
+
+  useEffect(() => {
+    fetch(`/problems/${id}.json`)
+      .then(response => response.json())
+      .then(data => {
+        setProblem(data)
+        setPageLoading(false)
+      })
+  }, [])
 
 
   const testSubmission = async (submission: Submission): Promise<Submission> => {
@@ -24,7 +35,7 @@ const SubmitPractice = (): JSX.Element => {
       // Await response from piston execution
       const res = await fetch("https://piston.codeabac.us/execute", {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Allow-Origin': '*' },
         body: JSON.stringify({
           language: submission.language,
           source: submission.source,
@@ -55,7 +66,7 @@ const SubmitPractice = (): JSX.Element => {
   }
 
   const handleSubmit = async () => {
-    if (!(language && file)) return
+    if (!(language && file && problem)) return
 
     setLoading(true)
 
@@ -64,7 +75,7 @@ const SubmitPractice = (): JSX.Element => {
 
     let submissions: { [key: string]: Submission } = {}
     if (localStorage.submissions != undefined) {
-      submissions = JSON.parse(localStorage.submissions)
+      submissions = JSON.parse(localStorage.submissions).filter(({ sid }: { sid: string }) => sid == id)
     }
 
     fileReader.onloadend = async () => {
@@ -122,13 +133,23 @@ const SubmitPractice = (): JSX.Element => {
       event.preventDefault()
     }
   }
-
+  if (isPageLoading) return <Loader active inline='centered' />
+  if (!problem) return <NotFound />
 
   return <>
+    <Block transparent size='xs-12'>
+      <Breadcrumb>
+        <Breadcrumb.Section as={Link} to='/blue/practice'>Practice</Breadcrumb.Section>
+        <Breadcrumb.Divider />
+        <Breadcrumb.Section as={Link} to={`/blue/practice/${problem.id}`}>{problem.name}</Breadcrumb.Section>
+        <Breadcrumb.Divider />
+        <Breadcrumb.Section active>Submit</Breadcrumb.Section>
+      </Breadcrumb>
+    </Block>
     <Countdown />
     {!submissions || submissions?.filter((e) => e.status == "accepted").length == 0 ?
       <Block size='xs-12'>
-        <h1>Submit a solution to Practice Problem</h1>
+        <h1>Submit a solution to {problem.name}</h1>
 
         <Form onSubmit={handleSubmit}>
           <FileDialog file={file} onChange={uploadChange} control={(file?: File) => (
@@ -146,7 +167,7 @@ const SubmitPractice = (): JSX.Element => {
           <Form.Select inline label='Language' placeholder="Select Language" value={language?.value} options={languages} />
 
           <Form.Group>
-            <Button as={Link} to='/blue/practice' disabled={loading}>Cancel</Button>
+            <Button as={Link} to={`/blue/practice/${problem.id}`} disabled={loading}>Cancel</Button>
             <Form.Button loading={loading} disabled={loading} primary>Submit</Form.Button>
           </Form.Group>
         </Form>
