@@ -32,6 +32,8 @@ export const languages: Language[] = [
   { key: 'java', value: 'Java', text: 'Java', file_extension: '.java' },
 ]
 
+export const format_text = (str: string): string => str.replace(/(^.*$)/gm, (c: string) => isNaN(+c) ? `"${c}"` : c)
+
 // Capitalizes the first letter of a string
 export const capitalize = (str: string): string => str.trim().replace(/^\w/, (c) => c.toUpperCase());
 
