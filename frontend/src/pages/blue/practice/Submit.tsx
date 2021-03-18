@@ -137,6 +137,7 @@ const SubmitPractice = (): JSX.Element => {
   if (!problem) return <NotFound />
 
   return <>
+    <Countdown />
     <Block transparent size='xs-12'>
       <Breadcrumb>
         <Breadcrumb.Section as={Link} to='/blue/practice'>Practice</Breadcrumb.Section>
@@ -146,7 +147,6 @@ const SubmitPractice = (): JSX.Element => {
         <Breadcrumb.Section active>Submit</Breadcrumb.Section>
       </Breadcrumb>
     </Block>
-    <Countdown />
     {!submissions || submissions?.filter((e) => e.status == "accepted").length == 0 ?
       <Block size='xs-12'>
         <h1>Submit a solution to {problem.name}</h1>
