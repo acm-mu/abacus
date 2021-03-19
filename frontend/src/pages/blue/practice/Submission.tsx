@@ -34,10 +34,10 @@ const PracticeSubmission = ({ submission }: PracticeSubmissionProps): JSX.Elemen
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell rowSpan={2}>ID</Table.HeaderCell>
-            <Table.HeaderCell>TEST CASES</Table.HeaderCell>
-            <Table.HeaderCell>DATE</Table.HeaderCell>
             <Table.HeaderCell>PROBLEM</Table.HeaderCell>
+            <Table.HeaderCell>DATE</Table.HeaderCell>
             <Table.HeaderCell>STATUS</Table.HeaderCell>
+            <Table.HeaderCell>TEST CASES</Table.HeaderCell>
             <Table.HeaderCell>LANGUAGE</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
@@ -46,6 +46,9 @@ const PracticeSubmission = ({ submission }: PracticeSubmissionProps): JSX.Elemen
             <Table.Cell rowSpan={2}>
               <Link to={`/blue/practice/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link>
             </Table.Cell>
+            <Table.Cell><Link to={`/blue/practice/${submission.pid}`}>{submission.problem?.name}</Link></Table.Cell>
+            <Table.Cell><Moment fromNow date={submission?.date * 1000} /></Table.Cell>
+            <Table.Cell><span className={`icn status ${submission.status}`} /></Table.Cell>
             <Table.Cell>
               {submission?.tests.map((test: Test, index: number) => {
                 switch (test.result) {
@@ -58,9 +61,6 @@ const PracticeSubmission = ({ submission }: PracticeSubmissionProps): JSX.Elemen
                 }
               })}
             </Table.Cell>
-            <Table.Cell><Moment fromNow date={submission?.date * 1000} /></Table.Cell>
-            <Table.Cell><Link to={`/blue/practice/${submission.pid}`}>{submission.problem?.name}</Link></Table.Cell>
-            <Table.Cell><span className={`icn status ${submission.status}`} /></Table.Cell>
             <Table.Cell>{submission.language}</Table.Cell>
           </Table.Row>
         </Table.Body>
