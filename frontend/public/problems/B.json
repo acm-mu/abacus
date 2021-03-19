@@ -1,0 +1,38 @@
+{
+    "tests": [{
+            "result": "",
+            "include": false,
+            "in": "3\n300 200 7 30\n1000 450 10 16\n10 600 1 0",
+            "out": "9:00\n12:29\n1:01"
+        },
+        {
+            "result": "",
+            "include": false,
+            "in": "3\n466 30 5 23\n1200 150 2 0\n387 12 3 30",
+            "out": "8:55\n10:00\n11:45"
+        },
+        {
+            "result": "",
+            "include": false,
+            "in": "3\n2895 575 9 0\n1455 230 12 0\n2400 120 3 0",
+            "out": "2:02\n6:19\n11:00"
+        }
+    ],
+    "pid": "B",
+    "description": "### Problem Description\n\nComplete this problem to help us test if the competition software is working for all teams.\n\n> Pay attention to these side-notes in this practice problem. They explain the format of this document, which matches the format of the actual competition problems.\n\n> Problems descriptions end with a problem statement, which summarizes the task:\n\nTo complete this practice problem, **write a program that returns whether or not a given value is negative**.\n\n> Often times there will be extra clarifications after the problem statement explaining technical details.\n\nFor this problem, zero is considered non-negative. The program should indicate as such.\n\n---\n## Writing Your Solution\n\n> For each problem, we provide a code \"skeleton\": a pre-made Java or Python program that handles the parsing and printing of program input and output (through the console). Simply edit the indicated method in the pre-made skeleton to solve the problem, and leave the rest of the skeleton unchanged.\n\n> You are not required to use the code skeletons, but it is highly recommended. Each problem has strict input and output format requirements, and these skeletons can help you conform to those requirements.\n\nEnter your solution in the body of this method in the given code skeleton:\n\n### Method Signature\n\n#### Java\n\n```public static boolean isNegative(int input)```\n\n#### Python\n\n```def isNegative(input):```\n\n### Sample Method Calls\n\n#### Java\n\n`isNegative(-3)`\nreturns boolean value `true`\n\n`isNegative(12)`\nreturn boolean value `false`\n\n#### Python\n\n`isNegative(-3)`\nreturns boolean value `True`\n\n`isNegative(12)`\nreturns boolean value `False`\n\n---\n\n## Testing Your Program from the Console\n\n> When you are done writing your program, you can test it out by entering input into the console in the format described in this section. This is the format that we will use and expect when we test your solution.\n\n### Console Input Format\n\n* the first input line contains, `t`, the number of tests\n> Most problems will input multiple test cases during a single run of the program.\n* then, for each test, a single line containing the input number to check, `x`\n\n### Assumptions\n\n> Our test data (used to judge your solution) will *always* adhere to the assumptions listed in this section of each problem.\n\n* 1 <= `t` <= 10\n* -1000 <= `x` <= 1000\n  * A value of `x` equal to zero is valid input; when `x` = 0, the program should output that `x` is non-negative\n\n### Console Output Format\n\n* for each test, output a single line. Print \"Negative\" if `x` is negative, otherwise print \"Non-Negative\"\n\n### Sample Run\n\n> Every test provides a sample set of input and expected output. When you run your completed program, typing in the data under \"Input:\" should yield the data under \"Output:\".\n\n> For judging, we use additional test cases, besides those in the Sample Runs. Pay close attention to the \"Assumptions\" section of each problem, and think of other possible inputs to try out before submitting your solution.\n\n#### Input:\n\n```\n4\n-3\n12\n0\n-1\n```\n\n(4 is `t`, and the following values were different `x` cases)\n\n#### Output:\n\n```\nNegative\nNon-Negative\nNon-Negative\nNegative\n```\n",
+    "id": "B",
+    "name": "Flight Time",
+    "skeletons": [{
+            "language": "python",
+            "file_name": "FlightTime.py",
+            "source": "def totalFlightTime(distance, velocity, departureHr, departureMin):\n\t\"\"\"\n\tTODO: Complete this method that calculates the arrival time of a flight based on the given parameters:\n\t\n\tParameters:\n\tdistance --> the distance in miles of the flight\n\tvelocity --> how fast the plane is going in mph\n\tdepartureHr --> the hour in which the plane departs\n\tdepartureMin --> the minute in which the plane departs\n\n\tReturns:\n\tA list with arrivalHr at index 0 and arrivalMin at index 1\n\n\tNote: You do not need to account for time of day signifiers (AM or PM).\n\tNote: You do not need to account for time change between time zones.\n\t\"\"\"\n\treturn (0, 0)\n\n# It is unnecessary to edit the \"main\" function of each problem's provided code skeleton.\n# The main function is written for you in order to help you conform to input and output formatting requirements.\ndef main():\n\n\tfor _ in range(int(input())):\n\t\t# User Input #\n\t\tinp = [int(s) for s in input().split(\" \")]\n\n\t\t# Function Call\n\t\tflight = totalFlightTime(inp[0], inp[1], inp[2], inp[3])\n\n\t\t# Terminal Output #\n\t\tprint(\"{}:{:02d}\".format(int(flight[0]), int(flight[1])))\n\nmain()\n\n"
+        },
+        {
+            "NewValue1": "PracticeProblem.java",
+            "language": "java",
+            "source": "import java.util.Scanner;\n\npublic class FlightTime {\n\n\t/*\n\t * It is unnecessary to edit the \"main\" method of each problem's provided code\n\t * skeleton. The main method is written for you in order to help you conform to\n\t * input and output formatting requirements.\n\t */\n\tpublic static void main(String[] args) {\n\n\t\tScanner in = new Scanner(System.in);\n\n\t\tint cases = in.nextInt();\n\t\tfor (; cases > 0; cases--) {\n\n\t\t\t// User Input\n\t\t\tint dist = in.nextInt();\n\t\t\tint velo = in.nextInt();\n\t\t\tint depHr = in.nextInt();\n\t\t\tint depMin = in.nextInt();\n\n\t\t\t// Function Call\n\t\t\tint[] flight = totalFlightTime(dist, velo, depHr, depMin);\n\n\t\t\t// Terminal Output\n\t\t\tSystem.out.printf(\"%d:%02d\\n\", flight[0], flight[1]);\n\t\t}\n\n\t\tin.close();\n\n\t}\n\n\t/**\n\t * TODO: Complete the following method that calculates the arrival time of a\n\t * flight based on the given parameters:\n\t * \n\t * Note: You do not need to account for time of day signifiers (AM or PM). Note:\n\t * You do not need to account for time change between time zones.\n\t * \n\t * @param distance --> the distance in miles of the flight\n\t * @param velocity --> how fast the plane is going in mph\n\t * @param departureHr --> the hour in which the plane departs\n\t * @param departureMin --> the minute in which the plane departs\n\t * @return new int[] {arrivalHr, arrivalMin} --> an array with arrivalHr at\n\t *         index 0 and arrivalMin at index 1\n\t */\n\tpublic static int[] totalFlightTime(int distance, int velocity, int departureHr, int departureMin) {\n\t\treturn new int[] {0, 0};\n\t}\n\n}\n",
+            "file_name": "FlightTime.java"
+        }
+    ],
+    "division": "blue"
+}
