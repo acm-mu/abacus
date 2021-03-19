@@ -21,10 +21,12 @@
     ],
     "skeletons": [{
             "language": "python",
+            "file_name": "PracticeProblem.py",
             "source": "\ndef is_negative(x):\n    \"\"\"\n    TODO: Complete this function, which should return whether or not the input number is less than zero.\n\n    Parameters:\n    x --> (integer) the input number\n    \n    Returns:\n    result --> (boolean) True if x is less than zero, and False otherwise\n    \"\"\"\n    result = False\n\n    # write your code here to change \"result\"!\n\n    return result\n\n\n# It is unnecessary to edit the \"main\" function of each problem's provided code skeleton.\n# The main function is written for you in order to help you conform to input and output formatting requirements.\ndef main():\n    num_cases = int(input())\n\n    for _ in range(num_cases):\n        x = int(input())\n        x_is_negative = is_negative(x)\n\n        if x_is_negative:\n            print('Negative')\n        else:\n            print('Non-Negative')\n\nmain()\n    \n"
         },
         {
             "language": "java",
+            "file_name": "PracticeProblem.java",
             "source": "// Do NOT include a package statement at the top of your solution.\n\nimport java.util.Scanner;\n\npublic class PracticeProblem {\n\n    /*\n     * It is unnecessary to edit the \"main\" method of each problem's provided code skeleton.\n     * The main method is written for you in order to help you conform to input and output formatting requirements.\n     */\n    public static void main(String[] args) {\n        Scanner kb = new Scanner(System.in);\n        int numCases = kb.nextInt();\n        for (int iCase = 0; iCase < numCases; iCase++) {\n            int x = kb.nextInt();\n            boolean xIsNegative = isNegative(x);\n            if (xIsNegative) {\n                System.out.println(\"Negative\");\n            } else {\n                System.out.println(\"Non-Negative\");\n            }\n        }\n    }\n\n    public static boolean isNegative(int x) {\n        boolean result = false;\n\n        /*\n         * TODO: Write code that changes result to true if \"x\" is less than zero.\n         */ \n\n        return result;\n    }\n}"
         }
     ]

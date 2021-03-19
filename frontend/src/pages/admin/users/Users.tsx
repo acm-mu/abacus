@@ -60,7 +60,11 @@ const Users = (): JSX.Element => {
     }
   }
 
-  const downloadUsers = () => saveAs(new File([JSON.stringify(users, null, '\t')], 'users.json', { type: 'text/json;charset=utf-8' }))
+  const downloadUsers = () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const sanitized = JSON.stringify(users.map(({ checked, ...user }) => user), null, '\t')
+    saveAs(new File([sanitized], 'users.json', { type: 'text/json;charset=utf-8' }))
+  }
   const handleChange = ({ target: { id, checked } }: ChangeEvent<HTMLInputElement>) => setUsers(users.map(user => user.uid == id ? { ...user, checked } : user))
   const checkAll = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => setUsers(users.map(user => ({ ...user, checked })))
 
