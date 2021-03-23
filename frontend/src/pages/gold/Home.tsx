@@ -17,7 +17,15 @@ const Home = (): JSX.Element => {
           <img height='175px' src={scratch} />
         </div>
 
-        <p></p>
+        <p>
+          A team-based programming competition for high school students just beginning their programming education.
+          Teams of two or three students will have three hours to work collaboratively to solve problems focused on
+          logic, mathematics, and creativity. Points will be awarded based on the number of problems correctly solved
+          and original creative ideas. Appropriate penalties will be deducted for incorrect submissions or academic
+          dishonesty. Each question is written using <a href="https://scratch.mit.edu/" target="_blank" rel="noreferrer">Scratch</a>,
+          an event driven, block-based, visual programming language developed at the
+          <a href="https://www.media.mit.edu/" target="_blank" rel="noreferrer">MIT Media Lab</a> at the Massachusetts Institute of Technology.
+        </p>
       </Block>
     </>
   )
