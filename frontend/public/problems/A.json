@@ -1,0 +1,46 @@
+{
+    "tests": [{
+            "result": "",
+            "include": false,
+            "in": "4\n-3\n12\n0\n-1",
+            "out": "Negative\nNon-Negative\nNon-Negative\nNegative"
+        },
+        {
+            "result": "",
+            "include": false,
+            "in": "2\n0\n0",
+            "out": "Non-Negative\nNon-Negative"
+        },
+        {
+            "result": "",
+            "include": false,
+            "in": "10\n-5\n-4\n-3\n-2\n-1\n0\n1\n2\n-3\n4",
+            "out": "Negative\nNegative\nNegative\nNegative\nNegative\nNon-Negative\nNon-Negative\nNon-Negative\nNegative\nNon-Negative"
+        }
+    ],
+    "pid": "A",
+    "description": "### Problem Description\n\nComplete this problem to help us test if the competition software is working for all teams.\n\n> Pay attention to these side-notes in this practice problem. They explain the format of this document, which matches the format of the actual competition problems.\n\n> Problems descriptions end with a problem statement, which summarizes the task:\n\nTo complete this practice problem, **write a program that returns whether or not a given value is negative**.\n\n> Often times there will be extra clarifications after the problem statement explaining technical details.\n\nFor this problem, zero is considered non-negative. The program should indicate as such.\n\n---\n## Writing Your Solution\n\n> For each problem, we provide a code \"skeleton\": a pre-made Java or Python program that handles the parsing and printing of program input and output (through the console). Simply edit the indicated method in the pre-made skeleton to solve the problem, and leave the rest of the skeleton unchanged.\n\n> You are not required to use the code skeletons, but it is highly recommended. Each problem has strict input and output format requirements, and these skeletons can help you conform to those requirements.\n\nEnter your solution in the body of this method in the given code skeleton:\n\n### Method Signature\n\n#### Java\n\n```public static boolean isNegative(int input)```\n\n#### Python\n\n```def isNegative(input):```\n\n### Sample Method Calls\n\n#### Java\n\n`isNegative(-3)`\nreturns boolean value `true`\n\n`isNegative(12)`\nreturn boolean value `false`\n\n#### Python\n\n`isNegative(-3)`\nreturns boolean value `True`\n\n`isNegative(12)`\nreturns boolean value `False`\n\n---\n\n## Testing Your Program from the Console\n\n> When you are done writing your program, you can test it out by entering input into the console in the format described in this section. This is the format that we will use and expect when we test your solution.\n\n### Console Input Format\n\n* the first input line contains, `t`, the number of tests\n> Most problems will input multiple test cases during a single run of the program.\n* then, for each test, a single line containing the input number to check, `x`\n\n### Assumptions\n\n> Our test data (used to judge your solution) will *always* adhere to the assumptions listed in this section of each problem.\n\n* 1 <= `t` <= 10\n* -1000 <= `x` <= 1000\n  * A value of `x` equal to zero is valid input; when `x` = 0, the program should output that `x` is non-negative\n\n### Console Output Format\n\n* for each test, output a single line. Print \"Negative\" if `x` is negative, otherwise print \"Non-Negative\"\n\n### Sample Run\n\n> Every test provides a sample set of input and expected output. When you run your completed program, typing in the data under \"Input:\" should yield the data under \"Output:\".\n\n> For judging, we use additional test cases, besides those in the Sample Runs. Pay close attention to the \"Assumptions\" section of each problem, and think of other possible inputs to try out before submitting your solution.\n\n#### Input:\n\n```\n4\n-3\n12\n0\n-1\n```\n\n(4 is `t`, and the following values were different `x` cases)\n\n#### Output:\n\n```\nNegative\nNon-Negative\nNon-Negative\nNegative\n```\n",
+    "id": "A",
+    "solutions": [{
+            "language": "python",
+            "source": "# Python solution goes here"
+        },
+        {
+            "language": "java",
+            "source": "// Java solution goes here"
+        }
+    ],
+    "name": "Practice Problem",
+    "skeletons": [{
+            "language": "python",
+            "file_name": "PracticeProblem.py",
+            "source": "\ndef is_negative(x):\n    \"\"\"\n    TODO: Complete this function, which should return whether or not the input number is less than zero.\n\n    Parameters:\n    x --> (integer) the input number\n    \n    Returns:\n    result --> (boolean) True if x is less than zero, and False otherwise\n    \"\"\"\n    result = False\n\n    # write your code here to change \"result\"!\n\n    return result\n\n\n# It is unnecessary to edit the \"main\" function of each problem's provided code skeleton.\n# The main function is written for you in order to help you conform to input and output formatting requirements.\ndef main():\n    num_cases = int(input())\n\n    for _ in range(num_cases):\n        x = int(input())\n        x_is_negative = is_negative(x)\n\n        if x_is_negative:\n            print('Negative')\n        else:\n            print('Non-Negative')\n\nmain()\n    \n"
+        },
+        {
+            "NewValue1": "PracticeProblem.java",
+            "language": "java",
+            "source": "// Do NOT include a package statement at the top of your solution.\n\nimport java.util.Scanner;\n\npublic class PracticeProblem {\n\n    /*\n     * It is unnecessary to edit the \"main\" method of each problem's provided code skeleton.\n     * The main method is written for you in order to help you conform to input and output formatting requirements.\n     */\n    public static void main(String[] args) {\n        Scanner kb = new Scanner(System.in);\n        int numCases = kb.nextInt();\n        for (int iCase = 0; iCase < numCases; iCase++) {\n            int x = kb.nextInt();\n            boolean xIsNegative = isNegative(x);\n            if (xIsNegative) {\n                System.out.println(\"Negative\");\n            } else {\n                System.out.println(\"Non-Negative\");\n            }\n        }\n    }\n\n    public static boolean isNegative(int x) {\n        boolean result = false;\n\n        /*\n         * TODO: Write code that changes result to true if \"x\" is less than zero.\n         */ \n\n        return result;\n    }\n}"
+        }
+    ],
+    "division": "blue"
+}

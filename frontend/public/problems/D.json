@@ -1,0 +1,38 @@
+{
+    "tests": [{
+            "result": "",
+            "include": false,
+            "in": "5\n0\n90\n180\n270\n360\n",
+            "out": "0.000 1.000\n1.000 0.000\n0.000 -1.000\n-1.000 0.000\n0.000 1.000\n"
+        },
+        {
+            "result": "",
+            "include": false,
+            "in": "3\n8\n158\n312\n",
+            "out": "0.139 0.990\n0.375 -0.927\n-0.743 0.669\n"
+        },
+        {
+            "result": "",
+            "include": false,
+            "in": "3\n111\n222\n333\n",
+            "out": "0.934 -0.358\n-0.669 -0.743\n-0.454 0.891\n"
+        }
+    ],
+    "pid": "D",
+    "description": "### Problem Description\n\nSyrin did a fantastic job as a fill-in for the director of The Festival of Lights. The Four Amigos now hop on a train and take the Chunnel to the UK and arrive in Edinburgh, Scotland. Jimothy is a big mathematics history buff and decides to visit where Taylor series, a famous formula in Calculus, was created.\n\nOn his way to the historical site, he notices an advertisement stating that if he could write a program that can calculate the sine and cosine values of any given angle, he would get a free lifetime subscription to his favorite math history magazine titled, *Old Math, Old Dudes, New Concepts*.\n\nTo solve this problem, **write a program which uses the Taylor Series to calculate the sine and cosine of a specified angle.** The Taylor Series equation for sine and cosine are shown below.\n\n![](https://i.imgur.com/K86Frwv.png)\n\nThe program should implement these equations, rather than simply calling native `sin` and `cos` methods provided by common programming languages.\n\nThe program will accept input angles in degrees, so it should convert the angles to radians before applying the Taylor Series. That is, `x` in the above equations must be the value of an angle in radians. The following equation converts an angle from units of degrees to units of radians:\n\n`Radian value = Degrees value * (PI / 180)`\n\nFinally, the program cannot compute the summations for an infinite number of iterations (or it would never stop). The program should compute the cosine series through the `x ^ 40` term (`n` should range from 0 to 20), and the program should compute the sine series through the `x ^ 39` term (`n` should range from 0 to 19).\n\nNote: the exclamation mark is the factorial operator:\n```\n0! = 1\n1! = 1\n2! = 1 * 2\n3! = 1 * 2 * 3\n4! = 1 * 2 * 3 * 4\netc.\n```\n\n## Writing Your Solution\n\nEnter your solution in the body of this method in the given code skeleton:\n\n### Method Signature\n\n* `x` specifies an angle in units of degrees\n\n#### Java\n\n```public static double cos(double x)```\n\n```public static double sin(double x) ```\n\n- a `factorial` function is implemented for you\n\n#### Python\n\n```def cos(x):```\n\n```def sin(x):```\n\n### Sample Method Calls\n\n`cos(0.0)` \nreturns `1.0`\n\n`sin(0.0)` \nreturns `0.0`\n\n`cos(90.0)`\nreturns `0.5`\n\n`sin(90.0)`\nreturns `0.866`\n\n## Testing Your Program from the Console\n\n### Console Input Format\n\n* the first line contains the number of test cases, `t`\n* for each test, a line contains a decimal number `x`, the input angle in degrees\n\n### Assumptions\n\n* 0 <= `t` <= 10\n* 0.0 <= `x` < 360.0\n\n### Console Output Format\n\n* for each test, a single line with the sine and cosine of the input angle, separated by a space\n  * the output values should be rounded down to three decimal places\n\n### Sample Run\n\n#### Input:\n\n```\n2\n0.0\n30.0\n```\n\n#### Output:\n\n```\n0.000 1.000\n0.500 0.866\n```\n",
+    "id": "D",
+    "name": "Taylor Series",
+    "skeletons": [{
+            "language": "python",
+            "file_name": "TaylorSeries.py",
+            "source": "def cos(x):\n\t\"\"\"\n\tTODO: Complete this method which calculates the cosine given an angle\n\n\tParameters:\n\tx --> the given angle\n\n\tReturns:\n\tresult --> the given cosine in radians\n\n\tNote:\n\tIt is suggested to import the math library and use math.pow(base, exponent), math.pi, and math.factorial(number) for this problem.        \n\t\"\"\"\n\tresult = 0\n\n\treturn result\n\ndef sin(x):\n\t\"\"\"\n\tTODO: Complete this method which calculates the sine given an angle\n\n\tParameters:\n\tx --> the given angle\n\n\tReturns:\n\tresult --> the given sine in radians\n\n\tNote:\n\tIt is suggested to import the math library and use math.pow(base, exponent), math.pi, and math.factorial(number) for this problem.        \n\t\"\"\"\n\tresult = 0\n\n\treturn result\n\n# It is unnecessary to edit the \"main\" method of each problem's provided code skeleton.\n# The main method is written for you in order to help you conform to input and output formatting requirements.\ndef main(): \n    for _ in range(int(input())):\n        a = float(input())\n        print(format(sin(a), '.3f') + \" \" + format(cos(a), '.3f'))\nmain()\n\n\n\n\n\n\n\n\n\n\n\n"
+        },
+        {
+            "NewValue1": "PracticeProblem.java",
+            "language": "java",
+            "source": "import java.util.Scanner;\n\npublic class TaylorSeries {\n\n        /*\n\t * It is unnecessary to edit the \"main\" method of each problem's provided code skeleton.\n\t * The main method is written for you in order to help you conform to input and output formatting requirements.\n\t */\n\tpublic static void main(String[] args) {\n\t\tScanner in = new Scanner(System.in);\n\t\tint cases = in.nextInt();\n\t\tfor (; cases > 0; cases--) {\n\t\t\tdouble a = in.nextDouble();\n\t\t\tSystem.out.printf(\"%.3f %.3f\\n\", sin(a), cos(a));\n\t\t}\n\t\tin.close();\n\t}\n\n\t/**\n\t * TODO: Complete the following method which calculates the cosine given an angle in degrees\n\t * \n\t * @param x --> the angle given in degrees\n\t * @return result --> the cosine given in radians\n\t */\n\tpublic static double cos(double x) {\n\t\treturn 0;\n\t}\n\n\t/**\n\t * TODO: Complete the following method which calculates the sine given an angle in degrees\n\t * \n\t * @param x --> the angle given in degrees\n\t * @return result --> the sine given in radians\n\t */\n\tpublic static double sin(double x) {\n\t\treturn 0;\n\t}\n\n\t/**\n\t * \n\t * Note: Use this factorial method when developing your code \n\t * \n\t * @param x --> the value that is used to calculate the factorial\n\t * @return result --> the result of x!\n\t */\n\tpublic static double factorial(int x) {\n\t\tdouble result = 1;\n\t\tif (x == 0)\n\t\t\tresult = 1;\n\t\telse {\n\t\t\tfor (int i = 1; i <= x; i++) {\n\t\t\t\tresult *= i;\n\t\t\t}\n\t\t}\n\t\treturn result;\n\t}\n}\n",
+            "file_name": "TaylorSeries.java"
+        }
+    ],
+    "division": "blue"
+}

@@ -53,6 +53,7 @@ declare module "abacus" {
   export interface Skeleton {
     language: string;
     source: string;
+    file_name: string;
   }
   export interface ProblemScore {
     num_submissions: number;

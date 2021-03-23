@@ -128,7 +128,7 @@ const NewProblem = (): JSX.Element => {
         />
 
         <h1>Skeletons</h1>
-        <p>Skeletons will be auto generated.</p>
+        <p>Empty skeletons will be auto generated.</p>
         <Button primary onClick={handleSubmit}>Create</Button>
       </Block>
     </>

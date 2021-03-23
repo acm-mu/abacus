@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { Table, Label, Loader } from 'semantic-ui-react'
+import { Table, Label, Loader, Message, Icon } from 'semantic-ui-react'
 import { Countdown, Block } from 'components';
 import { capitalize } from 'utils';
+import { Link } from 'react-router-dom';
 
 type TeamType = {
   division: string,
@@ -50,11 +51,19 @@ const Home = (): JSX.Element => {
     }
   }
   return (
-    <><Countdown />
+    <>
+      <Message icon color='blue'>
+        <Icon name='bullhorn' />
+        <Message.Content>
+          <Message.Header>Blue Division!</Message.Header>
+          Our new practice system is now available. Click <b><Link to='/blue/practice'>here</Link></b> to practice with some of our problems from years past.
+          </Message.Content>
+      </Message>
+      <Countdown />
       <Block size='xs-12'>
         <h1>Welcome to Abacus</h1>
         <p>Abacus is a remote code execution application similar to AlgoExpert. It is developed by students at Marquette University.</p>
-      </Block>
+      </Block >
       <Block size='xs-12'>
         <h1>Teams</h1>
         <p>Take a look at our teams this year! Don&apos;t see your team? <a href="mailto:acm-registration@mscs.mu.edu">Let us know!</a></p>

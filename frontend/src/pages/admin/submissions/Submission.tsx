@@ -65,6 +65,9 @@ const submission = (): JSX.Element => {
     }
   }
 
+  const download = () => submission?.source &&
+    saveAs(new File([submission?.source], submission?.filename, { type: 'text/plain;charset=utf-8' }))
+
   const handleItemClick = (event: MouseEvent, data: MenuItemProps) => setActiveItem(data.tab)
   const handleTestItemClick = (event: MouseEvent, data: MenuItemProps) => setActiveTestItem(data.tab)
 
@@ -75,6 +78,7 @@ const submission = (): JSX.Element => {
   return <>
     <Block transparent size='xs-12' >
       <Button content="Rerun" icon="redo" labelPosition="left" onClick={rerun} />
+      <Button content="Download" icon="download" iconPosition="left" onClick={download} />
       <Button content="Delete" icon="trash" negative labelPosition="left" onClick={deleteSubmission} />
 
       <Table celled>
