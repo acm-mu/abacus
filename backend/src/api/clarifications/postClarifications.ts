@@ -2,13 +2,23 @@ import { Request, Response } from "express";
 import { matchedData, ParamSchema, validationResult } from "express-validator";
 import contest from "../../abacus/contest";
 import { v4 as uuidv4 } from 'uuid'
+import { Clarification } from "abacus";
 
 export const schema: Record<string, ParamSchema> = {
-  type: {
+  body: {
     in: 'body',
     isString: true,
     notEmpty: true,
-    errorMessage: 'type is not provided!'
+    errorMessage: 'body is not provided!'
+  },
+  parent: {
+    in: 'body',
+    optional: true
+  },
+  division: {
+    in: 'body',
+    isString: true,
+    optional: true
   },
   title: {
     in: 'body',
@@ -16,25 +26,10 @@ export const schema: Record<string, ParamSchema> = {
     notEmpty: true,
     optional: true
   },
-  body: {
+  type: {
     in: 'body',
     isString: true,
     notEmpty: true,
-    errorMessage: 'body is not provided!'
-  },
-  division: {
-    in: 'body',
-    isString: true,
-    optional: true
-  },
-  uid: {
-    in: 'body',
-    isString: true,
-    notEmpty: true,
-    errorMessage: 'uid is not provided'
-  },
-  parent: {
-    in: 'body',
     optional: true
   }
 }
@@ -47,20 +42,61 @@ export const postClarifications = async (req: Request, res: Response) => {
   }
 
   try {
-    const { type, title, body, division, uid, parent } = matchedData(req)
+    let { body, parent, division, type, title } = matchedData(req)
 
-    const clarification = {
-      cid: uuidv4().replace(/-/g, ''),
-      uid,
-      type,
-      title,
-      body,
-      date: Date.now() / 1000,
-      division,
-      parent
+    if (!req.user) {
+      res.status(400).json({ message: 'User is not valid!' })
+      return
     }
 
-    await contest.putItem('clarification', clarification)
+    let clarification: Clarification = {
+      cid: uuidv4().replace(/-/g, ''),
+      date: Date.now() / 1000,
+      body,
+      uid: req.user.uid
+    }
+
+    // Response
+    if (parent) {
+      console.log('New Reply')
+      const clarifications = await contest.scanItems('clarification', { cid: parent })
+      if (!clarifications?.length) {
+        res.status(400).json({ message: `Clarification ${parent} does not exist!` })
+        return
+      }
+
+      clarification = {
+        parent,
+        ...clarification
+      }
+    } else {
+      // Team's can only post private clarifications
+      if (req.user.role == 'team') type = 'private'
+      if (req.user.role == 'judge' || req.user.role == 'admin') type = 'public'
+
+      // Team's and Judge's clarifications only apply to themselves
+      if (req.user?.role == 'team' || req.user?.role == 'judge') division = req.user.division
+
+      if (!division || !(['blue', 'gold', 'public'].includes(division))) {
+        res.status(400).json({ message: `Division ${division} is not allowed!` })
+        return
+      }
+
+      if (!title) {
+        res.status(400).json({ message: "Clarification missing title!" })
+        return
+      }
+
+      clarification = {
+        type,
+        title,
+        division,
+        open: true,
+        ...clarification
+      }
+    }
+
+    await contest.putItem('clarification', { ...clarification })
     res.send(clarification)
   } catch (err) {
     console.error(err)

@@ -71,12 +71,15 @@ declare module "abacus" {
   }
 
   export interface Clarification {
-    clarification_id: string;
-    title: string;
-    text: string;
-    team_id: string;
+    cid: string;
+    body: string;
+    uid: string;
     date: number;
-    parent: string;
+    open?: boolean;
+    parent?: string;
+    division?: string;
+    type?: string;
+    title?: string;
   }
 
   export interface Args { [key: string]: unknown }
