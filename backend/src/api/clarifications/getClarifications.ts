@@ -91,13 +91,12 @@ export const getClarifications = async (req: Request, res: Response) => {
 
     for (const clarification of clarifications)
       if (clarification.parent != undefined)
-        map[clarification.parent].children.push(clarification)
+        if (clarification.parent in map) // inherently has access to
+          map[clarification.parent].children.push(clarification)
 
     res.send(map)
   } catch (err) {
     console.error(err);
     res.sendStatus(500)
   }
-
-
 }
