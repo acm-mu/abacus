@@ -1,11 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Button, ButtonProps, Comment, Form, Grid, Header, Label, List, Loader, Menu, MenuItemProps, Popup, Segment, TextAreaProps } from 'semantic-ui-react';
+import { Button, ButtonProps, Comment, Form, Grid, Header, Loader, Menu, MenuItemProps, Popup, Segment } from 'semantic-ui-react';
 import { Clarification } from 'abacus';
 import config from '../environment'
 import Moment from 'react-moment';
 import './Clarifications.scss'
 import { Block } from 'components';
-import { response } from 'express';
 import AppContext from 'AppContext';
 import { useParams } from 'react-router-dom';
 

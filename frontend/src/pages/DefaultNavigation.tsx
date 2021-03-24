@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Menu, Dropdown, MenuMenu } from 'semantic-ui-react';
+import { Menu, Dropdown } from 'semantic-ui-react';
 import { NavLink } from 'react-router-dom';
 import { Navigation } from 'components';
 import AppContext from 'AppContext';
