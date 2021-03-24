@@ -1,7 +1,7 @@
 import { Problem, Submission } from "abacus";
 import React, { useState, useEffect, useContext } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Button, Popup } from "semantic-ui-react";
+import { Button, Loader, Popup } from "semantic-ui-react";
 import MDEditor from "@uiw/react-md-editor";
 import { Block, Countdown, NotFound } from 'components'
 import config from 'environment'
@@ -10,6 +10,7 @@ import "./Problem.scss";
 
 const problem = (): JSX.Element => {
   const { user } = useContext(AppContext);
+  const [isLoading, setLoading] = useState(true)
   const [problem, setProblem] = useState<Problem>();
   const [submissions, setSubmissions] = useState<Submission[]>()
   const { pid } = useParams<{ pid: string }>()
@@ -17,7 +18,10 @@ const problem = (): JSX.Element => {
   const [isMounted, setMounted] = useState(true)
 
   useEffect(() => {
-    loadProblem()
+    loadProblem().then(() => {
+      setLoading(false)
+      if (user) loadSubmissions()
+    })
     return () => { setMounted(false) }
   }, []);
 
@@ -27,17 +31,29 @@ const problem = (): JSX.Element => {
         Authorization: `Bearer ${localStorage.accessToken}`
       }
     })
+
     if (response.ok && isMounted) {
-      const problem = Object.values(await response.json())[0] as Problem
-      setProblem(problem)
-      if (user) {
-        const submissions = await fetch(`${config.API_URL}/submissions?tid=${user?.uid}&pid=${problem.pid}`)
-        if (isMounted)
-          setSubmissions(Object.values(await submissions.json()))
-      }
+      setProblem(Object.values(await response.json())[0] as Problem)
     }
+
+    setLoading(false)
   }
 
+  const loadSubmissions = async () => {
+    if (!problem) return
+
+    const submissions = await fetch(`${config.API_URL}/submissions?tid=${user?.uid}&pid=${problem?.pid}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.accessToken}`
+      }
+    })
+
+    if (!isMounted) return
+
+    setSubmissions(Object.values(await submissions.json()))
+  }
+
+  if (isLoading) return <Loader active inline='centered' />
   if (!problem) return <NotFound />
 
   return (
