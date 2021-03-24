@@ -104,16 +104,9 @@ const Clarifications = (): JSX.Element => {
                 </Table.Cell>
                 <Table.Cell><Link to={`/clarifications/${clarification.cid}`}>{clarification.cid.substring(0, 7)}</Link></Table.Cell>
                 <Table.Cell>{(() => {
-                  switch (clarification.type) {
-                    case 'public':
-                      return <Label content="Public" />
-                    case 'private':
-                      return <Label color='grey' content="Private" />
-                    case 'division':
-                      switch (clarification.division) {
-                        case 'gold': return <Label color='yellow' content="Gold" />
-                        case 'blue': return <Label color='blue' content="Blue" />
-                      }
+                  switch (clarification.division) {
+                    case 'gold': return <Label color='yellow' content="Gold" />
+                    case 'blue': return <Label color='blue' content="Blue" />
                   }
                 })()}</Table.Cell>
                 <Table.Cell>{clarification.title}</Table.Cell>

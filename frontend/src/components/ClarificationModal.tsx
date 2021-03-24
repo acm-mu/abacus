@@ -20,7 +20,6 @@ const ClarificationModal = ({ trigger }: ClarificationModalProps): JSX.Element =
     title: '',
     body: '',
     division: user?.division || '',
-    type: user?.role == "admin" || user?.role == "judge" ? "public" : 'private'
   })
 
   const handleChange = ({ target: { name, value } }: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setClarification({ ...clarification, [name]: value })
@@ -32,27 +31,22 @@ const ClarificationModal = ({ trigger }: ClarificationModalProps): JSX.Element =
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.accessToken}` },
-        body: JSON.stringify({
-          ...clarification,
-          uid: user?.uid,
-          type: clarification.division ? 'division' : clarification.type
-        })
+        body: JSON.stringify(clarification)
       })
 
     if (response.ok) {
-      const { cid } = await response.json()
-
-      history.push(`/clarifications/${cid}`)
+      history.push(`/clarifications/`)
       setClarification({
         title: '',
         body: '',
         division: user?.division || '',
-        type: user?.role == "admin" || user?.role == "judge" ? "public" : 'private'
       })
       setOpen(false)
     } else {
       const body = await response.json()
       setError(body.message)
+
+      setTimeout(() => { setError(undefined) }, 5 * 1000)
     }
     setLoading(false)
   }
@@ -63,7 +57,7 @@ const ClarificationModal = ({ trigger }: ClarificationModalProps): JSX.Element =
     onOpen={() => setOpen(true)}
     open={isOpen}
     trigger={trigger}>
-    <Modal.Header>{user?.role == "admin" || user?.role == "judge" ? "New Public Clarification" : "New Clarification"}</Modal.Header>
+    <Modal.Header>{user?.role == "admin" || user?.role == "judge" ? "New Public Clarification" : "Ask a Clarification"}</Modal.Header>
     <Modal.Description>
       {error && <Message icon='warning circle' error attached='top' header="An error has occurred!" content={error} />}
 
@@ -73,14 +67,15 @@ const ClarificationModal = ({ trigger }: ClarificationModalProps): JSX.Element =
           name='title'
           value={clarification.title}
           onChange={handleChange} />
-        <Form.Select
-          label="Division"
-          placeholder="All"
-          name='division'
-          value={clarification.division}
-          onChange={handleDropdownChange}
-          options={[...divisions, { key: 'all', text: 'All', value: '' }]}
-        />
+        {user?.role == 'admin' ?
+          <Form.Select
+            label="Division"
+            placeholder="Division"
+            name='division'
+            value={clarification.division}
+            onChange={handleDropdownChange}
+            options={[...divisions, { key: 'public', text: 'Public', value: 'public' }]}
+          /> : <></>}
         <Form.TextArea
           label='Description'
           name='body'
@@ -90,7 +85,7 @@ const ClarificationModal = ({ trigger }: ClarificationModalProps): JSX.Element =
     </Modal.Description>
     <Modal.Actions>
       <Button disabled={isLoading} onClick={() => setOpen(false)}>Cancel</Button>
-      <Button loading={isLoading} disabled={isLoading} primary onClick={handleSubmit}>Create</Button>
+      <Button loading={isLoading} disabled={isLoading} primary onClick={handleSubmit}>Send</Button>
     </Modal.Actions>
   </Modal>
 }
