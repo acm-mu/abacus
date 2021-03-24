@@ -85,6 +85,7 @@ declare module "abacus" {
     type?: string;
     title?: string;
     children: Clarification[];
+    open?: boolean
   }
 
   export interface Args { [key: string]: unknown }

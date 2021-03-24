@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Button, Comment, Form, Grid, Header, Label, List, Loader, Menu, MenuItemProps, Segment, TextAreaProps } from 'semantic-ui-react';
+import { Button, ButtonProps, Comment, Form, Grid, Header, Label, List, Loader, Menu, MenuItemProps, Popup, Segment, TextAreaProps } from 'semantic-ui-react';
 import { Clarification } from 'abacus';
 import config from '../environment'
 import Moment from 'react-moment';
@@ -7,6 +7,7 @@ import './Clarifications.scss'
 import { Block } from 'components';
 import { response } from 'express';
 import AppContext from 'AppContext';
+import { useParams } from 'react-router-dom';
 
 interface ClarificationCommentProps {
   clarification: Clarification
@@ -28,7 +29,8 @@ const Clarifications = (): JSX.Element => {
   const { user } = useContext(AppContext)
   const [isLoading, setLoading] = useState(true)
   const [clarifications, setClarifications] = useState<{ [key: string]: Clarification }>()
-  const [activeItem, setActiveItem] = useState('')
+  const { cid } = useParams<{ cid: string }>()
+  const [activeItem, setActiveItem] = useState<string>(cid || '')
   const [body, setBody] = useState('')
 
   const loadClarifications = async () => {
@@ -37,8 +39,8 @@ const Clarifications = (): JSX.Element => {
     })
     if (response.ok) {
       const clarifs: { [key: string]: Clarification } = await response.json()
-      if (clarifs && Object.values(clarifs).length > 0) {
-        setActiveItem(Object.values(clarifs)[0].cid)
+      if (clarifs && (!cid || !(cid in clarifs)) && Object.values(clarifs).length > 0) {
+        setActiveItem(Object.values(clarifs).sort((c1, c2) => c2.date - c1.date)[0].cid)
       }
       setClarifications(clarifs)
     } else {
@@ -94,6 +96,20 @@ const Clarifications = (): JSX.Element => {
     }
   }
 
+  const handleLock = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, { value: open }: ButtonProps) => {
+    const response = await fetch(`${config.API_URL}/clarifications`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.accessToken}`,
+        'Content-Type': 'application/json'
+      },
+      method: 'PUT',
+      body: JSON.stringify({ cid: activeItem, open })
+    })
+    if (response.ok) {
+      loadClarifications()
+    }
+  }
+
   if (isLoading) return <Loader active inline='centered' />
 
   let clarification: Clarification | undefined = undefined
@@ -106,9 +122,9 @@ const Clarifications = (): JSX.Element => {
       <Segment>
         <Grid columns={2}>
           <Grid.Row>
-            <Grid.Column width={3}>
-              <Menu secondary vertical>
-                {clarifications && Object.values(clarifications).map((clarification: Clarification) =>
+            <Grid.Column width={4}>
+              <Menu secondary vertical style={{ width: '100%' }}>
+                {clarifications && Object.values(clarifications).sort((c1, c2) => c2.date - c1.date).map((clarification: Clarification) =>
                   <Menu.Item
                     name={clarification.cid}
                     onClick={handleClick}
@@ -122,7 +138,13 @@ const Clarifications = (): JSX.Element => {
                   </Menu.Item>)}
               </Menu>
             </Grid.Column>
-            <Grid.Column width={13}>
+            <Grid.Column width={12}>
+              {clarification ? <div style={{ float: 'right' }}>
+                {user?.role == 'admin' ? <Popup trigger={<Button icon='trash' negative onClick={handleDelete} />} content='Delete Clarification' /> : <></>}
+                {user?.role == 'admin' || user?.role == 'judge' ? (clarification?.open ?
+                  <Popup trigger={<Button icon='lock' value={false} onClick={handleLock} />} content='Close Clarification' /> :
+                  <Popup trigger={<Button icon='unlock' value={true} onClick={handleLock} />} content='Reopen Clarification' />) : <></>}
+              </div> : <></>}
               <Comment.Group>
                 {clarification ? <>
                   <ClarificationComment clarification={clarification} />
@@ -133,13 +155,14 @@ const Clarifications = (): JSX.Element => {
                         <ClarificationComment key={child.cid} clarification={child} />)}
                   </Comment.Group> : <></>}
                   <Form reply>
-                    <Form.TextArea
-                      name='body'
-                      value={body}
-                      onChange={handleChange}
-                    />
-                    <Button content='Add Reply' labelPosition='left' icon='edit' primary onClick={handleSubmit} />
-                    {user?.role == 'admin' ? <Button content='Delete' labelPosition='left' icon='trash' negative onClick={handleDelete} /> : <></>}
+                    {clarification.open ? <>
+                      <Form.TextArea
+                        name='body'
+                        value={body}
+                        onChange={handleChange}
+                      />
+                      <Button content='Add Reply' labelPosition='left' icon='edit' primary onClick={handleSubmit} />
+                    </> : <></>}
                   </Form>
                 </> : <></>}
               </Comment.Group>
