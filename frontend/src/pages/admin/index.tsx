@@ -20,7 +20,8 @@ import UploadProblems from "./problems/UploadProblems";
 import LoginModal from "components/Login";
 import AppContext from "AppContext";
 import DefaultNavigation from "pages/DefaultNavigation";
-import Clarifications from "pages/admin/Clarifications";
+import Clarifications from "./Clarifications";
+import ClarificationPage from "./Clarification";
 
 const Admin = (): JSX.Element => {
   const { user } = useContext(AppContext)
@@ -49,6 +50,7 @@ const Admin = (): JSX.Element => {
           <Route path='/admin/users' component={Users} />
           <Route path='/admin/submissions/:sid' component={Submission} />
           <Route path='/admin/submissions' component={Submissions} />
+          <Route path='/admin/clarifications/:cid' component={ClarificationPage} />
           <Route path='/admin/clarifications' component={Clarifications} />
           <Route component={NotFound} />
         </Switch>
