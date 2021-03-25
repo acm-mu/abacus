@@ -11,7 +11,6 @@ import { NotFound } from 'components';
 export const Index = (): JSX.Element => (
   <>
     <DefaultNavigation />
-
     <Container text className="main">
       <Switch>
         <Route exact path="/" component={Home} />

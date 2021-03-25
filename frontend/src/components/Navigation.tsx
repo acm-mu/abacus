@@ -34,7 +34,7 @@ const Navigation: React.FunctionComponent<Props> = (props: Props) => {
     return () => { setMounted(false) }
   })
 
-  return (
+  return (<>
     <Menu className={`fixed ${props.className}`} inverted>
       <Container>
         <Menu.Item as={Link} to="/" header>
@@ -56,8 +56,8 @@ const Navigation: React.FunctionComponent<Props> = (props: Props) => {
           }
         </Menu.Menu>}
       </Container>
-    </Menu >
-  );
+    </Menu>
+  </>);
 };
 
 export default Navigation;

@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Message } from 'semantic-ui-react';
+import { Message, MessageProps } from 'semantic-ui-react';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import AppContext from 'AppContext';
 import './Notifications.scss';
 
@@ -13,58 +14,33 @@ interface Notification {
 
 const Notifications = (): JSX.Element => {
   const { socket } = useContext(AppContext)
-  const [notifications, setNotifications] = useState<{ [key: string]: Notification }>({})
+  const [notifications, setNotifications] = useState<Notification[]>([])
 
   useEffect(() => {
     socket?.on('notification', (notification: Notification) => {
-      setTimeout(() => {
-        setNotifications({ ...notifications, [notification.id]: { ...notification, visible: true } })
-      }, 200)
-      setNotifications({ ...notifications, [notification.id]: notification })
+      console.log(notification)
+      notifications.push(notification)
+      setNotifications(notifications)
     })
   }, [socket])
 
-  const handleDismiss = () => {
-    return
-  }
+  const handleDismiss = (event: React.MouseEvent<HTMLElement, MouseEvent>, { id }: MessageProps) =>
+    setNotifications(notifications.filter(({ id: nid }) => id != nid))
 
-  return <div className='notifications'>
-    {Object.values(notifications).map(({ header, content, id, visible, type }: Notification) => {
-      switch (type) {
-        case 'success':
-          return <Message
-            key={`notification-${id}`}
-            className={visible ? 'visible' : ''}
-            icon='check'
-            header={header || "Success!"}
-            content={content}
-            onDismiss={handleDismiss} />
-        case 'error':
-          return <Message
-            key={`notification-${id}`}
-            className={visible ? 'visible' : ''}
-            icon='exclamation circle'
-            header={header || "Error!"}
-            content={content}
-            onDismiss={handleDismiss} />
-        case 'warning':
-          return <Message
-            key={`notification-${id}`}
-            className={visible ? 'visible' : ''}
-            icon='exclamation triangle'
-            header={header || "Warning"}
-            content={content}
-            onDismiss={handleDismiss} />
-        default:
-          return <Message
-            key={`notification-${id}`}
-            className={visible ? 'visible' : ''}
-            header={header}
-            content={content}
-            onDismiss={handleDismiss} />
-      }
-    })}
-  </div>
+  console.log(notifications)
+
+  return <TransitionGroup className='notifications'>
+    {Object.values(notifications).map(({ header, content, id }) => (
+      <CSSTransition key={`notification-${id}`} timeout={500} className='notification'>
+        <Message
+          id={id}
+          icon='check'
+          type='success'
+          header={header || "Success!"}
+          content={content}
+          onDismiss={handleDismiss} />
+      </CSSTransition>))}
+  </TransitionGroup>
 }
 
 export default Notifications
