@@ -154,14 +154,14 @@ const Clarifications = (): JSX.Element => {
                         <ClarificationComment key={child.cid} clarification={child} />)}
                   </Comment.Group> : <></>}
                   <Form reply>
-                    {clarification.open ? <>
+                    {(user?.role !== 'team' || clarification.user.uid == user?.uid) && clarification.open ? <>
                       <Form.TextArea
                         name='body'
                         value={body}
                         onChange={handleChange}
                       />
                       <Button content='Add Reply' labelPosition='left' icon='edit' primary onClick={handleSubmit} />
-                    </> : <></>}
+                    </> : <p>Responding for this clarification is disabled</p>}
                   </Form>
                 </> : <></>}
               </Comment.Group>
