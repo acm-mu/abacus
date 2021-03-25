@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Button, ButtonProps, Comment, Form, Grid, Header, Loader, Menu, MenuItemProps, Popup, Segment } from 'semantic-ui-react';
+import { Button, ButtonProps, Comment, Form, Grid, Header, Icon, Label, Loader, Menu, MenuItemProps, Popup, Segment } from 'semantic-ui-react';
 import { Clarification } from 'abacus';
 import config from '../environment'
 import Moment from 'react-moment';
@@ -12,18 +12,6 @@ interface ClarificationCommentProps {
   clarification: Clarification
 }
 
-const ClarificationComment = ({ clarification }: ClarificationCommentProps) => {
-  return <Comment>
-    <Comment.Content>
-      <Comment.Author as='a'>{clarification.user.display_name}</Comment.Author>
-      <Comment.Metadata>
-        <div><Moment fromNow date={clarification.date * 1000} /></div>
-      </Comment.Metadata>
-      <Comment.Text>{clarification.body}</Comment.Text>
-    </Comment.Content>
-  </Comment>
-}
-
 const Clarifications = (): JSX.Element => {
   const { user } = useContext(AppContext)
   const [isLoading, setLoading] = useState(true)
@@ -32,25 +20,26 @@ const Clarifications = (): JSX.Element => {
   const [activeItem, setActiveItem] = useState<string>(cid || '')
   const [body, setBody] = useState('')
 
-  const loadClarifications = async () => {
+  const loadClarifications = async (): Promise<{ [key: string]: Clarification }> => {
+    let clarifications = {}
     const response = await fetch(`${config.API_URL}/clarifications`, {
       headers: { Authorization: `Bearer ${localStorage.accessToken}` }
     })
+
     if (response.ok) {
-      const clarifs: { [key: string]: Clarification } = await response.json()
-      if (clarifs && (!cid || !(cid in clarifs)) && Object.values(clarifs).length > 0) {
-        setActiveItem(Object.values(clarifs).sort((c1, c2) => c2.date - c1.date)[0].cid)
-      }
-      setClarifications(clarifs)
-    } else {
-      setClarifications({})
+      clarifications = await response.json()
     }
 
+    setClarifications(clarifications)
     setLoading(false)
+
+    return clarifications
   }
 
   useEffect(() => {
-    loadClarifications()
+    loadClarifications().then((clarifications: { [key: string]: Clarification }) => {
+      setActiveItem(Object.values(clarifications).sort((c1, c2) => c2.date - c1.date)[0].cid)
+    })
   }, [])
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, { name }: MenuItemProps) => {
@@ -77,7 +66,8 @@ const Clarifications = (): JSX.Element => {
     })
 
     if (response.ok) {
-      loadClarifications()
+      await loadClarifications()
+      setBody('')
     }
   }
 
@@ -109,6 +99,34 @@ const Clarifications = (): JSX.Element => {
     }
   }
 
+
+  const deleteClarification = async (cid: string) => {
+    const response = await fetch(`${config.API_URL}/clarifications`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.accessToken}`,
+        'Content-Type': 'application/json'
+      },
+      method: 'DELETE',
+      body: JSON.stringify({ cid })
+    })
+    if (response.ok) {
+      loadClarifications()
+    }
+  }
+  const ClarificationComment = ({ clarification }: ClarificationCommentProps) => {
+    return <Comment>
+      <Comment.Content>
+        <Comment.Author as='a'>{clarification.user.display_name}</Comment.Author>
+        <Comment.Metadata>
+          <div><Moment fromNow date={clarification.date * 1000} /></div>
+        </Comment.Metadata>
+        <Comment.Text>{clarification.body}
+          {clarification.parent != undefined ? <a href='#' onClick={() => deleteClarification(clarification.cid)}>Delete</a> : <></>}
+        </Comment.Text>
+      </Comment.Content>
+    </Comment>
+  }
+
   if (isLoading) return <Loader active inline='centered' />
 
   let clarification: Clarification | undefined = undefined
@@ -129,11 +147,12 @@ const Clarifications = (): JSX.Element => {
                     onClick={handleClick}
                     key={clarification.cid}
                     active={activeItem == clarification.cid}
+                    className={`${clarification.open ? 'open' : 'closed'}`}
                   >
-                    <Header as='h5'>{clarification.title}</Header>
-                    {clarification.user.display_name} {' '}
+                    <Header as='h5'>{clarification.title}
+                      {!clarification.open ? <Icon name='lock' /> : clarification.type == 'private' ? <Popup content="Private" trigger={<Icon name='eye slash' />} /> : <></>}</Header>
+                    {user?.uid == clarification.user.uid ? "You" : clarification.user.display_name} {' '}
                     <Moment fromNow date={clarification.date * 1000} />
-
                   </Menu.Item>)}
               </Menu>
             </Grid.Column>
@@ -161,7 +180,7 @@ const Clarifications = (): JSX.Element => {
                         onChange={handleChange}
                       />
                       <Button content='Add Reply' labelPosition='left' icon='edit' primary onClick={handleSubmit} />
-                    </> : <p>Responding for this clarification is disabled</p>}
+                    </> : <p>Replying to this clarification is disabled</p>}
                   </Form>
                 </> : <></>}
               </Comment.Group>
