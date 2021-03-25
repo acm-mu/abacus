@@ -7,9 +7,10 @@ import { divisions } from 'utils';
 
 interface ClarificationModalProps {
   trigger: JSX.Element
+  title?: string
 }
 
-const ClarificationModal = ({ trigger }: ClarificationModalProps): JSX.Element => {
+const ClarificationModal = ({ trigger, title = '' }: ClarificationModalProps): JSX.Element => {
   const history = useHistory()
   const { user } = useContext(AppContext)
   const [isLoading, setLoading] = useState(false)
@@ -17,7 +18,7 @@ const ClarificationModal = ({ trigger }: ClarificationModalProps): JSX.Element =
   const [error, setError] = useState<string>()
 
   const [clarification, setClarification] = useState({
-    title: '',
+    title,
     body: '',
     division: user?.division || '',
   })
