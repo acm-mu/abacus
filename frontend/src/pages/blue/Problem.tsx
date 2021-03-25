@@ -1,7 +1,7 @@
 import { Problem, Submission } from "abacus";
 import React, { useState, useEffect, useContext } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Button, Loader, Popup } from "semantic-ui-react";
+import { Button, Loader } from "semantic-ui-react";
 import MDEditor from "@uiw/react-md-editor";
 import { Block, Countdown, NotFound } from 'components'
 import config from 'environment'
