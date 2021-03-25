@@ -29,7 +29,6 @@ const ClarificationPage = (): JSX.Element => {
     })
     if (response.ok && isMounted) {
       const clarifications: Clarification[] = Object.values(await response.json())
-      console.log(clarifications)
       if (clarifications.length > 0) setClarification(clarifications[0])
     }
     setLoading(false)
@@ -53,7 +52,8 @@ const ClarificationPage = (): JSX.Element => {
     })
 
     if (response.ok) {
-      loadClarification()
+      await loadClarification()
+      setBody('')
     }
   }
 
