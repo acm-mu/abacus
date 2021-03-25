@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Button, ButtonProps, Comment, Form, Grid, Header, Icon, Label, Loader, Menu, MenuItemProps, Popup, Segment } from 'semantic-ui-react';
+import { Button, ButtonProps, Comment, Form, Grid, Header, Icon, Loader, Menu, MenuItemProps, Popup, Segment } from 'semantic-ui-react';
 import { Clarification } from 'abacus';
 import config from '../environment'
 import Moment from 'react-moment';
