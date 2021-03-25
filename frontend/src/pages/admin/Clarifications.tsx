@@ -91,6 +91,7 @@ const Clarifications = (): JSX.Element => {
             <Table.HeaderCell className='sortable' onClick={() => sort('division')} sorted={column == 'division' ? direction : undefined}>Division</Table.HeaderCell>
             <Table.HeaderCell className='sortable' onClick={() => sort('title')} sorted={column == 'title' ? direction : undefined}>Title</Table.HeaderCell>
             <Table.HeaderCell>User</Table.HeaderCell>
+            <Table.HeaderCell>Replies</Table.HeaderCell>
             <Table.HeaderCell className='sortable' onClick={() => sort('date')} sorted={column == 'date' ? direction : undefined}>Date</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
@@ -122,6 +123,7 @@ const Clarifications = (): JSX.Element => {
                   })()}</Table.Cell>
                   <Table.Cell>{clarification.title}</Table.Cell>
                   <Table.Cell>{clarification.user?.display_name}</Table.Cell>
+                  <Table.Cell><Link to={`/admin/clarifications/${clarification.cid}`}>{clarification.children.length}</Link></Table.Cell>
                   <Table.Cell><Moment date={clarification.date * 1000} fromNow /></Table.Cell>
                 </Table.Row>
               ))}
