@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Block } from 'components';
-import { Button, Label, Loader, Table } from 'semantic-ui-react';
+import { Button, Checkbox, CheckboxProps, Label, Loader, Table } from 'semantic-ui-react';
 import config from 'environment'
 import { Clarification } from 'abacus';
 import { Link } from 'react-router-dom';
@@ -11,7 +11,7 @@ interface ClarificationItem extends Clarification {
   checked: boolean;
 }
 
-type SortKey = 'title' | 'date' | 'cid'
+type SortKey = 'title' | 'date' | 'cid' | 'type' | 'division'
 type SortConfig = {
   column: SortKey,
   direction: 'ascending' | 'descending'
@@ -21,10 +21,13 @@ const Clarifications = (): JSX.Element => {
   const [isLoading, setLoading] = useState(true)
   const [isMounted, setMounted] = useState(true)
   const [clarifications, setClarifications] = useState<ClarificationItem[]>([])
+  const [showClosed, setShowClosed] = useState(false)
   const [{ column, direction }, setSortConfig] = useState<SortConfig>({
     column: 'date',
     direction: 'ascending'
   })
+
+  const onFilterChange = (event: React.FormEvent<HTMLInputElement>, { checked }: CheckboxProps) => setShowClosed(checked || false)
 
   const loadClarifications = async () => {
     const response = await fetch(`${config.API_URL}/clarifications`, {
@@ -43,7 +46,7 @@ const Clarifications = (): JSX.Element => {
   }
 
   const sort = (newColumn: SortKey, clarification_list: ClarificationItem[] = clarifications) => {
-    const newDirection = column === newColumn ? 'descending' : 'ascending'
+    const newDirection = column === newColumn && direction == 'ascending' ? 'descending' : 'ascending'
     setSortConfig({ column: newColumn, direction: newDirection })
 
     setClarifications(clarification_list.sort((c1: Clarification, c2: Clarification) => (compare(c1[newColumn] || 'ZZ', c2[newColumn] || 'ZZ') * (direction == 'ascending' ? 1 : -1)))
@@ -78,15 +81,17 @@ const Clarifications = (): JSX.Element => {
       <Button content="Delete Clarification(s)" negative onClick={deleteSelected} /> : <></>}
 
     <Block transparent size='xs-12'>
-      <Table>
+      <Checkbox toggle label='Show Closed' checked={showClosed} onChange={onFilterChange} />
+      <Table sortable>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell collapsing><input type='checkbox' onChange={checkAll} /></Table.HeaderCell>
-            <Table.HeaderCell className='sortable' onClick={() => sort('cid')}>Clarification ID</Table.HeaderCell>
-            <Table.HeaderCell>Type</Table.HeaderCell>
-            <Table.HeaderCell className='sortable' onClick={() => sort('title')}>Title</Table.HeaderCell>
+            <Table.HeaderCell className='sortable' onClick={() => sort('cid')} sorted={column == 'cid' ? direction : undefined}>Clarification ID</Table.HeaderCell>
+            <Table.HeaderCell className='sortable' onClick={() => sort('type')} sorted={column == 'type' ? direction : undefined}>Type</Table.HeaderCell>
+            <Table.HeaderCell className='sortable' onClick={() => sort('division')} sorted={column == 'division' ? direction : undefined}>Division</Table.HeaderCell>
+            <Table.HeaderCell className='sortable' onClick={() => sort('title')} sorted={column == 'title' ? direction : undefined}>Title</Table.HeaderCell>
             <Table.HeaderCell>User</Table.HeaderCell>
-            <Table.HeaderCell>Date</Table.HeaderCell>
+            <Table.HeaderCell className='sortable' onClick={() => sort('date')} sorted={column == 'date' ? direction : undefined}>Date</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -94,26 +99,32 @@ const Clarifications = (): JSX.Element => {
             <Table.Row>
               <Table.Cell colSpan={6} style={{ textAlign: 'center' }}>No Clarifications</Table.Cell>
             </Table.Row> :
-            clarifications.map((clarification: ClarificationItem) => (
-              <Table.Row key={clarification.cid}>
-                <Table.Cell>
-                  <input type='checkbox'
-                    checked={clarification.checked}
-                    id={clarification.cid}
-                    onChange={handleChange} />
-                </Table.Cell>
-                <Table.Cell><Link to={`/clarifications/${clarification.cid}`}>{clarification.cid.substring(0, 7)}</Link></Table.Cell>
-                <Table.Cell>{(() => {
-                  switch (clarification.division) {
-                    case 'gold': return <Label color='yellow' content="Gold" />
-                    case 'blue': return <Label color='blue' content="Blue" />
-                  }
-                })()}</Table.Cell>
-                <Table.Cell>{clarification.title}</Table.Cell>
-                <Table.Cell>{clarification.user?.display_name}</Table.Cell>
-                <Table.Cell><Moment date={clarification.date * 1000} fromNow /></Table.Cell>
-              </Table.Row>
-            ))}
+            clarifications.filter((clarification) => showClosed || clarification.open)
+              .map((clarification: ClarificationItem) => (
+                <Table.Row key={clarification.cid}>
+                  <Table.Cell>
+                    <input type='checkbox'
+                      checked={clarification.checked}
+                      id={clarification.cid}
+                      onChange={handleChange} />
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Link to={`/admin/clarifications/${clarification.cid}`}>{clarification.cid.substring(0, 7)}</Link>
+                    {!clarification.open ? <Label style={{ float: 'right' }} content='Closed' /> : <></>}
+                  </Table.Cell>
+                  <Table.Cell>{clarification.type}</Table.Cell>
+                  <Table.Cell>{(() => {
+                    switch (clarification.division) {
+                      case 'gold': return <Label color='yellow' content="Gold" />
+                      case 'blue': return <Label color='blue' content="Blue" />
+                      case 'public': return <Label content="Public" />
+                    }
+                  })()}</Table.Cell>
+                  <Table.Cell>{clarification.title}</Table.Cell>
+                  <Table.Cell>{clarification.user?.display_name}</Table.Cell>
+                  <Table.Cell><Moment date={clarification.date * 1000} fromNow /></Table.Cell>
+                </Table.Row>
+              ))}
         </Table.Body>
       </Table>
     </Block>
