@@ -48,12 +48,11 @@ const Clarifications = (): JSX.Element => {
   const sort = (newColumn: SortKey, clarification_list: ClarificationItem[] = clarifications) => {
     const newDirection = column === newColumn && direction == 'ascending' ? 'descending' : 'ascending'
     setSortConfig({ column: newColumn, direction: newDirection })
-
-    setClarifications(clarification_list.sort((c1: Clarification, c2: Clarification) => (compare(c1[newColumn] || 'ZZ', c2[newColumn] || 'ZZ') * (direction == 'ascending' ? 1 : -1)))
-    )
+    setClarifications(clarification_list.sort((c1: Clarification, c2: Clarification) => (compare(c1[newColumn] || 'ZZ', c2[newColumn] || 'ZZ') * (direction == 'ascending' ? 1 : -1))))
   }
 
   const handleChange = ({ target: { id, checked } }: ChangeEvent<HTMLInputElement>) => setClarifications(clarifications.map(clarification => clarification.cid == id ? { ...clarification, checked } : clarification))
+
   const checkAll = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => setClarifications(clarifications.map(clarification => ({ ...clarification, checked })))
 
   const deleteSelected = async () => {
@@ -67,6 +66,15 @@ const Clarifications = (): JSX.Element => {
       body: JSON.stringify({ cid: clarificationsToDelete })
     })
     loadClarifications()
+  }
+
+  const divisionLabel = (division?: string): JSX.Element => {
+    switch (division) {
+      case 'gold': return <Label color='yellow' content="Gold" />
+      case 'blue': return <Label color='blue' content="Blue" />
+      case 'public': return <Label content="Public" />
+      default: return <></>
+    }
   }
 
   useEffect(() => {
@@ -114,13 +122,7 @@ const Clarifications = (): JSX.Element => {
                     {!clarification.open ? <Label style={{ float: 'right' }} content='Closed' /> : <></>}
                   </Table.Cell>
                   <Table.Cell>{clarification.type}</Table.Cell>
-                  <Table.Cell>{(() => {
-                    switch (clarification.division) {
-                      case 'gold': return <Label color='yellow' content="Gold" />
-                      case 'blue': return <Label color='blue' content="Blue" />
-                      case 'public': return <Label content="Public" />
-                    }
-                  })()}</Table.Cell>
+                  <Table.Cell>{divisionLabel(clarification.division)}</Table.Cell>
                   <Table.Cell>{clarification.title}</Table.Cell>
                   <Table.Cell>{clarification.user?.display_name}</Table.Cell>
                   <Table.Cell><Link to={`/admin/clarifications/${clarification.cid}`}>{clarification.children.length}</Link></Table.Cell>
