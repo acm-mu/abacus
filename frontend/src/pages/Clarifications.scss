@@ -9,3 +9,19 @@
     font-family: Lato, 'Helvetica Neue', Arial, Helvetica, sans-serif;
     line-height: 1.4285em;
 }
+
+.ui.menu .header .icon {
+    float: right;
+    font-size: 1em;
+    color: #555;
+    margin: 0;
+}
+
+.ui.menu .item.closed,
+.ui.menu .item.closed:hover,
+.ui.menu .item.active.closed {
+    color: #aaa !important;
+     :is(h5, a, p, .icon) {
+        color: #aaa;
+    }
+}
