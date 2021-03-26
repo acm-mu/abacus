@@ -1,6 +1,6 @@
 import { Submission } from 'abacus'
 import React, { ChangeEvent, useState, useEffect } from 'react'
-import { Button, Loader, Table } from 'semantic-ui-react'
+import { Button, Checkbox, CheckboxProps, Label, Loader, Table } from 'semantic-ui-react'
 import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
 import config from 'environment'
@@ -19,6 +19,7 @@ const Submissions = (): JSX.Element => {
   const [isLoading, setLoading] = useState<boolean>(true)
   const [submissions, setSubmissions] = useState<SubmissionItem[]>([])
   const [isMounted, setMounted] = useState<boolean>(true)
+  const [filterReleased, setFilterReleased] = useState(false)
 
   const [{ column, direction }, setSortConfig] = useState<SortConfig>({
     column: 'date',
@@ -53,6 +54,10 @@ const Submissions = (): JSX.Element => {
     setLoading(false)
   }
 
+  const onFilterChange = (event: React.MouseEvent<HTMLInputElement, MouseEvent>, { checked }: CheckboxProps) => {
+    setFilterReleased(checked || false)
+  }
+
   const downloadSubmissions = () => saveAs(new File([JSON.stringify(submissions, null, '\t')], 'submissions.json', { type: 'text/json;charset=utf-8' }))
   const handleChange = ({ target: { id, checked } }: ChangeEvent<HTMLInputElement>) => setSubmissions(submissions.map(submission => submission.sid == id ? { ...submission, checked } : submission))
   const checkAll = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => setSubmissions(submissions.map(submission => ({ ...submission, checked })))
@@ -79,6 +84,7 @@ const Submissions = (): JSX.Element => {
       <Button content="Download Submissions" onClick={downloadSubmissions} />
       {submissions.filter(submission => submission.checked).length ?
         <Button content="Delete Submission(s)" negative onClick={deleteSelected} /> : <></>}
+      <Checkbox toggle label="Hide Released" checked={filterReleased} onClick={onFilterChange} />
 
       <Table singleLine>
         <Table.Header>
@@ -90,6 +96,7 @@ const Submissions = (): JSX.Element => {
             <Table.HeaderCell className='sortable' onClick={() => sort('sub_no')}>Submission #</Table.HeaderCell>
             <Table.HeaderCell className='sortable' onClick={() => sort('language')}>Language</Table.HeaderCell>
             <Table.HeaderCell className='sortable' onClick={() => sort('status')}>Status</Table.HeaderCell>
+            <Table.HeaderCell>Released</Table.HeaderCell>
             <Table.HeaderCell className='sortable' onClick={() => sort('runtime')}>Runtime</Table.HeaderCell>
             <Table.HeaderCell className='sortable' onClick={() => sort('date')}>Time</Table.HeaderCell>
             <Table.HeaderCell className='sortable' onClick={() => sort('score')}>Score</Table.HeaderCell>
@@ -100,7 +107,7 @@ const Submissions = (): JSX.Element => {
             <Table.Row>
               <Table.Cell colSpan={10} style={{ textAlign: "center" }}>No Submissions</Table.Cell>
             </Table.Row> :
-            submissions.map((submission: SubmissionItem) =>
+            submissions.filter((submission) => !filterReleased || submission.released).map((submission) =>
               <Table.Row key={submission.sid}>
                 <Table.Cell>
                   <input
@@ -116,6 +123,7 @@ const Submissions = (): JSX.Element => {
                 <Table.Cell>{submission.sub_no + 1}</Table.Cell>
                 <Table.Cell>{submission.language}</Table.Cell>
                 <Table.Cell><span className={`status icn ${submission.status}`} /></Table.Cell>
+                <Table.Cell>{submission.released ? <Label color='green' icon='check' content="Released" /> : <Label icon='lock' content="Held" />}</Table.Cell>
                 <Table.Cell>{Math.floor(submission.runtime)}</Table.Cell>
                 <Table.Cell><Moment fromNow date={submission.date * 1000} /> </Table.Cell>
                 <Table.Cell>{submission.score}</Table.Cell>

@@ -94,6 +94,7 @@ const SubmitPractice = (): JSX.Element => {
         filesize,
         md5: '',
         sub_no: Object.values(submissions).filter(({ pid }: { pid: string }) => pid == id).length,
+        released: true,
         status: 'pending',
         score: 0,
         date: Date.now() / 1000,

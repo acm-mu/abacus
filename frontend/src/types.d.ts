@@ -20,6 +20,7 @@ declare module "abacus" {
     pid: string;
     problem: Problem;
     runtime: number;
+    released: boolean;
     score: number;
     status: string;
     sub_no: number;

@@ -93,6 +93,7 @@ export const postSubmissions = async (req: Request, res: Response) => {
       filename,
       filesize,
       md5,
+      released: false,
       sub_no: submissions?.length,
       status: 'pending',
       score: 0,
