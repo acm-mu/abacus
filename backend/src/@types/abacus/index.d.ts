@@ -18,6 +18,8 @@ declare module "abacus" {
     md5: string;
     pid: string;
     runtime: number;
+    released: boolean;
+    claimed?: string;
     score: number;
     status: string;
     sub_no: number;
