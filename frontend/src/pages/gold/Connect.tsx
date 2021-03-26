@@ -6,13 +6,14 @@ import config from 'environment'
 
 const Connect = (): JSX.Element => {
   const { setUser, user } = useContext(AppContext)
+
   const [username, setUsername] = useState<string>()
   const [disabled, setDisabled] = useState<boolean>(true)
 
-  const handleChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = async ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
     setUsername(value)
-    fetch(`${config.API_URL}/scratch?username=${value}`)
-      .then(res => setDisabled(res.status != 200))
+    const response = await fetch(`${config.API_URL}/scratch?username=${value}`)
+    setDisabled(response.status != 200)
   }
 
   const handleSubmit = async () => {
@@ -40,16 +41,15 @@ const Connect = (): JSX.Element => {
       setUser({ ...user })
     }
   }
-  return (
-    <>
-      {user && <Block size='xs-12' >
-        <p>You have not yet attached your Scratch® account to your profile. Please enter it below.</p>
-        <Form onSubmit={handleSubmit}>
-          <Input placeholder="Scratch Username" onChange={handleChange} action={<Button content='Connect' color='orange' disabled={disabled} />} />
-        </Form>
-      </Block>}
-    </>
-  )
+
+  if (!user || user.scratch_username) return <></>
+
+  return <Block size='xs-12' >
+    <p>You have not yet attached your Scratch® account to your profile. Please enter it below.</p>
+    <Form onSubmit={handleSubmit}>
+      <Input placeholder="Scratch Username" onChange={handleChange} action={<Button content='Connect' color='orange' disabled={disabled} />} />
+    </Form>
+  </Block>
 }
 
 export default Connect
