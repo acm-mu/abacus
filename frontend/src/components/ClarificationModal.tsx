@@ -36,7 +36,14 @@ const ClarificationModal = ({ trigger, title = '' }: ClarificationModalProps): J
       })
 
     if (response.ok) {
-      history.push(`/clarifications/`)
+      const { cid } = await response.json()
+
+      if (user?.role === 'admin') {
+        history.push(`/admin/clarifications/${cid}`)
+      } else {
+        history.push(`/${user?.division}/clarifications/`)
+      }
+
       setClarification({
         title: '',
         body: '',

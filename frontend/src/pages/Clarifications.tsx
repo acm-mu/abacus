@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Button, ButtonProps, Checkbox, CheckboxProps, Comment, Form, Grid, Header, Icon, Loader, Menu, MenuItemProps, Popup, Segment } from 'semantic-ui-react';
+import { Button, ButtonProps, Checkbox, CheckboxProps, Comment, Form, Grid, Header, Icon, Loader, Menu, MenuItemProps, Message, Popup, Segment } from 'semantic-ui-react';
 import { Clarification } from 'abacus';
 import config from '../environment'
 import Moment from 'react-moment';
@@ -33,9 +33,7 @@ const Clarifications = (): JSX.Element => {
   }
 
   useEffect(() => {
-    loadClarifications().then((clarifications: { [key: string]: Clarification }) => {
-      setActiveItem(Object.values(clarifications).sort((c1, c2) => c2.date - c1.date)[0].cid)
-    })
+    loadClarifications()
   }, [])
 
   const ClarificationsMenu = ({ clarifications }: { clarifications: Clarification[] }) => {
@@ -140,7 +138,9 @@ const Clarifications = (): JSX.Element => {
       }
     }
 
-    if (!clarification) return <p>Clarification not found!</p>
+    if (activeItem === '') return <p className='prompt'>No clarification selected. Pick a clarification to view.</p>
+
+    if (!clarification) return <p className='prompt'>Clarification not found!</p>
 
     // Can only comment if open and user is judge, admin, or author
     const canComment = clarification.open && (user?.role !== 'team' || clarification.user.uid == user?.uid)
@@ -167,7 +167,12 @@ const Clarifications = (): JSX.Element => {
             <Form.TextArea name='body' value={body} onChange={handleChange} />
             <Button content='Add Reply' labelPosition='left' icon='edit' primary onClick={handleSubmit} />
           </Form>
-          : <p>Replying to this clarification is disabled</p>}
+          : <Message
+            warning
+            icon='exclamation'
+            header='Notice'
+            content='Replying to this clarification is disabled.'
+          />}
       </Comment.Group>
     </>
   }

@@ -5,8 +5,9 @@ import React, { useContext, useEffect, useState } from 'react';
 import Moment from 'react-moment';
 import { useHistory, useParams } from 'react-router';
 import { Link } from 'react-router-dom';
-import { Breadcrumb, Button, ButtonProps, Comment, Form, Label, Loader, Popup } from 'semantic-ui-react';
+import { Breadcrumb, Button, ButtonProps, Comment, Form, Icon, Label, Loader, Message, Popup } from 'semantic-ui-react';
 import config from '../../environment'
+import './Clarification.scss'
 
 interface ClarificationProps {
   clarification: Clarification
@@ -98,7 +99,10 @@ const ClarificationPage = (): JSX.Element => {
         <Comment.Author as='a'>{clarification.user.display_name}</Comment.Author>
         <Comment.Metadata>
           <div><Moment fromNow date={clarification.date * 1000} /></div>
-          <a href='#' onClick={deleteClarification}>Delete</a>
+          {clarification.open ?
+            <a href='#' onClick={deleteClarification}>Delete</a> :
+            <p></p>
+          }
         </Comment.Metadata>
         <Comment.Text>{clarification.body}</Comment.Text>
       </Comment.Content>
@@ -110,11 +114,12 @@ const ClarificationPage = (): JSX.Element => {
 
   return <>
     <Block transparent size='xs-12'>
-      <Breadcrumb>
+      {/* <Breadcrumb>
         <Breadcrumb.Section as={Link} to='/admin/clarifications' content="Clarifications" />
         <Breadcrumb.Divider />
         <Breadcrumb.Section active content={clarification.title} />
-      </Breadcrumb>
+      </Breadcrumb> */}
+      <Button content='Back' icon='arrow left' labelPosition='left' onClick={history.goBack} />
     </Block>
 
     <Block size='xs-12'>
@@ -124,7 +129,7 @@ const ClarificationPage = (): JSX.Element => {
           <Popup trigger={<Button floated='right' icon='lock' value={true} onClick={handleLock} />} content='Reopen Clarification' />
         ) : <></>}
 
-      <h1 style={{ display: 'inline' }}>{clarification.title} {!clarification.open ? <Label content="Closed" /> : <></>}</h1>
+      <h1 style={{ display: 'inline' }}>{clarification.title} {!clarification.open ? <Label content="Closed" className='closed' /> : <></>}</h1>
       <Comment.Group>
         <ClarificationComment clarification={clarification} />
         {clarification.children.length > 0 ?
@@ -143,7 +148,12 @@ const ClarificationPage = (): JSX.Element => {
               onChange={handleChange} />
             <Button content='Add Reply' labelPosition='left' icon='edit' primary onClick={handleSubmit} />
           </Form> :
-          <p>Replying to this clarification is disabled</p>}
+          <Message
+            warning
+            icon='exclamation'
+            header='Notice'
+            content='Replying to this clarification is disabled.'
+          />}
       </Comment.Group>
     </Block>
   </>
