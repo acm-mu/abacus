@@ -63,7 +63,7 @@ export const getProblems = async (req: Request, res: Response) => {
   try {
     let problems: any = await contest.scanItems('problem', query, columns)
     if (!problems.length) {
-      res.sendStatus(404)
+      res.send([])
       return
     }
     if (type !== "list")
