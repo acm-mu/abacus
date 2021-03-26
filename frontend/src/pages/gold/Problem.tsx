@@ -1,42 +1,64 @@
 import { Problem, Submission } from 'abacus'
 import React, { useContext, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { Button, Popup } from 'semantic-ui-react'
+import { Button, Loader, Popup } from 'semantic-ui-react'
 import MDEditor from '@uiw/react-md-editor'
 
-import { Block, Countdown } from 'components'
+import { Block, Countdown, NotFound } from 'components'
 import config from "environment"
 import AppContext from 'AppContext'
 
 const problem = (): JSX.Element => {
+  const { user } = useContext(AppContext)
+  const [isLoading, setLoading] = useState(true)
   const [problem, setProblem] = useState<Problem>()
   const [submissions, setSubmissions] = useState<Submission[]>()
-  const { user } = useContext(AppContext)
   const { pid } = useParams<{ pid: string }>()
 
+  const [isMounted, setMounted] = useState(true)
+
   useEffect(() => {
-    fetch(`${config.API_URL}/problems?division=gold&id=${pid}`)
-      .then(res => res.json())
-      .then(res => {
-        if (res) {
-          const problem = Object.values(res)[0] as Problem
-          setProblem(problem)
-          if (user)
-            fetch(`${config.API_URL}/submissions?tid=${user?.uid}&pid=${problem.pid}`)
-              .then(res => res.json())
-              .then(res => setSubmissions(Object.values(res)))
-        }
-      })
+    loadProblem().then(() => {
+      setLoading(false)
+      if (user) loadSubmissions()
+    })
+    return () => { setMounted(false) }
   }, [])
+
+  const loadProblem = async () => {
+    const response = await fetch(`${config.API_URL}/problems?division=gold&id=${pid}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.accessToken}`
+      }
+    })
+
+    if (!response.ok || !isMounted) return
+
+    setProblem(Object.values(await response.json())[0] as Problem)
+  }
+
+  const loadSubmissions = async () => {
+    if (!problem) return
+
+    const response = await fetch(`${config.API_URL}/submissions?tid=${user?.uid}&pid=${problem?.pid}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.accessToken}`
+      }
+    })
+
+    if (!response.ok || !isMounted) return
+
+    setSubmissions(Object.values(await response.json()))
+  }
+
+  if (isLoading) return <Loader active inline='centered' />
+  if (!problem) return <NotFound />
 
   return (
     <>
       <Countdown />
       <Block size='xs-9'>
-        <h1>Problem {problem?.id}
-          <br />
-          {problem?.name}
-        </h1>
+        <h1>Problem {problem?.id}: {problem?.name}</h1>
         <hr />
         <MDEditor.Markdown source={problem?.description || ''} />
       </Block>
@@ -47,7 +69,7 @@ const problem = (): JSX.Element => {
               trigger={
                 <Button
                   as={Link}
-                  to={`/blue/problems/${problem?.id}/submit`}
+                  to={`/gold/problems/${problem?.id}/submit`}
                   content="Submit"
                   icon="upload"
                 />

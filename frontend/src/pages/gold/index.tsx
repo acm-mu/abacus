@@ -22,8 +22,8 @@ const Gold = (): JSX.Element => (
         <Route exact path='/gold/' component={Home} />
         <Route path='/gold/connect' component={Connect} />
         <Route path='/gold/submit' component={Submit} />
-        <Route path='/gold/problems' component={Problems} />
         <Route path='/gold/problems/:pid' component={Problem} />
+        <Route path='/gold/problems' component={Problems} />
         <Route path='/gold/problems/:pid/submit' component={SubmitProblem} />
         <Route path='/gold/submissions' component={Submissions} />
         <Route path='/gold/submissions/:sid' component={Submission} />
