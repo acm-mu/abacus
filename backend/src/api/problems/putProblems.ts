@@ -72,7 +72,7 @@ export const putProblems = async (req: Request, res: Response) => {
   const item = matchedData(req)
 
   if (item.id) {
-    const problems = Object.values(await contest.scanItems('problem', { id: item.id }) || {})
+    const problems = Object.values(await contest.scanItems('problem', { id: item.id, division: item.division }) || {})
     if (problems.length > 0 && problems[0].pid != item.pid) {
       res.status(400).json({ message: "Problem id is taken!" })
       return

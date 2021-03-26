@@ -68,7 +68,7 @@ export const postProblems = async (req: Request, res: Response) => {
   item.skeletons = [{ source: '# Python skeleton goes here', file_name: `${filename}.py`, language: 'python' }, { source: '// Java skeleton goes here', file_name: `${filename}.py`, language: 'java' }]
   item.solutions = [{ source: '# Python solution goes here', file_name: `${filename}.java`, language: 'python' }, { source: '// Java solution goes here', file_name: `${filename}.java`, language: 'java' }]
 
-  const problems = await contest.scanItems('problem', { id: item.id }) || {}
+  const problems = await contest.scanItems('problem', { id: item.id, division: item.division }) || {}
   if (Object.values(problems).length > 0) {
     res.status(400).json({ message: "Problem id is taken!" })
     return
