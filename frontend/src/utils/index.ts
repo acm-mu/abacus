@@ -21,6 +21,17 @@ export const userHome = (user: User): string => {
   }
 }
 
+export const divisions = [
+  { key: 1, text: "Blue", value: 'blue' },
+  { key: 2, text: "Gold", value: 'gold' }
+]
+
+export const roles = [
+  { key: 'team', text: 'Team', value: 'team' },
+  { key: 'judge', text: 'Judge', value: 'judge' },
+  { key: 'admin', text: 'Admin', value: 'admin' }
+]
+
 export interface Language {
   key: string;
   value: string;

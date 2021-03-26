@@ -1,6 +1,7 @@
 import React, { ChangeEvent, useState } from "react"
 import { Modal, Form, Input, Select, Button, Message } from "semantic-ui-react"
 import config from 'environment'
+import { divisions, roles } from "utils"
 
 type CreateUserProps = {
   trigger: JSX.Element;
@@ -20,16 +21,6 @@ const CreateUser = ({ trigger, callback }: CreateUserProps): JSX.Element => {
   const [open, setOpen] = useState<boolean>(false)
   const [error, setError] = useState<string>()
   const [user, setUser] = useState(empty)
-
-  const roles = [
-    { key: 'team', text: 'Team', value: 'team' },
-    { key: 'judge', text: 'Judge', value: 'judge' },
-    { key: 'admin', text: 'Admin', value: 'admin' }
-  ]
-  const divisions = [
-    { key: 'blue', text: 'Blue', value: 'blue' },
-    { key: 'gold', text: 'Gold', value: 'gold' }
-  ]
 
   const handleChange = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>) => setUser({ ...user, [name]: value })
   const handleSelectChange = (_: never, { name, value }: HTMLInputElement) => setUser({ ...user, [name]: value })
