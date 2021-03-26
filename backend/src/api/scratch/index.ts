@@ -4,6 +4,6 @@ import { getUser, schema as getSchema } from './getUser'
 
 const scratch = Router()
 
-scratch.get('/scratch/', checkSchema(getSchema), getUser)
+scratch.get('/scratch', checkSchema(getSchema), getUser)
 
 export default scratch

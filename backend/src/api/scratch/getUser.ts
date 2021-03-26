@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { matchedData, ParamSchema, validationResult } from "express-validator";
+import axios from 'axios'
 
 export const schema: Record<string, ParamSchema> = {
   username: {
@@ -18,7 +19,8 @@ export const getUser = async (req: Request, res: Response) => {
 
   const { username } = matchedData(req)
 
-  const scratchResponse = await fetch(`https://api.scratch.mit.edu/users/${username}`)
-
-  res.status(scratchResponse.status).send(scratchResponse.statusText)
+  try {
+    const scratchResponse = await axios.get(`https://api.scratch.mit.edu/users/${username}`)
+    res.status(scratchResponse.status).send(scratchResponse.statusText)
+  } catch (err) { res.sendStatus(400) }
 }
