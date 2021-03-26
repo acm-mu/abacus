@@ -3,11 +3,10 @@ import React, { useState, useEffect, useContext } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Button, Loader } from "semantic-ui-react";
 import MDEditor from "@uiw/react-md-editor";
-import { Block, Countdown, NotFound } from 'components'
+import { Block, Countdown, NotFound, ClarificationModal } from 'components'
 import config from 'environment'
 import AppContext from "AppContext";
 import "./Problem.scss";
-import ClarificationModal from "components/ClarificationModal";
 
 const problem = (): JSX.Element => {
   const { user } = useContext(AppContext);
