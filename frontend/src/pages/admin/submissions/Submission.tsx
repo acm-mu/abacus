@@ -77,7 +77,7 @@ const submission = (): JSX.Element => {
         Authorization: `Bearer ${localStorage.accessToken}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ sid, released: true, claimed: undefined })
+      body: JSON.stringify({ sid, released: true })
     })
     if (response.ok) {
       const result = await response.json()

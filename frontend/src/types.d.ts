@@ -21,7 +21,6 @@ declare module "abacus" {
     problem: Problem;
     runtime: number;
     released: boolean;
-    claimed?: string;
     score: number;
     status: string;
     sub_no: number;

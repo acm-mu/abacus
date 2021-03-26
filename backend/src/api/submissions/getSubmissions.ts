@@ -53,11 +53,6 @@ export const schema: Record<string, ParamSchema> = {
     optional: true,
     errorMessage: 'tid is invalid'
   },
-  claimed: {
-    in: ['query', 'body'],
-    isString: true,
-    optional: true
-  },
   released: {
     in: ['query', 'body'],
     isBoolean: true,
