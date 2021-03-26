@@ -1,3 +1,4 @@
+import { Test } from 'abacus'
 import { Request, Response } from 'express'
 import { matchedData, ParamSchema, validationResult } from "express-validator"
 import contest, { transpose } from '../../abacus/contest'
@@ -51,6 +52,17 @@ export const schema: Record<string, ParamSchema> = {
     notEmpty: true,
     optional: true,
     errorMessage: 'tid is invalid'
+  },
+  claimed: {
+    in: ['query', 'body'],
+    isString: true,
+    optional: true
+  },
+  released: {
+    in: ['query', 'body'],
+    isBoolean: true,
+    notEmpty: true,
+    optional: true
   }
 }
 
@@ -83,6 +95,11 @@ export const getSubmissions = async (req: Request, res: Response) => {
         display_name: team.display_name,
         division: team.division
       }
+      if (req.user?.role == 'team' && !submission.released) {
+        submission.status = 'pending'
+        submission.tests = submission.tests.map((test: Test) => ({ ...test, result: '' }))
+      }
+      return submission
     })
 
     res.send(transpose(submissions, 'sid'))
