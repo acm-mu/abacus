@@ -47,28 +47,33 @@ const Problems = (): JSX.Element => {
       }
     })
 
-    const problems = Object.values(await response.json()) as ProblemItem[]
+    if (response.ok) {
+      const problems = Object.values(await response.json()) as ProblemItem[]
 
-    if (!isMounted) return
+      if (!isMounted) return
 
-    sort('id', problems.map(problem => ({ ...problem, checked: false })))
+      sort('id', problems.map(problem => ({ ...problem, checked: false })))
 
-    response = await fetch(`${config.API_URL}/submissions?division=blue`, {
-      headers: {
-        authorization: `Bearer ${localStorage.accessToken}`
-      }
-    })
+      response = await fetch(`${config.API_URL}/submissions?division=blue`, {
+        headers: {
+          authorization: `Bearer ${localStorage.accessToken}`
+        }
+      })
 
-    if (!isMounted) return
+      if (!isMounted) return
 
-    const submissions = Object.values(await response.json()) as Submission[]
-    const subs: { [key: string]: Submission[] } = {}
-    submissions.forEach((sub: Submission) => {
-      const { pid } = sub;
-      if (!(pid in subs)) subs[pid] = []
-      subs[pid].push(sub)
-    })
-    setSubmissions(subs)
+      const submissions = Object.values(await response.json()) as Submission[]
+      const subs: { [key: string]: Submission[] } = {}
+      submissions.forEach((sub: Submission) => {
+        const { pid } = sub;
+        if (!(pid in subs)) subs[pid] = []
+        subs[pid].push(sub)
+      })
+      setSubmissions(subs)
+    } else {
+      setProblems([])
+      setSubmissions({})
+    }
     setLoading(false)
   }
 
