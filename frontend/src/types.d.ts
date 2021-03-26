@@ -75,5 +75,18 @@ declare module "abacus" {
     problems: { [key: string]: ProblemScore };
   }
 
+  export interface Clarification {
+    cid: string;
+    body: string;
+    user: User;
+    date: number;
+    parent?: string;
+    division?: string;
+    type?: string;
+    title?: string;
+    children: Clarification[];
+    open?: boolean
+  }
+
   export interface Args { [key: string]: unknown }
 }

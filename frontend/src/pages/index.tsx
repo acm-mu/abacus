@@ -7,6 +7,7 @@ import About from './About';
 import Help from './Help';
 import DefaultNavigation from './DefaultNavigation';
 import { NotFound } from 'components';
+import Clarifications from './Clarifications';
 
 export const Index = (): JSX.Element => (
   <>
@@ -17,6 +18,8 @@ export const Index = (): JSX.Element => (
         <Route exact path="/" component={Home} />
         <Route path="/about" component={About} />
         <Route path="/help" component={Help} />
+        <Route path='/clarifications/:cid' component={Clarifications} />
+        <Route path='/clarifications' component={Clarifications} />
         <Route component={NotFound} />
       </Switch>
     </Container>

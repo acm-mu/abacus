@@ -5,6 +5,7 @@ import AppContext from "AppContext";
 import fulllogoy from 'assets/fulllogoy.png'
 import { LoginModal } from "components";
 import { userHome } from "utils";
+import ClarificationModal from "./ClarificationModal";
 
 type Props = {
   children: React.ReactNode;
@@ -45,13 +46,16 @@ const Navigation = (props: Props): JSX.Element => {
 
         {<Menu.Menu position="right">
           {user ?
-            <Dropdown item simple
-              text={user.display_name}
-              onClick={() => { history.push(userHome(user)) }}>
-              <Dropdown.Menu>
-                <Dropdown.Item onClick={handleLogout} text="Log out" />
-              </Dropdown.Menu>
-            </Dropdown> :
+            <>
+              <Dropdown item simple
+                text={user.display_name}
+                onClick={() => { history.push(userHome(user)) }}>
+                <Dropdown.Menu>
+                  <Dropdown.Item onClick={handleLogout} text="Log out" />
+                </Dropdown.Menu>
+              </Dropdown>
+              <ClarificationModal trigger={<Menu.Item icon='question' />} />
+            </> :
             <LoginModal trigger={<Menu.Item content="Log in" />} />
           }
         </Menu.Menu>}

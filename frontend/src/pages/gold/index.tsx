@@ -12,7 +12,7 @@ import SubmitProblem from "./SubmitProblem";
 import Submission from "./Submission";
 import Submissions from "./Submissions";
 import Standings from "./Standings";
-import Clarifications from "pages/Clarifications";
+import Clarifications from "../Clarifications";
 
 const Gold = (): JSX.Element => (
   <>
