@@ -1,6 +1,6 @@
 import { Problem, Submission } from 'abacus'
 import React, { ChangeEvent, useState, useEffect } from 'react'
-import { Table, Button, Loader } from 'semantic-ui-react'
+import { Table, Button, Loader, Menu, MenuItemProps } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import config from 'environment'
 import { Block, DivisionLabel } from 'components'
@@ -19,6 +19,7 @@ const Problems = (): JSX.Element => {
   const [problems, setProblems] = useState<ProblemItem[]>([])
   const [submissions, setSubmissions] = useState<{ [key: string]: Submission[] }>()
   const [isMounted, setMounted] = useState<boolean>(true)
+  const [activeDivision, setActiveDivision] = useState('blue')
 
   const [{ column, direction }, setSortConfig] = useState<SortConfig>({
     column: 'id',
@@ -78,11 +79,15 @@ const Problems = (): JSX.Element => {
       saveAs(new File([JSON.stringify(problems, null, '\t')], 'problems.json', { type: 'text/json;charset=utf-8' }))
     }
   }
-  const handleChange = ({ target: { id, checked } }: ChangeEvent<HTMLInputElement>) => setProblems(problems.map(problem => problem.pid == id ? { ...problem, checked } : problem))
-  const checkAll = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => setProblems(problems.map(problem => ({ ...problem, checked })))
+
+  const handleChange = ({ target: { id, checked } }: ChangeEvent<HTMLInputElement>) =>
+    setProblems(problems.map(problem => problem.pid == id ? { ...problem, checked } : problem))
+
+  const checkAll = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) =>
+    setProblems(problems.map(problem => problem.division == activeDivision ? ({ ...problem, checked }) : problem))
 
   const deleteSelected = async () => {
-    const problemsToDelete = problems.filter(problem => problem.checked).map(problem => problem.pid)
+    const problemsToDelete = problems.filter(problem => problem.checked && problem.division == activeDivision).map(problem => problem.pid)
     const response = await fetch(`${config.API_URL}/problems`, {
       method: 'DELETE',
       headers: {
@@ -96,21 +101,33 @@ const Problems = (): JSX.Element => {
     }
   }
 
+  const handleItemClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, { name }: MenuItemProps) =>
+    name && setActiveDivision(name)
+
   if (isLoading) return <Loader active inline='centered' content="Loading..." />
 
   return <>
     <Button as={Link} to='/admin/problems/new' primary content="Add Problem" />
     <Link to='/admin/problems/upload'><Button content="Upload Problems" /></Link>
     <Button content="Download Problems" onClick={downloadProblems} />
-    {problems.filter(problem => problem.checked).length ?
+    {problems.filter(problem => problem.division == activeDivision && problem.checked).length ?
       <Button content="Delete Selected" negative onClick={deleteSelected} /> : <></>}
 
     <Block size='xs-12' transparent>
+      <Menu pointing secondary>
+        <Menu.Item name='blue' active={activeDivision == 'blue'} onClick={handleItemClick}>Blue</Menu.Item>
+        <Menu.Item name='gold' active={activeDivision == 'gold'} onClick={handleItemClick}>Gold</Menu.Item>
+      </Menu>
       {/* <h3>Blue Division</h3> */}
       <Table sortable>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell collapsing><input type='checkbox' onChange={checkAll} /></Table.HeaderCell>
+            <Table.HeaderCell collapsing>
+              <input
+                type='checkbox'
+                checked={problems.filter((problem) => problem.division == activeDivision && !problem.checked).length == 0}
+                onChange={checkAll} />
+            </Table.HeaderCell>
             <Table.HeaderCell
               sorted={column === 'id' ? direction : undefined}
               onClick={() => sort('id')}
@@ -126,7 +143,7 @@ const Problems = (): JSX.Element => {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {problems.map((problem: ProblemItem, index: number) => (
+          {problems.filter((problem) => problem.division == activeDivision).map((problem: ProblemItem, index: number) => (
             <Table.Row key={index}>
               <Table.Cell>
                 <input
