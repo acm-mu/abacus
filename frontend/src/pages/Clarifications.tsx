@@ -103,10 +103,12 @@ const Clarifications = (): JSX.Element => {
 
   const ClarificationView = ({ clarification }: { clarification?: Clarification }) => {
     const [body, setBody] = useState('')
+    const [replyLoading, setReplyLoading] = useState(false)
 
     const handleChange = ({ target: { value } }: React.ChangeEvent<HTMLTextAreaElement>) => setBody(value)
 
     const handleSubmit = async () => {
+      setReplyLoading(true)
       const response = await fetch(`${config.API_URL}/clarifications`, {
         headers: {
           Authorization: `Bearer ${localStorage.accessToken}`,
@@ -120,6 +122,7 @@ const Clarifications = (): JSX.Element => {
 
       if (response.ok) {
         await loadClarifications()
+        setReplyLoading(false)
         setBody('')
       }
     }
@@ -165,7 +168,7 @@ const Clarifications = (): JSX.Element => {
         {canComment ?
           <Form reply>
             <Form.TextArea name='body' value={body} onChange={handleChange} />
-            <Button content='Add Reply' labelPosition='left' icon='edit' primary onClick={handleSubmit} />
+            <Button loading={replyLoading} disabled={replyLoading} content='Add Reply' labelPosition='left' icon='edit' primary onClick={handleSubmit} />
           </Form>
           : <Message
             warning

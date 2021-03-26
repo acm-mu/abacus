@@ -21,7 +21,6 @@ export const userHome = (user: User): string => {
   }
 }
 
-
 export const divisions = [
   { key: 1, text: "Blue", value: 'blue' },
   { key: 2, text: "Gold", value: 'gold' }

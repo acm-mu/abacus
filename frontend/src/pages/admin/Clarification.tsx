@@ -4,8 +4,7 @@ import { Block, NotFound } from 'components';
 import React, { useContext, useEffect, useState } from 'react';
 import Moment from 'react-moment';
 import { useHistory, useParams } from 'react-router';
-import { Link } from 'react-router-dom';
-import { Breadcrumb, Button, ButtonProps, Comment, Form, Icon, Label, Loader, Message, Popup } from 'semantic-ui-react';
+import { Button, ButtonProps, Comment, Form, Label, Loader, Message, Popup } from 'semantic-ui-react';
 import config from '../../environment'
 import './Clarification.scss'
 
@@ -21,6 +20,7 @@ const ClarificationPage = (): JSX.Element => {
   const [body, setBody] = useState('')
   const [isLoading, setLoading] = useState(true)
   const [isMounted, setMounted] = useState(true)
+  const [replyLoading, setReplyLoading] = useState(false)
 
   const loadClarification = async () => {
     const response = await fetch(`${config.API_URL}/clarifications?cid=${cid}`, {
@@ -43,6 +43,7 @@ const ClarificationPage = (): JSX.Element => {
   const handleSubmit = async () => {
     if (!clarification) { alert('Invalid clarification'); return }
 
+    setReplyLoading(true)
     const response = await fetch(`${config.API_URL}/clarifications`, {
       headers: {
         Authorization: `Bearer ${localStorage.accessToken}`,
@@ -54,6 +55,7 @@ const ClarificationPage = (): JSX.Element => {
 
     if (response.ok) {
       await loadClarification()
+      setReplyLoading(false)
       setBody('')
     }
   }
@@ -99,10 +101,7 @@ const ClarificationPage = (): JSX.Element => {
         <Comment.Author as='a'>{clarification.user.display_name}</Comment.Author>
         <Comment.Metadata>
           <div><Moment fromNow date={clarification.date * 1000} /></div>
-          {clarification.open ?
-            <a href='#' onClick={deleteClarification}>Delete</a> :
-            <p></p>
-          }
+          <a href='#' onClick={deleteClarification}>Delete</a>
         </Comment.Metadata>
         <Comment.Text>{clarification.body}</Comment.Text>
       </Comment.Content>
@@ -114,11 +113,6 @@ const ClarificationPage = (): JSX.Element => {
 
   return <>
     <Block transparent size='xs-12'>
-      {/* <Breadcrumb>
-        <Breadcrumb.Section as={Link} to='/admin/clarifications' content="Clarifications" />
-        <Breadcrumb.Divider />
-        <Breadcrumb.Section active content={clarification.title} />
-      </Breadcrumb> */}
       <Button content='Back' icon='arrow left' labelPosition='left' onClick={history.goBack} />
     </Block>
 
@@ -146,7 +140,7 @@ const ClarificationPage = (): JSX.Element => {
               name='body'
               value={body}
               onChange={handleChange} />
-            <Button content='Add Reply' labelPosition='left' icon='edit' primary onClick={handleSubmit} />
+            <Button loading={replyLoading} disabled={replyLoading} content='Add Reply' labelPosition='left' icon='edit' primary onClick={handleSubmit} />
           </Form> :
           <Message
             warning
