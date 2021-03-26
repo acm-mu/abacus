@@ -90,7 +90,6 @@ const Submissions = (): JSX.Element => {
       {submissions.filter(submission => submission.checked).length ?
         <Button content="Delete Submission(s)" negative onClick={deleteSelected} /> : <></>}
       <Checkbox toggle label="Show Released" checked={showReleased} onClick={onFilterChange} />
-      {/* <Button icon={showReleased ? 'eye' : 'eye slash'} color={showReleased ? "green" : undefined} content="Show Released" onClick={onFilterChange} /> */}
 
       <Table singleLine>
         <Table.Header>
