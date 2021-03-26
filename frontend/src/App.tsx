@@ -8,9 +8,10 @@ import config from 'environment'
 import { Footer, Notifications } from 'components';
 
 import './App.scss';
+import { User } from 'abacus';
 
 const App = (): JSX.Element => {
-  const [user, setUser] = useState()
+  const [user, setUser] = useState<User | undefined>()
   const [settings, setSettings] = useState()
   const [isLoading, setLoading] = useState(true)
   const [socket, setSocket] = useState<SocketIOClient.Socket>()
@@ -47,7 +48,7 @@ const App = (): JSX.Element => {
 
   const appContext: AppContextType = {
     user,
-    setUser,
+    setUser: (user?: User) => { setUser(user) },
     socket,
     settings
   }

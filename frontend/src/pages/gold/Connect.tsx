@@ -5,17 +5,17 @@ import { Block } from "components"
 import config from 'environment'
 
 const Connect = (): JSX.Element => {
-  const { user } = useContext(AppContext)
+  const { setUser, user } = useContext(AppContext)
   const [username, setUsername] = useState<string>()
   const [disabled, setDisabled] = useState<boolean>(true)
 
   const handleChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
     setUsername(value)
-    fetch(`https://api.scratch.mit.edu/users/${value}`)
+    fetch(`${config.API_URL}/scratch?username=${value}`)
       .then(res => setDisabled(res.status != 200))
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const formData = new FormData()
     if (!user) {
       alert("You must be logged in to do that!")
@@ -27,10 +27,18 @@ const Connect = (): JSX.Element => {
     }
     formData.set('uid', user.uid)
     formData.set('scratch_username', username)
-    fetch(`${config.API_URL}/users`, {
+
+    const response = await fetch(`${config.API_URL}/users`, {
       method: "PUT",
-      body: formData
+      body: formData,
+      headers: {
+        Authorization: `Bearer ${localStorage.accessToken}`
+      }
     })
+    if (response.ok) {
+      user.scratch_username = username
+      setUser({ ...user })
+    }
   }
   return (
     <>

@@ -1,16 +1,16 @@
 import { Settings, User } from 'abacus';
-import { createContext, Dispatch, SetStateAction } from 'react';
+import { createContext } from 'react';
 
 export interface AppContextType {
   user?: User;
-  setUser: Dispatch<SetStateAction<undefined>>;
+  setUser: (user: User | undefined) => void;
   socket?: SocketIOClient.Socket;
   settings?: Settings;
 }
 
 const AppContext = createContext<AppContextType>({
   user: undefined,
-  setUser: () => { return },
+  setUser: (user: User | undefined) => { console.log(user); return },
   settings: undefined,
   socket: undefined
 })
