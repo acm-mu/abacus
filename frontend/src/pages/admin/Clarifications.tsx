@@ -106,7 +106,7 @@ const Clarifications = (): JSX.Element => {
         <Table.Body>
           {clarifications.length == 0 ?
             <Table.Row>
-              <Table.Cell colSpan={6} style={{ textAlign: 'center' }}>No Clarifications</Table.Cell>
+              <Table.Cell colSpan={'100%'} style={{ textAlign: 'center' }}>No Clarifications</Table.Cell>
             </Table.Row> :
             clarifications.filter((clarification) => showClosed || clarification.open)
               .map((clarification: ClarificationItem) => (
