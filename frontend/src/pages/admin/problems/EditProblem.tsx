@@ -18,10 +18,10 @@ const ProblemInfo = ({ problem, setProblem }: ProblemStateProps) => {
   return <Form>
     <Form.Field label='Problem ID' name='id' control={Input} onChange={handleChange} value={problem?.id || ''} />
     <Form.Field label='Problem Name' name='name' control={Input} onChange={handleChange} value={problem?.name || ''} />
-    <Form.Group widths='equal'>
+    {problem?.division == 'blue' ? <Form.Group widths='equal'>
       <Form.Field label='Memory Limit' name='memory_limit' control={Input} onChange={handleChange} value={problem?.memory_limit || -1} />
       <Form.Field label='CPU Time Limit' name='cpu_time_limit' control={Input} onChange={handleChange} value={problem?.cpu_time_limit || -1} />
-    </Form.Group>
+    </Form.Group> : <></>}
   </Form>
 }
 
@@ -274,10 +274,12 @@ const EditProblems = (): JSX.Element => {
 
     <Menu attached='top' tabular>
       <Menu.Item name='Problem Info' tab='problem-info' active={activeItem === 'problem-info'} onClick={handleItemClick} />
-      <Menu.Item name='Test Data' tab='test-data' active={activeItem === 'test-data'} onClick={handleItemClick} />
       <Menu.Item name='Description' tab='description' active={activeItem === 'description'} onClick={handleItemClick} />
-      <Menu.Item name='Skeletons' tab='skeletons' active={activeItem === 'skeletons'} onClick={handleItemClick} />
-      <Menu.Item name='Solutions' tab='solutions' active={activeItem == 'solutions'} onClick={handleItemClick} />
+      {problem?.division == 'blue' ? <>
+        <Menu.Item name='Test Data' tab='test-data' active={activeItem === 'test-data'} onClick={handleItemClick} />
+        <Menu.Item name='Skeletons' tab='skeletons' active={activeItem === 'skeletons'} onClick={handleItemClick} />
+        <Menu.Item name='Solutions' tab='solutions' active={activeItem == 'solutions'} onClick={handleItemClick} />
+      </> : <></>}
     </Menu>
 
     <Block size='xs-12' style={{ padding: '20px', background: 'white', border: '1px solid #d4d4d5', borderTop: 'none' }}>

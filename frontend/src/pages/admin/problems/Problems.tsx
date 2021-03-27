@@ -39,7 +39,7 @@ const Problems = (): JSX.Element => {
   }, [])
 
   const loadProblems = async () => {
-    let response = await fetch(`${config.API_URL}/problems?division=blue&columns=tests`, {
+    let response = await fetch(`${config.API_URL}/problems?columns=tests`, {
       headers: {
         authorization: `Bearer ${localStorage.accessToken}`
       }
@@ -52,7 +52,7 @@ const Problems = (): JSX.Element => {
 
       sort('id', problems.map(problem => ({ ...problem, checked: false })))
 
-      response = await fetch(`${config.API_URL}/submissions?division=blue`, {
+      response = await fetch(`${config.API_URL}/submissions`, {
         headers: {
           authorization: `Bearer ${localStorage.accessToken}`
         }
