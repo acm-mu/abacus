@@ -4,6 +4,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Message } from 'semantic-ui-react';
 import io from 'socket.io-client';
 import config from '../environment';
+import { v4 as uuidv4 } from 'uuid';
 import './Notifications.scss';
 
 declare global {
@@ -16,9 +17,11 @@ declare global {
 const Notifications = (): JSX.Element => {
   const [notifications, setNotifications] = useState<Notification[]>(window.notifications || [])
 
-  window.sendNotification = (notification: Notification) =>
+  window.sendNotification = (notification: Notification) => {
+    if (!notification.id) notification.id = uuidv4()
     setNotifications(notifications =>
       notifications.concat(notification))
+  }
 
   useEffect(() => {
     const socket = io(config.API_URL)
