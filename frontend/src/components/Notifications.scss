@@ -2,24 +2,22 @@
     display: flex;
     flex-direction: column;
     position: fixed;
-    top: 0;
+    top: 3em;
     right: 2em;
     z-index: 1000;
     width: 25vw;
-    .ui.message {
-        margin: 1em 1em;
-        .close.icon {
-            cursor: pointer;
-        }
+}
+
+.notification.ui.message {
+    transition: right 500ms ease-in;
+    margin: 0.5em 1em;
+    .close.icon {
+        cursor: pointer;
     }
 }
 
-.notification {
-    transition: right 500ms ease-in;
-}
-
 .notification.enter {
-    right: -100%;
+    right: -120%;
 }
 
 .notification.enter-active {
@@ -36,6 +34,6 @@
 }
 
 .notification.exit-active {
-    right: -100%;
-    transition: right 500ms ease-in;
+    right: -120%;
+    transition: right 300ms ease-in;
 }
