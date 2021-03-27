@@ -9,6 +9,8 @@ import PracticeSubmission from "./Submission";
 import PracticeProblem from "./Problem";
 import PracticeProblems from "./Problems";
 import { Submission } from "abacus";
+import { Loader } from "semantic-ui-react";
+import { Helmet } from "react-helmet";
 
 export type Problem = {
   id: string;
@@ -21,11 +23,15 @@ const Practice = (): JSX.Element => {
   const { settings } = useContext(AppContext)
   const [problems, setProblems] = useState<{ [key: string]: Problem }>({})
   const submissions: { [key: string]: Submission } = localStorage.submissions ? JSON.parse(localStorage.submissions) : {}
+  const [isLoading, setLoading] = useState(true)
+
+  const helmet = <Helmet> <title>Abacus | Practice</title> </Helmet>
 
   const loadProblems = async () => {
     const response = await fetch('/problems/index.json')
     if (!isMounted) return
     setProblems(await response.json())
+    setLoading(false)
   }
 
   useEffect(() => {
@@ -33,11 +39,21 @@ const Practice = (): JSX.Element => {
     return () => { setMounted(false) }
   }, [])
 
+  if (isLoading) {
+    return <>
+      {helmet}
+      <Loader active inline='centered' content="Loading..." />
+    </>
+  }
+
   if (!settings || (new Date()) > settings.start_date) {
-    return <Block size='xs-12'>
-      <h1>⏰ Practice Period Has Ended! ⏰</h1>
-      <p>The practice period has closed because either the competition is in progress, or has ended.</p>
-    </Block>
+    return <>
+      {helmet}
+      <Block size='xs-12'>
+        <h1>⏰ Practice Period Has Ended! ⏰</h1>
+        <p>The practice period has closed because either the competition is in progress, or has ended.</p>
+      </Block>
+    </>
   }
 
   return <Switch>

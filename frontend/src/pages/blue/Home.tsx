@@ -2,8 +2,12 @@ import React from 'react'
 import { Block } from 'components'
 import java from 'assets/java.png'
 import python from 'assets/python.png'
+import { Helmet } from 'react-helmet'
 
-const Home = (): JSX.Element => (
+const Home = (): JSX.Element => <>
+  <Helmet>
+    <title>Abacus | Blue</title>
+  </Helmet>
   <Block size='xs-12'>
     <h1>Blue Division (Java/Python)</h1>
 
@@ -27,6 +31,6 @@ const Home = (): JSX.Element => (
       the world.
     </p>
   </Block>
-)
+</>
 
 export default Home

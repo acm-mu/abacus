@@ -4,6 +4,7 @@ import { Breadcrumb, Button, Label, Table } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { Problem } from '.';
 import { Submission } from 'abacus';
+import { Helmet } from 'react-helmet';
 
 interface PracticeProblemsProps {
   problems: { [key: string]: Problem };
@@ -18,6 +19,9 @@ const PracticeProblems = ({ problems, submissions }: PracticeProblemsProps): JSX
   }
 
   return <>
+    <Helmet>
+      <title>Abacus | Practice</title>
+    </Helmet>
     <Countdown />
     <Block transparent size='xs-12'>
       <Breadcrumb>

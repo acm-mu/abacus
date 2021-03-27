@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
 import { Block, Unauthorized } from 'components'
 import AppContext from 'AppContext'
+import { Helmet } from 'react-helmet'
 
 const Submissions = (): JSX.Element => {
   const { user } = useContext(AppContext)
@@ -13,8 +14,10 @@ const Submissions = (): JSX.Element => {
   if (!user) return <Unauthorized />
   // if (isLoading) return <Loader active inline='centered' content="Loading" />
 
-  return (
-
+  return <>
+    <Helmet>
+      <title>Abacus | Gold Submissions</title>
+    </Helmet>
     <Block size='xs-12' transparent>
       <Table>
         <Table.Header>
@@ -46,7 +49,7 @@ const Submissions = (): JSX.Element => {
         </Table.Body>
       </Table>
     </Block>
-  )
+  </>
 }
 
 export default Submissions

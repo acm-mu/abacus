@@ -2,6 +2,7 @@ import { Clarification } from 'abacus';
 import AppContext from 'AppContext';
 import { Block, NotFound } from 'components';
 import React, { useContext, useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet';
 import Moment from 'react-moment';
 import { useHistory, useParams } from 'react-router';
 import { Button, ButtonProps, Comment, Form, Label, Loader, Message, Popup } from 'semantic-ui-react';
@@ -108,10 +109,13 @@ const ClarificationPage = (): JSX.Element => {
     </Comment>
   }
 
-  if (isLoading) return <Loader active inline='centered' />
+  if (isLoading) return <Loader active inline='centered' content="Loading..." />
   if (!clarification) return <NotFound />
 
   return <>
+    <Helmet>
+      <title>Abacus | Admin {clarification.title}</title>
+    </Helmet>
     <Block transparent size='xs-12'>
       <Button content='Back' icon='arrow left' labelPosition='left' onClick={history.goBack} />
     </Block>

@@ -7,6 +7,7 @@ import { Block, Countdown, Unauthorized } from "components";
 import config from 'environment'
 import AppContext from "AppContext";
 import "components/Icons.scss";
+import { Helmet } from "react-helmet";
 
 const Submissions = (): JSX.Element => {
   const { user } = useContext(AppContext);
@@ -31,10 +32,13 @@ const Submissions = (): JSX.Element => {
   }
 
   if (!user) return <Unauthorized />
-  if (isLoading) return <Loader active inline='centered' content="Loading" />
+  if (isLoading) return <Loader active inline='centered' content="Loading..." />
 
   return (
     <>
+      <Helmet>
+        <title>Abacus | Blue Submissions</title>
+      </Helmet>
       <Countdown />
       <Block transparent size="xs-12">
         <Table>

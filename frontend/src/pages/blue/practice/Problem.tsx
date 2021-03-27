@@ -4,8 +4,9 @@ import { Link, useParams } from 'react-router-dom';
 import { Breadcrumb, Button, Loader, Table } from 'semantic-ui-react';
 import MDEditor from '@uiw/react-md-editor';
 
-import { Block, Countdown } from 'components'; import Moment from 'react-moment';
+import { Block, Countdown, NotFound } from 'components'; import Moment from 'react-moment';
 import "../Problem.scss";
+import { Helmet } from 'react-helmet';
 
 interface PracticeProblemProps {
   submissions: Submission[]
@@ -14,11 +15,17 @@ interface PracticeProblemProps {
 const PracticeProblem = ({ submissions }: PracticeProblemProps): JSX.Element => {
   const { id } = useParams<{ id: string }>()
   const [problem, setProblem] = useState<Problem>()
+  const [isLoading, setLoading] = useState(true)
+
+  const helmet = <Helmet> <title>Abacus | Clarifications</title> </Helmet>
 
   useEffect(() => {
     fetch(`/problems/${id}.json`)
       .then(res => res.json())
-      .then(data => setProblem(data))
+      .then(data => {
+        setProblem(data)
+        setLoading(false)
+      })
   }, [])
 
   const downloadFiles = () => {
@@ -28,8 +35,22 @@ const PracticeProblem = ({ submissions }: PracticeProblemProps): JSX.Element => 
       }
   }
 
-  if (!problem) return <Loader active inline='centered' />
+  if (isLoading) {
+    return <>
+      {helmet}
+      <Loader active inline='centered' content="Loading..." />
+    </>
+  }
+
+  if (!problem) {
+    return <>
+      {helmet}
+      <NotFound />
+    </>
+  }
+
   return <>
+    {helmet}
     <Countdown />
     <Block transparent size='xs-12'>
       <Breadcrumb>
@@ -73,7 +94,7 @@ const PracticeProblem = ({ submissions }: PracticeProblemProps): JSX.Element => 
       <MDEditor.Markdown source={problem.description} />
     </Block>
 
-    <Block size='xs-3' style={{ textAlign: 'center' }}>
+    <Block size='xs-3' className='problem-panel'>
       {problem?.tests ?
         <Button
           as={Link}

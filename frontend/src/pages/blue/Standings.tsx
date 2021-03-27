@@ -6,6 +6,7 @@ import { Block, Countdown } from "components";
 import config from 'environment'
 import "./Standings.scss";
 import AppContext from "AppContext";
+import { Helmet } from "react-helmet";
 
 const Standings = (): JSX.Element => {
   const { settings } = useContext(AppContext);
@@ -43,6 +44,9 @@ const Standings = (): JSX.Element => {
   if (!settings || new Date() < settings.start_date) {
     return (
       <>
+        <Helmet>
+          <title>Abacus | Standings</title>
+        </Helmet>
         <Countdown />
         <Block center size='xs-12'>
           <h1>Competition not yet started!</h1>
@@ -52,11 +56,20 @@ const Standings = (): JSX.Element => {
     )
   }
 
-  if (isLoading) return <Loader active inline='centered' content="Loading" />
-  if (!standings || !problems) return <Message icon='exclamation' error header='Error' content="An error has occurred! Please contact support" />
+  if (isLoading) return <Loader active inline='centered' content="Loading..." />
+  if (!standings || !problems) {
+    return <Message
+      icon='exclamation'
+      error
+      header='Error'
+      content="An error has occurred! Please contact support" />
+  }
 
   return (
     <>
+      <Helmet>
+        <title>Abacus | Blue Standings</title>
+      </Helmet>
       <Countdown />
       <Block size="xs-12" transparent>
         <div className="table-legend">

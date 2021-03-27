@@ -6,6 +6,7 @@ import MDEditor from '@uiw/react-md-editor'
 import { Block } from 'components'
 import { divisions } from 'utils'
 import config from 'environment'
+import { Helmet } from 'react-helmet'
 
 interface NewProblemType {
   id: string,
@@ -77,6 +78,9 @@ const NewProblem = (): JSX.Element => {
 
   return (
     <>
+      <Helmet>
+        <title>Abacus | Admin New Problem</title>
+      </Helmet>
       <h1>New Problem</h1>
       <Block size='xs-12'>
         {message?.type == 'error' ? <Message error content={message.message} /> :
