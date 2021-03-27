@@ -83,5 +83,12 @@ declare module "abacus" {
     title?: string;
   }
 
+  export interface Notification {
+    header?: string;
+    content: string;
+    id: string;
+    type: 'success' | 'warning' | 'error' | undefined
+  }
+
   export interface Args { [key: string]: unknown }
 }

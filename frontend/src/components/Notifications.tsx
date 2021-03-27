@@ -1,17 +1,22 @@
 import { Notification } from 'abacus';
-import React, { Dispatch, SetStateAction, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Message } from 'semantic-ui-react';
+import io from 'socket.io-client';
+import config from '../environment';
 import './Notifications.scss';
 
-interface NotificationsProps {
-  notifications: Notification[];
-  setNotifications: Dispatch<SetStateAction<Notification[]>>
-}
+const Notifications = (): JSX.Element => {
+  const [notifications, setNotifications] = useState<Notification[]>([])
 
+  useEffect(() => {
+    const socket = io(config.API_URL)
 
-
-const Notifications = ({ notifications, setNotifications }: NotificationsProps): JSX.Element => {
+    socket.on('notification', (notification: Notification) => {
+      setNotifications(notifications =>
+        notifications.concat(notification))
+    })
+  }, [])
 
   const typeIcon = (type?: string) => {
     switch (type) {
@@ -22,32 +27,26 @@ const Notifications = ({ notifications, setNotifications }: NotificationsProps):
     }
   }
 
-  const NotificationMessage = ({ notification: { id, type, header, content } }: { notification: Notification }): JSX.Element =>
-    <Message
-      // id={id}
-      icon={typeIcon(type)}
-      success={type === 'success'}
-      warning={type === 'warning'}
-      error={type === 'error'}
-      header={header}
-      content={content}
-      onDismiss={() => setNotifications(notifications =>
-        notifications.filter(notification => id != notification.id))}
-    />
-
-  const notificationsList = useMemo(() => notifications.map(notification =>
-    <CSSTransition
-      unmountOnExit
-      key={notification.id}
-      timeout={500}
-      className='notification'
-    >
-      <NotificationMessage notification={notification} />
-    </CSSTransition>
-  ), [notifications])
-
   return <TransitionGroup className='notifications'>
-    {notificationsList}
+    {notifications.map(({ id, type, header, content }) =>
+      <CSSTransition
+        unmountOnExit
+        key={id}
+        timeout={500}
+        className='notification'
+      >
+        <Message
+          icon={typeIcon(type)}
+          success={type === 'success'}
+          warning={type === 'warning'}
+          error={type === 'error'}
+          header={header}
+          content={content}
+          onDismiss={() => setNotifications(notifications =>
+            notifications.filter(notification => id != notification.id))}
+        />
+      </CSSTransition>
+    )}
   </TransitionGroup>
 }
 
