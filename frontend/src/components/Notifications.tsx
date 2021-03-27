@@ -21,6 +21,12 @@ const Notifications = (): JSX.Element => {
     if (!notification.id) notification.id = uuidv4()
     setNotifications(notifications =>
       notifications.concat(notification))
+
+    setTimeout(() => {
+      setNotifications(notifications =>
+        notifications.filter(({ id }) => id != notification.id))
+    }, 15 * 1000)
+
   }
 
   useEffect(() => {
