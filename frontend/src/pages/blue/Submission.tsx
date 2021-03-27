@@ -7,6 +7,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { Block, Countdown, NotFound } from 'components'
 import config from 'environment'
 import { syntax_lang } from 'utils'
+import { Helmet } from 'react-helmet'
 
 const submission = (): JSX.Element => {
   const { sid } = useParams<{ sid: string }>()
@@ -34,10 +35,12 @@ const submission = (): JSX.Element => {
   }
 
   if (isLoading) return <Loader active inline='centered' content="Loading..." />
-
   if (!submission) return <NotFound />
 
   return <>
+    <Helmet>
+      <title>Abacus | Submission</title>
+    </Helmet>
     <Countdown />
     <Block transparent size="xs-12">
       <Table celled>

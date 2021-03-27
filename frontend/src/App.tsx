@@ -25,7 +25,6 @@ const App = (): JSX.Element => {
     if (res.ok) {
       setUser(await res.json())
     }
-    setLoading(false)
   }
 
   const loadSettings = async () => {
@@ -41,8 +40,10 @@ const App = (): JSX.Element => {
 
   useEffect(() => {
     setSocket(io(config.API_URL))
-    checkAuth()
-    loadSettings()
+    Promise.all([
+      loadSettings(),
+      checkAuth()
+    ]).then(() => setLoading(false))
   }, [])
 
   const appContext: AppContextType = {

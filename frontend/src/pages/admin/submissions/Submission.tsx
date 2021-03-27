@@ -8,6 +8,7 @@ import { Block, NotFound } from 'components'
 import config from 'environment'
 import { capitalize, syntax_lang, format_text } from "utils"
 import "pages/Submission.scss"
+import { Helmet } from 'react-helmet'
 
 const submission = (): JSX.Element => {
   const history = useHistory()
@@ -97,6 +98,9 @@ const submission = (): JSX.Element => {
   if (!submission) return <NotFound />
 
   return <>
+    <Helmet>
+      <title>Abacus | Admin Submission</title>
+    </Helmet>
     <Block transparent size='xs-12' >
       <Button disabled={rerunning} loading={rerunning} content="Rerun" icon="redo" labelPosition="left" onClick={rerun} />
 

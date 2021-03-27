@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 import config from 'environment'
 import AppContext from 'AppContext'
 import CreateUser from './CreateUser'
+import { Helmet } from 'react-helmet';
 
 interface UserItem extends User {
   checked: boolean
@@ -99,6 +100,9 @@ const Users = (): JSX.Element => {
   if (error) return <Message content={error} />
 
   return <>
+    <Helmet>
+      <title>Abacus | Users</title>
+    </Helmet>
     <CreateUser trigger={<Button content="Add User" primary />} callback={createUserCallback} />
     <Link to='/admin/users/upload'><Button content="Upload Users" /></Link>
     <Button content="Download Users" onClick={downloadUsers} />

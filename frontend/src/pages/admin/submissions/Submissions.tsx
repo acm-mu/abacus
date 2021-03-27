@@ -5,6 +5,7 @@ import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
 import config from 'environment'
 import { compare } from 'utils'
+import { Helmet } from 'react-helmet'
 
 interface SubmissionItem extends Submission {
   checked: boolean
@@ -86,6 +87,9 @@ const Submissions = (): JSX.Element => {
 
   return (
     <>
+      <Helmet>
+        <title>Abacus | Admin Submissions</title>
+      </Helmet>
       <Button content="Download Submissions" onClick={downloadSubmissions} />
       {submissions.filter(submission => submission.checked).length ?
         <Button content="Delete Submission(s)" negative onClick={deleteSelected} /> : <></>}

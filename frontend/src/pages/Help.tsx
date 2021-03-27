@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Block } from "components";
 import { Accordion, AccordionTitleProps, Icon } from 'semantic-ui-react';
+import { Helmet } from "react-helmet";
 
 const Help = (): JSX.Element => {
 
@@ -10,6 +11,10 @@ const Help = (): JSX.Element => {
 
   return (
     <>
+      <Helmet>
+        <title>Abacus | Help</title>
+      </Helmet>
+
       <Block size="xs-12">
         <h1>Help Page</h1>
       </Block>

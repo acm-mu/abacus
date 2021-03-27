@@ -2,6 +2,7 @@ import React, { ChangeEvent, useEffect, useState } from 'react'
 import { Button, Form, Input, Message } from 'semantic-ui-react'
 import { Block } from 'components'
 import config from 'environment'
+import { Helmet } from 'react-helmet'
 
 const timezoneOffset = () => (new Date()).getTimezoneOffset() * 60 * 1000
 
@@ -72,7 +73,10 @@ const Settings = (): JSX.Element => {
     }
   }
 
-  return (
+  return <>
+    <Helmet>
+      <title>Abacus | Admin Settings</title>
+    </Helmet>
     <Block center size='xs-6'>
       {message?.type == 'error' ? <Message error icon='warning' header='Error!' content={message.message} /> :
         message?.type == 'success' ? <Message success icon='check' header='Saved!' content={message.message} /> : <></>}
@@ -110,7 +114,7 @@ const Settings = (): JSX.Element => {
         <Button primary>Save</Button>
       </Form>
     </Block>
-  )
+  </>
 }
 
 export default Settings

@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { Block, Countdown, Unauthorized } from 'components'
 import config from 'environment'
 import AppContext from 'AppContext'
+import { Helmet } from 'react-helmet'
 
 const Problems = (): JSX.Element => {
   const [isMounted, setMounted] = useState<boolean>(false)
@@ -26,15 +27,16 @@ const Problems = (): JSX.Element => {
   }, [])
 
   if (!settings || new Date() < settings.start_date) {
-    return (
-      <>
-        <Countdown />
-        <Block center size='xs-12'>
-          <h1>Competition not yet started!</h1>
-          <p>Problem&apos;s will become available as soon as the competition begins.</p>
-        </Block>
-      </>
-    )
+    return <>
+      <Helmet>
+        <title>Abacus | Gold Problems</title>
+      </Helmet>
+      <Countdown />
+      <Block center size='xs-12'>
+        <h1>Competition not yet started!</h1>
+        <p>Problem&apos;s will become available as soon as the competition begins.</p>
+      </Block>
+    </>
   }
 
   return (
