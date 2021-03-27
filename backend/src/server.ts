@@ -31,12 +31,12 @@ app.use(morgan('dev'));
 app.use(api);
 app.get('/', (_, res) => res.status(200).send(' ')); // Sends 200 OK when AWS EBS pings server for health check
 
-const sendNotification = (header: string, content: string) => {
-  io.sockets.emit('notification', { header, content, id: uuidv4() })
-}
+export const sendNotification = (header: string, content: string, type?: string) =>
+  io.sockets.emit('notification', ({ id: uuidv4(), header, content, type }))
+
 
 app.get('/ping', (_, res) => {
-  sendNotification("Pong!", "Responding to ping");
+  sendNotification("Pong!", "Responding to ping", 'success');
   res.send('Pong!')
 })
 
