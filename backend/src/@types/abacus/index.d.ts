@@ -18,6 +18,7 @@ declare module "abacus" {
     md5: string;
     pid: string;
     runtime: number;
+    released: boolean;
     score: number;
     status: string;
     sub_no: number;
@@ -68,6 +69,18 @@ declare module "abacus" {
     solved: number;
     time: number;
     problems: { [key: string]: ProblemScore };
+  }
+
+  export interface Clarification {
+    cid: string;
+    body: string;
+    uid: string;
+    date: number;
+    open?: boolean;
+    parent?: string;
+    division?: string;
+    type?: string;
+    title?: string;
   }
 
   export interface Args { [key: string]: unknown }

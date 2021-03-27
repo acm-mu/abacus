@@ -1,0 +1,33 @@
+.ui.menu time {
+    color: rgba(0, 0, 0, 0.87);
+    font-weight: 400;
+    font-size: 0.85714em;
+    font-style: normal;
+    float: right;
+    margin: 0 0 0 0.5em;
+    color: rgba(0, 0, 0, 0.4);
+    font-family: Lato, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    line-height: 1.4285em;
+}
+
+.ui.menu .header .icon {
+    float: right;
+    font-size: 1em;
+    color: #555;
+    margin: 0;
+}
+
+.ui.menu .item.closed,
+.ui.menu .item.closed:hover,
+.ui.menu .item.active.closed {
+    color: #aaa !important;
+     :is(h5, a, p, .icon) {
+        color: #aaa;
+    }
+}
+
+p.prompt {
+    text-align: center;
+    font-size: 1.5em;
+    padding: 6em;
+}

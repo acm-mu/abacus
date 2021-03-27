@@ -59,6 +59,7 @@ h6 {
     font-weight: normal;
 }
 
+
 /* header */
 
 .ui.fixed.menu.inverted {
@@ -82,6 +83,7 @@ h6 {
     height: 20px;
 }
 
+
 /* Block System */
 
 .ui.main.text.container {
@@ -91,6 +93,7 @@ h6 {
     flex-wrap: wrap;
     align-content: flex-start;
 }
+
 
 /* Stretch the navigation container, and the main container */
 
@@ -105,6 +108,7 @@ form#loginForm {
     flex-direction: column;
     align-items: center;
 }
+
 
 /* Button */
 
@@ -121,4 +125,9 @@ a.button {
 
 .ui.table thead th.sortable {
     cursor: pointer;
+}
+
+.ui.checkbox {
+    display: flex;
+    align-items: center;
 }

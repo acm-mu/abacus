@@ -47,6 +47,7 @@ export const postAuth = async (req: Request, res: Response) => {
 
     res.send({ accessToken, ...user })
   } catch (err) {
+    console.error(err)
     res.sendStatus(500)
   }
 }

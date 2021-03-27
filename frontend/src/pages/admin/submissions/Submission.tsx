@@ -6,10 +6,8 @@ import Moment from 'react-moment'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { Block, NotFound } from 'components'
 import config from 'environment'
-import { capitalize, syntax_lang } from "utils"
+import { capitalize, syntax_lang, format_text } from "utils"
 import "pages/Submission.scss"
-
-const format_text = (str: string): string => str.replace(/(^.*$)/gm, (c: string) => isNaN(+c) ? `"${c}"` : c)
 
 const submission = (): JSX.Element => {
   const history = useHistory()
@@ -17,6 +15,8 @@ const submission = (): JSX.Element => {
   const [submission, setSubmission] = useState<Submission>()
 
   const [isLoading, setLoading] = useState(true)
+  const [rerunning, setRerunning] = useState(false)
+  const [releaseLoading, setReleaseLoading] = useState(false)
 
   const [activeItem, setActiveItem] = useState('source-code')
   const [activeTestItem, setActiveTestItem] = useState(0)
@@ -51,6 +51,7 @@ const submission = (): JSX.Element => {
   }
 
   const rerun = async () => {
+    setRerunning(true)
     const response = await fetch(`${config.API_URL}/submissions/rerun`, {
       method: 'POST',
       headers: {
@@ -65,6 +66,24 @@ const submission = (): JSX.Element => {
         setSubmission({ team: submission?.team, problem: submission?.problem, ...result.submissions[sid] })
       }
     }
+    setRerunning(false)
+  }
+  const release = async () => {
+    if (!submission) return
+    setReleaseLoading(true)
+    const response = await fetch(`${config.API_URL}/submissions`, {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${localStorage.accessToken}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ sid, released: true })
+    })
+    if (response.ok) {
+      const result = await response.json()
+      setSubmission({ ...submission, released: result.released })
+    }
+    setReleaseLoading(false)
   }
 
   const download = () => submission?.source &&
@@ -79,7 +98,11 @@ const submission = (): JSX.Element => {
 
   return <>
     <Block transparent size='xs-12' >
-      <Button content="Rerun" icon="redo" labelPosition="left" onClick={rerun} />
+      <Button disabled={rerunning} loading={rerunning} content="Rerun" icon="redo" labelPosition="left" onClick={rerun} />
+
+      {submission.released ?
+        <Button icon="check" positive content="Released" labelPosition="left" /> :
+        <Button loading={releaseLoading} disabled={releaseLoading} icon="right arrow" content="Release" labelPosition="left" onClick={release} />}
       <Button content="Download" icon="download" iconPosition="left" onClick={download} />
       <Button content="Delete" icon="trash" negative labelPosition="left" onClick={deleteSubmission} />
 
@@ -107,14 +130,16 @@ const submission = (): JSX.Element => {
             <Table.Cell>{submission.team.display_name}</Table.Cell>
             <Table.Cell><Moment fromNow date={submission?.date * 1000} /></Table.Cell>
             <Table.Cell><Link to={`/admin/problems/${submission.pid}`}>{submission.problem?.name}</Link></Table.Cell>
-            <Table.Cell><span className={`icn status ${submission.status}`} /></Table.Cell>
-            <Table.Cell>{Math.floor(submission.runtime)}</Table.Cell>
-            <Table.Cell>{submission.score}</Table.Cell>
+            <Table.Cell>
+              {rerunning ? <Loader inline size='small' active /> : <span className={`icn status ${submission.status}`} />}
+            </Table.Cell>
+            <Table.Cell>{rerunning ? <Loader active inline size='small' /> : Math.floor(submission.runtime)}</Table.Cell>
+            <Table.Cell>{rerunning ? <Loader active inline size='small' /> : submission.score}</Table.Cell>
             <Table.Cell>{submission.language}</Table.Cell>
           </Table.Row>
           <Table.Row>
             <Table.Cell colSpan={7}>
-              {submission?.tests.map((test: Test, index: number) => {
+              {rerunning ? <Loader inline size='small' active /> : submission?.tests.map((test: Test, index: number) => {
                 switch (test.result) {
                   case 'accepted':
                     return <span key={`test-${index}`} className='result icn accepted' />
@@ -167,33 +192,36 @@ const submission = (): JSX.Element => {
         </pre>
       </> :
         activeItem == 'test-cases' ? <div style={{ display: 'flex' }}>
-          <Menu secondary vertical>
-            {submission.tests.map((test: Test, index: number) =>
-              <Menu.Item key={`test-case-${index}`} name={`Test Case #${index + 1}`} active={activeTestItem === index} tab={index} onClick={handleTestItemClick} />
-            )}</Menu>
+          {rerunning ? <Loader active size='large' inline='centered' content="Retesting" /> :
+            <>
+              <Menu secondary vertical>
+                {submission.tests.map((test: Test, index: number) =>
+                  <Menu.Item key={`test-case-${index}`} name={`Test Case #${index + 1}`} active={activeTestItem === index} tab={index} onClick={handleTestItemClick} />
+                )}</Menu>
 
-          {submission.tests.map((test: Test, index: number) => (
-            <React.Fragment key={`test-result-${index}`}>
-              {index == activeTestItem ?
-                <div className='testRun'>
-                  <h3 className={test.result}>{capitalize(test.result || '')}</h3>
-                  <b>Input</b>
-                  <pre>{format_text(test.in)}</pre>
+              {submission.tests.map((test: Test, index: number) => (
+                <React.Fragment key={`test-result-${index}`}>
+                  {index == activeTestItem ?
+                    <div className='testRun'>
+                      <h3 className={test.result}>{capitalize(test.result || '')}</h3>
+                      <b>Input</b>
+                      <pre>{format_text(test.in)}</pre>
 
-                  <div>
-                    <div>
-                      <b>Output</b>
-                      <pre>{format_text(test.stdout || '')}</pre>
+                      <div>
+                        <div>
+                          <b>Output</b>
+                          <pre>{format_text(test.stdout || '')}</pre>
+                        </div>
+                        <div>
+                          <b>Expected</b>
+                          <pre>{format_text(test.out)}</pre>
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <b>Expected</b>
-                      <pre>{format_text(test.out)}</pre>
-                    </div>
-                  </div>
-                </div>
-                : <></>}
-            </React.Fragment>
-          ))}
+                    : <></>}
+                </React.Fragment>
+              ))}
+            </>}
         </div>
           : <></>}
     </Block>
