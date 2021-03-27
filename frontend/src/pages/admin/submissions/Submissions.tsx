@@ -1,6 +1,6 @@
 import { Submission } from 'abacus'
-import React, { ChangeEvent, useState, useEffect } from 'react'
-import { Button, Checkbox, CheckboxProps, Label, Loader, Table } from 'semantic-ui-react'
+import React, { ChangeEvent, useState, useEffect, useMemo } from 'react'
+import { Button, Checkbox, Label, Loader, Table } from 'semantic-ui-react'
 import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
 import config from 'environment'
@@ -19,7 +19,7 @@ const Submissions = (): JSX.Element => {
   const [isLoading, setLoading] = useState<boolean>(true)
   const [submissions, setSubmissions] = useState<SubmissionItem[]>([])
   const [isMounted, setMounted] = useState<boolean>(true)
-  const [filterReleased, setFilterReleased] = useState(false)
+  const [showReleased, setShowReleased] = useState(false)
 
   const [{ column, direction }, setSortConfig] = useState<SortConfig>({
     column: 'date',
@@ -36,8 +36,12 @@ const Submissions = (): JSX.Element => {
   }
 
   useEffect(() => {
-    loadSubmissions()
-    return () => { setMounted(false) }
+    loadSubmissions().then(() => setLoading(false))
+    const timeInterval = setInterval(loadSubmissions, 5 * 1000)
+    return () => {
+      clearInterval(timeInterval)
+      setMounted(false)
+    }
   }, [])
 
   const loadSubmissions = async () => {
@@ -51,12 +55,9 @@ const Submissions = (): JSX.Element => {
     if (!isMounted) return
 
     setSubmissions(submissions.map(submission => ({ ...submission, checked: false })))
-    setLoading(false)
   }
 
-  const onFilterChange = (event: React.MouseEvent<HTMLInputElement, MouseEvent>, { checked }: CheckboxProps) => {
-    setFilterReleased(checked || false)
-  }
+  const onFilterChange = () => setShowReleased(!showReleased)
 
   const downloadSubmissions = () => saveAs(new File([JSON.stringify(submissions, null, '\t')], 'submissions.json', { type: 'text/json;charset=utf-8' }))
   const handleChange = ({ target: { id, checked } }: ChangeEvent<HTMLInputElement>) => setSubmissions(submissions.map(submission => submission.sid == id ? { ...submission, checked } : submission))
@@ -77,6 +78,10 @@ const Submissions = (): JSX.Element => {
     }
   }
 
+  const filteredSubmissions = useMemo(() =>
+    submissions.filter((submission) => showReleased || !submission.released)
+    , [submissions, showReleased])
+
   if (isLoading) return <Loader active inline='centered' content="Loading" />
 
   return (
@@ -84,7 +89,7 @@ const Submissions = (): JSX.Element => {
       <Button content="Download Submissions" onClick={downloadSubmissions} />
       {submissions.filter(submission => submission.checked).length ?
         <Button content="Delete Submission(s)" negative onClick={deleteSelected} /> : <></>}
-      <Checkbox toggle label="Hide Released" checked={filterReleased} onClick={onFilterChange} />
+      <Checkbox toggle label="Show Released" checked={showReleased} onClick={onFilterChange} />
 
       <Table singleLine>
         <Table.Header>
@@ -103,11 +108,11 @@ const Submissions = (): JSX.Element => {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {submissions.length == 0 ?
+          {filteredSubmissions.length == 0 ?
             <Table.Row>
               <Table.Cell colSpan={10} style={{ textAlign: "center" }}>No Submissions</Table.Cell>
             </Table.Row> :
-            submissions.filter((submission) => !filterReleased || submission.released).map((submission) =>
+            filteredSubmissions.map((submission) =>
               <Table.Row key={submission.sid}>
                 <Table.Cell>
                   <input
