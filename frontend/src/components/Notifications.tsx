@@ -31,7 +31,7 @@ const Notifications = (): JSX.Element => {
   const typeIcon = (type?: string) => {
     switch (type) {
       case 'success': return 'check'
-      case 'warning': return 'warning triangle'
+      case 'warning': return 'warning sign'
       case 'error': return 'exclamation'
       default: return 'bell'
     }
