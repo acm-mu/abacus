@@ -89,5 +89,12 @@ declare module "abacus" {
     open?: boolean
   }
 
+  export interface Notification {
+    header?: string;
+    content: string;
+    id: string;
+    type: 'success' | 'warning' | 'error' | undefined
+  }
+
   export interface Args { [key: string]: unknown }
 }
