@@ -22,6 +22,8 @@ const Submissions = (): JSX.Element => {
   const [isMounted, setMounted] = useState<boolean>(true)
   const [showReleased, setShowReleased] = useState(false)
 
+  const helmet = <Helmet><title>Abacus | Admin Submissions</title></Helmet>
+
   const [{ column, direction }, setSortConfig] = useState<SortConfig>({
     column: 'date',
     direction: 'ascending'
@@ -83,13 +85,16 @@ const Submissions = (): JSX.Element => {
     submissions.filter((submission) => showReleased || !submission.released)
     , [submissions, showReleased])
 
-  if (isLoading) return <Loader active inline='centered' content="Loading" />
+  if (isLoading) {
+    return <>
+      {helmet}
+      <Loader active inline='centered' content="Loading" />
+    </>
+  }
 
   return (
     <>
-      <Helmet>
-        <title>Abacus | Admin Submissions</title>
-      </Helmet>
+      {helmet}
       <Button content="Download Submissions" onClick={downloadSubmissions} />
       {submissions.filter(submission => submission.checked).length ?
         <Button content="Delete Submission(s)" negative onClick={deleteSelected} /> : <></>}

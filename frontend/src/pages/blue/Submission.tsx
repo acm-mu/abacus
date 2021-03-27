@@ -39,7 +39,7 @@ const submission = (): JSX.Element => {
 
   return <>
     <Helmet>
-      <title>Abacus | Submission</title>
+      <title>Abacus | Blue Submission</title>
     </Helmet>
     <Countdown />
     <Block transparent size="xs-12">

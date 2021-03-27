@@ -25,7 +25,7 @@ const Submit = (): JSX.Element => {
 
   return <>
     <Helmet>
-      <title>Abacus | Submit Gold</title>
+      <title>Abacus | Gold Submit</title>
     </Helmet>
     <Block size='xs-12'>
       <Form>
@@ -70,6 +70,7 @@ const Submit = (): JSX.Element => {
       <a href='/help/scratch_share'>Sharing Projects on Scratch</a>
     </Block>
   </>
+
 }
 
 export default Submit

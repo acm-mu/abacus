@@ -113,7 +113,6 @@ const ClarificationPage = (): JSX.Element => {
   if (!clarification) return <NotFound />
 
   return <>
-
     <Helmet>
       <title>Abacus | Admin {clarification.title}</title>
     </Helmet>
