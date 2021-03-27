@@ -3,6 +3,7 @@ import { Table, Label, Loader, Message, Icon } from 'semantic-ui-react'
 import { Countdown, Block } from 'components';
 import { capitalize } from 'utils';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
 type TeamType = {
   division: string,
@@ -52,6 +53,9 @@ const Home = (): JSX.Element => {
   }
   return (
     <>
+      <Helmet>
+        <title>Abacus</title>
+      </Helmet>
       <Message icon color='blue'>
         <Icon name='bullhorn' />
         <Message.Content>

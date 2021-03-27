@@ -6,6 +6,7 @@ import Editor from '@monaco-editor/react'
 import MDEditor from '@uiw/react-md-editor'
 import { Block } from 'components'
 import config from 'environment'
+import { Helmet } from 'react-helmet'
 
 interface ProblemStateProps {
   problem?: Problem;
@@ -207,6 +208,9 @@ const EditProblems = (): JSX.Element => {
   if (isLoading) return <Loader active inline='centered' content="Loading" />
 
   return <>
+    <Helmet>
+      <title>Abacus | Admin Edit Problem</title>
+    </Helmet>
     <h1>{problem?.name}</h1>
 
     <Menu attached='top' tabular>

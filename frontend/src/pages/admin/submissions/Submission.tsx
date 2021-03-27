@@ -8,6 +8,7 @@ import { Block, NotFound } from 'components'
 import config from 'environment'
 import { capitalize, syntax_lang, format_text } from "utils"
 import "pages/Submission.scss"
+import { Helmet } from 'react-helmet'
 
 const submission = (): JSX.Element => {
   const history = useHistory()
@@ -20,6 +21,8 @@ const submission = (): JSX.Element => {
 
   const [activeItem, setActiveItem] = useState('source-code')
   const [activeTestItem, setActiveTestItem] = useState(0)
+
+  const helmet = <Helmet> <title>Abacus | Admin Submission</title> </Helmet>
 
   useEffect(() => {
     loadSubmission()
@@ -92,11 +95,17 @@ const submission = (): JSX.Element => {
   const handleItemClick = (event: MouseEvent, data: MenuItemProps) => setActiveItem(data.tab)
   const handleTestItemClick = (event: MouseEvent, data: MenuItemProps) => setActiveTestItem(data.tab)
 
-  if (isLoading) return <Loader active inline='centered' content="Loading..." />
+  if (isLoading) {
+    return <>
+      {helmet}
+      <Loader active inline='centered' content="Loading..." />
+    </>
+  }
 
   if (!submission) return <NotFound />
 
   return <>
+    {helmet}
     <Block transparent size='xs-12' >
       <Button disabled={rerunning} loading={rerunning} content="Rerun" icon="redo" labelPosition="left" onClick={rerun} />
 

@@ -6,6 +6,7 @@ import AppContext from 'AppContext'
 import { Block } from 'components'
 import config from 'environment'
 import '@toast-ui/chart/dist/toastui-chart.min.css'
+import { Helmet } from 'react-helmet'
 
 const Home = (): JSX.Element => {
   const [submissions, setSubmissions] = useState<Submission[]>()
@@ -166,6 +167,9 @@ const Home = (): JSX.Element => {
 
   return (
     <>
+      <Helmet>
+        <title>Abacus | Admin</title>
+      </Helmet>
       <Block size='xs-12'>
         <h1>Admin Dashboard</h1>
       </Block>
