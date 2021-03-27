@@ -9,19 +9,20 @@ import './Notifications.scss';
 declare global {
   interface Window {
     notifications: Notification[]
+    sendNotification: (notification: Notification) => void;
   }
 }
 
 const Notifications = (): JSX.Element => {
   const [notifications, setNotifications] = useState<Notification[]>(window.notifications || [])
 
+  window.sendNotification = (notification: Notification) =>
+    setNotifications(notifications =>
+      notifications.concat(notification))
+
   useEffect(() => {
     const socket = io(config.API_URL)
-
-    socket.on('notification', (notification: Notification) => {
-      setNotifications(notifications =>
-        notifications.concat(notification))
-    })
+    socket.on('notification', window.sendNotification)
   }, [])
 
   const typeIcon = (type?: string) => {
