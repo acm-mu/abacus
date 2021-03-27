@@ -6,8 +6,14 @@ import io from 'socket.io-client';
 import config from '../environment';
 import './Notifications.scss';
 
+declare global {
+  interface Window {
+    notifications: Notification[]
+  }
+}
+
 const Notifications = (): JSX.Element => {
-  const [notifications, setNotifications] = useState<Notification[]>([])
+  const [notifications, setNotifications] = useState<Notification[]>(window.notifications || [])
 
   useEffect(() => {
     const socket = io(config.API_URL)

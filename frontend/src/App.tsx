@@ -5,6 +5,7 @@ import { Index, Admin, Blue, Gold } from 'pages'
 import AppContext, { AppContextType } from 'AppContext';
 import config from 'environment'
 import { Footer, Notifications } from 'components';
+import { v4 as uuidv4 } from 'uuid';
 import './App.scss';
 
 const App = (): JSX.Element => {
@@ -44,7 +45,7 @@ const App = (): JSX.Element => {
       await loadSettings()
       await checkAuth()
     } catch (err) {
-      // sendNotification({ id: uuidv4(), type: 'error', header: 'Uh oh!', content: "We are having issues communicating with our servers." })
+      window.notifications = [({ id: uuidv4(), type: 'error', header: 'Uh oh!', content: "We are having issues communicating with our servers." })]
     }
   }
 
