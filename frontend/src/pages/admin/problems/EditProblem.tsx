@@ -1,4 +1,4 @@
-import { Problem, Skeleton, Test } from 'abacus'
+import { Problem } from 'abacus'
 import React, { ChangeEvent, MouseEvent, useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Form, Input, Menu, Button, TextArea, MenuItemProps, Message, Loader, InputOnChangeData } from 'semantic-ui-react'
@@ -6,6 +6,7 @@ import Editor from '@monaco-editor/react'
 import MDEditor from '@uiw/react-md-editor'
 import { Block } from 'components'
 import config from 'environment'
+import { Helmet } from 'react-helmet'
 
 interface ProblemStateProps {
   problem?: Problem;
@@ -18,10 +19,10 @@ const ProblemInfo = ({ problem, setProblem }: ProblemStateProps) => {
   return <Form>
     <Form.Field label='Problem ID' name='id' control={Input} onChange={handleChange} value={problem?.id || ''} />
     <Form.Field label='Problem Name' name='name' control={Input} onChange={handleChange} value={problem?.name || ''} />
-    <Form.Group widths='equal'>
+    {problem?.division == 'blue' ? <Form.Group widths='equal'>
       <Form.Field label='Memory Limit' name='memory_limit' control={Input} onChange={handleChange} value={problem?.memory_limit || -1} />
       <Form.Field label='CPU Time Limit' name='cpu_time_limit' control={Input} onChange={handleChange} value={problem?.cpu_time_limit || -1} />
-    </Form.Group>
+    </Form.Group> : <></>}
   </Form>
 }
 
@@ -38,7 +39,7 @@ const TestData = ({ problem, setProblem }: ProblemStateProps) => {
   const handleDeleteTest = () => {
     if (problem) {
       setActiveTestItem(problem.tests.length - 2)
-      setProblem({ ...problem, tests: problem.tests.filter((_, index: number) => index != activeTestItem) })
+      setProblem({ ...problem, tests: problem.tests.filter((_, index) => index != activeTestItem) })
     }
   }
 
@@ -46,7 +47,7 @@ const TestData = ({ problem, setProblem }: ProblemStateProps) => {
     style.height = `${scrollHeight}px`
     if (problem)
       setProblem({
-        ...problem, tests: problem.tests?.map((test: Test, index: number) => {
+        ...problem, tests: problem.tests?.map((test, index) => {
           if (name == `${index}-in`)
             test.in = value
           else if (name == `${index}-out`)
@@ -58,7 +59,7 @@ const TestData = ({ problem, setProblem }: ProblemStateProps) => {
 
   return <Form>
     <Menu>
-      {problem?.tests?.map((test: Test, index: number) => (
+      {problem?.tests?.map((test, index) => (
         <Menu.Item name={`${index + 1}`} key={`${index}-test-tab`} tab={index} active={activeTestItem === index} onClick={handleTestItemClick} />
       ))}
       <Menu.Menu position='right'>
@@ -67,7 +68,7 @@ const TestData = ({ problem, setProblem }: ProblemStateProps) => {
       </Menu.Menu>
     </Menu>
 
-    {problem?.tests?.map((test: Test, index: number) => (
+    {problem?.tests?.map((test, index) => (
       <div key={`test-${index}`}>
         {activeTestItem == index ?
           <Form.Group widths='equal'>
@@ -100,7 +101,7 @@ const Skeletons = ({ problem, setProblem }: ProblemStateProps) => {
     if (problem && value)
       setProblem({
         ...problem,
-        skeletons: problem.skeletons?.map((skeleton: Skeleton) =>
+        skeletons: problem.skeletons?.map((skeleton) =>
           language == skeleton.language ? {
             ...skeleton,
             source: value
@@ -113,7 +114,7 @@ const Skeletons = ({ problem, setProblem }: ProblemStateProps) => {
     if (problem)
       setProblem({
         ...problem,
-        skeletons: problem.skeletons?.map((skeleton: Skeleton) =>
+        skeletons: problem.skeletons?.map((skeleton) =>
           language == skeleton.language ? {
             ...skeleton,
             file_name
@@ -124,11 +125,11 @@ const Skeletons = ({ problem, setProblem }: ProblemStateProps) => {
 
   return <>
     <Menu>
-      {problem?.skeletons?.map((skeleton: Skeleton, index: number) => (
+      {problem?.skeletons?.map((skeleton, index) => (
         <Menu.Item key={`skeleton-${index}`} name={skeleton.language} tab={skeleton.language} active={activeSkeleton == skeleton.language} onClick={handleSkeletonClick} />
       ))}
     </Menu>
-    {problem?.skeletons?.map((skeleton: Skeleton, index: number) =>
+    {problem?.skeletons?.map((skeleton, index) =>
       skeleton.language == activeSkeleton ?
         <>
           <div key={`editor=${index}`} style={{ margin: '15px 0' }}>
@@ -155,6 +156,69 @@ const Skeletons = ({ problem, setProblem }: ProblemStateProps) => {
   </>
 }
 
+const Solutions = ({ problem, setProblem }: ProblemStateProps) => {
+  const [activeSolution, setActiveSolution] = useState('python')
+  const handleSolutionClick = (event: MouseEvent, data: MenuItemProps) => setActiveSolution(data.tab)
+
+  const handleSolutionChange = (language: string, value?: string) => {
+    if (problem && value)
+      setProblem({
+        ...problem,
+        solutions: problem.solutions?.map((solution) =>
+          language == solution.language ? {
+            ...solution,
+            source: value
+          } : solution
+        )
+      })
+  }
+
+  const handleChange = (language: string, { value: file_name }: InputOnChangeData) => {
+    if (problem)
+      setProblem({
+        ...problem,
+        solutions: problem.solutions?.map((solution) =>
+          language == solution.language ? {
+            ...solution,
+            file_name
+          } : solution
+        )
+      })
+  }
+
+  return <>
+    <Menu>
+      {problem?.solutions?.map((solution, index) => (
+        <Menu.Item key={`skeleton-${index}`} name={solution.language} tab={solution.language} active={activeSolution == solution.language} onClick={handleSolutionClick} />
+      ))}
+    </Menu>
+    {problem?.solutions?.map((solution, index) =>
+      solution.language == activeSolution ?
+        <>
+          <div key={`editor=${index}`} style={{ margin: '15px 0' }}>
+            <Editor
+              key={`editor-${index}`}
+              language={solution.language}
+              width="100%"
+              height="500px"
+              theme="vs"
+              value={solution.source}
+              options={{ minimap: { enabled: false } }}
+              onChange={(value?: string) => handleSolutionChange(solution.language, value)}
+            />
+          </div>
+          <Input
+            label='Filename'
+            size='small'
+            name='filename'
+            value={solution.file_name}
+            onChange={(event, data) => { handleChange(solution.language, data) }}
+            style={{ margin: '15px' }} />
+        </> : <></>
+    )}
+  </>
+}
+
 const EditProblems = (): JSX.Element => {
   const { pid } = useParams<{ pid: string }>()
   const [problem, setProblem] = useState<Problem>()
@@ -175,7 +239,7 @@ const EditProblems = (): JSX.Element => {
   }, [])
 
   const loadProblem = async () => {
-    const response = await fetch(`${config.API_URL}/problems?pid=${pid}&columns=description,skeletons,tests`, {
+    const response = await fetch(`${config.API_URL}/problems?pid=${pid}&columns=description,solutions,skeletons,tests`, {
       headers: {
         Authorization: `Bearer ${localStorage.accessToken}`
       }
@@ -207,13 +271,19 @@ const EditProblems = (): JSX.Element => {
   if (isLoading) return <Loader active inline='centered' content="Loading" />
 
   return <>
+    <Helmet>
+      <title>Abacus | Admin Edit Problem</title>
+    </Helmet>
     <h1>{problem?.name}</h1>
 
     <Menu attached='top' tabular>
       <Menu.Item name='Problem Info' tab='problem-info' active={activeItem === 'problem-info'} onClick={handleItemClick} />
-      <Menu.Item name='Test Data' tab='test-data' active={activeItem === 'test-data'} onClick={handleItemClick} />
       <Menu.Item name='Description' tab='description' active={activeItem === 'description'} onClick={handleItemClick} />
-      <Menu.Item name='Skeletons' tab='skeletons' active={activeItem === 'skeletons'} onClick={handleItemClick} />
+      {problem?.division == 'blue' ? <>
+        <Menu.Item name='Test Data' tab='test-data' active={activeItem === 'test-data'} onClick={handleItemClick} />
+        <Menu.Item name='Skeletons' tab='skeletons' active={activeItem === 'skeletons'} onClick={handleItemClick} />
+        <Menu.Item name='Solutions' tab='solutions' active={activeItem == 'solutions'} onClick={handleItemClick} />
+      </> : <></>}
     </Menu>
 
     <Block size='xs-12' style={{ padding: '20px', background: 'white', border: '1px solid #d4d4d5', borderTop: 'none' }}>
@@ -223,7 +293,8 @@ const EditProblems = (): JSX.Element => {
       {activeItem == 'problem-info' ? <ProblemInfo problem={problem} setProblem={setProblem} /> :
         activeItem == 'test-data' ? <TestData problem={problem} setProblem={setProblem} /> :
           activeItem == 'description' ? <Description problem={problem} setProblem={setProblem} /> :
-            activeItem == 'skeletons' ? <Skeletons problem={problem} setProblem={setProblem} /> : <></>}
+            activeItem == 'skeletons' ? <Skeletons problem={problem} setProblem={setProblem} /> :
+              activeItem == 'solutions' ? <Solutions problem={problem} setProblem={setProblem} /> : <></>}
 
       <Button primary onClick={handleSubmit}>Save</Button>
     </Block>

@@ -6,6 +6,7 @@ import MDEditor from '@uiw/react-md-editor'
 import { Block } from 'components'
 import { divisions } from 'utils'
 import config from 'environment'
+import { Helmet } from 'react-helmet'
 
 interface NewProblemType {
   id: string,
@@ -77,6 +78,9 @@ const NewProblem = (): JSX.Element => {
 
   return (
     <>
+      <Helmet>
+        <title>Abacus | Admin New Problem</title>
+      </Helmet>
       <h1>New Problem</h1>
       <Block size='xs-12'>
         {message?.type == 'error' ? <Message error content={message.message} /> :
@@ -90,45 +94,50 @@ const NewProblem = (): JSX.Element => {
             <Form.Select label='Division' name='division' fluid options={divisions} onChange={handleDropdownChange} placeholder="Division" value={problem?.division || ''} />
           </Form.Group>
 
-          <Form.Group widths='equal'>
-            <Form.Field label='Memory Limit' name='memory_limit' control={Input} onChange={handleChange} value={problem?.memory_limit || -1} />
-            <Form.Field label='CPU Time Limit' name='cpu_time_limit' control={Input} onChange={handleChange} value={problem?.cpu_time_limit || -1} />
-          </Form.Group>
+          {problem.division == 'blue' ? <>
+            <Form.Group widths='equal'>
+              <Form.Field label='Memory Limit' name='memory_limit' control={Input} onChange={handleChange} value={problem?.memory_limit || -1} />
+              <Form.Field label='CPU Time Limit' name='cpu_time_limit' control={Input} onChange={handleChange} value={problem?.cpu_time_limit || -1} />
+            </Form.Group>
+          </> : <></>}
 
-          <h1>Test Data</h1>
-          <Menu>
-            {problem?.tests.map((test: Test, index: number) => (
-              <Menu.Item name={`${index + 1}`} key={`${index}-test-tab`} tab={index} active={activeTestItem === index} onClick={handleTestItemClick} />
-            ))}
-            <Menu.Menu position='right'>
-              <Menu.Item onClick={handleNewTest}>New</Menu.Item>
-              <Menu.Item onClick={handleDeleteTest}>Delete</Menu.Item>
-            </Menu.Menu>
-          </Menu>
+          <h1>Problem Description</h1>
+          <MDEditor
+            value={problem?.description || ''}
+            onChange={handleTextareaChange}
+            height="500"
+          />
 
-          {
-            problem?.tests.map((test: Test, index: number) => (
-              <div key={`test-${index}`}>
-                {activeTestItem == index ?
-                  <Form.Group widths='equal'>
-                    <Form.Field label='Input' onChange={handleTestChange} control={TextArea} name={`${index}-in`} value={test.in} />
-                    <Form.Field label='Answer' onChange={handleTestChange} control={TextArea} name={`${index}-out`} value={test.out} />
-                  </Form.Group>
-                  : <></>}
-              </div>
-            ))
-          }
+          {problem.division == 'blue' ? <>
+
+            <h1>Test Data</h1>
+            <Menu>
+              {problem?.tests.map((test: Test, index: number) => (
+                <Menu.Item name={`${index + 1}`} key={`${index}-test-tab`} tab={index} active={activeTestItem === index} onClick={handleTestItemClick} />
+              ))}
+              <Menu.Menu position='right'>
+                <Menu.Item onClick={handleNewTest}>New</Menu.Item>
+                <Menu.Item onClick={handleDeleteTest}>Delete</Menu.Item>
+              </Menu.Menu>
+            </Menu>
+
+            {
+              problem?.tests.map((test: Test, index: number) => (
+                <div key={`test-${index}`}>
+                  {activeTestItem == index ?
+                    <Form.Group widths='equal'>
+                      <Form.Field label='Input' onChange={handleTestChange} control={TextArea} name={`${index}-in`} value={test.in} />
+                      <Form.Field label='Answer' onChange={handleTestChange} control={TextArea} name={`${index}-out`} value={test.out} />
+                    </Form.Group>
+                    : <></>}
+                </div>
+              ))
+            }
+
+            <h1>Skeletons</h1>
+            <p>Empty skeletons will be auto generated.</p> </> : <></>}
         </Form>
 
-        <h1>Problem Description</h1>
-        <MDEditor
-          value={problem?.description || ''}
-          onChange={handleTextareaChange}
-          height="500"
-        />
-
-        <h1>Skeletons</h1>
-        <p>Empty skeletons will be auto generated.</p>
         <Button primary onClick={handleSubmit}>Create</Button>
       </Block>
     </>

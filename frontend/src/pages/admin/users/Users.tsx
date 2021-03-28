@@ -1,11 +1,12 @@
 import { User } from 'abacus'
 import React, { ChangeEvent, useState, useEffect, useContext } from 'react'
-import { Table, Button, Loader, Message } from 'semantic-ui-react'
+import { Table, Button, Loader, Message, Label } from 'semantic-ui-react'
 import { saveAs } from 'file-saver';
 import { Link } from 'react-router-dom'
 import config from 'environment'
 import AppContext from 'AppContext'
 import CreateUser from './CreateUser'
+import { Helmet } from 'react-helmet';
 
 interface UserItem extends User {
   checked: boolean
@@ -21,6 +22,9 @@ const Users = (): JSX.Element => {
 
   const [users, setUsers] = useState<UserItem[]>([])
   const [isLoading, setLoading] = useState(true)
+  const [isDownloading, setDownloading] = useState(false)
+  const [isDeleting, setDeleting] = useState(false)
+  const [isImporting, setImporting] = useState(false)
   const [error, setError] = useState()
 
   const [isMounted, setMounted] = useState(true)
@@ -61,10 +65,70 @@ const Users = (): JSX.Element => {
   }
 
   const downloadUsers = () => {
+    setDownloading(true)
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const sanitized = JSON.stringify(users.map(({ checked, ...user }) => user), null, '\t')
     saveAs(new File([sanitized], 'users.json', { type: 'text/json;charset=utf-8' }))
+    setDownloading(false)
   }
+
+  const importUsers = async () => {
+    setImporting(true)
+    const passwords = []
+
+    try {
+      const response = await fetch('https://mu.acm.org/api/registered_teams')
+      const teams = await response.json()
+
+      let i = 1
+
+      for (const team of teams) {
+        if (team.division === 'eagle') continue
+        const password = await (await fetch('https://www.passwordrandom.com/query?command=password&scheme=rrVNvNRRNN')).text()
+
+        const username = 'team' + i
+
+        const res = await fetch(`${config.API_URL}/users`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.accessToken}`
+          },
+          body: JSON.stringify({
+            division: team.division,
+            display_name: team.team_name,
+            school: team.school_name,
+            password,
+            role: 'team',
+            username
+          })
+        })
+
+        if (res.ok) {
+          passwords.push({
+            display_name: team.team_name,
+            username,
+            password
+          })
+          const new_user = await res.json()
+          setUsers(users => users.concat(new_user))
+        }
+        i++
+      }
+
+      if (passwords.length != 0) {
+        const sanitized = JSON.stringify(passwords, null, '\t')
+        saveAs(new File([sanitized], 'imported_users.json', { type: 'text/json;charset=utf-8' }))
+      }
+
+
+    } catch (err) {
+      console.log(err)
+      setError(err)
+    }
+    setImporting(false)
+  }
+
   const handleChange = ({ target: { id, checked } }: ChangeEvent<HTMLInputElement>) => setUsers(users.map(user => user.uid == id ? { ...user, checked } : user))
   const checkAll = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => setUsers(users.map(user => ({ ...user, checked })))
 
@@ -79,6 +143,8 @@ const Users = (): JSX.Element => {
       return
     }
 
+    setDeleting(true)
+
     const usersToDelete = users.filter(user => user.checked).map(user => user.uid)
     const response = await fetch(`${config.API_URL}/users`, {
       method: 'DELETE',
@@ -92,18 +158,33 @@ const Users = (): JSX.Element => {
     if (response.ok) {
       setUsers(users.filter(user => !usersToDelete.includes(user.uid)))
     }
+
+    setDeleting(false)
   }
 
   if (isLoading) return <Loader active inline='centered' content="Loading..." />
 
   if (error) return <Message content={error} />
 
+  const divisionLabel = (division?: string): JSX.Element => {
+    switch (division) {
+      case 'gold': return <Label color='yellow' content="Gold" />
+      case 'blue': return <Label color='blue' content="Blue" />
+      case 'public': return <Label content="Public" />
+      default: return <></>
+    }
+  }
+
   return <>
+    <Helmet>
+      <title>Abacus | Users</title>
+    </Helmet>
     <CreateUser trigger={<Button content="Add User" primary />} callback={createUserCallback} />
     <Link to='/admin/users/upload'><Button content="Upload Users" /></Link>
-    <Button content="Download Users" onClick={downloadUsers} />
+    <Button loading={isImporting} disabled={isImporting} content="Import Users" onClick={importUsers} />
+    <Button loading={isDownloading} disabled={isDownloading} content="Download Users" onClick={downloadUsers} />
     {users.filter(user => user.checked).length ?
-      <Button content="Delete Selected" negative onClick={deleteSelected} /> : <></>}
+      <Button loading={isDeleting} disabled={isDeleting} content="Delete Selected" negative onClick={deleteSelected} /> : <></>}
 
     <Table sortable>
       <Table.Header>
@@ -124,7 +205,7 @@ const Users = (): JSX.Element => {
           <Table.HeaderCell
             sorted={column === 'school' ? direction : undefined}
             onClick={() => sort('school')}
-            content="Shool" />
+            content="School" />
           <Table.HeaderCell
             sorted={column === 'display_name' ? direction : undefined}
             onClick={() => sort('display_name')}
@@ -143,7 +224,7 @@ const Users = (): JSX.Element => {
             </Table.Cell>
             <Table.Cell><Link to={`/admin/users/${user.uid}`}>{user.username}</Link></Table.Cell>
             <Table.Cell>{user.role}</Table.Cell>
-            <Table.Cell>{user.division}</Table.Cell>
+            <Table.Cell>{divisionLabel(user.division)}</Table.Cell>
             <Table.Cell>{user.school}</Table.Cell>
             <Table.Cell>{user.display_name}</Table.Cell>
           </Table.Row>)}

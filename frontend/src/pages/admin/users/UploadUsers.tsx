@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { Button, Label, Table } from 'semantic-ui-react';
 import { Block, FileDialog } from 'components';
 import config from "environment"
+import { Helmet } from 'react-helmet';
 
 interface UserItem extends User {
   checked: boolean
@@ -68,65 +69,70 @@ const UploadUsers = (): JSX.Element => {
     }
   }
 
-  return <Block size='xs-12' transparent>
-    <h1>Upload Users</h1>
+  return <>
+    <Helmet>
+      <title>Abacus |  Admin Upload Users</title>
+    </Helmet>
+    <Block size='xs-12' transparent>
+      <h1>Upload Users</h1>
 
-    <FileDialog file={file} onChange={uploadChange} control={(file?: File) => (
-      file ?
-        <>
-          <h3>Your upload will include the following files:</h3>
-          <ul>
-            <li>{file.name} ({file.size} bytes)</li>
-          </ul>
-        </> : <p>
-          <b>Drag & drop</b> a file here to upload <br />
-          <i>(Or click and choose file)</i>
-        </p>
-    )} />
-    {newUsers ? <>
-      <Table>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell collapsing>
-              <input type="checkbox" onChange={checkAll} />
-            </Table.HeaderCell>
-            <Table.HeaderCell>User Id</Table.HeaderCell>
-            <Table.HeaderCell>Role</Table.HeaderCell>
-            <Table.HeaderCell>Division</Table.HeaderCell>
-            <Table.HeaderCell>Username</Table.HeaderCell>
-            <Table.HeaderCell>Password</Table.HeaderCell>
-            <Table.HeaderCell>DisplayName</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {newUsers.filter(user => users ? filterUser(user, users[user.uid]) : true)
-            .map((user: UserItem, index: number) => (
-              <Table.Row key={index}>
-                <Table.HeaderCell collapsing>
-                  <input
-                    type="checkbox"
-                    checked={user.checked}
-                    id={user.uid}
-                    onChange={handleChange} />
-                </Table.HeaderCell>
-                <Table.Cell>
-                  {user.uid}
-                  {Object.keys(users || {}).includes(user.uid) ?
-                    <Label color='blue' style={{ float: 'right' }}>Update User</Label> :
-                    <Label color='green' style={{ float: 'right' }}>Brand New</Label>}
-                </Table.Cell>
-                <Table.Cell>{user.role}</Table.Cell>
-                <Table.Cell>{user.division}</Table.Cell>
-                <Table.Cell>{user.username}</Table.Cell>
-                <Table.Cell>{user.password}</Table.Cell>
-                <Table.Cell>{user.display_name}</Table.Cell>
-              </Table.Row>
-            ))}
-        </Table.Body>
-      </Table>
-      <Button primary onClick={handleSubmit}>Import user(s)</Button>
-    </> : <></>}
-  </Block>
+      <FileDialog file={file} onChange={uploadChange} control={(file?: File) => (
+        file ?
+          <>
+            <h3>Your upload will include the following files:</h3>
+            <ul>
+              <li>{file.name} ({file.size} bytes)</li>
+            </ul>
+          </> : <p>
+            <b>Drag & drop</b> a file here to upload <br />
+            <i>(Or click and choose file)</i>
+          </p>
+      )} />
+      {newUsers ? <>
+        <Table>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell collapsing>
+                <input type="checkbox" onChange={checkAll} />
+              </Table.HeaderCell>
+              <Table.HeaderCell>User Id</Table.HeaderCell>
+              <Table.HeaderCell>Role</Table.HeaderCell>
+              <Table.HeaderCell>Division</Table.HeaderCell>
+              <Table.HeaderCell>Username</Table.HeaderCell>
+              <Table.HeaderCell>Password</Table.HeaderCell>
+              <Table.HeaderCell>DisplayName</Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {newUsers.filter(user => users ? filterUser(user, users[user.uid]) : true)
+              .map((user: UserItem, index: number) => (
+                <Table.Row key={index}>
+                  <Table.HeaderCell collapsing>
+                    <input
+                      type="checkbox"
+                      checked={user.checked}
+                      id={user.uid}
+                      onChange={handleChange} />
+                  </Table.HeaderCell>
+                  <Table.Cell>
+                    {user.uid}
+                    {Object.keys(users || {}).includes(user.uid) ?
+                      <Label color='blue' style={{ float: 'right' }}>Update User</Label> :
+                      <Label color='green' style={{ float: 'right' }}>Brand New</Label>}
+                  </Table.Cell>
+                  <Table.Cell>{user.role}</Table.Cell>
+                  <Table.Cell>{user.division}</Table.Cell>
+                  <Table.Cell>{user.username}</Table.Cell>
+                  <Table.Cell>{user.password}</Table.Cell>
+                  <Table.Cell>{user.display_name}</Table.Cell>
+                </Table.Row>
+              ))}
+          </Table.Body>
+        </Table>
+        <Button primary onClick={handleSubmit}>Import user(s)</Button>
+      </> : <></>}
+    </Block>
+  </>
 }
 
 export default UploadUsers
