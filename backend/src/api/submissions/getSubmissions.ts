@@ -92,6 +92,7 @@ export const getSubmissions = async (req: Request, res: Response) => {
       }
       if (req.user?.role == 'team' && !submission.released) {
         submission.status = 'pending'
+        submission.score = 0
         submission.tests = submission.tests.map((test: Test) => ({ ...test, result: '' }))
       }
       return submission

@@ -10,6 +10,7 @@ export const getStandings = async (_req: Request, res: Response) => {
   const subs: { [key: string]: { [key: string]: Submission[] } } = {}
 
   Object.values(submissions).forEach((submission: any) => {
+    if (!submission.released) return
     const { tid, pid } = submission;
     if (!(tid in subs)) subs[tid] = {}
     if (!(pid in subs[tid])) subs[tid][pid] = []

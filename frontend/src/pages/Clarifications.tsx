@@ -8,6 +8,7 @@ import { Block } from 'components';
 import AppContext from 'AppContext';
 import { useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
+import ClarificationModal from 'components/ClarificationModal';
 
 const Clarifications = (): JSX.Element => {
   const { user } = useContext(AppContext)
@@ -190,10 +191,17 @@ const Clarifications = (): JSX.Element => {
     </>
   }
 
+  const askClarification = <ClarificationModal trigger={<Button content="Ask Clarification" />} callback={({ cid }) => {
+    loadClarifications()
+    setActiveItem(cid)
+  }} />
+
   if (!clarifications || Object.values(clarifications).length == 0) {
     return <>
       {helmet}
       <Block size='xs-12' transparent>
+        <h2>Clarifications</h2>
+        {askClarification}
         <p>There are no active clarifications right now!</p>
       </Block>
     </>
@@ -205,6 +213,7 @@ const Clarifications = (): JSX.Element => {
     {helmet}
     <Block size='xs-12' transparent>
       <h2>Clarifications</h2>
+      {askClarification}
       <Segment>
         <Grid columns={2}>
           <Grid.Row>
