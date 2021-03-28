@@ -5,7 +5,6 @@ import AppContext from "AppContext";
 import fulllogoy from 'assets/fulllogoy.png'
 import { LoginModal } from "components";
 import { userHome } from "utils";
-import ClarificationModal from "./ClarificationModal";
 
 type Props = {
   children: React.ReactNode;
