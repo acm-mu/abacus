@@ -1,5 +1,6 @@
 import { Args, Settings } from "abacus";
 import AWS, { AWSError, Lambda, S3 } from "aws-sdk";
+import { v4 as uuidv4 } from 'uuid';
 import { AttributeMap, BatchWriteItemOutput, DeleteItemOutput, DocumentClient, GetItemOutput, ItemList, PutItemOutput, ScanInput, ScanOutput, UpdateItemOutput } from "aws-sdk/clients/dynamodb";
 
 class ContestService {
@@ -91,8 +92,12 @@ class ContestService {
         TableName: tableName,
         Item: item
       }, (err: AWSError, data: PutItemOutput) => {
-        if (err) reject(err)
-        else resolve(data)
+        if (err) {
+          reject(err)
+          return
+        }
+        this.logActivity(tableName, 'PUT', item)
+        resolve(data)
       })
     })
   }
@@ -107,8 +112,12 @@ class ContestService {
         ExpressionAttributeNames: Object.assign({}, ...entries.map((x) => ({ [`#${x[0]}`]: x[0] }))),
         ExpressionAttributeValues: Object.assign({}, ...entries.map((x) => ({ [`:${x[0]}`]: x[1] })))
       }, (err: AWSError, data: UpdateItemOutput) => {
-        if (err) reject(err)
-        else resolve(data)
+        if (err) {
+          reject(err)
+          return
+        }
+        this.logActivity(tableName, 'UPDATE', { ...key, ...args })
+        resolve(data)
       })
     })
   }
@@ -119,9 +128,26 @@ class ContestService {
         TableName: tableName,
         Key: key
       }, (err: AWSError, data: DeleteItemOutput) => {
-        if (err) reject(err)
-        else resolve(data)
+        if (err) {
+          reject(err)
+          return
+        }
+        this.logActivity(tableName, 'DELETE', { ...key })
+        resolve(data)
       })
+    })
+  }
+
+  logActivity(tableName: string, action: string, newValue: Args) {
+    this.db.put({
+      TableName: 'activity',
+      Item: {
+        aid: uuidv4(),
+        table_name: tableName,
+        action,
+        ...newValue,
+        date: Date.now() / 1000
+      }
     })
   }
 }
