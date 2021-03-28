@@ -4,6 +4,7 @@ import { Table, Button, Loader, Menu, MenuItemProps } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import config from 'environment'
 import { Block, DivisionLabel } from 'components'
+import { Helmet } from 'react-helmet'
 
 interface ProblemItem extends Problem {
   checked: boolean
@@ -54,7 +55,7 @@ const Problems = (): JSX.Element => {
 
       sort('id', problems.map(problem => ({ ...problem, checked: false })))
 
-      response = await fetch(`${config.API_URL}/submissions?division=blue`, {
+      response = await fetch(`${config.API_URL}/submissions`, {
         headers: {
           authorization: `Bearer ${localStorage.accessToken}`
         }
@@ -112,6 +113,10 @@ const Problems = (): JSX.Element => {
   if (isLoading) return <Loader active inline='centered' content="Loading..." />
 
   return <>
+    <Helmet>
+      <title>Abacus | Admin Problems</title>
+    </Helmet>
+
     <Button as={Link} to='/admin/problems/new' primary content="Add Problem" />
     <Link to='/admin/problems/upload'><Button content="Upload Problems" /></Link>
     <Button content="Download Problems" onClick={downloadProblems} />

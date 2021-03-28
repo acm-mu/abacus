@@ -2,7 +2,7 @@ import { Problem } from "abacus";
 import React, { useContext, useEffect, useState } from "react";
 import { Form, Label, Loader, DropdownProps, InputOnChangeData } from "semantic-ui-react";
 import AppContext from "AppContext";
-import { Block } from "components";
+import { Block, NotFound } from "components";
 import config from "environment"
 import Moment from "react-moment";
 

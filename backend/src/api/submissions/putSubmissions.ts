@@ -50,6 +50,11 @@ export const schema: Record<string, ParamSchema> = {
     notEmpty: true,
     optional: true,
     errorMessage: 'tid is invalid'
+  },
+  released: {
+    in: 'body',
+    isBoolean: true,
+    optional: true
   }
 }
 

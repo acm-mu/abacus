@@ -6,6 +6,7 @@ import { Block, Countdown, FileDialog } from 'components'
 import config from 'environment'
 import AppContext from 'AppContext'
 import { Language, languages } from 'utils'
+import { Helmet } from 'react-helmet'
 
 const Submit = (): JSX.Element => {
   const { user } = useContext(AppContext);
@@ -88,6 +89,9 @@ const Submit = (): JSX.Element => {
 
   return (
     <>
+      <Helmet>
+        <title>Abacus | Blue Submit</title>
+      </Helmet>
       <Countdown />
       {!submissions || submissions?.filter((e) => e.status == "accepted").length == 0 ?
         <Block size='xs-12'>

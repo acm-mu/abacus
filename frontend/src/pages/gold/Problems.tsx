@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { Block, Countdown } from 'components'
 import config from 'environment'
 import AppContext from 'AppContext'
+import { Helmet } from 'react-helmet'
 
 const Problems = (): JSX.Element => {
   const { settings } = useContext(AppContext)

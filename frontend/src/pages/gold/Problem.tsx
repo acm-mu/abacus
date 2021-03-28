@@ -1,12 +1,12 @@
 import { Problem, Submission } from 'abacus'
 import React, { useContext, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { Button, Loader } from 'semantic-ui-react'
-import MDEditor from '@uiw/react-md-editor'
-
 import { Block, Countdown, NotFound, ClarificationModal } from 'components'
+import { Button, Loader, Popup } from 'semantic-ui-react'
+import MDEditor from '@uiw/react-md-editor'
 import config from "environment"
 import AppContext from 'AppContext'
+import { Helmet } from 'react-helmet'
 
 const problem = (): JSX.Element => {
   const { user } = useContext(AppContext)

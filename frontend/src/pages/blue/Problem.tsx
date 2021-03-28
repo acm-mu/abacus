@@ -7,6 +7,7 @@ import { Block, Countdown, NotFound, ClarificationModal } from 'components'
 import config from 'environment'
 import AppContext from "AppContext";
 import "./Problem.scss";
+import { Helmet } from "react-helmet";
 
 const problem = (): JSX.Element => {
   const { user } = useContext(AppContext);
@@ -53,11 +54,14 @@ const problem = (): JSX.Element => {
     setSubmissions(Object.values(await submissions.json()))
   }
 
-  if (isLoading) return <Loader active inline='centered' />
+  if (isLoading) return <Loader active inline='centered' content="Loading..." />
   if (!problem) return <NotFound />
 
   return (
     <>
+      <Helmet>
+        <title>Abacus | {problem.name}</title>
+      </Helmet>
       <Countdown />
       <Block size='xs-9' className='problem'>
         <h1>Problem {problem.id}: {problem.name}</h1>

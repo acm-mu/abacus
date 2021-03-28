@@ -6,6 +6,7 @@ import { Clarification } from 'abacus';
 import { Link } from 'react-router-dom';
 import { compare } from 'utils';
 import Moment from 'react-moment';
+import { Helmet } from 'react-helmet';
 
 interface ClarificationItem extends Clarification {
   checked: boolean;
@@ -82,9 +83,12 @@ const Clarifications = (): JSX.Element => {
     return () => { setMounted(false) }
   }, [])
 
-  if (isLoading) return <Loader active inline='centered' content="Loading" />
+  if (isLoading) return <Loader active inline='centered' content="Loading..." />
 
   return <>
+    <Helmet>
+      <title>Abacus | Admin Clarifications</title>
+    </Helmet>
     {clarifications.filter(clarification => clarification.checked).length ?
       <Button content="Delete Clarification(s)" negative onClick={deleteSelected} /> : <></>}
 
