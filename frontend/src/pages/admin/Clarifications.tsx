@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { compare } from 'utils';
 import Moment from 'react-moment';
 import { Helmet } from 'react-helmet';
+import ClarificationModal from 'components/ClarificationModal';
 
 interface ClarificationItem extends Clarification {
   checked: boolean;
@@ -89,6 +90,8 @@ const Clarifications = (): JSX.Element => {
     <Helmet>
       <title>Abacus | Admin Clarifications</title>
     </Helmet>
+
+    <ClarificationModal trigger={<Button content="Ask Clarification" />} callback={loadClarifications} />
     {clarifications.filter(clarification => clarification.checked).length ?
       <Button content="Delete Clarification(s)" negative onClick={deleteSelected} /> : <></>}
 
