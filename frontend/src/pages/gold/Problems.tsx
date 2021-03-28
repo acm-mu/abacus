@@ -16,7 +16,6 @@ const Problems = (): JSX.Element => {
   useEffect(() => {
     loadProblems()
     return () => { setMounted(false) }
-    return () => { setMounted(false) }
   }, [])
 
   const loadProblems = async () => {

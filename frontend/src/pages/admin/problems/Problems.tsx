@@ -175,48 +175,6 @@ const Problems = (): JSX.Element => {
         </Table.Body>
       </Table>
     </Block>
-    {/* 
-    <Block size='xs-12' transparent>
-      <h3>Gold Problems</h3>
-      <Table sortable>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell collapsing><input type='checkbox' onChange={checkAll} /></Table.HeaderCell>
-            <Table.HeaderCell
-              sorted={column === 'id' ? direction : undefined}
-              onClick={() => sort('id')}
-              content="ID" />
-            <Table.HeaderCell
-              sorted={column === 'name' ? direction : undefined}
-              onClick={() => sort('name')}
-              content="Problem Name" />
-            <Table.HeaderCell># of Tests</Table.HeaderCell>
-            <Table.HeaderCell>Solved Attempts</Table.HeaderCell>
-            <Table.HeaderCell>Total Attempts</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {problems.filter((problem) => problem.division == 'gold').map((problem: ProblemItem, index: number) => (
-            <Table.Row key={index}>
-              <Table.Cell>
-                <input
-                  type='checkbox'
-                  checked={problem.checked}
-                  id={problem.pid}
-                  onChange={handleChange} />
-              </Table.Cell>
-              <Table.Cell><Link to={`/admin/problems/${problem.pid}`}>{problem.id}</Link></Table.Cell>
-              <Table.Cell><Link to={`/admin/problems/${problem.pid}`}>{problem.name}</Link></Table.Cell>
-              <Table.Cell>{problem.tests?.length}</Table.Cell>
-              {submissions && <>
-                <Table.Cell>{problem.pid in submissions ? submissions[problem.pid].filter((p) => p.score > 0).length : 0}</Table.Cell>
-                <Table.Cell>{problem.pid in submissions ? submissions[problem.pid].length : 0}</Table.Cell>
-              </>}
-            </Table.Row>
-          ))}
-        </Table.Body>
-      </Table>
-    </Block> */}
   </>
 }
 

@@ -42,14 +42,15 @@ const Connect = (): JSX.Element => {
     }
   }
 
-  if (!user || user.scratch_username) return <></>
-
-  return <Block size='xs-12' >
-    <p>You have not yet attached your Scratch® account to your profile. Please enter it below.</p>
-    <Form onSubmit={handleSubmit}>
-      <Input placeholder="Scratch Username" onChange={handleChange} action={<Button content='Connect' color='orange' disabled={disabled} />} />
-    </Form>
-  </Block>
+  if (user?.role == 'team' && user.division == 'gold' && !user.scratch_username) {
+    return <Block size='xs-12' >
+      <p>You have not yet attached your Scratch® account to your profile. Please enter it below.</p>
+      <Form onSubmit={handleSubmit}>
+        <Input placeholder="Scratch Username" onChange={handleChange} action={<Button content='Connect' color='orange' disabled={disabled} />} />
+      </Form>
+    </Block>
+  }
+  return <></>
 }
 
 export default Connect

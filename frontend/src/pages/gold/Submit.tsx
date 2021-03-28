@@ -5,6 +5,7 @@ import AppContext from "AppContext";
 import { Block, NotFound } from "components";
 import config from "environment"
 import Moment from "react-moment";
+import { Helmet } from "react-helmet";
 
 const Submit = (): JSX.Element => {
   const [problems, setProblems] = useState<Problem[]>([])
@@ -54,6 +55,9 @@ const Submit = (): JSX.Element => {
 
   return (
     <>
+      <Helmet>
+        <title>Abacus | Gold Submit</title>
+      </Helmet>
       <Block size='xs-12'>
         <Form>
           <Form.Group widths='equal'>
