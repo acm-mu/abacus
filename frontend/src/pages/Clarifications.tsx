@@ -199,8 +199,9 @@ const Clarifications = (): JSX.Element => {
   if (!clarifications || Object.values(clarifications).length == 0) {
     return <>
       {helmet}
-      {askClarification}
       <Block size='xs-12' transparent>
+        <h2>Clarifications</h2>
+        {askClarification}
         <p>There are no active clarifications right now!</p>
       </Block>
     </>
@@ -210,9 +211,9 @@ const Clarifications = (): JSX.Element => {
 
   return <>
     {helmet}
-    {askClarification}
     <Block size='xs-12' transparent>
       <h2>Clarifications</h2>
+      {askClarification}
       <Segment>
         <Grid columns={2}>
           <Grid.Row>
