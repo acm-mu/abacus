@@ -49,7 +49,7 @@ const ScratchViewer = ({ project_id }: ScratchViewerProps): JSX.Element => {
 
   return <Grid columns={2} stackable>
     <Grid.Row>
-      <Grid.Column>
+      <Grid.Column textAlign='center'>
         <iframe src={`https://scratch.mit.edu/projects/${project_id}/embed`} width="485" height="402" frameBorder="0" scrolling="no" allowFullScreen />
       </Grid.Column>
 

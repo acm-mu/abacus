@@ -8,9 +8,10 @@ import { useParams } from "react-router";
 
 const Submit = (): JSX.Element => {
   const { project_id: default_project_id } = useParams<{ project_id: string }>()
+  const { pid: problem_id } = useParams<{ pid: string }>()
   const [problems, setProblems] = useState<Problem[]>([])
-  const [problem, setProblem] = useState()
-  const [project_url, setProjectUrl] = useState<string>(`https://scratch.mit.edu/projects/${default_project_id}`)
+  const [problem, setProblem] = useState<string>()
+  const [project_url, setProjectUrl] = useState<string>(`https://scratch.mit.edu/projects/${default_project_id || ''}`)
   const [isLoading, setLoading] = useState(true)
   const [isMounted, setMounted] = useState(true)
 
@@ -34,12 +35,16 @@ const Submit = (): JSX.Element => {
       }
     })
     if (response.ok && isMounted) {
-      setProblems(Object.values(await response.json()))
+      const problems: Problem[] = Object.values(await response.json())
+      for (const problem of problems)
+        if (problem.id == problem_id) setProblem(problem.pid)
+
+      setProblems(problems)
     }
     setLoading(false)
   }
 
-  const handleProblemChange = (event: React.SyntheticEvent<HTMLElement, Event>, { key }: DropdownProps) => setProblem(key)
+  const handleProblemChange = (event: React.SyntheticEvent<HTMLElement, Event>, { key }: DropdownProps) => { console.log(key); setProblem(key) }
   const handleChange = async (event: React.ChangeEvent<HTMLInputElement>, { value }: InputOnChangeData) => setProjectUrl(value)
 
   if (isLoading) return <Loader inline='centered' active />
