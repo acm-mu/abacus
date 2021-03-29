@@ -4,7 +4,7 @@ import { Link, useHistory, useParams } from 'react-router-dom'
 import { Button, Label, Loader, Menu, MenuItemProps, Table } from 'semantic-ui-react'
 import Moment from 'react-moment'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-import { Block, NotFound } from 'components'
+import { Block, NotFound, PageLoading } from 'components'
 import config from 'environment'
 import { capitalize, syntax_lang, format_text } from "utils"
 import "pages/Submission.scss"
@@ -21,8 +21,6 @@ const submission = (): JSX.Element => {
 
   const [activeItem, setActiveItem] = useState('source-code')
   const [activeTestItem, setActiveTestItem] = useState(0)
-
-  const helmet = <Helmet> <title>Abacus | Admin Submission</title> </Helmet>
 
   useEffect(() => {
     loadSubmission()
@@ -95,17 +93,11 @@ const submission = (): JSX.Element => {
   const handleItemClick = (event: MouseEvent, data: MenuItemProps) => setActiveItem(data.tab)
   const handleTestItemClick = (event: MouseEvent, data: MenuItemProps) => setActiveTestItem(data.tab)
 
-  if (isLoading) {
-    return <>
-      {helmet}
-      <Loader active inline='centered' content="Loading..." />
-    </>
-  }
-
+  if (isLoading) <PageLoading />
   if (!submission) return <NotFound />
 
   return <>
-    {helmet}
+    <Helmet> <title>Abacus | Admin Submission</title> </Helmet>
     <Block transparent size='xs-12' >
       <Button disabled={rerunning} loading={rerunning} content="Rerun" icon="redo" labelPosition="left" onClick={rerun} />
 

@@ -1,10 +1,10 @@
 import { Problem, Submission } from 'abacus'
-import { Block, Countdown, FileDialog, NotFound } from 'components'
+import { Block, Countdown, FileDialog, NotFound, PageLoading } from 'components'
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet'
 import { useHistory, useParams } from 'react-router'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Button, Form, Loader } from 'semantic-ui-react'
+import { Breadcrumb, Button, Form } from 'semantic-ui-react'
 import { Language, languages } from 'utils'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -18,8 +18,6 @@ const SubmitPractice = (): JSX.Element => {
   const [language, setLanguage] = useState<Language>()
   const [file, setFile] = useState<File>()
   const history = useHistory()
-
-  const helmet = <Helmet> <title>Abacus | Submit Practice</title> </Helmet>
 
   useEffect(() => {
     fetch(`/problems/${id}.json`)
@@ -137,19 +135,11 @@ const SubmitPractice = (): JSX.Element => {
       event.preventDefault()
     }
   }
-  if (isPageLoading) {
-    return <>
-      {helmet}
-      <Loader active inline='centered' content="Loading..." />
-    </>
-  }
+  if (isPageLoading) return <PageLoading />
   if (!problem) return <NotFound />
 
-
   return <>
-    <Helmet>
-      <title>Abacus | Submit Practice {problem.id}</title>
-    </Helmet>
+    <Helmet> <title>Abacus | Submit Practice {problem.id}</title> </Helmet>
     <Countdown />
     <Block transparent size='xs-12'>
       <Breadcrumb>

@@ -2,7 +2,7 @@ import { Problem } from 'abacus';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button, Label, Message, Table } from 'semantic-ui-react';
-import { Block, FileDialog } from 'components';
+import { Block, FileDialog, StatusMessage } from 'components';
 import config from "environment"
 import { Helmet } from 'react-helmet';
 
@@ -75,14 +75,12 @@ const UploadProblems = (): JSX.Element => {
   }
 
   return <>
-    <Helmet>
-      <title>Abacus | Admin Upload Problems</title>
-    </Helmet>
+    <Helmet> <title>Abacus | Admin Upload Problems</title>  </Helmet>
 
     <Block size='xs-12' transparent>
       <h1>Upload Problems</h1>
 
-      {error ? <Message error><b>An Error Has Occurred! </b></Message> : <></>}
+      {error ? <StatusMessage message={{ type: 'error', message: 'An Error Has Occurred!' }} /> : <></>}
 
       <FileDialog file={file} onChange={uploadChange} control={(file?: File) => (
         file ?

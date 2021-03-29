@@ -2,9 +2,9 @@ import { Submission } from 'abacus'
 import React, { useEffect, useState } from 'react'
 import Moment from 'react-moment'
 import { Link, useParams } from 'react-router-dom'
-import { Loader, Table } from 'semantic-ui-react'
+import { Table } from 'semantic-ui-react'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-import { Block, Countdown, NotFound } from 'components'
+import { Block, Countdown, NotFound, PageLoading } from 'components'
 import config from 'environment'
 import { syntax_lang } from 'utils'
 import { Helmet } from 'react-helmet'
@@ -34,13 +34,11 @@ const submission = (): JSX.Element => {
     setLoading(false)
   }
 
-  if (isLoading) return <Loader active inline='centered' content="Loading..." />
+  if (isLoading) return <PageLoading />
   if (!submission) return <NotFound />
 
   return <>
-    <Helmet>
-      <title>Abacus | Blue Submission</title>
-    </Helmet>
+    <Helmet> <title>Abacus | Blue Submission</title> </Helmet>
     <Countdown />
     <Block transparent size="xs-12">
       <Table celled>

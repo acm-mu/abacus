@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Button, ButtonProps, Checkbox, CheckboxProps, Comment, Form, Grid, Header, Icon, Loader, Menu, MenuItemProps, Message, Popup, Segment } from 'semantic-ui-react';
+import { Button, ButtonProps, Checkbox, CheckboxProps, Comment, Form, Grid, Header, Icon, Menu, MenuItemProps, Message, Popup, Segment } from 'semantic-ui-react';
 import { Clarification } from 'abacus';
 import config from '../environment'
 import Moment from 'react-moment';
 import './Clarifications.scss'
-import { Block } from 'components';
+import { Block, PageLoading } from 'components';
 import AppContext from 'AppContext';
 import { useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
@@ -184,19 +184,14 @@ const Clarifications = (): JSX.Element => {
     </>
   }
 
-  if (isLoading) {
-    return <>
-      {helmet}
-      <Loader active inline='centered' content="Loading..." />
-    </>
-  }
+  if (isLoading) return <PageLoading />
 
   const askClarification = <ClarificationModal trigger={<Button content="Ask Clarification" />} callback={({ cid }) => {
     loadClarifications()
     setActiveItem(cid)
   }} />
 
-  if (!clarifications || Object.values(clarifications).length == 0) {
+  if (!clarifications || Object.values(clarifications).length == 0)
     return <>
       {helmet}
       <Block size='xs-12' transparent>
@@ -205,7 +200,6 @@ const Clarifications = (): JSX.Element => {
         <p>There are no active clarifications right now!</p>
       </Block>
     </>
-  }
 
   const clarification = Object.keys(clarifications).includes(activeItem) ? clarifications[activeItem] : undefined
 

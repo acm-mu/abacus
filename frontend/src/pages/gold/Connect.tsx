@@ -2,8 +2,8 @@ import React, { ChangeEvent, useContext, useState } from "react"
 import { Input, Form, Button } from "semantic-ui-react"
 import AppContext from "AppContext"
 import { Block, StatusMessage } from "components"
-import config from 'environment'
 import { StatusMessageType } from "components/StatusMessage"
+import config from 'environment'
 
 const Connect = (): JSX.Element => {
   const { setUser, user } = useContext(AppContext)

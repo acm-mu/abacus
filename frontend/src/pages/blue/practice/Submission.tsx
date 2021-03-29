@@ -20,9 +20,7 @@ const PracticeSubmission = ({ submission }: PracticeSubmissionProps): JSX.Elemen
   const handleTestItemClick = (event: MouseEvent, data: MenuItemProps) => setActiveTestItem(data.tab)
 
   return <>
-    <Helmet>
-      <title>Abacus | Practice Submission</title>
-    </Helmet>
+    <Helmet> <title>Abacus | Practice Submission</title> </Helmet>
     <Countdown />
     <Block transparent size='xs-12'>
       <Breadcrumb>

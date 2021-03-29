@@ -1,11 +1,10 @@
 import { Problem } from 'abacus'
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Loader } from 'semantic-ui-react'
 import config from 'environment'
 import { Helmet } from 'react-helmet'
 import { ProblemEditor } from 'components/editor'
-import { StatusMessage } from 'components'
+import { PageLoading, StatusMessage } from 'components'
 import { StatusMessageType } from 'components/StatusMessage'
 
 const EditProblems = (): JSX.Element => {
@@ -56,13 +55,13 @@ const EditProblems = (): JSX.Element => {
     }
   }
 
-  if (isLoading) return <Loader active inline='centered' content="Loading..." />
+  if (isLoading) return <PageLoading />
 
   return <>
     <Helmet> <title>Abacus | Admin Edit Problem</title> </Helmet>
     <h1>{problem?.name}</h1>
 
-    {message ? <StatusMessage message={message} onDismiss={() => setMessage(undefined)} /> : <></>}
+    <StatusMessage message={message} onDismiss={() => setMessage(undefined)} />
 
     <ProblemEditor problem={problem} handleSubmit={handleSubmit} />
   </>

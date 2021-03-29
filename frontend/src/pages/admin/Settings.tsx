@@ -1,8 +1,9 @@
 import React, { ChangeEvent, useEffect, useState } from 'react'
-import { Button, Form, Input, Message } from 'semantic-ui-react'
-import { Block } from 'components'
+import { Button, Form, Input } from 'semantic-ui-react'
+import { Block, PageLoading, StatusMessage } from 'components'
 import config from 'environment'
 import { Helmet } from 'react-helmet'
+import { StatusMessageType } from 'components/StatusMessage'
 
 const timezoneOffset = () => (new Date()).getTimezoneOffset() * 60 * 1000
 
@@ -24,7 +25,8 @@ const Settings = (): JSX.Element => {
     points_per_minute: '0'
   })
   const [isMounted, setMounted] = useState(true)
-  const [message, setMessage] = useState<{ type: string, message: string }>()
+  const [isLoading, setLoading] = useState(true)
+  const [message, setMessage] = useState<StatusMessageType>()
 
   useEffect(() => {
     loadSettings()
@@ -45,6 +47,8 @@ const Settings = (): JSX.Element => {
       end_date: toLocalDateString(data.end_date),
       end_time: toLocalTimeString(data.end_date)
     })
+
+    setLoading(false)
   }
 
   const handleSubmit = async () => {
@@ -73,13 +77,12 @@ const Settings = (): JSX.Element => {
     }
   }
 
+  if (isLoading) return <PageLoading />
+
   return <>
-    <Helmet>
-      <title>Abacus | Admin Settings</title>
-    </Helmet>
+    <Helmet> <title>Abacus | Admin Settings</title> </Helmet>
     <Block center size='xs-6'>
-      {message?.type == 'error' ? <Message error icon='warning' header='Error!' content={message.message} /> :
-        message?.type == 'success' ? <Message success icon='check' header='Saved!' content={message.message} /> : <></>}
+      <StatusMessage message={message} onDismiss={() => setMessage(undefined)} />
       <Form onSubmit={handleSubmit}>
         <h1>Settings</h1>
         <hr />

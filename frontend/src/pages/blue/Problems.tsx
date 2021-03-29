@@ -1,8 +1,8 @@
 import { Problem } from "abacus";
 import React, { useContext, useEffect, useState } from "react";
-import { Loader, Table } from "semantic-ui-react";
+import { Table } from "semantic-ui-react";
 import { Link } from "react-router-dom";
-import { Block, Countdown } from "components";
+import { Block, Countdown, PageLoading } from "components";
 import config from 'environment'
 import AppContext from "AppContext";
 import 'components/Table.scss'
@@ -14,6 +14,8 @@ const Problems = (): JSX.Element => {
   const [isMounted, setMounted] = useState(true)
   const [isLoading, setLoading] = useState(true)
   const [problems, setProblems] = useState<Problem[]>()
+
+  const helmet = <Helmet> <title>Abacus | Blue Problems</title> </Helmet>
 
   useEffect(() => {
     loadProblems()
@@ -37,56 +39,47 @@ const Problems = (): JSX.Element => {
     setLoading(false)
   }
 
-  if (!settings || new Date() < settings.start_date) {
-    return (
-      <>
-        <Countdown />
-        <Block size='xs-12'>
-          <h1>Competition not yet started!</h1>
-          <p>Problem&apos;s will become available as soon as the competition begins.</p>
-        </Block>
-      </>
-    )
-  }
-
-  if (isLoading) return <Loader active inline='centered' content="Loading..." />
-
-  return (
-    <>
-      <Helmet>
-        <title>Abacus | Blue Problems</title>
-      </Helmet>
+  if (!settings || new Date() < settings.start_date)
+    return <>
+      {helmet}
       <Countdown />
-      <Block size="xs-12" transparent>
-        <Table celled>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell></Table.HeaderCell>
-              <Table.HeaderCell>Problem Name</Table.HeaderCell>
-              {/* <Table.HeaderCell># of Submissions</Table.HeaderCell>
-              <Table.HeaderCell>Latest Submission</Table.HeaderCell> */}
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {!(problems?.length) ?
-              <Table.Row>
-                <Table.Cell colspan={2} style={{ textAlign: 'center' }}>We can&apos;t find any problems. If you believe this is an error please contact us.</Table.Cell>
-              </Table.Row> :
-              problems.map((problem: Problem) =>
-                <Table.Row key={problem.pid}>
-                  <Table.HeaderCell collapsing textAlign='center'>{problem.id}</Table.HeaderCell>
-                  <Table.Cell>
-                    <Link to={`/blue/problems/${problem.id}`}>{problem.name}</Link>
-                  </Table.Cell>
-                  {/* <Table.Cell></Table.Cell>
-                <Table.Cell></Table.Cell> */}
-                </Table.Row>
-              )}
-          </Table.Body>
-        </Table>
+      <Block size='xs-12'>
+        <h1>Competition not yet started!</h1>
+        <p>Problem&apos;s will become available as soon as the competition begins.</p>
       </Block>
     </>
-  );
+
+
+  if (isLoading) return <PageLoading />
+
+  return <>
+    {helmet}
+    <Countdown />
+    <Block size="xs-12" transparent>
+      <Table celled>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell></Table.HeaderCell>
+            <Table.HeaderCell>Problem Name</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {!(problems?.length) ?
+            <Table.Row>
+              <Table.Cell colspan={2} textAlign='center'>We can&apos;t find any problems. If you believe this is an error please contact us.</Table.Cell>
+            </Table.Row> :
+            problems.map((problem: Problem) =>
+              <Table.Row key={problem.pid}>
+                <Table.HeaderCell collapsing textAlign='center'>{problem.id}</Table.HeaderCell>
+                <Table.Cell>
+                  <Link to={`/blue/problems/${problem.id}`}>{problem.name}</Link>
+                </Table.Cell>
+              </Table.Row>
+            )}
+        </Table.Body>
+      </Table>
+    </Block>
+  </>
 };
 
 export default Problems;

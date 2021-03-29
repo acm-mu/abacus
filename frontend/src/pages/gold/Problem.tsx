@@ -1,8 +1,8 @@
 import { Problem, Submission } from 'abacus'
 import React, { useContext, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { Block, Countdown, NotFound, ClarificationModal } from 'components'
-import { Button, Loader } from 'semantic-ui-react'
+import { Block, Countdown, NotFound, ClarificationModal, PageLoading } from 'components'
+import { Button } from 'semantic-ui-react'
 import MDEditor from '@uiw/react-md-editor'
 import config from "environment"
 import AppContext from 'AppContext'
@@ -51,13 +51,11 @@ const problem = (): JSX.Element => {
     setSubmissions(Object.values(await response.json()))
   }
 
-  if (isLoading) return <Loader active inline='centered' />
+  if (isLoading) return <PageLoading />
   if (!problem) return <NotFound />
 
   return <>
-    <Helmet>
-      Gold | {problem.name}
-    </Helmet>
+    <Helmet> <title>Abacus | {problem.name}</title> </Helmet>
     <Countdown />
     <Block size='xs-9' className='problem'>
       <h1>Problem {problem?.id}: {problem?.name}</h1>

@@ -8,7 +8,8 @@ export { default as Navigation } from './Navigation';
 export { default as NotFound } from './NotFound';
 export { default as Notifications } from './Notifications';
 export { default as Unauthorized } from './Unauthorized';
-export { default as DivisionLabel } from './DivisionLabel'
-export { default as ClarificationModal } from './ClarificationModal'
-export { default as StatusMessage } from './StatusMessage'
-export { default as ScratchViewer } from './ScratchViewer'
+export { default as DivisionLabel } from './DivisionLabel';
+export { default as ClarificationModal } from './ClarificationModal';
+export { default as StatusMessage } from './StatusMessage';
+export { default as ScratchViewer } from './ScratchViewer';
+export { default as PageLoading } from './PageLoading';

@@ -1,7 +1,7 @@
 import { Problem } from "abacus";
 import React, { useEffect, useMemo, useState } from "react";
-import { Form, Loader, DropdownProps, InputOnChangeData } from "semantic-ui-react";
-import { Block, ScratchViewer } from "components";
+import { Form, DropdownProps, InputOnChangeData } from "semantic-ui-react";
+import { Block, PageLoading, ScratchViewer } from "components";
 import config from "environment"
 import { Helmet } from "react-helmet";
 import { useParams } from "react-router";
@@ -47,12 +47,10 @@ const Submit = (): JSX.Element => {
   const handleProblemChange = (event: React.SyntheticEvent<HTMLElement, Event>, { key }: DropdownProps) => { console.log(key); setProblem(key) }
   const handleChange = async (event: React.ChangeEvent<HTMLInputElement>, { value }: InputOnChangeData) => setProjectUrl(value)
 
-  if (isLoading) return <Loader inline='centered' active />
+  if (isLoading) return <PageLoading />
 
   return <>
-    <Helmet>
-      <title>Abacus | Gold Submit</title>
-    </Helmet>
+    <Helmet> <title>Abacus | Gold Submit</title> </Helmet>
     <Block size='xs-12'>
       <Form>
         <Form.Group widths='equal'>

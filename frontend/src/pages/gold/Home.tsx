@@ -1,13 +1,11 @@
 import React from 'react'
 import { Block } from 'components'
-import scratch from '../../assets/scratch.png'
+import scratch from 'assets/scratch.png'
 import { Helmet } from 'react-helmet'
 import { Button } from 'semantic-ui-react'
 
 const Home = (): JSX.Element => <>
-  <Helmet>
-    <title>Abacus | Gold</title>
-  </Helmet>
+  <Helmet> <title>Abacus | Gold</title> </Helmet>
 
   <Block size='xs-12'>
     <h1>Gold Division (Scratch)</h1>

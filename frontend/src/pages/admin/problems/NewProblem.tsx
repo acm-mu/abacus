@@ -5,10 +5,11 @@ import { StatusMessage } from 'components'
 import config from 'environment'
 import { Helmet } from 'react-helmet'
 import { ProblemEditor } from 'components/editor'
+import { StatusMessageType } from 'components/StatusMessage'
 
 const NewProblem = (): JSX.Element => {
   const history = useHistory()
-  const [message, setMessage] = useState<{ type: 'success' | 'warning' | 'error' | undefined, message: string }>()
+  const [message, setMessage] = useState<StatusMessageType>()
 
   const handleSubmit = async (problem: Problem) => {
     const res = await fetch(`${config.API_URL}/problems`, {
@@ -28,11 +29,9 @@ const NewProblem = (): JSX.Element => {
   }
 
   return <>
-    <Helmet>
-      <title>Abacus | Admin New Problem</title>
-    </Helmet>
+    <Helmet>  <title>Abacus | Admin New Problem</title> </Helmet>
     <h1>New Problem</h1>
-    {message ? <StatusMessage message={message} onDismiss={() => setMessage(undefined)} /> : <></>}
+    <StatusMessage message={message} onDismiss={() => setMessage(undefined)} />
 
     <ProblemEditor handleSubmit={handleSubmit} />
   </>

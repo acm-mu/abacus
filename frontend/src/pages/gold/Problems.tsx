@@ -1,8 +1,8 @@
 import { Problem } from 'abacus'
 import React, { useState, useEffect, useContext } from 'react'
-import { Loader, Table } from 'semantic-ui-react'
+import { Table } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
-import { Block, Countdown } from 'components'
+import { Block, Countdown, PageLoading } from 'components'
 import config from 'environment'
 import AppContext from 'AppContext'
 import { Helmet } from 'react-helmet'
@@ -12,6 +12,8 @@ const Problems = (): JSX.Element => {
   const [isMounted, setMounted] = useState<boolean>(true)
   const [isLoading, setLoading] = useState(true)
   const [problems, setProblems] = useState<Problem[]>()
+
+  const helmet = <Helmet> <title>Abacus | Gold Problems</title> </Helmet>
 
   useEffect(() => {
     loadProblems()
@@ -34,22 +36,20 @@ const Problems = (): JSX.Element => {
     setLoading(false)
   }
 
-  if (!settings || new Date() < settings.start_date) {
+  if (!settings || new Date() < settings.start_date)
     return <>
+      {helmet}
       <Countdown />
       <Block size='xs-12'>
         <h1>Competition not yet started!</h1>
         <p>Problem&apos;s will become available as soon as the competition begins.</p>
       </Block>
     </>
-  }
 
-  if (isLoading) return <Loader active inline='centered' content="Loading" />
+  if (isLoading) <PageLoading />
 
   return <>
-    <Helmet>
-      Abacus | Gold Problems
-  </Helmet>
+    {helmet}
     <Countdown />
     <Block size='xs-12' transparent>
       <Table celled>

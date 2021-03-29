@@ -5,6 +5,7 @@ import AppContext from 'AppContext';
 import { useHistory } from 'react-router';
 import { divisions } from 'utils';
 import { Clarification } from 'abacus';
+import { StatusMessage } from 'components';
 
 interface ClarificationModalProps {
   trigger: JSX.Element
@@ -69,7 +70,7 @@ const ClarificationModal = ({ trigger, title = '' }: ClarificationModalProps): J
     trigger={trigger}>
     <Modal.Header>{user?.role == "admin" || user?.role == "judge" ? "New Public Clarification" : "Ask a Clarification"}</Modal.Header>
     <Modal.Description>
-      {error && <Message icon='warning circle' error attached='top' header="An error has occurred!" content={error} />}
+      {error ? <StatusMessage message={{ type: 'error', message: error }} /> : <></>}
 
       <Form style={{ padding: '1em' }}>
         <Form.Input

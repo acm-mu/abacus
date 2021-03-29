@@ -5,6 +5,7 @@ import AppContext from "AppContext";
 import config from 'environment'
 import fulllogo from 'assets/fulllogo.png'
 import { userHome } from "utils";
+import { StatusMessage } from "components";
 
 interface LoginModalProps {
   trigger?: JSX.Element
@@ -51,7 +52,7 @@ const LoginModal = ({ trigger, open }: LoginModalProps): JSX.Element => {
       open={isOpen}
       trigger={trigger}>
       <Modal.Description>
-        {error && <Message icon='warning circle' error attached='top' header="An error has occurred!" content={error} />}
+        {error ? <StatusMessage message={{ type: 'error', message: error }} /> : <></>}
         <Form className='attached fluid segment' id="loginForm" onSubmit={handleSubmit}>
           <img src={fulllogo} width="300px" alt="Logo" />
           <Form.Input

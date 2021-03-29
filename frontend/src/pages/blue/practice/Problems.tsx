@@ -19,9 +19,7 @@ const PracticeProblems = ({ problems, submissions }: PracticeProblemsProps): JSX
   }
 
   return <>
-    <Helmet>
-      <title>Abacus | Practice</title>
-    </Helmet>
+    <Helmet> <title>Abacus | Practice Problems</title> </Helmet>
     <Countdown />
     <Block transparent size='xs-12'>
       <Breadcrumb>

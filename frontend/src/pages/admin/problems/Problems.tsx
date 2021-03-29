@@ -1,9 +1,9 @@
 import { Problem, Submission } from 'abacus'
 import React, { ChangeEvent, useState, useEffect, useMemo } from 'react'
-import { Table, Button, Loader, Menu, MenuItemProps } from 'semantic-ui-react'
+import { Table, Button, Menu, MenuItemProps } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import config from 'environment'
-import { Block, DivisionLabel } from 'components'
+import { Block, DivisionLabel, PageLoading } from 'components'
 import { Helmet } from 'react-helmet'
 
 interface ProblemItem extends Problem {
@@ -111,12 +111,10 @@ const Problems = (): JSX.Element => {
   const handleItemClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, { name }: MenuItemProps) =>
     name && setActiveDivision(name)
 
-  if (isLoading) return <Loader active inline='centered' content="Loading..." />
+  if (isLoading) return <PageLoading />
 
   return <>
-    <Helmet>
-      <title>Abacus | Admin Problems</title>
-    </Helmet>
+    <Helmet> <title>Abacus | Admin Problems</title> </Helmet>
 
     <Button as={Link} to='/admin/problems/new' primary content="Add Problem" />
     <Link to='/admin/problems/upload'><Button content="Upload Problems" /></Link>
