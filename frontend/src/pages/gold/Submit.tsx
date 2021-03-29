@@ -17,14 +17,10 @@ const Submit = (): JSX.Element => {
   const regex = /https:\/\/scratch\.mit\.edu\/projects\/(\d*)/
 
   const project_id = useMemo(() => {
-    console.log(project_url)
     const match = project_url.match(regex)
-    console.log(match)
     if (match) return match[1]
     return undefined
   }, [project_url])
-
-  console.log(project_id)
 
   useEffect(() => {
     loadProblems()

@@ -10,7 +10,7 @@ export interface AppContextType {
 
 const AppContext = createContext<AppContextType>({
   user: undefined,
-  setUser: (user: User | undefined) => { console.log(user); return },
+  setUser: () => { return },
   settings: undefined,
   socket: undefined
 })
