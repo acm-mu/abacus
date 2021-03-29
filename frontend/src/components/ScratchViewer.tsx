@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import config from 'environment'
 import { Grid, Header, Icon, Label, Segment } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
+import Moment from 'react-moment';
+import "./ScratchViewer.scss"
 
 interface ScratchViewerProps {
   project_id?: string;
@@ -15,6 +17,11 @@ interface ScratchProject {
   is_published: boolean,
   author: {
     username: string
+  },
+  history: {
+    created: string,
+    modified: string,
+    shared: string
   }
 }
 
@@ -43,23 +50,23 @@ const ScratchViewer = ({ project_id }: ScratchViewerProps): JSX.Element => {
   return <Grid columns={2} stackable>
     <Grid.Row>
       <Grid.Column>
-        <iframe src={`https://scratch.mit.edu/projects/${project_id}/embed`} allowTransparency width="485" height="402" frameBorder="0" scrolling="no" allowFullScreen />
+        <iframe src={`https://scratch.mit.edu/projects/${project_id}/embed`} width="485" height="402" frameBorder="0" scrolling="no" allowFullScreen />
       </Grid.Column>
 
-      <Grid.Column>
-        {project ? <>
-          <Link to=''><h2>{project.title}</h2></Link>
-          <h3><b>Author</b> <a href='#'>{project.author.username}</a></h3>
+      <Grid.Column className='scratch-info'>
+        {project ? <Segment>
+          <Link to={`https://scratch.mit.edu/projects/${project_id}`}><h2>{project.title}</h2> {project.author.username}</Link>
           <p>{project.description}</p>
-          <div>
-            {project.is_published ? <Label content='Published' icon='check' color='green' /> : <Label content="Unpublished" icon='cross' color='red' />}
-            {project.public ? <Label content='Public' icon='check' color='green' /> : <Label content="Private" icon='cross' color='red' />}
-            {project.visibility == 'visible' ? <Label content='Visible' icon='check' color='green' /> : <Label content="Not visible" icon='cross' color='red' />}
+
+          <div className='history'>
+            <span>Created<br /> <Label><Moment fromNow date={Date.parse(project.history.created)} /></Label></span>
+            <span>Modified<br /> <Label><Moment fromNow date={Date.parse(project.history.modified)} /></Label></span>
+            <span>Shared<br /> <Label><Moment fromNow date={Date.parse(project.history.shared)} /></Label></span>
           </div>
-        </> : <></>}
+        </Segment> : <></>}
       </Grid.Column>
-    </Grid.Row>
-  </Grid>
+    </Grid.Row >
+  </Grid >
 }
 
 export default ScratchViewer
