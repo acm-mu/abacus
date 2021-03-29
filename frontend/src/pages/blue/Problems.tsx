@@ -6,6 +6,7 @@ import { Block, Countdown } from "components";
 import config from 'environment'
 import AppContext from "AppContext";
 import 'components/Table.scss'
+import { Helmet } from "react-helmet";
 
 
 const Problems = (): JSX.Element => {
@@ -48,12 +49,14 @@ const Problems = (): JSX.Element => {
     )
   }
 
-  if (isLoading) return <Loader active inline='centered' content="Loading" />
+  if (isLoading) return <Loader active inline='centered' content="Loading..." />
 
   return (
     <>
+      <Helmet>
+        <title>Abacus | Blue Problems</title>
+      </Helmet>
       <Countdown />
-
       <Block size="xs-12" transparent>
         <Table celled>
           <Table.Header>

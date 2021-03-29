@@ -7,6 +7,8 @@ import './Clarifications.scss'
 import { Block } from 'components';
 import AppContext from 'AppContext';
 import { useParams } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
+import ClarificationModal from 'components/ClarificationModal';
 
 const Clarifications = (): JSX.Element => {
   const { user } = useContext(AppContext)
@@ -15,6 +17,8 @@ const Clarifications = (): JSX.Element => {
   const { cid } = useParams<{ cid: string }>()
   const [activeItem, setActiveItem] = useState<string>(cid || '')
   const [showClosed, setShowClosed] = useState(false)
+
+  const helmet = <Helmet> <title>Abacus | Clarifications</title> </Helmet>
 
   const loadClarifications = async (): Promise<{ [key: string]: Clarification }> => {
     let clarifications = {}
@@ -180,31 +184,50 @@ const Clarifications = (): JSX.Element => {
     </>
   }
 
-  if (isLoading) return <Loader active inline='centered' />
+  if (isLoading) {
+    return <>
+      {helmet}
+      <Loader active inline='centered' content="Loading..." />
+    </>
+  }
+
+  const askClarification = <ClarificationModal trigger={<Button content="Ask Clarification" />} callback={({ cid }) => {
+    loadClarifications()
+    setActiveItem(cid)
+  }} />
 
   if (!clarifications || Object.values(clarifications).length == 0) {
-    return <Block size='xs-12' transparent>
-      <p>There are no active clarifications right now!</p>
-    </Block>
+    return <>
+      {helmet}
+      <Block size='xs-12' transparent>
+        <h2>Clarifications</h2>
+        {askClarification}
+        <p>There are no active clarifications right now!</p>
+      </Block>
+    </>
   }
 
   const clarification = Object.keys(clarifications).includes(activeItem) ? clarifications[activeItem] : undefined
 
-  return <Block size='xs-12' transparent>
-    <h2>Clarifications</h2>
-    <Segment>
-      <Grid columns={2}>
-        <Grid.Row>
-          <Grid.Column width={4}>
-            <ClarificationsMenu clarifications={Object.values(clarifications)} />
-          </Grid.Column>
-          <Grid.Column width={12}>
-            <ClarificationView clarification={clarification} />
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
-    </Segment>
-  </Block>
+  return <>
+    {helmet}
+    <Block size='xs-12' transparent>
+      <h2>Clarifications</h2>
+      {askClarification}
+      <Segment>
+        <Grid columns={2}>
+          <Grid.Row>
+            <Grid.Column width={4}>
+              <ClarificationsMenu clarifications={Object.values(clarifications)} />
+            </Grid.Column>
+            <Grid.Column width={12}>
+              <ClarificationView clarification={clarification} />
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+      </Segment>
+    </Block>
+  </>
 }
 
 export default Clarifications

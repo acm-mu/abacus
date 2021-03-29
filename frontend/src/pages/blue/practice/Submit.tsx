@@ -1,6 +1,7 @@
 import { Problem, Submission } from 'abacus'
 import { Block, Countdown, FileDialog, NotFound } from 'components'
 import React, { ChangeEvent, useEffect, useState } from 'react'
+import { Helmet } from 'react-helmet'
 import { useHistory, useParams } from 'react-router'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Button, Form, Loader } from 'semantic-ui-react'
@@ -9,7 +10,7 @@ import { v4 as uuidv4 } from 'uuid'
 
 const SubmitPractice = (): JSX.Element => {
   const { id } = useParams<{ id: string }>()
-  const [loading, setLoading] = useState(false)
+  const [isLoading, setLoading] = useState(false)
   const [isPageLoading, setPageLoading] = useState(true)
   const submissions: Submission[] = []
   const [problem, setProblem] = useState<Problem>()
@@ -17,6 +18,8 @@ const SubmitPractice = (): JSX.Element => {
   const [language, setLanguage] = useState<Language>()
   const [file, setFile] = useState<File>()
   const history = useHistory()
+
+  const helmet = <Helmet> <title>Abacus | Submit Practice</title> </Helmet>
 
   useEffect(() => {
     fetch(`/problems/${id}.json`)
@@ -133,10 +136,19 @@ const SubmitPractice = (): JSX.Element => {
       event.preventDefault()
     }
   }
-  if (isPageLoading) return <Loader active inline='centered' />
+  if (isPageLoading) {
+    return <>
+      {helmet}
+      <Loader active inline='centered' content="Loading..." />
+    </>
+  }
   if (!problem) return <NotFound />
 
+
   return <>
+    <Helmet>
+      <title>Abacus | Submit Practice {problem.id}</title>
+    </Helmet>
     <Countdown />
     <Block transparent size='xs-12'>
       <Breadcrumb>
@@ -167,8 +179,8 @@ const SubmitPractice = (): JSX.Element => {
           <Form.Select inline label='Language' placeholder="Select Language" value={language?.value} options={languages} />
 
           <Form.Group>
-            <Button as={Link} to={`/blue/practice/${problem.id}`} disabled={loading}>Cancel</Button>
-            <Form.Button loading={loading} disabled={loading} primary>Submit</Form.Button>
+            <Button as={Link} to={`/blue/practice/${problem.id}`} disabled={isLoading}>Cancel</Button>
+            <Form.Button loading={isLoading} disabled={isLoading} primary>Submit</Form.Button>
           </Form.Group>
         </Form>
       </Block>

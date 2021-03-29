@@ -4,10 +4,12 @@ import config from 'environment';
 import AppContext from 'AppContext';
 import { useHistory } from 'react-router';
 import { divisions } from 'utils';
+import { Clarification } from 'abacus';
 
 interface ClarificationModalProps {
   trigger: JSX.Element
   title?: string
+  callback?: (clarification: Clarification) => void;
 }
 
 const ClarificationModal = ({ trigger, title = '' }: ClarificationModalProps): JSX.Element => {

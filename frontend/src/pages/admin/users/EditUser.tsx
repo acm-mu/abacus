@@ -5,6 +5,7 @@ import { Button, Form, Input, Menu, Message, Select } from "semantic-ui-react"
 import config from 'environment'
 import { Block } from "components"
 import { divisions, roles } from "utils"
+import { Helmet } from "react-helmet"
 
 const EditUser = (): JSX.Element => {
   const [user, setUser] = useState<User>()
@@ -61,84 +62,85 @@ const EditUser = (): JSX.Element => {
     return () => { setMounted(false) }
   }, [])
 
-  return (
-    <>
-      <h1>{user?.display_name}</h1>
-      <Block size='xs-12' transparent>
-        {message ?
-          <>
-            {(() => {
-              switch (message.type) {
-                case 'error':
-                  return <Message error icon='warning circle' header="An error has occurred!" content={message.message} />
-                case 'success':
-                  return <Message success icon='check' header='Success!' content={message.message} />
-              }
-            })()}
-          </> : <></>}
-        <Menu attached='top' tabular>
-          <Menu.Item active>User Info</Menu.Item>
-        </Menu>
-        <Form style={{ padding: '20px', background: 'white', border: '1px solid #d4d4d5', borderTop: 'none' }} onSubmit={handleSubmit} >
-          <h2>Edit User</h2>
+  return <>
+    <Helmet>
+      <title>Abacus | Edit User</title>
+    </Helmet>
+    <h1>{user?.display_name}</h1>
+    <Block size='xs-12' transparent>
+      {message ?
+        <>
+          {(() => {
+            switch (message.type) {
+              case 'error':
+                return <Message error icon='warning circle' header="An error has occurred!" content={message.message} />
+              case 'success':
+                return <Message success icon='check' header='Success!' content={message.message} />
+            }
+          })()}
+        </> : <></>}
+      <Menu attached='top' tabular>
+        <Menu.Item active>User Info</Menu.Item>
+      </Menu>
+      <Form style={{ padding: '20px', background: 'white', border: '1px solid #d4d4d5', borderTop: 'none' }} onSubmit={handleSubmit} >
+        <h2>Edit User</h2>
 
+        <Form.Field
+          control={Input}
+          onChange={handleChange}
+          label='Username'
+          name='username'
+          value={formUser?.username}
+          placeholder='User Name'
+          required />
+        <Form.Field
+          control={Input}
+          onChange={handleChange}
+          label='Display Name'
+          name='display_name'
+          value={formUser?.display_name}
+          placeholder='Display Name'
+          required />
+        <Form.Field
+          control={Select}
+          onChange={handleSelectChange}
+          label='User Role'
+          name='role'
+          options={roles}
+          value={formUser?.role}
+          placeholder='User Role'
+          required />
+        {formUser.role == 'team' &&
           <Form.Field
             control={Input}
             onChange={handleChange}
-            label='Username'
-            name='username'
-            value={formUser?.username}
-            placeholder='User Name'
-            required />
-          <Form.Field
-            control={Input}
-            onChange={handleChange}
-            label='Display Name'
-            name='display_name'
-            value={formUser?.display_name}
-            placeholder='Display Name'
-            required />
-          <Form.Field
-            control={Select}
-            onChange={handleSelectChange}
-            label='User Role'
-            name='role'
-            options={roles}
-            value={formUser?.role}
-            placeholder='User Role'
-            required />
-          {formUser.role == 'team' &&
-            <Form.Field
-              control={Input}
-              onChange={handleChange}
-              label='School'
-              name='school'
-              value={formUser?.school}
-              placeholder='School'
-              required />}
-          <Form.Field
-            control={Select}
-            onChange={handleSelectChange}
-            label='Division'
-            name='division'
-            options={divisions}
-            value={formUser?.division}
-            placeholder='Division'
-            required />
-          <Form.Field
-            control={Input}
-            onChange={handleChange}
-            label='Password'
-            name='password'
-            type='password'
-            value={formUser?.password}
-            placeholder='Password'
-            required />
-          <Button primary type="submit">Save</Button>
-        </Form>
-      </Block>
-    </>
-  )
+            label='School'
+            name='school'
+            value={formUser?.school}
+            placeholder='School'
+            required />}
+        <Form.Field
+          control={Select}
+          onChange={handleSelectChange}
+          label='Division'
+          name='division'
+          options={divisions}
+          value={formUser?.division}
+          placeholder='Division'
+          required />
+        <Form.Field
+          control={Input}
+          onChange={handleChange}
+          label='Password'
+          name='password'
+          type='password'
+          value={formUser?.password}
+          placeholder='Password'
+          required />
+        <Button primary type="submit">Save</Button>
+      </Form>
+    </Block>
+  </>
 }
 
 export default EditUser

@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from "express";
 import jwt from 'jsonwebtoken';
 import contest from './contest'
 
-const authenticate = (req: Request, _: Response): Promise<User | undefined> => {
+export const authenticate = (req: Request, _: Response): Promise<User | undefined> => {
   return new Promise<User | undefined>((resolve, reject) => {
     const { authorization } = req.headers
     const token = authorization && authorization.split(' ')[1]

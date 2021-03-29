@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { Button, Label, Message, Table } from 'semantic-ui-react';
 import { Block, FileDialog } from 'components';
 import config from "environment"
+import { Helmet } from 'react-helmet';
 
 interface ProblemItem extends Problem {
   checked: boolean
@@ -73,60 +74,66 @@ const UploadProblems = (): JSX.Element => {
     }
   }
 
-  return (<Block size='xs-12' transparent>
-    <h1>Upload Problems</h1>
+  return <>
+    <Helmet>
+      <title>Abacus | Admin Upload Problems</title>
+    </Helmet>
 
-    {error ? <Message error><b>An Error Has Occurred! </b></Message> : <></>}
+    <Block size='xs-12' transparent>
+      <h1>Upload Problems</h1>
 
-    <FileDialog file={file} onChange={uploadChange} control={(file?: File) => (
-      file ?
+      {error ? <Message error><b>An Error Has Occurred! </b></Message> : <></>}
+
+      <FileDialog file={file} onChange={uploadChange} control={(file?: File) => (
+        file ?
+          <>
+            <h3>Your upload will include the following files:</h3>
+            <ul>
+              <li>{file.name} ({file.size} bytes)</li>
+            </ul>
+          </> : <p>
+            <b>Drag & drop</b> a file here to upload <br />
+            <i>(Or click and choose file)</i>
+          </p>
+      )} />
+      {newProblems?.length ?
         <>
-          <h3>Your upload will include the following files:</h3>
-          <ul>
-            <li>{file.name} ({file.size} bytes)</li>
-          </ul>
-        </> : <p>
-          <b>Drag & drop</b> a file here to upload <br />
-          <i>(Or click and choose file)</i>
-        </p>
-    )} />
-    {newProblems?.length ?
-      <>
-        <Table>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell collapsing>
-                <input type="checkbox" onChange={checkAll} />
-              </Table.HeaderCell>
-              <Table.HeaderCell>Id</Table.HeaderCell>
-              <Table.HeaderCell>Problem Name</Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {newProblems.filter(problem => filterProblem(problem, problems[problem.pid]))
-              .map((problem: ProblemItem, index: number) => (
-                <Table.Row key={index}>
-                  <Table.HeaderCell collapsing>
-                    <input
-                      type="checkbox"
-                      checked={problem.checked}
-                      id={problem.pid}
-                      onChange={handleChange} />
-                  </Table.HeaderCell>
-                  <Table.Cell>
-                    {problem.pid}
-                    {Object.keys(problems).includes(problem.pid) ?
-                      <Label color='blue' style={{ float: 'right' }}>Update User</Label> :
-                      <Label color='green' style={{ float: 'right' }}>Brand New</Label>}
-                  </Table.Cell>
-                  <Table.Cell>{problem.name}</Table.Cell>
-                </Table.Row>
-              ))}
-          </Table.Body>
-        </Table>
-        <Button primary onClick={handleSubmit}>Import problem(s)</Button>
-      </> : <></>}
-  </Block>)
+          <Table>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell collapsing>
+                  <input type="checkbox" onChange={checkAll} />
+                </Table.HeaderCell>
+                <Table.HeaderCell>Id</Table.HeaderCell>
+                <Table.HeaderCell>Problem Name</Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {newProblems.filter(problem => filterProblem(problem, problems[problem.pid]))
+                .map((problem: ProblemItem, index: number) => (
+                  <Table.Row key={index}>
+                    <Table.HeaderCell collapsing>
+                      <input
+                        type="checkbox"
+                        checked={problem.checked}
+                        id={problem.pid}
+                        onChange={handleChange} />
+                    </Table.HeaderCell>
+                    <Table.Cell>
+                      {problem.pid}
+                      {Object.keys(problems).includes(problem.pid) ?
+                        <Label color='blue' style={{ float: 'right' }}>Update User</Label> :
+                        <Label color='green' style={{ float: 'right' }}>Brand New</Label>}
+                    </Table.Cell>
+                    <Table.Cell>{problem.name}</Table.Cell>
+                  </Table.Row>
+                ))}
+            </Table.Body>
+          </Table>
+          <Button primary onClick={handleSubmit}>Import problem(s)</Button>
+        </> : <></>}
+    </Block>
+  </>
 }
 
 export default UploadProblems

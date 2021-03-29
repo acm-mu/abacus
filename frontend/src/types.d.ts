@@ -38,6 +38,7 @@ declare module "abacus" {
     memory_limit: number;
     tests: Test[]
     skeletons?: Skeleton[];
+    solutions?: Solution[];
   }
   export interface User {
     uid: string;
@@ -57,6 +58,11 @@ declare module "abacus" {
     include?: boolean;
   }
   export interface Skeleton {
+    language: string;
+    source: string;
+    file_name: string;
+  }
+  export interface Solution {
     language: string;
     source: string;
     file_name: string;
