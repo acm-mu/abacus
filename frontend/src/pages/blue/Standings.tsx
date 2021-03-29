@@ -1,7 +1,7 @@
 import { Problem, ProblemScore, StandingsUser } from "abacus";
 import React, { useContext, useEffect, useState } from "react";
 import { Link } from 'react-router-dom'
-import { Message, Table } from "semantic-ui-react";
+import { Table } from "semantic-ui-react";
 import { Block, Countdown, PageLoading, StatusMessage } from "components";
 import config from 'environment'
 import "./Standings.scss";

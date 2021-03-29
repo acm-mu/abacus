@@ -1,7 +1,7 @@
 import { Problem } from 'abacus';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Button, Label, Message, Table } from 'semantic-ui-react';
+import { Button, Label, Table } from 'semantic-ui-react';
 import { Block, FileDialog, StatusMessage } from 'components';
 import config from "environment"
 import { Helmet } from 'react-helmet';

@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useState } from "react"
-import { Modal, Form, Input, Select, Button, Message } from "semantic-ui-react"
+import { Modal, Form, Input, Select, Button } from "semantic-ui-react"
 import config from 'environment'
 import { divisions, roles } from "utils"
 import { StatusMessage } from "components"
