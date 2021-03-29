@@ -68,7 +68,7 @@ const submission = (): JSX.Element => {
           </Table.Row>
           <Table.Row>
             <Table.Cell colSpan="5">
-              {submission?.tests.map((test, index) => {
+              {submission?.tests?.map((test, index) => {
                 switch (test.result) {
                   case 'accepted':
                     return <span key={index} className='result icn accepted' />
