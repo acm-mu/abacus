@@ -13,6 +13,8 @@ const App = (): JSX.Element => {
   const [settings, setSettings] = useState()
   const [isLoading, setLoading] = useState(true)
 
+  const error_id = uuidv4()
+
   const checkAuth = async () => {
     try {
       const response = await fetch(`${config.API_URL}/auth`, {
@@ -45,13 +47,25 @@ const App = (): JSX.Element => {
       await loadSettings()
       await checkAuth()
     } catch (err) {
+      setTimeout(() => loadApp(), 15 * 1000)
       // Store notification in cache before notification component loads.
-      window.notifications = [({ id: uuidv4(), type: 'error', header: 'Uh oh!', content: "We are having issues communicating with our servers." })]
+      window.notifications = [({ id: error_id, type: 'error', header: 'Uh oh!', content: "We are having issues communicating with our servers. Trying again in 15 seconds" })]
     }
   }
 
   useEffect(() => {
     loadApp().then(() => setLoading(false))
+
+    const pingInterval = setInterval(async () => {
+      try {
+        await fetch(config.API_URL)
+      } catch (err) {
+        window.sendNotification({ id: error_id, type: 'error', header: 'Uh oh!', content: "We are having issues communicating with our servers. Trying again in 15 seconds" })
+        loadApp()
+      }
+    }, 15 * 1000)
+
+    return () => { clearInterval(pingInterval) }
   }, [])
 
   const appContext: AppContextType = {
