@@ -47,6 +47,9 @@ const Problems = (): JSX.Element => {
   if (isLoading) return <Loader active inline='centered' content="Loading" />
 
   return <>
+    <Helmet>
+      Abacus | Gold Problems
+  </Helmet>
     <Countdown />
     <Block size='xs-12' transparent>
       <Table celled>
