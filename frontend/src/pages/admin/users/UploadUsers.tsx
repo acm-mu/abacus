@@ -70,9 +70,7 @@ const UploadUsers = (): JSX.Element => {
   }
 
   return <>
-    <Helmet>
-      <title>Abacus |  Admin Upload Users</title>
-    </Helmet>
+    <Helmet> <title>Abacus |  Admin Upload Users</title> </Helmet>
     <Block size='xs-12' transparent>
       <h1>Upload Users</h1>
 

@@ -1,47 +1,83 @@
 import React, { ChangeEvent, useContext, useState } from "react"
 import { Input, Form, Button } from "semantic-ui-react"
 import AppContext from "AppContext"
-import { Block } from "components"
+import { Block, StatusMessage } from "components"
+import { StatusMessageType } from "components/StatusMessage"
 import config from 'environment'
 
 const Connect = (): JSX.Element => {
-  const { user } = useContext(AppContext)
-  const [username, setUsername] = useState<string>()
-  const [disabled, setDisabled] = useState<boolean>(true)
+  const { setUser, user } = useContext(AppContext)
 
-  const handleChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
-    setUsername(value)
-    fetch(`https://api.scratch.mit.edu/users/${value}`)
-      .then(res => setDisabled(res.status != 200))
+  const [username, setUsername] = useState<string>()
+  const [disabled, setDisabled] = useState(true)
+  const [isLoading, setLoading] = useState(false)
+  const [message, setMessage] = useState<StatusMessageType>()
+
+  const showMessage = (type: 'success' | 'warning' | 'error' | undefined, message: string) => {
+    setMessage({ type, message })
+    setTimeout(() => setMessage(undefined), 5 * 1000)
   }
 
-  const handleSubmit = () => {
+  const handleChange = async ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
+    setUsername(value)
+    setDisabled(true)
+    const response = await fetch(`${config.API_URL}/scratch?username=${value}`)
+    setDisabled(response.status !== 200)
+  }
+
+  if (!user) return <></>
+
+  const handleSubmit = async () => {
+    setLoading(true)
     const formData = new FormData()
     if (!user) {
-      alert("You must be logged in to do that!")
+      showMessage('warning', "You must be logged in to do that!")
       return
     }
     if (!username) {
-      alert("Missing username!")
+      showMessage('warning', "Missing username")
       return
     }
     formData.set('uid', user.uid)
     formData.set('scratch_username', username)
-    fetch(`${config.API_URL}/users`, {
+
+    const response = await fetch(`${config.API_URL}/users`, {
       method: "PUT",
-      body: formData
+      body: formData,
+      headers: {
+        Authorization: `Bearer ${localStorage.accessToken}`
+      }
     })
+    if (response.ok) {
+      user.scratch_username = username
+      setUser({ ...user })
+      showMessage('success', 'Scratch account connected successfully!')
+    } else {
+      showMessage('error', response.statusText)
+    }
+    setLoading(false)
   }
-  return (
-    <>
-      {user && <Block size='xs-12' >
-        <p>You have not yet attached your Scratch® account to your profile. Please enter it below.</p>
-        <Form onSubmit={handleSubmit}>
-          <Input placeholder="Scratch Username" onChange={handleChange} action={<Button content='Connect' color='orange' disabled={disabled} />} />
-        </Form>
-      </Block>}
-    </>
-  )
+
+  if (message) {
+    return <StatusMessage message={message} />
+  }
+
+  if (user?.role == 'team' && user.division == 'gold' && !user.scratch_username) {
+    return <Block size='xs-12' >
+      <p>You have not yet attached your Scratch® account to your profile. Please enter it below.</p>
+      <Form onSubmit={handleSubmit}>
+        <Input
+          placeholder="Scratch Username"
+          onChange={handleChange}
+          action={<Button
+            content='Connect'
+            color='orange'
+            loading={isLoading}
+            disabled={isLoading || disabled} />} />
+      </Form>
+    </Block>
+  }
+  return <></>
 }
 
 export default Connect

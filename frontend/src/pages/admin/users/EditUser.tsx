@@ -1,15 +1,16 @@
 import { User } from "abacus"
 import React, { ChangeEvent, useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import { Button, Form, Input, Menu, Message, Select } from "semantic-ui-react"
+import { Button, Form, Input, Menu, Select } from "semantic-ui-react"
 import config from 'environment'
-import { Block } from "components"
+import { Block, NotFound, PageLoading } from "components"
 import { divisions, roles } from "utils"
 import { Helmet } from "react-helmet"
+import StatusMessage, { StatusMessageType } from "components/StatusMessage"
 
 const EditUser = (): JSX.Element => {
   const [user, setUser] = useState<User>()
-  const [formUser, setFormUser] = useState({
+  const [formUser, setFormUser] = useState<User>({
     uid: '',
     username: '',
     role: '',
@@ -18,7 +19,9 @@ const EditUser = (): JSX.Element => {
     display_name: '',
     password: ''
   })
-  const [message, setMessage] = useState<{ type: string, message: string }>()
+  const [isLoading, setLoading] = useState(true)
+  const [isMounted, setMounted] = useState(true)
+  const [message, setMessage] = useState<StatusMessageType>()
   const { uid } = useParams<{ uid: string }>()
 
   const handleChange = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>) => setFormUser({ ...formUser, [name]: value })
@@ -44,41 +47,36 @@ const EditUser = (): JSX.Element => {
     }
   }
 
-  const [isMounted, setMounted] = useState(true)
-  useEffect(() => {
-    fetch(`${config.API_URL}/users?uid=${uid}`, {
+  const loadUser = async () => {
+    const response = await fetch(`${config.API_URL}/users?uid=${uid}`, {
       headers: {
         authorization: `Bearer ${localStorage.accessToken}`
       }
     })
-      .then(res => res.json())
-      .then(data => {
-        if (isMounted) {
-          data = Object.values(data)[0]
-          setUser(data)
-          setFormUser({ ...data, password: '' })
-        }
-      })
+    if (!isMounted) return
+
+    const users: User[] = Object.values(await response.json())
+    if (users.length > 0) {
+      setUser(users[0])
+      setFormUser({ ...users[0], password: '' })
+    }
+
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    loadUser()
     return () => { setMounted(false) }
   }, [])
 
+  if (isLoading) return <PageLoading />
+  if (!user) return <NotFound />
+
   return <>
-    <Helmet>
-      <title>Abacus | Edit User</title>
-    </Helmet>
-    <h1>{user?.display_name}</h1>
+    <Helmet> <title>Abacus | Edit User</title> </Helmet>
+    <h1>{user.display_name}</h1>
     <Block size='xs-12' transparent>
-      {message ?
-        <>
-          {(() => {
-            switch (message.type) {
-              case 'error':
-                return <Message error icon='warning circle' header="An error has occurred!" content={message.message} />
-              case 'success':
-                return <Message success icon='check' header='Success!' content={message.message} />
-            }
-          })()}
-        </> : <></>}
+      <StatusMessage message={message} onDismiss={() => setMessage(undefined)} />
       <Menu attached='top' tabular>
         <Menu.Item active>User Info</Menu.Item>
       </Menu>

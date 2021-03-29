@@ -39,15 +39,15 @@ export const postSubmissions = async (req: Request, res: Response) => {
   }
 
   try {
-    const { pid, tid, language } = matchedData(req)
+    const item = matchedData(req)
 
-    const user = await contest.getItem('user', { uid: tid }) as unknown as User
+    const user = await contest.getItem('user', { uid: item.tid }) as unknown as User
     if (!user) {
       res.status(400).send('Team does not exist!')
       return
     }
 
-    const problem = await contest.getItem('problem', { pid: pid }) as unknown as Problem
+    const problem = await contest.getItem('problem', { pid: item.pid }) as unknown as Problem
     if (!problem) {
       res.status(400).send('Problem does not exist!')
       return
@@ -67,7 +67,7 @@ export const postSubmissions = async (req: Request, res: Response) => {
       return
     }
 
-    const submissions = await contest.scanItems('submission', { tid, pid })
+    const submissions = await contest.scanItems('submission', { tid: item.tid, pid: item.pid })
 
     if (submissions) {
       for (const submission of submissions) {
@@ -82,14 +82,23 @@ export const postSubmissions = async (req: Request, res: Response) => {
       }
     }
 
+    if (item.division == 'gold' && item.source) {
+      const scratchResponse = await fetch(`https://api.scratch.mit.edu/projects/${item.project_id}`)
+      if (!scratchResponse.ok) {
+        res.status(400).send('Server cannot access project with that id!')
+        return
+      }
+    }
+
+
     const { name: filename, size: filesize, md5, data } = req.files!.source as UploadedFile
 
     const submission = {
       sid: uuidv4().replace(/-/g, ''),
-      pid,
-      tid,
+      pid: item.pid,
+      tid: item.tid,
       division: problem.division,
-      language,
+      language: item.language,
       filename,
       filesize,
       md5,

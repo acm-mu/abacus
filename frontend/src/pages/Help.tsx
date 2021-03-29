@@ -11,9 +11,7 @@ const Help = (): JSX.Element => {
 
   return (
     <>
-      <Helmet>
-        <title>Abacus | Help</title>
-      </Helmet>
+      <Helmet> <title>Abacus | Help</title> </Helmet>
 
       <Block size="xs-12">
         <h1>Help Page</h1>

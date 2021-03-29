@@ -43,11 +43,6 @@ export const schema: Record<string, ParamSchema> = {
     isString: true,
     optional: true
   },
-  session_token: {
-    in: 'body',
-    isString: true,
-    optional: true
-  },
   username: {
     in: 'body',
     isString: true,
@@ -68,6 +63,11 @@ export const putUsers = async (req: Request, res: Response) => {
   }
   if (item.password) {
     item.password = createHash('sha256').update(item.password).digest('hex')
+  }
+
+  if (req.user?.role != 'admin' && (item.username || item.display_name || item.division || item.role || item.school)) {
+    res.sendStatus(403)
+    return
   }
 
   try {

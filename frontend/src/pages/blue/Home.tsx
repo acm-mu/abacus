@@ -5,9 +5,7 @@ import python from 'assets/python.png'
 import { Helmet } from 'react-helmet'
 
 const Home = (): JSX.Element => <>
-  <Helmet>
-    <title>Abacus | Blue</title>
-  </Helmet>
+  <Helmet> <title>Abacus | Blue</title> </Helmet>
   <Block size='xs-12'>
     <h1>Blue Division (Java/Python)</h1>
 

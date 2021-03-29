@@ -2,7 +2,7 @@ import { Problem, Submission } from 'abacus'
 import React, { ChangeEvent, useContext, useEffect, useState } from 'react'
 import { Form, Button } from 'semantic-ui-react'
 import { Link, useHistory, useParams } from 'react-router-dom'
-import { Block, Countdown, FileDialog } from 'components'
+import { Block, Countdown, FileDialog, NotFound, PageLoading } from 'components'
 import config from 'environment'
 import AppContext from 'AppContext'
 import { Language, languages } from 'utils'
@@ -12,6 +12,7 @@ const Submit = (): JSX.Element => {
   const { user } = useContext(AppContext);
   const [submissions, setSubmissions] = useState<Submission[]>()
   const [problem, setProblem] = useState<Problem>()
+  const [isLoading, setLoading] = useState(true)
   const [language, setLanguage] = useState<Language>()
   const [file, setFile] = useState<File>()
   const history = useHistory()
@@ -35,6 +36,7 @@ const Submit = (): JSX.Element => {
     response = await fetch(`${config.API_URL}/submissions?tid=${user?.uid}&pid=${problem.pid}`)
 
     setSubmissions(Object.values(await response.json()))
+    setLoading(false)
   }
 
   const handleSubmit = async () => {
@@ -87,42 +89,41 @@ const Submit = (): JSX.Element => {
     }
   }
 
-  return (
-    <>
-      <Helmet>
-        <title>Abacus | Blue Submit</title>
-      </Helmet>
-      <Countdown />
-      {!submissions || submissions?.filter((e) => e.status == "accepted").length == 0 ?
-        <Block size='xs-12'>
-          <h1>Submit a solution to {problem?.name} </h1>
+  if (isLoading) return <PageLoading />
+  if (!problem) return <NotFound />
 
-          <Form onSubmit={handleSubmit}>
-            <FileDialog file={file} onChange={uploadChange} control={(file?: File) => (
-              file ?
-                <>
-                  <h3>Your upload will include the following files:</h3>
-                  <ul>
-                    <li>{file.name}</li>
-                  </ul>
-                </> : <p>
-                  <b>Drag & drop</b> a file here to upload <br />
-                  <i>(Or click and choose file)</i>
-                </p>
-            )} />
-            <Form.Select inline label='Language' placeholder="Select Language" value={language?.value} options={languages} />
+  return <>
+    <Helmet> <title>Abacus | Blue Submit</title> </Helmet>
+    <Countdown />
+    {!submissions || submissions?.filter((e) => e.status == "accepted").length == 0 ?
+      <Block size='xs-12'>
+        <h1>Submit a solution to {problem?.name} </h1>
 
-            <Form.Group>
-              <Button>Cancel</Button>
-              <Form.Button primary content="Submit" />
-            </Form.Group>
-          </Form>
-        </Block>
-        : <Block size='xs-12' transparent>
-          <h2>You Already Solved This Problem!</h2>
-          <Link to={`/blue/submissions/${submissions.filter((e) => e.status == "accepted")[0].sid}`}>Go to your solved submission</Link>
-        </Block>}
-    </>
-  )
+        <Form onSubmit={handleSubmit}>
+          <FileDialog file={file} onChange={uploadChange} control={(file?: File) => (
+            file ?
+              <>
+                <h3>Your upload will include the following files:</h3>
+                <ul>
+                  <li>{file.name}</li>
+                </ul>
+              </> : <p>
+                <b>Drag & drop</b> a file here to upload <br />
+                <i>(Or click and choose file)</i>
+              </p>
+          )} />
+          <Form.Select inline label='Language' placeholder="Select Language" value={language?.value} options={languages} />
+
+          <Form.Group>
+            <Button>Cancel</Button>
+            <Form.Button primary content="Submit" />
+          </Form.Group>
+        </Form>
+      </Block> :
+      <Block size='xs-12' transparent>
+        <h2>You Already Solved This Problem!</h2>
+        <Link to={`/blue/submissions/${submissions.filter((e) => e.status == "accepted")[0].sid}`}>Go to your solved submission</Link>
+      </Block>}
+  </>
 }
 export default Submit

@@ -12,21 +12,21 @@ declare module "abacus" {
     sid: string;
     date: number;
     division: string;
-    filename: string;
-    filesize: number;
+    filename?: string;
+    filesize?: number;
     source: string;
     language: string;
     md5: string;
     pid: string;
     problem: Problem;
-    runtime: number;
+    runtime?: number;
     released: boolean;
     score: number;
     status: string;
     sub_no: number;
     tid: string;
     team?: Team;
-    tests: Test[];
+    tests?: Test[];
   }
   export interface Problem {
     pid: string;
@@ -34,9 +34,10 @@ declare module "abacus" {
     division: string;
     name: string;
     description: string;
-    cpu_time_limit: number;
-    memory_limit: number;
-    tests: Test[]
+    cpu_time_limit?: number;
+    memory_limit?: number;
+    tests?: Test[]
+    project_id?: string;
     skeletons?: Skeleton[];
     solutions?: Solution[];
   }

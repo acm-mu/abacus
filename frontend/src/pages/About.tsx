@@ -4,15 +4,12 @@ import { Helmet } from 'react-helmet';
 
 const About = (): JSX.Element => (
   <>
-    <Helmet>
-      <title>Abacus | About</title>
-    </Helmet>
+    <Helmet> <title>Abacus | About</title> </Helmet>
 
     <Block size="xs-12">
       <h1>About the Marquette ACM/UPE Programming Competition</h1>
     </Block>
     <Block size="xs-12">
-
       <h2>Overview</h2>
       <p>
         The Wisconsin-Dairyland chapter of the CSTA, in conjunction with the
@@ -24,18 +21,11 @@ const About = (): JSX.Element => (
 
       <h2>Java/Python Division (Blue)</h2>
       <p>
-        A traditional team-based programming competition, modeled on the ACM International Collegiate Programming Contest.
-        Teams of three or four students will have three hours and two computers to work collaboratively to solve problems
-        similar in scope to Advanced Placement Computer Science exam questions. Points will be awarded based on the number of
-        problems correctly solved and the time taken to solve, with appropriate penalties for incorrect submissions.
+        A traditional team-based programming competition, modeled on the ACM International Collegiate Programming Contest. Teams of three or four students will have three hours and two computers to work collaboratively to solve problems similar in scope to Advanced Placement Computer Science exam questions. Points will be awarded based on the number of problems correctly solved and the time taken to solve, with appropriate penalties for incorrect submissions.
       </p>
 
       <p>
-        The International Collegiate Programming Contest is an algorithmic programming contest for college students. Teams of
-        three, representing their university, work to solve the most real-world problems, fostering collaboration, creativity,
-        innovation, and the ability to perform under pressure. Through training and competition, teams challenge each other to
-        raise the bar on the possible. Quite simply, it is the oldest, largest, and most prestigious programming contest in
-        the world.
+        The International Collegiate Programming Contest is an algorithmic programming contest for college students. Teams of three, representing their university, work to solve the most real-world problems, fostering collaboration, creativity, innovation, and the ability to perform under pressure. Through training and competition, teams challenge each other to raise the bar on the possible. Quite simply, it is the oldest, largest, and most prestigious programming contest in the world.
       </p>
 
       <h2>Open/Scratch Division (Gold)</h2>
@@ -51,11 +41,7 @@ const About = (): JSX.Element => (
 
       <h2>AP Computer Science Principles (Eagle)</h2>
       <p>
-        Teams of two to four students will be working together to solve a problem that is present in society and is awaiting a technological
-        solution. The students then have three hours to develop a solution using their knowledge of computer science principles and technologies. Students are
-        not required to write code or create a working prototype, but rather have a flushed out, technical solution. At the end of the three hours, each team will
-        present (5 – 10 minutes) their solution to a small board of faculty members. The faculty will ask a few questions and ultimately vote on a winner. We will
-        have a Google Meet call where students will present and gain feedback the feedback mentioned earlier.
+        Teams of two to four students will be working together to solve a problem that is present in society and is awaiting a technological solution. The students then have three hours to develop a solution using their knowledge of computer science principles and technologies. Students are not required to write code or create a working prototype, but rather have a flushed out, technical solution. At the end of the three hours, each team will present (5 – 10 minutes) their solution to a small board of faculty members. The faculty will ask a few questions and ultimately vote on a winner. We will have a Google Meet call where students will present and gain feedback the feedback mentioned earlier.
       </p>
     </Block>
   </>

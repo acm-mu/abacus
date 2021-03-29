@@ -58,7 +58,6 @@ export const postClarifications = async (req: Request, res: Response) => {
 
     // Response
     if (parent) {
-      console.log('New Reply')
       const clarifications = await contest.scanItems('clarification', { cid: parent })
       if (!clarifications?.length) {
         res.status(400).json({ message: `Clarification ${parent} does not exist!` })
