@@ -84,7 +84,7 @@ declare module "abacus" {
   }
 
   export interface Context {
-    type: 'pid' | 'cid' | 'sid' | 'uid';
+    type: 'pid' | 'cid' | 'sid';
     id: string;
   }
 

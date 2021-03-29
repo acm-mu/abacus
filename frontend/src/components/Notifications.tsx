@@ -52,7 +52,6 @@ const Notifications = (): JSX.Element => {
     switch (context.type) {
       case 'cid': return `${userHome(user)}/clarifications/${context.id}`
       case 'pid': return `${userHome(user)}/problems/${context.id}`
-      case 'uid': return ``
       case 'sid': return `${userHome(user)}/submissions/${context.id}`
     }
   }
