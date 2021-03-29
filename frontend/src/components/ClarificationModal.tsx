@@ -4,16 +4,17 @@ import config from 'environment';
 import AppContext from 'AppContext';
 import { useHistory } from 'react-router';
 import { divisions } from 'utils';
-import { Clarification } from 'abacus';
+import { Clarification, Context } from 'abacus';
 import { StatusMessage } from '.';
 
 interface ClarificationModalProps {
   trigger: JSX.Element
-  title?: string
+  title?: string,
+  context?: Context,
   callback?: (clarification: Clarification) => void;
 }
 
-const ClarificationModal = ({ trigger, title = '' }: ClarificationModalProps): JSX.Element => {
+const ClarificationModal = ({ trigger, title = '', context }: ClarificationModalProps): JSX.Element => {
   const history = useHistory()
   const { user } = useContext(AppContext)
   const [isLoading, setLoading] = useState(false)
@@ -22,6 +23,7 @@ const ClarificationModal = ({ trigger, title = '' }: ClarificationModalProps): J
 
   const [clarification, setClarification] = useState({
     title,
+    context,
     body: '',
     division: user?.division || '',
   })
@@ -50,6 +52,7 @@ const ClarificationModal = ({ trigger, title = '' }: ClarificationModalProps): J
       setClarification({
         title: '',
         body: '',
+        context: undefined,
         division: user?.division || '',
       })
       setOpen(false)

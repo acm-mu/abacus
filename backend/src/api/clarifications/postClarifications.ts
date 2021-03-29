@@ -31,6 +31,11 @@ export const schema: Record<string, ParamSchema> = {
     isString: true,
     notEmpty: true,
     optional: true
+  },
+  context: {
+    in: 'body',
+    isObject: true,
+    notEmpty: true
   }
 }
 

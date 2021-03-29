@@ -71,6 +71,11 @@ declare module "abacus" {
     problems: { [key: string]: ProblemScore };
   }
 
+  export interface Context {
+    type: 'pid' | 'cid' | 'sid';
+    id: string;
+  }
+
   export interface Clarification {
     cid: string;
     body: string;
@@ -81,11 +86,7 @@ declare module "abacus" {
     division?: string;
     type?: string;
     title?: string;
-  }
-
-  export interface Context {
-    type: 'pid' | 'cid' | 'sid';
-    id: string;
+    context?: Context;
   }
 
   export interface Notification {

@@ -74,9 +74,11 @@ const problem = (): JSX.Element => {
           icon="upload"
         /> : <></>
       }
-      <ClarificationModal title={`${problem.name} | `} trigger={
-        <Button content="Ask" icon="question" />
-      } />
+      <ClarificationModal
+        title={`${problem.name} | `}
+        context={{ type: 'pid', id: problem.pid }}
+        trigger={<Button content="Ask" icon="question" />}
+      />
       <p><b>Problem ID:</b> {problem.id}</p>
       <p><b>CPU Time limit:</b> {problem.cpu_time_limit}</p>
       <p><b>Memory limit:</b> {problem.memory_limit}</p>

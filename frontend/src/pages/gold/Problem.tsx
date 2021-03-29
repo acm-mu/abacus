@@ -71,9 +71,11 @@ const problem = (): JSX.Element => {
           icon="upload"
         /> : <></>
       }
-      <ClarificationModal title={`${problem.name} | `} trigger={
-        <Button content="Ask" icon="question" />
-      } />
+      <ClarificationModal
+        title={`${problem.name} | `}
+        context={{ type: 'pid', id: problem.pid }}
+        trigger={<Button content="Ask" icon="question" />}
+      />
       <a
         rel="noreferrer"
         target="_blank"

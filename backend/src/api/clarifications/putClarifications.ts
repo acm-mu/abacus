@@ -30,6 +30,11 @@ export const schema: Record<string, ParamSchema> = {
     in: 'body',
     isBoolean: true,
     notEmpty: true
+  },
+  context: {
+    in: 'body',
+    isObject: true,
+    notEmpty: true
   }
 }
 
