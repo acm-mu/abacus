@@ -1,16 +1,14 @@
 import { Submission } from "abacus"
 import React, { useState } from "react"
 import { Link } from "react-router-dom"
-import { Table, Label } from "semantic-ui-react"
-import { Block } from "components"
+import { Table } from "semantic-ui-react"
+import { Block, ScratchViewer } from "components"
 import { Helmet } from "react-helmet"
 
 const submission = (): JSX.Element => {
   const [submission] = useState<Submission>()
   return <>
-    <Helmet>
-      <title>Abacus | Gold Submission</title>
-    </Helmet>
+    <Helmet> <title>Abacus | Gold Submission</title> </Helmet>
     <Block size='xs-12'>
       <h1>Submission</h1>
       <Table celled>
@@ -34,14 +32,10 @@ const submission = (): JSX.Element => {
         </Table.Body>
       </Table>
     </Block>
-
-    <Block size='xs-12'>
-      <h3>Scratch Live Preview</h3>
-      <Label target='_blank' href='{{ submission.filename }}' icon='linkify'> Link to Project</Label>
-      <br /><br />
-      {/* <iframe id='scratch_embedded' src="{{ submission.filename }}/embed" allowtransparency="true" width="603" height="500"
-          frameborder="0" scrolling="no" allowfullscreen></iframe> */}
-    </Block>
+    {submission?.filename ?
+      <Block size='xs-12'>
+        <ScratchViewer project_id={submission?.filename} />
+      </Block> : <></>}
   </>
 }
 

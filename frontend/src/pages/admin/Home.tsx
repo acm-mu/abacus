@@ -165,36 +165,32 @@ const Home = (): JSX.Element => {
     // }
   };
 
-  return (
-    <>
-      <Helmet>
-        <title>Abacus | Admin</title>
-      </Helmet>
-      <Block size='xs-12'>
-        <h1>Admin Dashboard</h1>
-      </Block>
+  return <>
+    <Helmet> <title>Abacus | Admin</title> </Helmet>
+    <Block size='xs-12'>
+      <h1>Admin Dashboard</h1>
+    </Block>
 
-      <Block size='xs-6'>
-        <h2>Submission Timeline</h2>
-        {submissions?.length ?
-          <LineChart
-            data={timelineData}
-            options={timelineOptions}
-          />
-          : <p>There are not any submissions yet!</p>}
-      </Block>
+    <Block size='xs-6'>
+      <h2>Submission Timeline</h2>
+      {submissions?.length ?
+        <LineChart
+          data={timelineData}
+          options={timelineOptions}
+        />
+        : <p>There are not any submissions yet!</p>}
+    </Block>
 
-      <Block size='xs-6'>
-        <h2>Submission Breakdown</h2>
-        {submissions?.length ?
+    <Block size='xs-6'>
+      <h2>Submission Breakdown</h2>
+      {submissions?.length ?
 
-          <PieChart
-            data={breakdownData}
-            options={breakdownOptions}
-          />
-          : <p>There are not any submissions yet!</p>}
-      </Block>
-    </>
-  )
+        <PieChart
+          data={breakdownData}
+          options={breakdownOptions}
+        />
+        : <p>There are not any submissions yet!</p>}
+    </Block>
+  </>
 }
 export default Home

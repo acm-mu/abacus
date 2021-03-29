@@ -1,76 +1,91 @@
 import { Problem, Submission } from 'abacus'
 import React, { useContext, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { Button, Loader, Popup } from 'semantic-ui-react'
+import { Block, Countdown, NotFound, ClarificationModal, PageLoading } from 'components'
+import { Button } from 'semantic-ui-react'
 import MDEditor from '@uiw/react-md-editor'
-
-import { Block, Countdown, NotFound } from 'components'
 import config from "environment"
 import AppContext from 'AppContext'
 import { Helmet } from 'react-helmet'
 
 const problem = (): JSX.Element => {
-  const [problem, setProblem] = useState<Problem>()
-  const [isLoading, setLoading] = useState(true)
-  const [submissions, setSubmissions] = useState<Submission[]>()
   const { user } = useContext(AppContext)
+  const [isLoading, setLoading] = useState(true)
+  const [problem, setProblem] = useState<Problem>()
+  const [submissions, setSubmissions] = useState<Submission[]>()
   const { pid } = useParams<{ pid: string }>()
 
+  const [isMounted, setMounted] = useState(true)
+
   useEffect(() => {
-    fetch(`${config.API_URL}/problems?division=gold&id=${pid}`)
-      .then(res => res.json())
-      .then(res => {
-        if (res) {
-          const problem = Object.values(res)[0] as Problem
-          setProblem(problem)
-          if (user)
-            fetch(`${config.API_URL}/submissions?tid=${user?.uid}&pid=${problem.pid}`)
-              .then(res => res.json())
-              .then(res => setSubmissions(Object.values(res)))
-        }
-        setLoading(false)
-      })
+    loadProblem().then(() => {
+      setLoading(false)
+      if (user) loadSubmissions()
+    })
+    return () => { setMounted(false) }
   }, [])
 
-  if (!isLoading) return <Loader active inline='centered' content="Loading..." />
+  const loadProblem = async () => {
+    const response = await fetch(`${config.API_URL}/problems?division=gold&id=${pid}&columns=description,project_id`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.accessToken}`
+      }
+    })
+
+    if (!response.ok || !isMounted) return
+
+    setProblem(Object.values(await response.json())[0] as Problem)
+  }
+
+  const loadSubmissions = async () => {
+    if (!problem) return
+
+    const response = await fetch(`${config.API_URL}/submissions?tid=${user?.uid}&pid=${problem?.pid}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.accessToken}`
+      }
+    })
+
+    if (!response.ok || !isMounted) return
+
+    setSubmissions(Object.values(await response.json()))
+  }
+
+  if (isLoading) return <PageLoading />
   if (!problem) return <NotFound />
 
   return <>
-    <Helmet>
-      <title>Abacus | {problem.name}</title>
-    </Helmet>
-
+    <Helmet> <title>Abacus | {problem.name}</title> </Helmet>
     <Countdown />
-    <Block size='xs-9'>
-      <h1>Problem {problem.id}
-        <br />
-        {problem.name}
-      </h1>
+    <Block size='xs-9' className='problem'>
+      <h1>Problem {problem?.id}: {problem?.name}</h1>
       <hr />
       <MDEditor.Markdown source={problem?.description || ''} />
     </Block>
-    <Block size='xs-3'>
-      <div style={{ display: 'flex', justifyContent: 'space-evenly' }} >
-        {!submissions || submissions?.filter((e) => e.status == "accepted").length == 0 ?
-          <Popup
-            trigger={
-              <Button
-                as={Link}
-                to={`/blue/problems/${problem.id}/submit`}
-                content="Submit"
-                icon="upload"
-              />
-            }
-            content="Submit"
-            position="top center"
-            inverted /> : <></>
-        }
-      </div>
-      <p><b>Problem ID:</b> {problem.id}</p>
-      <p><b>CPU Time limit:</b> {problem.cpu_time_limit}</p>
-      <p><b>Memory limit:</b> {problem.memory_limit}</p>
-      <p><b>Download:</b> <a>Sample data files</a></p>
-    </Block>
+    <Block size='xs-3' className='problem-panel'>
+      {!submissions || submissions?.filter((e) => e.status == "accepted").length == 0 ?
+        <Button
+          as={Link}
+          to={`/gold/problems/${problem?.id}/submit`}
+          content="Submit"
+          icon="upload"
+        /> : <></>
+      }
+      <ClarificationModal title={`${problem.name} | `} trigger={
+        <Button content="Ask" icon="question" />
+      } />
+      <a
+        rel="noreferrer"
+        target="_blank"
+        href={`https://scratch.mit.edu/projects/${problem?.project_id}`}
+      >
+        <Button
+          color='orange'
+          content="Template"
+          icon='linkify'
+        />
+      </a>
+    </Block >
   </>
 }
 

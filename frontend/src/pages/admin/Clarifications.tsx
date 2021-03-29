@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
-import { Block } from 'components';
-import { Button, Checkbox, CheckboxProps, Label, Loader, Table } from 'semantic-ui-react';
+import { Block, DivisionLabel, PageLoading } from 'components';
+import { Button, Checkbox, CheckboxProps, Label, Table } from 'semantic-ui-react';
 import config from 'environment'
 import { Clarification } from 'abacus';
 import { Link } from 'react-router-dom';
@@ -70,26 +70,15 @@ const Clarifications = (): JSX.Element => {
     loadClarifications()
   }
 
-  const divisionLabel = (division?: string): JSX.Element => {
-    switch (division) {
-      case 'gold': return <Label color='yellow' content="Gold" />
-      case 'blue': return <Label color='blue' content="Blue" />
-      case 'public': return <Label content="Public" />
-      default: return <></>
-    }
-  }
-
   useEffect(() => {
     loadClarifications()
     return () => { setMounted(false) }
   }, [])
 
-  if (isLoading) return <Loader active inline='centered' content="Loading..." />
+  if (isLoading) return <PageLoading />
 
   return <>
-    <Helmet>
-      <title>Abacus | Admin Clarifications</title>
-    </Helmet>
+    <Helmet> <title>Abacus | Admin Clarifications</title> </Helmet>
 
     <ClarificationModal trigger={<Button content="Ask Clarification" />} callback={loadClarifications} />
     {clarifications.filter(clarification => clarification.checked).length ?
@@ -129,7 +118,7 @@ const Clarifications = (): JSX.Element => {
                     {!clarification.open ? <Label style={{ float: 'right' }} content='Closed' /> : <></>}
                   </Table.Cell>
                   <Table.Cell>{clarification.type}</Table.Cell>
-                  <Table.Cell>{divisionLabel(clarification.division)}</Table.Cell>
+                  <Table.Cell><DivisionLabel division={clarification.division} /></Table.Cell>
                   <Table.Cell>{clarification.title}</Table.Cell>
                   <Table.Cell>{clarification.user?.display_name}</Table.Cell>
                   <Table.Cell><Link to={`/admin/clarifications/${clarification.cid}`}>{clarification.children.length}</Link></Table.Cell>

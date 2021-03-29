@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Problem, Submission } from 'abacus';
 import { Link, useParams } from 'react-router-dom';
-import { Breadcrumb, Button, Loader, Table } from 'semantic-ui-react';
+import { Breadcrumb, Button, Table } from 'semantic-ui-react';
 import MDEditor from '@uiw/react-md-editor';
 
-import { Block, Countdown, NotFound } from 'components'; import Moment from 'react-moment';
+import { Block, Countdown, NotFound, PageLoading } from 'components'; import Moment from 'react-moment';
 import "../Problem.scss";
 import { Helmet } from 'react-helmet';
 
@@ -16,8 +16,6 @@ const PracticeProblem = ({ submissions }: PracticeProblemProps): JSX.Element => 
   const { id } = useParams<{ id: string }>()
   const [problem, setProblem] = useState<Problem>()
   const [isLoading, setLoading] = useState(true)
-
-  const helmet = <Helmet> <title>Abacus | Clarifications</title> </Helmet>
 
   useEffect(() => {
     fetch(`/problems/${id}.json`)
@@ -35,22 +33,11 @@ const PracticeProblem = ({ submissions }: PracticeProblemProps): JSX.Element => 
       }
   }
 
-  if (isLoading) {
-    return <>
-      {helmet}
-      <Loader active inline='centered' content="Loading..." />
-    </>
-  }
-
-  if (!problem) {
-    return <>
-      {helmet}
-      <NotFound />
-    </>
-  }
+  if (isLoading) return <PageLoading />
+  if (!problem) return <NotFound />
 
   return <>
-    {helmet}
+    <Helmet> <title>Abacus | {problem.name}</title> </Helmet>
     <Countdown />
     <Block transparent size='xs-12'>
       <Breadcrumb>

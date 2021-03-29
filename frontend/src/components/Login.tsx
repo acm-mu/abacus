@@ -1,10 +1,11 @@
 import React, { ChangeEvent, useContext, useState } from "react";
 import { useHistory } from "react-router";
-import { Button, Form, Message, Modal } from "semantic-ui-react";
+import { Button, Form, Modal } from "semantic-ui-react";
 import AppContext from "AppContext";
 import config from 'environment'
 import fulllogo from 'assets/fulllogo.png'
 import { userHome } from "utils";
+import { StatusMessage } from ".";
 
 interface LoginModalProps {
   trigger?: JSX.Element
@@ -51,7 +52,7 @@ const LoginModal = ({ trigger, open }: LoginModalProps): JSX.Element => {
       open={isOpen}
       trigger={trigger}>
       <Modal.Description>
-        {error && <Message icon='warning circle' error attached='top' header="An error has occurred!" content={error} />}
+        {error ? <StatusMessage message={{ type: 'error', message: error }} /> : <></>}
         <Form className='attached fluid segment' id="loginForm" onSubmit={handleSubmit}>
           <img src={fulllogo} width="300px" alt="Logo" />
           <Form.Input

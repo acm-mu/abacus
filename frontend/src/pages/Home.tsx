@@ -53,9 +53,7 @@ const Home = (): JSX.Element => {
   }
   return (
     <>
-      <Helmet>
-        <title>Abacus</title>
-      </Helmet>
+      <Helmet> <title>Abacus</title> </Helmet>
       <Message icon color='blue'>
         <Icon name='bullhorn' />
         <Message.Content>

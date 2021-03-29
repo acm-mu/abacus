@@ -11,7 +11,7 @@ type Props = {
   className?: string;
 };
 
-const Navigation: React.FunctionComponent<Props> = (props: Props) => {
+const Navigation = (props: Props): JSX.Element => {
   const history = useHistory()
   const { user, setUser } = useContext(AppContext)
   const [isMounted, setMounted] = useState<boolean>(false)

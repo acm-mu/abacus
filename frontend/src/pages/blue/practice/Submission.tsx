@@ -20,9 +20,7 @@ const PracticeSubmission = ({ submission }: PracticeSubmissionProps): JSX.Elemen
   const handleTestItemClick = (event: MouseEvent, data: MenuItemProps) => setActiveTestItem(data.tab)
 
   return <>
-    <Helmet>
-      <title>Abacus | Practice Submission</title>
-    </Helmet>
+    <Helmet> <title>Abacus | Practice Submission</title> </Helmet>
     <Countdown />
     <Block transparent size='xs-12'>
       <Breadcrumb>
@@ -54,7 +52,7 @@ const PracticeSubmission = ({ submission }: PracticeSubmissionProps): JSX.Elemen
             <Table.Cell><Moment fromNow date={submission?.date * 1000} /></Table.Cell>
             <Table.Cell><span className={`icn status ${submission.status}`} /></Table.Cell>
             <Table.Cell>
-              {submission?.tests.map((test: Test, index: number) => {
+              {submission?.tests?.map((test: Test, index: number) => {
                 switch (test.result) {
                   case 'accepted':
                     return <span key={`test-${index}`} className='result icn accepted' />
@@ -111,11 +109,11 @@ const PracticeSubmission = ({ submission }: PracticeSubmissionProps): JSX.Elemen
           <Message warning icon='warning triangle' header='Heads Up!' content='This section will not be visible during the competition' />
           <div style={{ display: 'flex' }}>
             <Menu secondary vertical>
-              {submission.tests.map((test: Test, index: number) =>
+              {submission.tests?.map((test: Test, index: number) =>
                 <Menu.Item key={`test-case-${index}`} name={`Test Case #${index + 1}`} active={activeTestItem === index} tab={index} onClick={handleTestItemClick} />
               )}</Menu>
 
-            {submission.tests.map((test: Test, index: number) => (
+            {submission.tests?.map((test: Test, index: number) => (
               <React.Fragment key={`test-result-${index}`}>
                 {index == activeTestItem ?
                   <div className='testRun'>

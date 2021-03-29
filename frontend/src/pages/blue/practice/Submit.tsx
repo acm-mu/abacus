@@ -1,10 +1,10 @@
 import { Problem, Submission } from 'abacus'
-import { Block, Countdown, FileDialog, NotFound } from 'components'
+import { Block, Countdown, FileDialog, NotFound, PageLoading } from 'components'
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet'
 import { useHistory, useParams } from 'react-router'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Button, Form, Loader } from 'semantic-ui-react'
+import { Breadcrumb, Button, Form } from 'semantic-ui-react'
 import { Language, languages } from 'utils'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -19,8 +19,6 @@ const SubmitPractice = (): JSX.Element => {
   const [file, setFile] = useState<File>()
   const history = useHistory()
 
-  const helmet = <Helmet> <title>Abacus | Submit Practice</title> </Helmet>
-
   useEffect(() => {
     fetch(`/problems/${id}.json`)
       .then(response => response.json())
@@ -34,33 +32,34 @@ const SubmitPractice = (): JSX.Element => {
   const testSubmission = async (submission: Submission): Promise<Submission> => {
     let runtime = -1;
     let status = 'accepted'
-    for (const test of submission.tests) {
-      // Await response from piston execution
-      const res = await fetch("https://piston.codeabac.us/execute", {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          language: submission.language,
-          source: submission.source,
-          stdin: test.in,
-          timeout: 15
-        })
-      });
+    if (submission.tests) {
+      for (const test of submission.tests) {
+        // Await response from piston execution
+        const res = await fetch("https://piston.codeabac.us/execute", {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            language: submission.language,
+            source: submission.source,
+            stdin: test.in,
+            timeout: 15
+          })
+        });
 
-      const json = await res.json()
+        const json = await res.json()
 
-      runtime = Math.max(runtime, json.runtime);
-      test.stdout = json.output;
+        runtime = Math.max(runtime, json.runtime);
+        test.stdout = json.output;
 
-      if (json.output != test.out) {
-        status = "rejected";
-        test['result'] = "rejected";
-      } else {
-        test['result'] = "accepted";
+        if (json.output != test.out) {
+          status = "rejected";
+          test['result'] = "rejected";
+        } else {
+          test['result'] = "accepted";
+        }
       }
+      submission.status = status
     }
-
-    submission.status = status
     submission.runtime = runtime
     submission.score = 0;
 
@@ -136,19 +135,11 @@ const SubmitPractice = (): JSX.Element => {
       event.preventDefault()
     }
   }
-  if (isPageLoading) {
-    return <>
-      {helmet}
-      <Loader active inline='centered' content="Loading..." />
-    </>
-  }
+  if (isPageLoading) return <PageLoading />
   if (!problem) return <NotFound />
 
-
   return <>
-    <Helmet>
-      <title>Abacus | Submit Practice {problem.id}</title>
-    </Helmet>
+    <Helmet> <title>Abacus | Submit Practice {problem.id}</title> </Helmet>
     <Countdown />
     <Block transparent size='xs-12'>
       <Breadcrumb>

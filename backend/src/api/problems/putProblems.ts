@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { Request, Response } from 'express';
 import { matchedData, ParamSchema, validationResult } from "express-validator";
 
@@ -59,6 +60,10 @@ export const schema: Record<string, ParamSchema> = {
   solutions: {
     in: 'body',
     optional: true
+  },
+  project_id: {
+    in: 'body',
+    optional: true
   }
 }
 
@@ -71,8 +76,16 @@ export const putProblems = async (req: Request, res: Response) => {
 
   const item = matchedData(req)
 
+  if (item.division == 'gold' && item.project_id) {
+    const scratchResponse = await axios.get(`https://api.scratch.mit.edu/projects/${item.project_id}`)
+    if (scratchResponse.status !== 200) {
+      res.status(400).send('Server cannot access project with that id!')
+      return
+    }
+  }
+
   if (item.id) {
-    const problems = Object.values(await contest.scanItems('problem', { id: item.id }) || {})
+    const problems = Object.values(await contest.scanItems('problem', { id: item.id, division: item.division }) || {})
     if (problems.length > 0 && problems[0].pid != item.pid) {
       res.status(400).json({ message: "Problem id is taken!" })
       return

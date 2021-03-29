@@ -1,12 +1,13 @@
 import { User } from 'abacus'
 import React, { ChangeEvent, useState, useEffect, useContext } from 'react'
-import { Table, Button, Loader, Message, Label } from 'semantic-ui-react'
+import { Table, Button } from 'semantic-ui-react'
 import { saveAs } from 'file-saver';
 import { Link } from 'react-router-dom'
 import config from 'environment'
 import AppContext from 'AppContext'
 import CreateUser from './CreateUser'
 import { Helmet } from 'react-helmet';
+import { DivisionLabel, PageLoading, StatusMessage } from 'components';
 
 interface UserItem extends User {
   checked: boolean
@@ -25,7 +26,7 @@ const Users = (): JSX.Element => {
   const [isDownloading, setDownloading] = useState(false)
   const [isDeleting, setDeleting] = useState(false)
   const [isImporting, setImporting] = useState(false)
-  const [error, setError] = useState()
+  const [error, setError] = useState<string>()
 
   const [isMounted, setMounted] = useState(true)
   const [{ column, direction }, setSortConfig] = useState<SortConfig>({
@@ -162,23 +163,11 @@ const Users = (): JSX.Element => {
     setDeleting(false)
   }
 
-  if (isLoading) return <Loader active inline='centered' content="Loading..." />
-
-  if (error) return <Message content={error} />
-
-  const divisionLabel = (division?: string): JSX.Element => {
-    switch (division) {
-      case 'gold': return <Label color='yellow' content="Gold" />
-      case 'blue': return <Label color='blue' content="Blue" />
-      case 'public': return <Label content="Public" />
-      default: return <></>
-    }
-  }
+  if (isLoading) return <PageLoading />
+  if (error) return <StatusMessage message={{ type: 'error', message: error }} />
 
   return <>
-    <Helmet>
-      <title>Abacus | Users</title>
-    </Helmet>
+    <Helmet> <title>Abacus | Users</title> </Helmet>
     <CreateUser trigger={<Button content="Add User" primary />} callback={createUserCallback} />
     <Link to='/admin/users/upload'><Button content="Upload Users" /></Link>
     <Button loading={isImporting} disabled={isImporting} content="Import Users" onClick={importUsers} />
@@ -224,7 +213,7 @@ const Users = (): JSX.Element => {
             </Table.Cell>
             <Table.Cell><Link to={`/admin/users/${user.uid}`}>{user.username}</Link></Table.Cell>
             <Table.Cell>{user.role}</Table.Cell>
-            <Table.Cell>{divisionLabel(user.division)}</Table.Cell>
+            <Table.Cell><DivisionLabel division={user.division} /></Table.Cell>
             <Table.Cell>{user.school}</Table.Cell>
             <Table.Cell>{user.display_name}</Table.Cell>
           </Table.Row>)}

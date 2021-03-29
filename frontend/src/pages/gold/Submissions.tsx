@@ -12,12 +12,9 @@ const Submissions = (): JSX.Element => {
   const [submissions] = useState<Submission[]>()
 
   if (!user) return <Unauthorized />
-  // if (isLoading) return <Loader active inline='centered' content="Loading" />
 
   return <>
-    <Helmet>
-      <title>Abacus | Gold Submissions</title>
-    </Helmet>
+    <Helmet> <title>Abacus | Gold Submissions</title> </Helmet>
     <Block size='xs-12' transparent>
       <Table>
         <Table.Header>
@@ -43,7 +40,7 @@ const Submissions = (): JSX.Element => {
               </Table.Row>
             ))) : (
               <Table.Row>
-                <Table.Cell colSpan={7} style={{ textAlign: 'center' }}>No Submissions</Table.Cell>
+                <Table.Cell colSpan={'100%'} style={{ textAlign: 'center' }}>No Submissions</Table.Cell>
               </Table.Row>
             )}
         </Table.Body>

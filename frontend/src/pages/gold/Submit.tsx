@@ -1,76 +1,81 @@
 import { Problem } from "abacus";
-import React, { useContext, useEffect, useState } from "react";
-import { Form, Input, Select, Label, Loader } from "semantic-ui-react";
-import AppContext from "AppContext";
-import { Block, NotFound } from "components";
+import React, { useEffect, useMemo, useState } from "react";
+import { Form, DropdownProps, InputOnChangeData } from "semantic-ui-react";
+import { Block, PageLoading, ScratchViewer } from "components";
 import config from "environment"
 import { Helmet } from "react-helmet";
+import { useParams } from "react-router";
 
 const Submit = (): JSX.Element => {
+  const { project_id: default_project_id } = useParams<{ project_id: string }>()
+  const { pid: problem_id } = useParams<{ pid: string }>()
   const [problems, setProblems] = useState<Problem[]>([])
+  const [problem, setProblem] = useState<string>()
+  const [project_url, setProjectUrl] = useState<string>(`https://scratch.mit.edu/projects/${default_project_id || ''}`)
   const [isLoading, setLoading] = useState(true)
-  const { user } = useContext(AppContext)
+  const [isMounted, setMounted] = useState(true)
+
+  const regex = /https:\/\/scratch\.mit\.edu\/projects\/(\d*)/
+
+  const project_id = useMemo(() => {
+    const match = project_url.match(regex)
+    if (match) return match[1]
+    return undefined
+  }, [project_url])
 
   useEffect(() => {
-    fetch(`${config.API_URL}/problems?division=gold`)
-      .then(res => res.json())
-      .then(res => {
-        setProblems(Object.values(res))
-        setLoading(false)
-      })
+    loadProblems()
+    return () => { setMounted(false) }
   }, [])
 
-  if (isLoading) return <Loader active inline='centered' content="Loading..." />
-  if (!problems) return <NotFound />
+  const loadProblems = async () => {
+    const response = await fetch(`${config.API_URL}/problems?division=gold`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.accessToken}`
+      }
+    })
+    if (response.ok && isMounted) {
+      const problems: Problem[] = Object.values(await response.json())
+      for (const problem of problems)
+        if (problem.id == problem_id) setProblem(problem.pid)
+
+      setProblems(problems)
+    }
+    setLoading(false)
+  }
+
+  const handleProblemChange = (event: React.SyntheticEvent<HTMLElement, Event>, { key }: DropdownProps) => { console.log(key); setProblem(key) }
+  const handleChange = async (event: React.ChangeEvent<HTMLInputElement>, { value }: InputOnChangeData) => setProjectUrl(value)
+
+  if (isLoading) return <PageLoading />
 
   return <>
-    <Helmet>
-      <title>Abacus | Gold Submit</title>
-    </Helmet>
+    <Helmet> <title>Abacus | Gold Submit</title> </Helmet>
     <Block size='xs-12'>
       <Form>
-        <Input value="scratch" style={{ display: 'none' }} />
-        <Input style={{ display: 'none' }} value={user?.scratch_username} />
-
         <Form.Group widths='equal'>
-          <Form.Field label='Problem' control={Select} />
-          {problems.map((problem) => {
-            <option value={problem.pid}>{problem.name}</option>
-          })}
-          <Form.Field label='Scratch URL' control={Input}
-            placeholder="https://scratch.mit.edu/projects/<project_id>" value={`https://scratch.mit.edu/projects/{project_id}`} />
-
-          <Form.Field control={Input} />
+          <Form.Select
+            label='Problem'
+            placeholder='Problem'
+            name='problem'
+            value={problem}
+            onChange={handleProblemChange}
+            options={problems.map((problem) => ({ key: problem.pid, text: problem.name, value: problem.pid }))}
+          />
+          <Form.Input
+            label='Project Url'
+            onChange={handleChange}
+            placeholder="https://scratch.mit.edu/projects/<project_id>"
+            value={project_url}
+          />
         </Form.Group>
       </Form>
     </Block>
 
-    <Block size='xs-12'>
-      <h1>Project Title: <i>title</i></h1>
-      <Label>Project Id <div className="detail">#%id%</div></Label>
-      <Label>Created <div className="detail">%created_date%</div></Label>
-      <Label>Modified <div className="detail">%modified_date%</div></Label>
-      <br />
-      <br />
-      <Label>Public</Label>
-      <Label>Published</Label>
-      <a className="ui label" target='_blank' rel="noreferrer" href='https://scratch.mit.edu/projects/%id%'><i className="linkify icon"></i> Link to Project</a>
-      <p>%description%</p>
-
-      {/* <iframe id='scratch_embedded' src="https://scratch.mit.edu/projects/%id%/embed" allowtransparency="true" width="603"
-        height="500" frameborder="0" scrolling="no" allowfullscreen></iframe> */}
-
-    </Block>
-
-    <Block size='xs-12'>
-      <h2 style={{ textAlign: 'center' }}>⚠️ Cannot access project! ⚠️</h2>
-      <br />
-      <p>Please make sure you are sharing your project on scratch in order for the judges to view and assess</p>
-      <h3>Need help?</h3>
-      <a href='/help/scratch_share'>Sharing Projects on Scratch</a>
+    <Block transparent size='xs-12'>
+      <ScratchViewer project_id={project_id} />
     </Block>
   </>
-
 }
 
 export default Submit

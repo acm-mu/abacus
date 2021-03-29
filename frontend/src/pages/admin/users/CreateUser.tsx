@@ -1,7 +1,8 @@
 import React, { ChangeEvent, useState } from "react"
-import { Modal, Form, Input, Select, Button, Message } from "semantic-ui-react"
+import { Modal, Form, Input, Select, Button } from "semantic-ui-react"
 import config from 'environment'
 import { divisions, roles } from "utils"
+import { StatusMessage } from "components"
 
 type CreateUserProps = {
   trigger: JSX.Element;
@@ -59,7 +60,7 @@ const CreateUser = ({ trigger, callback }: CreateUserProps): JSX.Element => {
       <Modal.Header>Create User</Modal.Header>
       <Modal.Content>
         <Modal.Description>
-          {error && <Message error>{error}</Message>}
+          {error ? <StatusMessage message={{ type: 'error', message: error }} /> : <></>}
           <Form>
             <Form.Field
               control={Input}
