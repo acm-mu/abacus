@@ -2,7 +2,7 @@ import { Problem, Submission } from 'abacus'
 import React, { useContext, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Block, Countdown, NotFound, ClarificationModal } from 'components'
-import { Button, Loader, Popup } from 'semantic-ui-react'
+import { Button, Loader } from 'semantic-ui-react'
 import MDEditor from '@uiw/react-md-editor'
 import config from "environment"
 import AppContext from 'AppContext'
@@ -26,7 +26,7 @@ const problem = (): JSX.Element => {
   }, [])
 
   const loadProblem = async () => {
-    const response = await fetch(`${config.API_URL}/problems?division=gold&id=${pid}`, {
+    const response = await fetch(`${config.API_URL}/problems?division=gold&id=${pid}&columns=description,project_id`, {
       headers: {
         Authorization: `Bearer ${localStorage.accessToken}`
       }
@@ -55,6 +55,9 @@ const problem = (): JSX.Element => {
   if (!problem) return <NotFound />
 
   return <>
+    <Helmet>
+      Gold | {problem.name}
+    </Helmet>
     <Countdown />
     <Block size='xs-9' className='problem'>
       <h1>Problem {problem?.id}: {problem?.name}</h1>
@@ -73,10 +76,17 @@ const problem = (): JSX.Element => {
       <ClarificationModal title={`${problem.name} | `} trigger={
         <Button content="Ask" icon="question" />
       } />
-      <p><b>Problem ID:</b> {problem?.id}</p>
-      <p><b>CPU Time limit:</b> {problem?.cpu_time_limit}</p>
-      <p><b>Memory limit:</b> {problem?.memory_limit}</p>
-      <p><b>Download:</b> <a>Sample data files</a></p>
+      <a
+        rel="noreferrer"
+        target="_blank"
+        href={`https://scratch.mit.edu/projects/${problem?.project_id}`}
+      >
+        <Button
+          color='orange'
+          content="Template"
+          icon='linkify'
+        />
+      </a>
     </Block >
   </>
 }
