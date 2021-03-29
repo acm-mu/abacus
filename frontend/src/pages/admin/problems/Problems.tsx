@@ -1,5 +1,5 @@
 import { Problem, Submission } from 'abacus'
-import React, { ChangeEvent, useState, useEffect } from 'react'
+import React, { ChangeEvent, useState, useEffect, useMemo } from 'react'
 import { Table, Button, Loader, Menu, MenuItemProps } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import config from 'environment'
@@ -21,6 +21,7 @@ const Problems = (): JSX.Element => {
   const [submissions, setSubmissions] = useState<{ [key: string]: Submission[] }>()
   const [isMounted, setMounted] = useState<boolean>(true)
   const [activeDivision, setActiveDivision] = useState('blue')
+  const activeProblems = useMemo(() => problems.filter(problem => problem.division == activeDivision), [problems, activeDivision])
 
   const [{ column, direction }, setSortConfig] = useState<SortConfig>({
     column: 'id',
@@ -93,7 +94,7 @@ const Problems = (): JSX.Element => {
     setProblems(problems.map(problem => problem.division == activeDivision ? ({ ...problem, checked }) : problem))
 
   const deleteSelected = async () => {
-    const problemsToDelete = problems.filter(problem => problem.checked && problem.division == activeDivision).map(problem => problem.pid)
+    const problemsToDelete = activeProblems.filter(problem => problem.checked).map(problem => problem.pid)
     const response = await fetch(`${config.API_URL}/problems`, {
       method: 'DELETE',
       headers: {
@@ -128,14 +129,13 @@ const Problems = (): JSX.Element => {
         <Menu.Item name='blue' active={activeDivision == 'blue'} onClick={handleItemClick}>Blue</Menu.Item>
         <Menu.Item name='gold' active={activeDivision == 'gold'} onClick={handleItemClick}>Gold</Menu.Item>
       </Menu>
-      {/* <h3>Blue Division</h3> */}
       <Table sortable>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell collapsing>
               <input
                 type='checkbox'
-                checked={problems.filter((problem) => problem.division == activeDivision && !problem.checked).length == 0}
+                checked={activeProblems.length > 0 && activeProblems.filter((problem) => !problem.checked).length == 0}
                 onChange={checkAll} />
             </Table.HeaderCell>
             <Table.HeaderCell
@@ -153,7 +153,7 @@ const Problems = (): JSX.Element => {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {problems.filter((problem) => problem.division == activeDivision).map((problem: ProblemItem, index: number) => (
+          {activeProblems.map((problem: ProblemItem, index: number) => (
             <Table.Row key={index}>
               <Table.Cell>
                 <input
