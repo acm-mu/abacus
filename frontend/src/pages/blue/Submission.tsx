@@ -65,7 +65,7 @@ const submission = (): JSX.Element => {
             <Table.Cell>{submission?.language}</Table.Cell>
           </Table.Row>
           <Table.Row>
-            <Table.Cell colSpan="5">
+            <Table.Cell colSpan={5}>
               {submission?.tests?.map((test, index) => {
                 switch (test.result) {
                   case 'accepted':

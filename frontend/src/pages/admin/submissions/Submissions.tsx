@@ -112,7 +112,7 @@ const Submissions = (): JSX.Element => {
       <Table.Body>
         {filteredSubmissions.length == 0 ?
           <Table.Row>
-            <Table.Cell colSpan={10} style={{ textAlign: "center" }}>No Submissions</Table.Cell>
+            <Table.Cell colSpan={'100%'} style={{ textAlign: "center" }}>No Submissions</Table.Cell>
           </Table.Row> :
           filteredSubmissions.map((submission) =>
             <Table.Row key={submission.sid}>
