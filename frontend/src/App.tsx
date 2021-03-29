@@ -63,8 +63,8 @@ const App = (): JSX.Element => {
   if (isLoading) return <></>
 
   return <AppContext.Provider value={appContext}>
-    <Notifications />
     <Router>
+      <Notifications />
       <Switch>
         <Route path='/admin' component={Admin} />
         <Route path='/blue' component={Blue} />

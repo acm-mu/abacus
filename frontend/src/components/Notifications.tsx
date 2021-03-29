@@ -1,11 +1,14 @@
-import { Notification } from 'abacus';
-import React, { useEffect, useState } from 'react';
+import { Context, Notification } from 'abacus';
+import React, { useContext, useEffect, useState } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Message } from 'semantic-ui-react';
 import io from 'socket.io-client';
 import config from '../environment';
 import { v4 as uuidv4 } from 'uuid';
 import './Notifications.scss';
+import { Link } from 'react-router-dom';
+import AppContext from 'AppContext';
+import { userHome } from 'utils';
 
 declare global {
   interface Window {
@@ -16,6 +19,7 @@ declare global {
 
 const Notifications = (): JSX.Element => {
   const [notifications, setNotifications] = useState<Notification[]>(window.notifications || [])
+  const { user } = useContext(AppContext)
 
   window.sendNotification = (notification: Notification) => {
     if (!notification.id) notification.id = uuidv4()
@@ -43,8 +47,18 @@ const Notifications = (): JSX.Element => {
     }
   }
 
+  const contextLink = (context?: Context): string => {
+    if (!context || !user) return ''
+    switch (context.type) {
+      case 'cid': return `${userHome(user)}/clarifications/${context.id}`
+      case 'pid': return `${userHome(user)}/problems/${context.id}`
+      case 'uid': return ``
+      case 'sid': return `${userHome(user)}/submissions/${context.id}`
+    }
+  }
+
   return <TransitionGroup className='notifications'>
-    {notifications.map(({ id, type, header, content }) =>
+    {notifications.map(({ id, type, header, content, context }) =>
       <CSSTransition
         unmountOnExit
         key={id}
@@ -52,6 +66,8 @@ const Notifications = (): JSX.Element => {
         className='notification'
       >
         <Message
+          as={Link}
+          to={contextLink(context)}
           icon={typeIcon(type)}
           success={type === 'success'}
           warning={type === 'warning'}

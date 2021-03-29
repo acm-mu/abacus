@@ -26,6 +26,7 @@ const Blue = (): JSX.Element => (
         <Route path='/blue/standings' component={Standings} />
         <Route path='/blue/submissions/:sid' component={Submission} />
         <Route path='/blue/submissions' component={Submissions} />
+        <Route path='/blue/clarifications/:cid' component={Clarifications} />
         <Route path='/blue/clarifications' component={Clarifications} />
         <Route path='/blue/practice' component={Practice} />
         <Route component={NotFound} />
