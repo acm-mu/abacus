@@ -93,7 +93,7 @@ const submission = (): JSX.Element => {
   const handleItemClick = (event: MouseEvent, data: MenuItemProps) => setActiveItem(data.tab)
   const handleTestItemClick = (event: MouseEvent, data: MenuItemProps) => setActiveTestItem(data.tab)
 
-  if (isLoading) <PageLoading />
+  if (isLoading) return <PageLoading />
   if (!submission) return <NotFound />
 
   return <>
@@ -104,7 +104,7 @@ const submission = (): JSX.Element => {
       {submission.released ?
         <Button icon="check" positive content="Released" labelPosition="left" /> :
         <Button loading={releaseLoading} disabled={releaseLoading} icon="right arrow" content="Release" labelPosition="left" onClick={release} />}
-      <Button content="Download" icon="download" iconPosition="left" onClick={download} />
+      <Button content="Download" icon="download" labelPosition="left" onClick={download} />
       <Button content="Delete" icon="trash" negative labelPosition="left" onClick={deleteSubmission} />
 
       <Table celled>
@@ -129,7 +129,7 @@ const submission = (): JSX.Element => {
               <Link to={`/admin/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link>
             </Table.Cell>
             <Table.Cell>{submission.team.display_name}</Table.Cell>
-            <Table.Cell><Moment fromNow date={submission?.date * 1000} /></Table.Cell>
+            <Table.Cell><Moment fromNow date={submission.date * 1000} /></Table.Cell>
             <Table.Cell><Link to={`/admin/problems/${submission.pid}`}>{submission.problem?.name}</Link></Table.Cell>
             <Table.Cell>
               {rerunning ? <Loader inline size='small' active /> : <span className={`icn status ${submission.status}`} />}
