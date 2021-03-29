@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { Request, Response } from 'express';
 import { matchedData, ParamSchema, validationResult } from "express-validator";
 import { v4 as uuidv4 } from 'uuid';
@@ -50,6 +51,10 @@ export const schema: Record<string, ParamSchema> = {
   tests: {
     in: 'body',
     optional: true
+  },
+  project_id: {
+    in: 'body',
+    optional: true
   }
 }
 
@@ -63,10 +68,13 @@ export const postProblems = async (req: Request, res: Response) => {
   const item = matchedData(req)
   item.pid = uuidv4().replace(/-/g, '')
 
-  const filename = item.name.replace(/[ !@#$%^&*()-]/g, '')
-
-  item.skeletons = [{ source: '# Python skeleton goes here', file_name: `${filename}.py`, language: 'python' }, { source: '// Java skeleton goes here', file_name: `${filename}.py`, language: 'java' }]
-  item.solutions = [{ source: '# Python solution goes here', file_name: `${filename}.java`, language: 'python' }, { source: '// Java solution goes here', file_name: `${filename}.java`, language: 'java' }]
+  if (item.division == 'gold') {
+    const scratchResponse = await axios.get(`https://api.scratch.mit.edu/projects/${item.project_id}`)
+    if (scratchResponse.status !== 200) {
+      res.status(400).send('Server cannot access project with that id!')
+      return
+    }
+  }
 
   const problems = await contest.scanItems('problem', { id: item.id, division: item.division }) || {}
   if (Object.values(problems).length > 0) {
