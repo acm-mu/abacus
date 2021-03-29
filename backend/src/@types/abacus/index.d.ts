@@ -83,11 +83,17 @@ declare module "abacus" {
     title?: string;
   }
 
+  export interface Context {
+    type: 'pid' | 'cid' | 'sid' | 'uid';
+    id: string;
+  }
+
   export interface Notification {
     header?: string;
     content: string;
-    id: string;
-    type: 'success' | 'warning' | 'error' | undefined
+    id?: string;
+    type?: 'success' | 'warning' | 'error';
+    context?: Context;
   }
 
   export interface Args { [key: string]: unknown }
