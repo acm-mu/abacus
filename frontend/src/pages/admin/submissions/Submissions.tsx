@@ -20,7 +20,7 @@ const Submissions = (): JSX.Element => {
   const [isLoading, setLoading] = useState<boolean>(true)
   const [submissions, setSubmissions] = useState<SubmissionItem[]>([])
   const [isMounted, setMounted] = useState<boolean>(true)
-  const [showReleased, setShowReleased] = useState(false)
+  const [showReleased, setShowReleased] = useState(true)
 
   const helmet = <Helmet><title>Abacus | Admin Submissions</title></Helmet>
 
@@ -138,7 +138,7 @@ const Submissions = (): JSX.Element => {
                 <Table.Cell>{submission.language}</Table.Cell>
                 <Table.Cell><span className={`status icn ${submission.status}`} /></Table.Cell>
                 <Table.Cell>{submission.released ? <Label color='green' icon='check' content="Released" /> : <Label icon='lock' content="Held" />}</Table.Cell>
-                <Table.Cell>{Math.floor(submission.runtime)}</Table.Cell>
+                <Table.Cell>{Math.floor(submission.runtime || 0)}</Table.Cell>
                 <Table.Cell><Moment fromNow date={submission.date * 1000} /> </Table.Cell>
                 <Table.Cell>{submission.score}</Table.Cell>
               </Table.Row>)}
