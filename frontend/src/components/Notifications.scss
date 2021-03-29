@@ -1,39 +1,41 @@
-@keyframes slide {
-    0% {
-        right: -100%;
-    }
-    100% {
-        right: 0;
-    }
-}
-
-@keyframes fade {
-    0% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0;
-    }
-}
-
 .notifications {
     display: flex;
     flex-direction: column;
     position: fixed;
-    top: 0;
-    right: 0;
+    top: 3rem;
+    right: 1.5vw;
+    max-width: 20vw;
     z-index: 1000;
-    width: 15vw;
-    .ui.message {
-        margin: 1em 1em;
-        right: -100%;
-        animation: slide 500ms;
-        transition: 200ms linear;
-        .close.icon {
-            cursor: pointer;
-        }
-        &.fade {
-            animation: fade 200ms;
-        }
+}
+
+.notification.ui.message {
+    transition: right 500ms ease-in;
+    padding: 1em 2em;
+    margin: 0.5rem 1rem;
+    .close.icon {
+        cursor: pointer;
     }
+    max-width: 20vw;
+}
+
+.notification.enter {
+    right: -120%;
+}
+
+.notification.enter-active {
+    transition: right 500ms ease-in;
+    right: 0;
+}
+
+.notification.enter-done {
+    right: 0;
+}
+
+.notification.exit {
+    right: 0;
+}
+
+.notification.exit-active {
+    right: -120%;
+    transition: right 300ms ease-in;
 }

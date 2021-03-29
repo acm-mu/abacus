@@ -1,70 +1,84 @@
+import { Context, Notification } from 'abacus';
 import React, { useContext, useEffect, useState } from 'react';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Message } from 'semantic-ui-react';
-import AppContext from 'AppContext';
+import io from 'socket.io-client';
+import config from '../environment';
+import { v4 as uuidv4 } from 'uuid';
 import './Notifications.scss';
+import { Link } from 'react-router-dom';
+import AppContext from 'AppContext';
+import { userHome } from 'utils';
 
-interface Notification {
-  header?: string;
-  content: string;
-  id: string;
-  visible: boolean;
-  type: 'success' | 'warning' | 'error' | undefined
+declare global {
+  interface Window {
+    notifications: Notification[]
+    sendNotification: (notification: Notification) => void;
+  }
 }
 
 const Notifications = (): JSX.Element => {
-  const { socket } = useContext(AppContext)
-  const [notifications, setNotifications] = useState<{ [key: string]: Notification }>({})
+  const [notifications, setNotifications] = useState<Notification[]>(window.notifications || [])
+  const { user } = useContext(AppContext)
 
-  useEffect(() => {
-    socket?.on('notification', (notification: Notification) => {
-      setTimeout(() => {
-        setNotifications({ ...notifications, [notification.id]: { ...notification, visible: true } })
-      }, 200)
-      setNotifications({ ...notifications, [notification.id]: notification })
-    })
-  }, [socket])
+  window.sendNotification = (notification: Notification) => {
+    if (!notification.id) notification.id = uuidv4()
+    setNotifications(notifications =>
+      notifications.concat(notification))
 
-  const handleDismiss = () => {
-    return
+    setTimeout(() => {
+      setNotifications(notifications =>
+        notifications.filter(({ id }) => id != notification.id))
+    }, 15 * 1000)
+
   }
 
-  return <div className='notifications'>
-    {Object.values(notifications).map(({ header, content, id, visible, type }: Notification) => {
-      switch (type) {
-        case 'success':
-          return <Message
-            key={`notification-${id}`}
-            className={visible ? 'visible' : ''}
-            icon='check'
-            header={header || "Success!"}
-            content={content}
-            onDismiss={handleDismiss} />
-        case 'error':
-          return <Message
-            key={`notification-${id}`}
-            className={visible ? 'visible' : ''}
-            icon='exclamation circle'
-            header={header || "Error!"}
-            content={content}
-            onDismiss={handleDismiss} />
-        case 'warning':
-          return <Message
-            key={`notification-${id}`}
-            className={visible ? 'visible' : ''}
-            icon='exclamation triangle'
-            header={header || "Warning"}
-            content={content}
-            onDismiss={handleDismiss} />
-        default:
-          return <Message
-            key={`notification-${id}`}
-            className={visible ? 'visible' : ''}
-            header={header}
-            content={content}
-            onDismiss={handleDismiss} />
-      }
-    })}
-  </div>
+  useEffect(() => {
+    const socket = io(config.API_URL, { transports: ['websocket'] })
+    socket.on('notification', window.sendNotification)
+  }, [])
+
+  const typeIcon = (type?: string) => {
+    switch (type) {
+      case 'success': return 'check'
+      case 'warning': return 'warning sign'
+      case 'error': return 'exclamation'
+      default: return 'bell'
+    }
+  }
+
+  const contextLink = (context?: Context): string => {
+    if (!context || !user) return ''
+    switch (context.type) {
+      case 'cid': return `${userHome(user)}/clarifications/${context.id}`
+      case 'pid': return `${userHome(user)}/problems/${context.id}`
+      case 'sid': return `${userHome(user)}/submissions/${context.id}`
+    }
+  }
+
+  return <TransitionGroup className='notifications'>
+    {notifications.map(({ id, type, header, content, context }) =>
+      <CSSTransition
+        unmountOnExit
+        key={id}
+        timeout={500}
+        className='notification'
+      >
+        <Message
+          as={Link}
+          to={contextLink(context)}
+          icon={typeIcon(type)}
+          success={type === 'success'}
+          warning={type === 'warning'}
+          error={type === 'error'}
+          header={header}
+          content={content}
+          onDismiss={() => setNotifications(notifications =>
+            notifications.filter(notification => id != notification.id))}
+        />
+      </CSSTransition>
+    )}
+  </TransitionGroup>
 }
 
 export default Notifications

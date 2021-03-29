@@ -1,3 +1,4 @@
+import { Notification } from 'abacus'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import express from "express";
@@ -31,14 +32,8 @@ app.use(morgan('dev'));
 app.use(api);
 app.get('/', (_, res) => res.status(200).send(' ')); // Sends 200 OK when AWS EBS pings server for health check
 
-const sendNotification = (header: string, content: string) => {
-  io.sockets.emit('notification', { header, content, id: uuidv4() })
-}
-
-app.get('/ping', (_, res) => {
-  sendNotification("Pong!", "Responding to ping");
-  res.send('Pong!')
-})
+export const sendNotification = ({ header, content, type, context }: Notification) =>
+  io.sockets.emit('notification', ({ id: uuidv4(), header, content, type, context }))
 
 server.listen(PORT, () => {
   console.log(`🚀 Server is running at :${PORT}`);

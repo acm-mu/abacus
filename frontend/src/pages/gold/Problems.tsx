@@ -46,7 +46,7 @@ const Problems = (): JSX.Element => {
       </Block>
     </>
 
-  if (isLoading) <PageLoading />
+  if (isLoading) return <PageLoading />
 
   return <>
     {helmet}

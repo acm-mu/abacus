@@ -96,5 +96,18 @@ declare module "abacus" {
     open?: boolean
   }
 
+  export interface Context {
+    type: 'pid' | 'cid' | 'sid';
+    id: string;
+  }
+
+  export interface Notification {
+    header?: string;
+    content: string;
+    id: string;
+    context?: Context;
+    type?: 'success' | 'warning' | 'error';
+  }
+
   export interface Args { [key: string]: unknown }
 }

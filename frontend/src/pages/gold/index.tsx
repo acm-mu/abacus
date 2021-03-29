@@ -28,6 +28,7 @@ const Gold = (): JSX.Element => (
         <Route path='/gold/submissions/:sid' component={Submission} />
         <Route path='/gold/submissions' component={Submissions} />
         <Route path='/gold/standings' component={Standings} />
+        <Route path='/gold/clarifications/:cid' component={Clarifications} />
         <Route path='/gold/clarifications' component={Clarifications} />
         <Route component={NotFound} />
       </Switch>

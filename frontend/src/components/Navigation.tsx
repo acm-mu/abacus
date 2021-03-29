@@ -34,7 +34,7 @@ const Navigation = (props: Props): JSX.Element => {
     return () => { setMounted(false) }
   })
 
-  return (
+  return (<>
     <Menu className={`fixed ${props.className}`} inverted>
       <Container>
         <Menu.Item as={Link} to="/" header>
@@ -58,8 +58,8 @@ const Navigation = (props: Props): JSX.Element => {
           }
         </Menu.Menu>}
       </Container>
-    </Menu >
-  );
+    </Menu>
+  </>);
 };
 
 export default Navigation;
