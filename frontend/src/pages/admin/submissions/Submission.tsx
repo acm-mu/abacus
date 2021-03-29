@@ -89,8 +89,8 @@ const submission = (): JSX.Element => {
     setReleaseLoading(false)
   }
 
-  const download = () => submission?.source &&
-    saveAs(new File([submission?.source], submission?.filename, { type: 'text/plain;charset=utf-8' }))
+  const download = () => submission?.source && submission.filename &&
+    saveAs(new File([submission?.source], submission.filename, { type: 'text/plain;charset=utf-8' }))
 
   const handleItemClick = (event: MouseEvent, data: MenuItemProps) => setActiveItem(data.tab)
   const handleTestItemClick = (event: MouseEvent, data: MenuItemProps) => setActiveTestItem(data.tab)
@@ -142,13 +142,13 @@ const submission = (): JSX.Element => {
             <Table.Cell>
               {rerunning ? <Loader inline size='small' active /> : <span className={`icn status ${submission.status}`} />}
             </Table.Cell>
-            <Table.Cell>{rerunning ? <Loader active inline size='small' /> : Math.floor(submission.runtime)}</Table.Cell>
+            <Table.Cell>{rerunning ? <Loader active inline size='small' /> : Math.floor(submission.runtime || 0)}</Table.Cell>
             <Table.Cell>{rerunning ? <Loader active inline size='small' /> : submission.score}</Table.Cell>
             <Table.Cell>{submission.language}</Table.Cell>
           </Table.Row>
           <Table.Row>
             <Table.Cell colSpan={7}>
-              {rerunning ? <Loader inline size='small' active /> : submission?.tests.map((test: Test, index: number) => {
+              {rerunning ? <Loader inline size='small' active /> : submission?.tests?.map((test: Test, index: number) => {
                 switch (test.result) {
                   case 'accepted':
                     return <span key={`test-${index}`} className='result icn accepted' />
@@ -204,11 +204,11 @@ const submission = (): JSX.Element => {
           {rerunning ? <Loader active size='large' inline='centered' content="Retesting" /> :
             <>
               <Menu secondary vertical>
-                {submission.tests.map((test: Test, index: number) =>
+                {submission.tests?.map((test: Test, index: number) =>
                   <Menu.Item key={`test-case-${index}`} name={`Test Case #${index + 1}`} active={activeTestItem === index} tab={index} onClick={handleTestItemClick} />
                 )}</Menu>
 
-              {submission.tests.map((test: Test, index: number) => (
+              {submission.tests?.map((test: Test, index: number) => (
                 <React.Fragment key={`test-result-${index}`}>
                   {index == activeTestItem ?
                     <div className='testRun'>
