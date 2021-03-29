@@ -34,33 +34,34 @@ const SubmitPractice = (): JSX.Element => {
   const testSubmission = async (submission: Submission): Promise<Submission> => {
     let runtime = -1;
     let status = 'accepted'
-    for (const test of submission.tests) {
-      // Await response from piston execution
-      const res = await fetch("https://piston.codeabac.us/execute", {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          language: submission.language,
-          source: submission.source,
-          stdin: test.in,
-          timeout: 15
-        })
-      });
+    if (submission.tests) {
+      for (const test of submission.tests) {
+        // Await response from piston execution
+        const res = await fetch("https://piston.codeabac.us/execute", {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            language: submission.language,
+            source: submission.source,
+            stdin: test.in,
+            timeout: 15
+          })
+        });
 
-      const json = await res.json()
+        const json = await res.json()
 
-      runtime = Math.max(runtime, json.runtime);
-      test.stdout = json.output;
+        runtime = Math.max(runtime, json.runtime);
+        test.stdout = json.output;
 
-      if (json.output != test.out) {
-        status = "rejected";
-        test['result'] = "rejected";
-      } else {
-        test['result'] = "accepted";
+        if (json.output != test.out) {
+          status = "rejected";
+          test['result'] = "rejected";
+        } else {
+          test['result'] = "accepted";
+        }
       }
+      submission.status = status
     }
-
-    submission.status = status
     submission.runtime = runtime
     submission.score = 0;
 
