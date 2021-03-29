@@ -3,11 +3,6 @@ import { Request, Response } from "express";
 import { matchedData, ParamSchema, validationResult } from "express-validator";
 
 export const schema: Record<string, ParamSchema> = {
-  username: {
-    in: ['body', 'query'],
-    isString: true,
-    errorMessage: 'username not provided!'
-  },
   project_id: {
     in: ['body', 'query'],
     isString: true,
@@ -22,10 +17,10 @@ export const getProject = async (req: Request, res: Response) => {
     return
   }
 
-  const { username, project_id } = matchedData(req)
+  const { project_id } = matchedData(req)
 
   try {
-    const scratchResponse = await axios.get(`https://api.scratch.mit.edu/users/${username}/projects/${project_id}`)
+    const scratchResponse = await axios.get(`https://api.scratch.mit.edu/projects/${project_id}`)
     res.send(scratchResponse.data)
   } catch (err) { console.error(err); res.sendStatus(400) }
 }
