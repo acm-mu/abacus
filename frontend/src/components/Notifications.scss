@@ -3,9 +3,8 @@
     flex-direction: column;
     position: fixed;
     top: 3em;
-    right: 2em;
+    right: 0;
     z-index: 1000;
-    width: 25vw;
 }
 
 .notification.ui.message {
@@ -14,6 +13,7 @@
     .close.icon {
         cursor: pointer;
     }
+    max-width: 20vw;
 }
 
 .notification.enter {
