@@ -1,4 +1,4 @@
-import { User } from 'abacus';
+import { User, Notification } from 'abacus';
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Index, Admin, Blue, Gold } from 'pages'
@@ -49,7 +49,9 @@ const App = (): JSX.Element => {
     } catch (err) {
       setTimeout(() => loadApp(), 15 * 1000)
       // Store notification in cache before notification component loads.
-      window.notifications = [({ id: error_id, type: 'error', header: 'Uh oh!', content: "We are having issues communicating with our servers. Trying again in 15 seconds" })]
+      const notification: Notification = { id: error_id, type: 'error', header: 'Uh oh!', content: "We are having issues communicating with our servers. Trying again in 15 seconds" }
+      if (window.sendNotification) window.sendNotification(notification)
+      else window.notifications = [notification]
     }
   }
 

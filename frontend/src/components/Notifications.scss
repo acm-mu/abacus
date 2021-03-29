@@ -4,12 +4,14 @@
     position: fixed;
     top: 3rem;
     right: 1.5vw;
+    max-width: 20vw;
     z-index: 1000;
 }
 
 .notification.ui.message {
     transition: right 500ms ease-in;
-    margin: 0.5em 1em;
+    padding: 1em 2em;
+    margin: 0.5rem 1rem;
     .close.icon {
         cursor: pointer;
     }
