@@ -21,7 +21,7 @@ const Submissions = (): JSX.Element => {
   const [isLoading, setLoading] = useState<boolean>(true)
   const [submissions, setSubmissions] = useState<SubmissionItem[]>([])
   const [isMounted, setMounted] = useState<boolean>(true)
-  const [showReleased, setShowReleased] = useState(true)
+  const [showReleased, setShowReleased] = useState(false)
 
   const [{ column, direction }, setSortConfig] = useState<SortConfig>({
     column: 'date',
