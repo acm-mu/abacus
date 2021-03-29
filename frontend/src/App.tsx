@@ -45,6 +45,7 @@ const App = (): JSX.Element => {
       await loadSettings()
       await checkAuth()
     } catch (err) {
+      // Store notification in cache before notification component loads.
       window.notifications = [({ id: uuidv4(), type: 'error', header: 'Uh oh!', content: "We are having issues communicating with our servers." })]
     }
   }
