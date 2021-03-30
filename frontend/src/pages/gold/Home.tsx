@@ -20,8 +20,7 @@ const Home = (): JSX.Element => <>
   <Block size='xs-12'>
     <p>Save this bookmark to your toolbar to easily submit your scratch projects.</p>
 
-    <Button as={'a'} href='javascript:(function(){const regex = /https:\/\/scratch\.mit\.edu\/projects\/(.*)/;
-  const project_id = window.location.href.match(regex)[1]; window.open(`http://localhost:3000/gold/submit/${project_id}`)}())'>Submit to Abacus</Button>
+    <Button as={'a'} href="javascript:(function(){var s=document.createElement('script');s.src='https://codeabac.us/scratch-bookmarklet.js';document.body.appendChild(s);})();">Submit to Abacus</Button>
   </Block>
 </>
 

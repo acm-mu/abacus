@@ -34,7 +34,7 @@ const Notifications = (): JSX.Element => {
   }
 
   useEffect(() => {
-    const socket = io(config.API_URL)
+    const socket = io(config.API_URL, { transports: ['websocket'] })
     socket.on('notification', window.sendNotification)
   }, [])
 
