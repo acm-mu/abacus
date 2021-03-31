@@ -23,6 +23,19 @@ const deleteSubmissionsForUser = async (tid: string) => {
   } catch (err) { return }
 }
 
+const deleteClarificationsForUser = async (tid: string) => {
+  try {
+    const clarifications = await contest.scanItems('clarification', { args: { uid: tid } })
+    if (!clarifications) return
+    for (const { cid } of clarifications) {
+      try {
+        contest.deleteItem('clarification', { cid })
+        console.log(`Deleted clarification ${cid}`)
+      } catch (err) { console.log(`Error deleting clarification ${cid}`) }
+    }
+  } catch (err) { return }
+}
+
 export const deleteUsers = async (req: Request, res: Response) => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {
@@ -35,6 +48,7 @@ export const deleteUsers = async (req: Request, res: Response) => {
     let failed = 0
     for (const uid of req.body.uid) {
       await deleteSubmissionsForUser(uid)
+      await deleteClarificationsForUser(uid)
       try {
         await contest.deleteItem('user', { uid })
         success++
@@ -43,6 +57,7 @@ export const deleteUsers = async (req: Request, res: Response) => {
     res.json({ message: `Successfully deleted ${success} user(s). (${failed} failed)` })
   } else {
     await deleteSubmissionsForUser(req.body.uid)
+    await deleteClarificationsForUser(req.body.uid)
     try {
       contest.deleteItem('user', { uid: req.body.uid })
       res.json({ message: "User deleted successfully!" })
