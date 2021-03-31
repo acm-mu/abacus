@@ -13,4 +13,11 @@ const dev: Config = {
   API_URL: 'http://localhost'
 }
 
-export default process.env.NODE_ENV === 'development' ? dev : prod
+const staging: Config = {
+  isLocal: true,
+  API_URL: 'https://api-staging.codeabac.us'
+}
+
+const isStaging = window.location.hostname.startsWith('staging')
+
+export default isStaging ? staging : (process.env.NODE_ENV === 'development' ? dev : prod)
