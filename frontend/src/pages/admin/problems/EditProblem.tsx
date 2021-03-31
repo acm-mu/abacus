@@ -21,7 +21,7 @@ const EditProblems = (): JSX.Element => {
   }, [])
 
   const loadProblem = async () => {
-    const response = await fetch(`${config.API_URL}/problems?pid=${pid}&columns=description,solutions,project_id,skeletons,tests`, {
+    const response = await fetch(`${config.API_URL}/problems?pid=${pid}&columns=description,solutions,project_id,skeletons,tests,design_document`, {
       headers: {
         Authorization: `Bearer ${localStorage.accessToken}`
       }

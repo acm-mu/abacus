@@ -10,7 +10,7 @@ const DivisionLabel = ({ division }: DivisionLabelProps): JSX.Element => {
     case 'gold': return <Label color='yellow' content="Gold" />
     case 'blue': return <Label color='blue' content="Blue" />
     case 'public': return <Label content="Public" />
-    default: return <Label content="" />
+    default: return <></>
   }
 }
 export default DivisionLabel

@@ -65,6 +65,7 @@ export const putContest = async (req: Request, res: Response) => {
     await contest.save_settings(settings)
     res.send(settings)
   } catch (err) {
+    console.error(err)
     res.sendStatus(500)
   }
 }

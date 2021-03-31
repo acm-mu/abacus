@@ -13,3 +13,5 @@ export { default as ClarificationModal } from './ClarificationModal';
 export { default as StatusMessage } from './StatusMessage';
 export { default as ScratchViewer } from './ScratchViewer';
 export { default as PageLoading } from './PageLoading';
+export { default as GoldSubmission } from './submission/GoldSubmission';
+export { default as BlueSubmission } from './submission/BlueSubmission';

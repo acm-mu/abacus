@@ -40,7 +40,7 @@ const Clarifications = (): JSX.Element => {
 
       if (!isMounted) return
 
-      setClarifications(clarifications.map(clarification => ({ ...clarification, checked: false })))
+      setClarifications(clarifications.map(clarification => ({ ...clarification, checked: false })).sort((c1, c2) => c2.date - c1.date))
     } else {
       setClarifications([])
     }
@@ -80,7 +80,7 @@ const Clarifications = (): JSX.Element => {
   return <>
     <Helmet> <title>Abacus | Admin Clarifications</title> </Helmet>
 
-    <ClarificationModal trigger={<Button content="Ask Clarification" />} callback={loadClarifications} />
+    <ClarificationModal trigger={<Button content="Create Clarification" />} callback={loadClarifications} />
     {clarifications.filter(clarification => clarification.checked).length ?
       <Button content="Delete Clarification(s)" negative onClick={deleteSelected} /> : <></>}
 
@@ -102,10 +102,10 @@ const Clarifications = (): JSX.Element => {
         <Table.Body>
           {clarifications.length == 0 ?
             <Table.Row>
-              <Table.Cell colSpan={'100%'} style={{ textAlign: 'center' }}>No Clarifications</Table.Cell>
+              <Table.Cell colSpan={'100%'}>No Clarifications</Table.Cell>
             </Table.Row> :
             clarifications.filter((clarification) => showClosed || clarification.open)
-              .map((clarification: ClarificationItem) => (
+              .map((clarification) => (
                 <Table.Row key={clarification.cid}>
                   <Table.Cell>
                     <input type='checkbox'

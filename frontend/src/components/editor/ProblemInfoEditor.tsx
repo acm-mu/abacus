@@ -1,5 +1,5 @@
-import React, { ChangeEvent } from 'react';
-import { Form, Input, Select } from 'semantic-ui-react';
+import React, { ChangeEvent, FormEvent } from 'react';
+import { CheckboxProps, Form, Input, Select } from 'semantic-ui-react';
 import { divisions } from 'utils';
 import { ProblemStateProps } from '.';
 
@@ -7,6 +7,8 @@ const ProblemInfoEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Elem
   if (!problem || !setProblem) return <></>
 
   const handleChange = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>) => setProblem({ ...problem, [name]: value })
+  const handleCheckChange = (event: FormEvent<HTMLInputElement>, { checked }: CheckboxProps) => setProblem({ ...problem, design_document: checked })
+
   const handleSelectChange = (_: never, { value }: HTMLInputElement) => {
     if (value == 'gold') {
       setProblem({
@@ -44,6 +46,8 @@ const ProblemInfoEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Elem
         placeholder='Division'
         required />
     </Form.Group>
+
+    {problem.division == 'gold' ? <Form.Checkbox label='Design Document' name='design_document' onChange={handleCheckChange} checked={problem.design_document} /> : <></>}
 
     {problem?.division == 'blue' ? <Form.Group widths='equal'>
       <Form.Field label='Memory Limit' name='memory_limit' control={Input} onChange={handleChange} value={problem?.memory_limit || ''} />

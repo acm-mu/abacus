@@ -39,11 +39,6 @@ export const schema: Record<string, ParamSchema> = {
     notEmpty: true,
     isString: true,
     errorMessage: 'String username is not supplied'
-  },
-  scratch_username: {
-    in: 'body',
-    isString: true,
-    optional: true
   }
 }
 
@@ -58,7 +53,7 @@ export const postUsers = async (req: Request, res: Response) => {
   item.username = item.username.toLowerCase()
   item.password = createHash('sha256').update(item.password).digest('hex')
 
-  const users = await contest.scanItems('user', { username: item.username }) || {}
+  const users = await contest.scanItems('user', { args: { username: item.username } }) || {}
   if (Object.values(users).length) {
     res.status(400).json({ message: 'Username is taken!' })
     return

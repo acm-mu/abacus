@@ -75,12 +75,12 @@ const EditUser = (): JSX.Element => {
   return <>
     <Helmet> <title>Abacus | Edit User</title> </Helmet>
     <h1>{user.display_name}</h1>
-    <Block size='xs-12' transparent>
-      <StatusMessage message={message} onDismiss={() => setMessage(undefined)} />
-      <Menu attached='top' tabular>
-        <Menu.Item active>User Info</Menu.Item>
-      </Menu>
-      <Form style={{ padding: '20px', background: 'white', border: '1px solid #d4d4d5', borderTop: 'none' }} onSubmit={handleSubmit} >
+    <StatusMessage message={message} onDismiss={() => setMessage(undefined)} />
+    <Menu attached='top' tabular>
+      <Menu.Item active>User Info</Menu.Item>
+    </Menu>
+    <Block size='xs-12' menuAttached="top">
+      <Form onSubmit={handleSubmit}>
         <h2>Edit User</h2>
 
         <Form.Field

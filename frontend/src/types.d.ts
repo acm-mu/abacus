@@ -15,6 +15,8 @@ declare module "abacus" {
     filename?: string;
     filesize?: number;
     source: string;
+    project_id?: number;
+    design_document?: string;
     language: string;
     md5: string;
     pid: string;
@@ -38,6 +40,7 @@ declare module "abacus" {
     memory_limit?: number;
     tests?: Test[]
     project_id?: string;
+    design_document?: boolean;
     skeletons?: Skeleton[];
     solutions?: Solution[];
   }
@@ -45,11 +48,11 @@ declare module "abacus" {
     uid: string;
     role: string;
     username: string;
+    disabled?: boolean;
     password: string;
     display_name: string;
     division?: string;
     school?: string;
-    scratch_username?: string;
   }
   export interface Test {
     in: string;
@@ -103,6 +106,7 @@ declare module "abacus" {
 
   export interface Notification {
     header?: string;
+    to?: string;
     content: string;
     id: string;
     context?: Context;

@@ -67,8 +67,8 @@ export const getSubmissions = async (req: Request, res: Response) => {
     res.status(400).json({ message: errors[0].msg })
     return
   }
-  const problems = transpose(await contest.scanItems('problem'), 'pid')
-  const teams = transpose(await contest.scanItems('user', { role: 'team' }), 'uid')
+  const problems = transpose(await contest.scanItems('problem', { columns: ['pid', 'division', 'id', 'name'] }), 'pid')
+  const teams = transpose(await contest.scanItems('user', { args: { role: 'team' } }), 'uid')
 
   try {
     const item = matchedData(req)
@@ -79,7 +79,7 @@ export const getSubmissions = async (req: Request, res: Response) => {
       item.tid = req.user.uid
     }
 
-    const submissions = await contest.scanItems('submission', item)
+    const submissions = await contest.scanItems('submission', { args: item })
 
     submissions?.map((submission: any) => {
       submission.problem = problems[submission.pid]
@@ -93,13 +93,14 @@ export const getSubmissions = async (req: Request, res: Response) => {
       if (req.user?.role == 'team' && !submission.released) {
         submission.status = 'pending'
         submission.score = 0
-        submission.tests = submission.tests.map((test: Test) => ({ ...test, result: '' }))
+        submission.tests = submission.tests?.map((test: Test) => ({ ...test, result: '' }))
       }
       return submission
     })
 
     res.send(transpose(submissions, 'sid'))
   } catch (err) {
+    console.error(err)
     res.sendStatus(500)
   }
 }

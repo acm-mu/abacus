@@ -12,13 +12,26 @@ export const schema: Record<string, ParamSchema> = {
 
 const deleteSubmissionsForUser = async (tid: string) => {
   try {
-    const submissions = await contest.scanItems('submission', { tid })
+    const submissions = await contest.scanItems('submission', { args: { tid } })
     if (!submissions) return
     for (const { sid } of submissions) {
       try {
         contest.deleteItem('submission', { sid })
         console.log(`Deleted submission ${sid}`)
       } catch (err) { console.log(`Error deleting submission ${sid}`) }
+    }
+  } catch (err) { return }
+}
+
+const deleteClarificationsForUser = async (tid: string) => {
+  try {
+    const clarifications = await contest.scanItems('clarification', { args: { uid: tid } })
+    if (!clarifications) return
+    for (const { cid } of clarifications) {
+      try {
+        contest.deleteItem('clarification', { cid })
+        console.log(`Deleted clarification ${cid}`)
+      } catch (err) { console.log(`Error deleting clarification ${cid}`) }
     }
   } catch (err) { return }
 }
@@ -35,6 +48,7 @@ export const deleteUsers = async (req: Request, res: Response) => {
     let failed = 0
     for (const uid of req.body.uid) {
       await deleteSubmissionsForUser(uid)
+      await deleteClarificationsForUser(uid)
       try {
         await contest.deleteItem('user', { uid })
         success++
@@ -43,6 +57,7 @@ export const deleteUsers = async (req: Request, res: Response) => {
     res.json({ message: `Successfully deleted ${success} user(s). (${failed} failed)` })
   } else {
     await deleteSubmissionsForUser(req.body.uid)
+    await deleteClarificationsForUser(req.body.uid)
     try {
       contest.deleteItem('user', { uid: req.body.uid })
       res.json({ message: "User deleted successfully!" })

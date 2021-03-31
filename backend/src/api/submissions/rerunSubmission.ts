@@ -20,7 +20,7 @@ export const rerunSubmission = async (req: Request, res: Response) => {
     return
   }
 
-  const submission = await contest.scanItems('submission', matchedData(req))
+  const submission = await contest.scanItems('submission', { args: matchedData(req) })
   if (submission) {
     contest.lambda.invoke({
       FunctionName: 'PistonRunner',
