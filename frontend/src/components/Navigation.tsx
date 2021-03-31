@@ -5,6 +5,7 @@ import AppContext from "AppContext";
 import fulllogoy from 'assets/fulllogoy.png'
 import { LoginModal } from "components";
 import { userHome } from "utils";
+import config from "environment";
 
 type Props = {
   children: React.ReactNode;
@@ -36,6 +37,7 @@ const Navigation = (props: Props): JSX.Element => {
 
   return (<>
     <Menu className={`fixed ${props.className}`} inverted>
+      {config.isLocal && <Menu.Item style={{ fontWeight: 'bold', position: 'fixed' }}>LOCAL ENVIRONMENT</Menu.Item>}
       <Container>
         <Menu.Item as={Link} to="/" header>
           <img className="logo" src={fulllogoy} alt="Abacus" />
