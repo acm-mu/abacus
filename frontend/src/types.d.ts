@@ -6,7 +6,7 @@ declare module "abacus" {
     points_per_compilation_error: number;
     points_per_minute: number;
     start_date: Date;
-    end_date: Date
+    end_date: Date;
   }
   export interface Submission {
     sid: string;
@@ -38,7 +38,7 @@ declare module "abacus" {
     description: string;
     cpu_time_limit?: number;
     memory_limit?: number;
-    tests?: Test[]
+    tests?: Test[];
     project_id?: string;
     design_document?: boolean;
     skeletons?: Skeleton[];
@@ -103,19 +103,6 @@ declare module "abacus" {
     children: Clarification[];
     open?: boolean;
     context?: Context;
-  }
-
-  export interface Notification {
-    header?: string;
-    content: string;
-    id: string;
-    context?: Context;
-    type?: 'success' | 'warning' | 'error';
-  }
-
-  export interface Context {
-    type: 'pid' | 'cid' | 'sid';
-    id: string;
   }
 
   export interface Notification {

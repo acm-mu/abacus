@@ -6,7 +6,7 @@ declare module "abacus" {
     points_per_compilation_error: number;
     points_per_minute: number;
     start_date: number;
-    end_date: number
+    end_date: number;
   }
   export interface Submission {
     sid: string;
@@ -91,24 +91,11 @@ declare module "abacus" {
 
   export interface Notification {
     header?: string;
-    content: string;
-    id?: string;
-    type?: 'success' | 'warning' | 'error';
-    context?: Context;
-  }
-
-  export interface Context {
-    type: 'pid' | 'cid' | 'sid';
-    id: string;
-  }
-
-  export interface Notification {
-    header?: string;
     to: string;
     content: string;
     id?: string;
-    type?: 'success' | 'warning' | 'error';
     context?: Context;
+    type?: 'success' | 'warning' | 'error';
   }
 
   export interface Args { [key: string]: unknown }
