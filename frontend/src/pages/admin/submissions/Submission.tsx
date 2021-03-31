@@ -98,6 +98,7 @@ const submission = (): JSX.Element => {
   return <>
     <Helmet> <title>Abacus | Admin Submission</title> </Helmet>
 
+    <Button content='Back' icon='arrow left' labelPosition='left' onClick={history.goBack} />
     <Button disabled={rerunning} loading={rerunning} content="Rerun" icon="redo" labelPosition="left" onClick={rerun} />
 
     {submission.released ?
