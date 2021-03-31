@@ -20,6 +20,9 @@ Fixes # (issue number)
   - Changes the behavior of a method.
   - Changes settings, configuration. -->
 
+- [ ] 🧹 Code Cleanup
+<!-- General Code Cleanup like removing stale files, comments, etc. -->
+
 - [ ] 📚 Documentation Change
 <!-- Changes to documentation only -->
   
