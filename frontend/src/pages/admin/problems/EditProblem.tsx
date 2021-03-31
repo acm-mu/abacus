@@ -1,6 +1,6 @@
 import { Problem } from 'abacus'
 import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import config from 'environment'
 import { Helmet } from 'react-helmet'
 import { ProblemEditor } from 'components/editor'
@@ -14,6 +14,8 @@ const EditProblems = (): JSX.Element => {
   const [message, setMessage] = useState<StatusMessageType>()
   const [isMounted, setMounted] = useState(true)
   const [isLoading, setLoading] = useState(true)
+
+  const history = useHistory()
 
   useEffect(() => {
     loadProblem()
@@ -59,6 +61,7 @@ const EditProblems = (): JSX.Element => {
 
   return <>
     <Helmet> <title>Abacus | Admin Edit Problem</title> </Helmet>
+
     <h1>{problem?.name}</h1>
 
     <StatusMessage message={message} onDismiss={() => setMessage(undefined)} />
