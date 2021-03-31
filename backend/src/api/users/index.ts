@@ -9,7 +9,7 @@ import { deleteUsers, schema as deleteSchema } from "./deleteUsers"
 const users = Router()
 
 users.get('/users', isAuthenticated, checkSchema(getSchema), getUsers)
-users.put('/users', isAuthenticated, checkSchema(putSchema), putUsers)
+users.put('/users', isAdminUser, checkSchema(putSchema), putUsers)
 users.post('/users', isAdminUser, checkSchema(postSchema), postUsers)
 users.delete('/users', isAdminUser, checkSchema(deleteSchema), deleteUsers)
 

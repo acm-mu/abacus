@@ -1,20 +1,43 @@
 import { Submission } from 'abacus'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
-import { Block, Unauthorized } from 'components'
+import { Block, Countdown, PageLoading, Unauthorized } from 'components'
 import AppContext from 'AppContext'
 import { Helmet } from 'react-helmet'
+import config from 'environment'
 
 const Submissions = (): JSX.Element => {
   const { user } = useContext(AppContext)
-  const [submissions] = useState<Submission[]>()
+  const [isMounted, setMounted] = useState(true)
+  const [isLoading, setLoading] = useState(true)
+  const [submissions, setSubmissions] = useState<Submission[]>()
+
+  useEffect(() => {
+    loadSubmissions()
+    return () => { setMounted(false) }
+  }, [])
+
+  const loadSubmissions = async () => {
+    const response = await fetch(`${config.API_URL}/submissions`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.accessToken}`
+      }
+    })
+    if (!isMounted) return
+    if (response.ok) {
+      setSubmissions(Object.values(await response.json()))
+    }
+    setLoading(false)
+  }
 
   if (!user) return <Unauthorized />
+  if (isLoading) return <PageLoading />
 
   return <>
     <Helmet> <title>Abacus | Gold Submissions</title> </Helmet>
+    <Countdown />
     <Block size='xs-12' transparent>
       <Table>
         <Table.Header>
@@ -34,13 +57,13 @@ const Submissions = (): JSX.Element => {
                 <Table.Cell><Link to={`/gold/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link></Table.Cell>
                 <Table.Cell><Link to={`/gold/problems/${submission.pid}`}>{submission.problem?.name} </Link></Table.Cell>
                 <Table.Cell>{submission.sub_no + 1}</Table.Cell>
-                <Table.Cell className={`icn ${submission.status}`}></Table.Cell>
+                <Table.Cell><span className={`icn status ${submission.status}`} /></Table.Cell>
                 <Table.Cell><Moment fromNow date={submission.date * 1000} /></Table.Cell>
                 <Table.Cell>{submission.score}</Table.Cell>
               </Table.Row>
             ))) : (
               <Table.Row>
-                <Table.Cell colSpan={'100%'} style={{ textAlign: 'center' }}>No Submissions</Table.Cell>
+                <Table.Cell colSpan={'100%'}>No Submissions</Table.Cell>
               </Table.Row>
             )}
         </Table.Body>

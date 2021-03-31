@@ -2,7 +2,7 @@ import { Problem, Submission } from 'abacus'
 import React, { useContext, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Block, Countdown, NotFound, ClarificationModal, PageLoading } from 'components'
-import { Button } from 'semantic-ui-react'
+import { Button, Message } from 'semantic-ui-react'
 import MDEditor from '@uiw/react-md-editor'
 import config from "environment"
 import AppContext from 'AppContext'
@@ -26,7 +26,7 @@ const problem = (): JSX.Element => {
   }, [])
 
   const loadProblem = async () => {
-    const response = await fetch(`${config.API_URL}/problems?division=gold&id=${pid}&columns=description,project_id`, {
+    const response = await fetch(`${config.API_URL}/problems?division=gold&id=${pid}&columns=description,project_id,design_document`, {
       headers: {
         Authorization: `Bearer ${localStorage.accessToken}`
       }
@@ -61,7 +61,10 @@ const problem = (): JSX.Element => {
       <h1>Problem {problem?.id}: {problem?.name}</h1>
       <hr />
       <MDEditor.Markdown source={problem?.description || ''} />
+
+      {problem.design_document == true ? <Message icon='file text' color='blue' header="Design Document" content="In addition to your Scratch project, submit a short description describing the features of your project. It doesn't have to be too formal or long - just list the primary ways your user can interact with the project and describe the features you're most proud of. Pretend you're selling your solution - make sure the judges know about all the features you spent your time on!" /> : <></>}
     </Block>
+
     <Block size='xs-3' className='problem-panel'>
       {!submissions || submissions?.filter((e) => e.status == "accepted").length == 0 ?
         <Button
@@ -76,18 +79,19 @@ const problem = (): JSX.Element => {
         context={{ type: 'pid', id: problem.pid }}
         trigger={<Button content="Ask" icon="question" />}
       />
-      <a
-        rel="noreferrer"
-        target="_blank"
-        href={`https://scratch.mit.edu/projects/${problem?.project_id}`}
-      >
-        <Button
-          color='orange'
-          content="Template"
-          icon='linkify'
-        />
-      </a>
-    </Block >
+      {problem.project_id ?
+        <a
+          rel="noreferrer"
+          target="_blank"
+          href={`https://scratch.mit.edu/projects/${problem?.project_id}`}
+        >
+          <Button
+            color='orange'
+            content="Template"
+            icon='linkify'
+          />
+        </a> : <Message warning><b>Note:</b> A project template is not provided for this problem.</Message>}
+    </Block>
   </>
 }
 

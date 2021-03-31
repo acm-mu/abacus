@@ -78,7 +78,7 @@ const PracticeSubmission = ({ submission }: PracticeSubmissionProps): JSX.Elemen
     </Menu>
 
 
-    <Block size="xs-12" style={{ padding: '20px', background: 'white', border: '1px solid #d4d4d5', borderTop: 'none' }}>
+    <Block size="xs-12" menuAttached="top">
       {activeItem == 'source-code' ? <>
         <p>Submission contains 1 file:</p>
         <Table celled>

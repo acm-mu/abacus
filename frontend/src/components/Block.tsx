@@ -7,16 +7,18 @@ type BlockProps = {
   transparent?: boolean;
   children?: JSX.Element | JSX.Element[];
   className?: string;
+  menuAttached?: string
   style?: React.CSSProperties
 };
 
-const Block = (props: BlockProps): JSX.Element => (
-  <div style={props.style}
-    className={`${props.size || ""} block ${props.center ? "center" : ""} 
-  ${props.transparent ? "transparent" : ""} 
-  ${props.className || ""}`}>
-    {props?.children}
-  </div>
-);
+const Block = ({ size, center, transparent, children, className, menuAttached, style }: BlockProps): JSX.Element => {
+  let classList = `block ${size} ${className || ''}`
+
+  if (center) classList += ' center'
+  if (transparent) classList += ' transparent'
+  if (menuAttached) classList += ` menu-attached-${menuAttached}`
+
+  return <div style={style} className={classList}> {children} </div>
+}
 
 export default Block;

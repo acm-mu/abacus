@@ -123,8 +123,13 @@ a.button {
     border: none;
 }
 
-.ui.table thead th.sortable {
-    cursor: pointer;
+.ui.table {
+    thead th.sortable {
+        cursor: pointer;
+    }
+    td[colspan='100%'] {
+        text-align: center;
+    }
 }
 
 .ui.checkbox {

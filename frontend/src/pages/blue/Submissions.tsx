@@ -11,23 +11,25 @@ import { Helmet } from "react-helmet";
 
 const Submissions = (): JSX.Element => {
   const { user } = useContext(AppContext);
-  const [isMounted, setMounted] = useState<boolean>(true)
-  const [isLoading, setLoading] = useState<boolean>(true)
+  const [isMounted, setMounted] = useState(true)
+  const [isLoading, setLoading] = useState(true)
   const [submissions, setSubmissions] = useState<Submission[]>();
 
   useEffect(() => {
-    loadSubmission()
+    loadSubmissions()
     return () => { setMounted(false) }
   }, []);
 
-  const loadSubmission = async () => {
+  const loadSubmissions = async () => {
     const response = await fetch(`${config.API_URL}/submissions?division=blue&tid=${user?.uid}`, {
       headers: {
         Authorization: `Bearer ${localStorage.accessToken}`
       }
     })
     if (!isMounted) return
-    setSubmissions(Object.values(await response.json()))
+    if (response.ok) {
+      setSubmissions(Object.values(await response.json()))
+    }
     setLoading(false)
   }
 
@@ -75,9 +77,9 @@ const Submissions = (): JSX.Element => {
             </Table.Row>
           ))) :
             (<Table.Row>
-              <Table.Cell colSpan={'100%'} style={{ textAlign: "center" }}>
+              <Table.Cell colSpan={'100%'}>
                 You don&lsquo;t have any submissions yet. Go write some code!
-                    </Table.Cell>
+              </Table.Cell>
             </Table.Row>)}
         </Table.Body>
       </Table>

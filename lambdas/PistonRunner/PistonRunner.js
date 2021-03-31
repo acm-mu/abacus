@@ -11,7 +11,9 @@ exports.handler = async(event) => {
 
         // Find submission from event metadata
         const submission = AWS.DynamoDB.Converter.unmarshall(record.dynamodb.NewImage);
-        const { sid, pid } = submission;
+        const { sid, pid, division } = submission;
+
+        if (division !== 'blue') continue
 
         // Get problem and competition details
         const problem = await getItem('problem', { pid })

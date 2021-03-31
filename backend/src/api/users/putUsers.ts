@@ -38,11 +38,6 @@ export const schema: Record<string, ParamSchema> = {
     isString: true,
     optional: true
   },
-  scratch_username: {
-    in: 'body',
-    isString: true,
-    optional: true
-  },
   username: {
     in: 'body',
     isString: true,
@@ -72,7 +67,7 @@ export const putUsers = async (req: Request, res: Response) => {
 
   try {
     if (item.username) {
-      let users = Object.values(await contest.scanItems('user', { username: item.username }) || {})
+      let users = Object.values(await contest.scanItems('user', { args: { username: item.username } }) || {})
       users = users.filter((user) => user.uid != item.uid)
       if (users.length > 0) {
         res.status(400).json({ message: "Username is taken!" })

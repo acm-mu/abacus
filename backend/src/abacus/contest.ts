@@ -46,25 +46,27 @@ class ContestService {
     })
   }
 
-  scanItems(tableName: string, args?: Args, columns?: string[]): Promise<ItemList | undefined> {
+  scanItems(tableName: string, query?: { args?: Args, columns?: string[] }): Promise<ItemList | undefined> {
     return new Promise((resolve, reject) => {
       let params: ScanInput = {
         TableName: tableName
       }
-      if (args) {
-        const entries = Object.entries(args)
-        if (entries.length > 0) {
-          params.FilterExpression = entries.map((e) => (`#${e[0]} = :${e[0]}`)).join(" AND ")
-          params.ExpressionAttributeNames = Object.assign({}, ...entries.map((x) => ({ [`#${x[0]}`]: x[0] })))
-          params.ExpressionAttributeValues = Object.assign({}, ...entries.map((x) => ({ [`:${x[0]}`]: x[1] })))
+      if (query) {
+        if (query.args) {
+          const entries = Object.entries(query.args)
+          if (entries.length > 0) {
+            params.FilterExpression = entries.map((e) => (`#${e[0]} = :${e[0]}`)).join(" AND ")
+            params.ExpressionAttributeNames = Object.assign({}, ...entries.map((x) => ({ [`#${x[0]}`]: x[0] })))
+            params.ExpressionAttributeValues = Object.assign({}, ...entries.map((x) => ({ [`:${x[0]}`]: x[1] })))
 
+          }
         }
-        if (columns) {
-          params.ProjectionExpression = columns.map((e) => `#${e}`).join(", ")
+        if (query.columns) {
+          params.ProjectionExpression = query.columns.map((e) => `#${e}`).join(", ")
           if (params.ExpressionAttributeNames)
-            params.ExpressionAttributeNames = { ...params.ExpressionAttributeNames, ...Object.assign({}, ...columns.map((e) => ({ [`#${e}`]: `${e}` }))) }
+            params.ExpressionAttributeNames = { ...params.ExpressionAttributeNames, ...Object.assign({}, ...query.columns.map((e) => ({ [`#${e}`]: `${e}` }))) }
           else
-            params.ExpressionAttributeNames = Object.assign({}, ...columns.map((e) => ({ [`#${e}`]: `${e}` })))
+            params.ExpressionAttributeNames = Object.assign({}, ...query.columns.map((e) => ({ [`#${e}`]: `${e}` })))
         }
       }
       this.db.scan(params, (err: AWSError, data: ScanOutput) => {

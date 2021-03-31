@@ -44,11 +44,6 @@ export const schema: Record<string, ParamSchema> = {
     isString: true,
     optional: true,
     errorMessage: 'String username is not supplied'
-  },
-  scratch_username: {
-    in: ['body', 'query'],
-    isString: true,
-    optional: true
   }
 }
 
@@ -68,7 +63,7 @@ export const getUsers = async (req: Request, res: Response) => {
   }
 
   try {
-    const users = await contest.scanItems('user', params)
+    const users = await contest.scanItems('user', { args: params })
     users?.map(user => delete user.password)
     res.send(transpose(users, 'uid'))
   } catch (err) {

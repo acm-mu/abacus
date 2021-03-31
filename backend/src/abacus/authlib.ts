@@ -15,7 +15,7 @@ export const authenticate = (req: Request, _: Response): Promise<User | undefine
 
         try {
           const { username, password } = data
-          const users = await contest.scanItems('user', { username, password }) as unknown as User[]
+          const users = await contest.scanItems('user', { args: { username, password } }) as unknown as User[]
           if (users.length) {
             req.user = users[0]
             return resolve(users[0])

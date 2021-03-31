@@ -1,4 +1,5 @@
 import { Problem, User } from 'abacus';
+import axios from 'axios';
 import { Request, Response } from 'express';
 import { UploadedFile } from 'express-fileupload';
 import { matchedData, ParamSchema, validationResult } from "express-validator";
@@ -13,17 +14,29 @@ export const schema: Record<string, ParamSchema> = {
     notEmpty: true,
     errorMessage: 'pid is not supplied'
   },
-  tid: {
-    in: 'body',
-    isString: true,
-    notEmpty: true,
-    errorMessage: 'tid is not supplied'
-  },
   language: {
     in: 'body',
     isString: true,
     notEmpty: true,
-    errorMessage: 'language is not supplied'
+    optional: true
+  },
+  source: {
+    in: 'body',
+    isString: true,
+    notEmpty: true,
+    optional: true
+  },
+  project_id: {
+    in: 'body',
+    isString: true,
+    notEmpty: true,
+    optional: true
+  },
+  design_document: {
+    in: 'body',
+    isString: true,
+    notEmpty: true,
+    optional: true
   }
 }
 
@@ -33,15 +46,11 @@ export const postSubmissions = async (req: Request, res: Response) => {
     res.status(400).json({ message: errors[0].msg })
     return
   }
-  if (req.files?.source == undefined) {
-    res.status(400).json({ message: "source file not supplied" })
-    return
-  }
 
   try {
     const item = matchedData(req)
 
-    const user = await contest.getItem('user', { uid: item.tid }) as unknown as User
+    const user = await contest.getItem('user', { uid: req.user?.uid }) as unknown as User
     if (!user) {
       res.status(400).send('Team does not exist!')
       return
@@ -67,7 +76,7 @@ export const postSubmissions = async (req: Request, res: Response) => {
       return
     }
 
-    const submissions = await contest.scanItems('submission', { tid: item.tid, pid: item.pid })
+    const submissions = await contest.scanItems('submission', { args: { tid: req.user?.uid, pid: item.pid } })
 
     if (submissions) {
       for (const submission of submissions) {
@@ -82,34 +91,55 @@ export const postSubmissions = async (req: Request, res: Response) => {
       }
     }
 
-    if (item.division == 'gold' && item.source) {
-      const scratchResponse = await fetch(`https://api.scratch.mit.edu/projects/${item.project_id}`)
-      if (!scratchResponse.ok) {
-        res.status(400).send('Server cannot access project with that id!')
-        return
-      }
-    }
-
-
-    const { name: filename, size: filesize, md5, data } = req.files!.source as UploadedFile
-
-    const submission = {
+    let submission: any = {
       sid: uuidv4().replace(/-/g, ''),
       pid: item.pid,
-      tid: item.tid,
+      tid: req.user?.uid,
       division: problem.division,
-      language: item.language,
-      filename,
-      filesize,
-      md5,
       released: false,
       sub_no: submissions?.length,
       status: 'pending',
       score: 0,
-      date: Date.now() / 1000,
-      tests: problem.tests,
-      runtime: 0,
-      source: data.toString('utf-8')
+      date: Date.now() / 1000
+    }
+
+    if (req.user?.division == 'blue') {
+
+      if (req.files?.source == undefined) {
+        res.status(400).json({ message: "source not provided" })
+        return
+      }
+
+      if (!item.language) {
+        res.status(400).json({ message: "language not provided" })
+        return
+      }
+
+      const { name: filename, size: filesize, md5, data } = req.files!.source as UploadedFile
+
+      submission = {
+        ...submission,
+        language: item.language,
+        filename,
+        filesize,
+        md5,
+        tests: problem.tests,
+        runtime: 0,
+        source: data.toString('utf-8')
+      }
+    } else if (req.user?.division == 'gold') {
+      const scratchResponse = await axios.get(`https://api.scratch.mit.edu/projects/${item.project_id}`)
+      if (scratchResponse.status !== 200) {
+        res.status(400).send('Server cannot access project with that id!')
+        return
+      }
+
+      submission = {
+        ...submission,
+        language: 'scratch',
+        design_document: item.design_document,
+        project_id: item.project_id
+      }
     }
 
     await contest.putItem('submission', submission)

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { FormEvent, useContext, useEffect, useState } from 'react';
 import { Button, ButtonProps, Checkbox, CheckboxProps, Comment, Form, Grid, Header, Icon, Menu, MenuItemProps, Message, Popup, Segment } from 'semantic-ui-react';
 import { Clarification } from 'abacus';
 import config from '../environment'
@@ -42,8 +42,8 @@ const Clarifications = (): JSX.Element => {
 
   const ClarificationsMenu = ({ clarifications }: { clarifications: Clarification[] }) => {
 
-    const onFilterChange = (event: React.FormEvent<HTMLInputElement>, { checked }: CheckboxProps) => setShowClosed(checked || false)
-    const handleItemClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, { name }: MenuItemProps) => name && setActiveItem(name)
+    const onFilterChange = (_event: FormEvent<HTMLInputElement>, { checked }: CheckboxProps) => setShowClosed(checked || false)
+    const handleItemClick = (_e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, { name }: MenuItemProps) => name && setActiveItem(name)
 
     return <>
       <Checkbox toggle label='Show Closed' checked={showClosed} onChange={onFilterChange} />

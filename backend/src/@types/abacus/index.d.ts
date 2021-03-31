@@ -14,6 +14,7 @@ declare module "abacus" {
     filename: string;
     filesize: number;
     source: string;
+    project_id?: string;
     language: string;
     md5: string;
     pid: string;
@@ -44,7 +45,6 @@ declare module "abacus" {
     display_name: string;
     division?: string;
     school?: string;
-    scratch_username?: string;
   }
   export interface Test {
     in: string;
@@ -104,6 +104,7 @@ declare module "abacus" {
 
   export interface Notification {
     header?: string;
+    to: string;
     content: string;
     id?: string;
     type?: 'success' | 'warning' | 'error';
