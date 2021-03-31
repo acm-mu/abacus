@@ -41,7 +41,6 @@ const Notifications = (): JSX.Element => {
   }, [])
 
   const forMe = ({ to }: Notification) => {
-    console.log(to)
     if (!to || to == 'public') return true
     for (const query of to.split('&')) {
       const [type, id] = query.split(':')

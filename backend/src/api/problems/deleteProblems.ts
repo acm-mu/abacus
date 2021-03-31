@@ -19,6 +19,7 @@ const deleteSubmissionsForProblem = async (pid: string) => {
         .catch(_ => console.log(`Error deleting submission ${sid}`))
     }
   } catch (err) {
+    console.error(err)
     console.log(`Error finding submissions to delete for problem ${pid}`)
   }
 }

@@ -6,6 +6,7 @@ export default async (_: Request, res: Response) => {
     const data = await contest.get_settings()
     res.send(data)
   } catch (err) {
+    console.error(err)
     res.sendStatus(500)
   }
 }
