@@ -33,6 +33,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Deploy build to S3 bucket
+      - name: Deploy build to Production S3 bucket
         working-directory: frontend
         run: aws s3 sync --delete ./build s3://codeabac.us
+
+      - name: Deploy build to Staging S3 bucket
+        working-directory: frontend
+        run: aws s3 sync --delete ./build s3://staging.codeabac.us
