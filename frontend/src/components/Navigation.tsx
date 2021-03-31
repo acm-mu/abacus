@@ -37,7 +37,7 @@ const Navigation = (props: Props): JSX.Element => {
 
   return (<>
     <Menu className={`fixed ${props.className}`} inverted>
-      {config.isLocal && <Menu.Item style={{ fontWeight: 'bold', position: 'fixed' }}>LOCAL ENVIRONMENT</Menu.Item>}
+      {config.isLocal && <Menu.Item style={{ fontWeight: 'bold', position: 'fixed' }} content={config.environmentText} />}
       <Container>
         <Menu.Item as={Link} to="/" header>
           <img className="logo" src={fulllogoy} alt="Abacus" />
