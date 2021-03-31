@@ -6,7 +6,7 @@ declare module "abacus" {
     points_per_compilation_error: number;
     points_per_minute: number;
     start_date: number;
-    end_date: number
+    end_date: number;
   }
   export interface Submission {
     sid: string;
@@ -71,6 +71,11 @@ declare module "abacus" {
     problems: { [key: string]: ProblemScore };
   }
 
+  export interface Context {
+    type: 'pid' | 'cid' | 'sid';
+    id: string;
+  }
+
   export interface Clarification {
     cid: string;
     body: string;
@@ -81,11 +86,7 @@ declare module "abacus" {
     division?: string;
     type?: string;
     title?: string;
-  }
-
-  export interface Context {
-    type: 'pid' | 'cid' | 'sid';
-    id: string;
+    context?: Context;
   }
 
   export interface Notification {
@@ -93,8 +94,8 @@ declare module "abacus" {
     to: string;
     content: string;
     id?: string;
-    type?: 'success' | 'warning' | 'error';
     context?: Context;
+    type?: 'success' | 'warning' | 'error';
   }
 
   export interface Args { [key: string]: unknown }

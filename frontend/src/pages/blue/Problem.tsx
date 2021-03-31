@@ -79,9 +79,11 @@ const problem = (): JSX.Element => {
         content="Submit"
         icon="upload"
       />
-      <ClarificationModal title={`${problem.name} | `} trigger={
-        <Button content="Ask" icon="question" />
-      } />
+      <ClarificationModal
+        title={`${problem.name} | `}
+        context={{ type: 'pid', id: problem.pid }}
+        trigger={<Button content="Ask" icon="question" />}
+      />
       {latestSubmission}
       <Divider />
       <p><b>Problem ID:</b> {problem.id}</p>
