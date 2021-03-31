@@ -1,11 +1,12 @@
-import { Clarification } from 'abacus';
+import { Clarification, Submission } from 'abacus';
 import AppContext from 'AppContext';
-import { Block, NotFound, PageLoading } from 'components';
+import { Block, DivisionLabel, NotFound, PageLoading } from 'components';
 import React, { useContext, useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import Moment from 'react-moment';
 import { useHistory, useParams } from 'react-router';
-import { Button, ButtonProps, Comment, Form, Label, Message, Popup } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
+import { Button, ButtonProps, Comment, Divider, Form, Label, Message, Popup, Table } from 'semantic-ui-react';
 import config from '../../environment'
 import './Clarification.scss'
 
@@ -18,6 +19,7 @@ const ClarificationPage = (): JSX.Element => {
   const { user } = useContext(AppContext)
   const { cid } = useParams<{ cid: string }>()
   const [clarification, setClarification] = useState<Clarification>()
+  const [submissions, setSubmissions] = useState<Submission[]> ([])
   const [body, setBody] = useState('')
   const [isLoading, setLoading] = useState(true)
   const [isMounted, setMounted] = useState(true)
@@ -36,8 +38,23 @@ const ClarificationPage = (): JSX.Element => {
     setLoading(false)
   }
 
+  const loadSubmissions = async () => {
+    const response = await fetch(`${config.API_URL}/submissions?tid=${clarification?.user.uid}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.accessToken}`
+      }
+    })
+    const submissions = Object.values(await response.json()) as Submission[]
+
+    if (!isMounted) return
+
+    setSubmissions(submissions.map(submission => ({ ...submission, checked: false })))
+    setLoading(false)
+  }
+
   useEffect(() => {
     loadClarification()
+    if(clarification) loadSubmissions()
     return () => { setMounted(false) }
   }, [])
 
@@ -109,23 +126,25 @@ const ClarificationPage = (): JSX.Element => {
     </Comment>
   }
 
+  const goBack = () => { history.push('/admin/clarifications') }
+
   if (isLoading) return <PageLoading />
   if (!clarification) return <NotFound />
 
   return <>
     <Helmet> <title>Abacus | Admin {clarification.title}</title> </Helmet>
+    <h1 style={{ display: 'inline' }}>{clarification.title} {!clarification.open ? <Label color='red' content="Closed" className='closed' /> : <></>}</h1>
     <Block transparent size='xs-12'>
-      <Button content='Back' icon='arrow left' labelPosition='left' onClick={history.goBack} />
+      <Button content='Back' icon='arrow left' labelPosition='left' onClick={goBack} />
     </Block>
 
-    <Block size='xs-12'>
+    <Block size='xs-6'>
       {user?.role == 'admin' || user?.role == 'judge' ?
         (clarification?.open ?
-          <Popup trigger={<Button floated='right' icon='unlock' value={false} onClick={handleLock} />} content='Close Clarification' /> :
-          <Popup trigger={<Button floated='right' icon='lock' value={true} onClick={handleLock} />} content='Reopen Clarification' />
+          <Popup trigger={<Button icon='unlock' value={false} onClick={handleLock} />} content='Close Clarification' /> :
+          <Popup trigger={<Button icon='lock' value={true} onClick={handleLock} />} content='Reopen Clarification' />
         ) : <></>}
 
-      <h1 style={{ display: 'inline' }}>{clarification.title} {!clarification.open ? <Label content="Closed" className='closed' /> : <></>}</h1>
       <Comment.Group>
         <ClarificationComment clarification={clarification} />
         {clarification.children.length > 0 ?
@@ -151,6 +170,35 @@ const ClarificationPage = (): JSX.Element => {
             content='Replying to this clarification is disabled.'
           />}
       </Comment.Group>
+    </Block>
+    <Block size='xs-6'>
+      <h2 style={{ display: 'inline' }}><Link to={`/admin/users/${clarification.user.uid}`}>{clarification.user.display_name}</Link> <DivisionLabel division={clarification.division} /></h2>
+      <h4>School: {clarification.user.school}</h4>
+      <Divider />
+      <h4>Last 5 Submissions:</h4>
+      <Table singleLine>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell>Submission ID</Table.HeaderCell>
+            <Table.HeaderCell>Problem</Table.HeaderCell>
+            <Table.HeaderCell>Submission #</Table.HeaderCell>
+            <Table.HeaderCell>Status</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {submissions.length == 0 ?
+            <Table.Row>
+              <Table.Cell colSpan={'100%'} style={{ textAlign: "center" }}>No Submissions</Table.Cell>
+            </Table.Row> :
+            submissions.map((submission: Submission) =>
+              <Table.Row key={submission.sid}>
+                <Table.Cell><Link to={`/admin/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link></Table.Cell>
+                <Table.Cell><Link to={`/admin/problems/${submission.pid}`}>{submission.problem?.name} </Link></Table.Cell>
+                <Table.Cell>{submission.sub_no + 1}</Table.Cell>
+                <Table.Cell><span className={`icn ${submission.status}`} /></Table.Cell>
+              </Table.Row>)}
+        </Table.Body>
+      </Table>
     </Block>
   </>
 }
