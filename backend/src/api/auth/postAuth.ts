@@ -31,7 +31,7 @@ export const postAuth = async (req: Request, res: Response) => {
   bodyData.password = createHash('sha256').update(bodyData.password).digest('hex')
 
   try {
-    const users = await contest.scanItems('user', bodyData)
+    const users = await contest.scanItems('user', { args: bodyData })
     if (!users?.length) {
       res.status(400).send({ message: "Invalid credentials!" })
       return

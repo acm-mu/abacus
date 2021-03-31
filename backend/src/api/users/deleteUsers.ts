@@ -12,7 +12,7 @@ export const schema: Record<string, ParamSchema> = {
 
 const deleteSubmissionsForUser = async (tid: string) => {
   try {
-    const submissions = await contest.scanItems('submission', { tid })
+    const submissions = await contest.scanItems('submission', { args: { tid } })
     if (!submissions) return
     for (const { sid } of submissions) {
       try {

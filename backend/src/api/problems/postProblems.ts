@@ -55,6 +55,11 @@ export const schema: Record<string, ParamSchema> = {
   project_id: {
     in: 'body',
     optional: true
+  },
+  design_document: {
+    in: 'body',
+    isBoolean: true,
+    optional: true
   }
 }
 
@@ -68,7 +73,7 @@ export const postProblems = async (req: Request, res: Response) => {
   const item = matchedData(req)
   item.pid = uuidv4().replace(/-/g, '')
 
-  if (item.division == 'gold') {
+  if (item.division == 'gold' && item.project_id) {
     const scratchResponse = await axios.get(`https://api.scratch.mit.edu/projects/${item.project_id}`)
     if (scratchResponse.status !== 200) {
       res.status(400).send('Server cannot access project with that id!')
@@ -76,7 +81,7 @@ export const postProblems = async (req: Request, res: Response) => {
     }
   }
 
-  const problems = await contest.scanItems('problem', { id: item.id, division: item.division }) || {}
+  const problems = await contest.scanItems('problem', { args: { id: item.id, division: item.division } }) || {}
   if (Object.values(problems).length > 0) {
     res.status(400).json({ message: "Problem id is taken!" })
     return

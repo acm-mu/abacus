@@ -22,5 +22,7 @@ export const getProject = async (req: Request, res: Response) => {
   try {
     const scratchResponse = await axios.get(`https://api.scratch.mit.edu/projects/${project_id}`)
     res.send(scratchResponse.data)
-  } catch (err) { console.error(err); res.sendStatus(400) }
+  } catch (err) {
+    res.sendStatus(400)
+  }
 }

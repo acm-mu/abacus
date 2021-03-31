@@ -12,7 +12,7 @@ export const schema: Record<string, ParamSchema> = {
 
 const deleteSubmissionsForProblem = async (pid: string) => {
   try {
-    const submissions = await contest.scanItems('submission', { pid }) || []
+    const submissions = await contest.scanItems('submission', { args: { pid } }) || []
     for (const { sid } of submissions) {
       await contest.deleteItem('submission', { sid })
         .then(_ => console.log(`Deleted submission ${sid}`))
