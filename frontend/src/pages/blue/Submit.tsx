@@ -26,16 +26,30 @@ const Submit = (): JSX.Element => {
   }, [])
 
   const loadProblem = async () => {
-    let response = await fetch(`${config.API_URL}/problems?division=blue&id=${pid}`)
-
-    const problem = Object.values(await response.json())[0] as Problem
-    setProblem(problem)
+    let response = await fetch(`${config.API_URL}/problems?division=blue&id=${pid}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.accessToken}`
+      }
+    })
 
     if (!isMounted) return
 
-    response = await fetch(`${config.API_URL}/submissions?tid=${user?.uid}&pid=${problem.pid}`)
+    if (response.ok) {
+      const problem = Object.values(await response.json())[0] as Problem
+      setProblem(problem)
 
-    setSubmissions(Object.values(await response.json()))
+      response = await fetch(`${config.API_URL}/submissions?tid=${user?.uid}&pid=${problem.pid}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.accessToken}`
+        }
+      })
+
+      if (!isMounted) return
+
+      if (response.ok) {
+        setSubmissions(Object.values(await response.json()))
+      }
+    }
     setLoading(false)
   }
 
@@ -45,8 +59,6 @@ const Submit = (): JSX.Element => {
     formData.set('pid', problem.pid)
     formData.set('source', file, file.name)
     formData.set('language', language.key)
-    formData.set('tid', user?.uid)
-    formData.set('division', user?.division || '')
 
     const res = await fetch(`${config.API_URL}/submissions`, {
       method: 'POST',
@@ -56,12 +68,12 @@ const Submit = (): JSX.Element => {
       body: formData
     })
 
-    const body: Submission = await res.json()
-
     if (res.status != 200) {
       alert("An error occurred! Please try again")
       return
     }
+
+    const body: Submission = await res.json()
 
     history.push(`/blue/submissions/${body.sid}`)
   }
@@ -115,7 +127,7 @@ const Submit = (): JSX.Element => {
           <Form.Select inline label='Language' placeholder="Select Language" value={language?.value} options={languages} />
 
           <Form.Group>
-            <Button>Cancel</Button>
+            <Button onClick={history.goBack}>Cancel</Button>
             <Form.Button primary content="Submit" />
           </Form.Group>
         </Form>

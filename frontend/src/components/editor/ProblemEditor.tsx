@@ -1,6 +1,6 @@
 import { Problem } from 'abacus'
 import React, { MouseEvent, useState } from 'react'
-import { Menu, Button, MenuItemProps } from 'semantic-ui-react'
+import { Menu, Button, MenuItemProps, Divider } from 'semantic-ui-react'
 import { Block } from 'components'
 import ProblemInfoEditor from './ProblemInfoEditor'
 import TestDataEditor from './TestDataEditor'
@@ -40,7 +40,7 @@ const ProblemEditor = ({ problem: defaultProblem, handleSubmit }: ProblemEditorP
       </> : <></>}
     </Menu>
 
-    <Block size='xs-12' style={{ padding: '20px', background: 'white', border: '1px solid #d4d4d5', borderTop: 'none' }}>
+    <Block size='xs-12' menuAttached="top">
       {(() => {
         switch (activeItem) {
           case 'problem-info': return <ProblemInfoEditor problem={problem} setProblem={setProblem} />
@@ -52,6 +52,7 @@ const ProblemEditor = ({ problem: defaultProblem, handleSubmit }: ProblemEditorP
           default: return <></>
         }
       })()}
+      <Divider />
       <Button primary onClick={() => handleSubmit(problem)}>Save</Button>
     </Block>
   </>
