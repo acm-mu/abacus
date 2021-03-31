@@ -86,10 +86,10 @@ export const getClarifications = async (req: Request, res: Response) => {
         ...clarification,
         children: [],
         user: {
-          uid: user.uid,
-          username: user.username,
-          display_name: user.display_name,
-          division: user.division
+          uid: user?.uid,
+          username: user?.username,
+          display_name: user?.display_name,
+          division: user?.division
         }
       }
     })

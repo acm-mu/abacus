@@ -35,8 +35,22 @@ const Notifications = (): JSX.Element => {
 
   useEffect(() => {
     const socket = io(config.API_URL, { transports: ['websocket'] })
-    socket.on('notification', window.sendNotification)
+    socket.on('notification', (notification: Notification) => {
+      if (forMe(notification)) window.sendNotification(notification)
+    })
   }, [])
+
+  const forMe = ({ to }: Notification) => {
+    console.log(to)
+    if (!to || to == 'public') return true
+    for (const query of to.split('&')) {
+      const [type, id] = query.split(':')
+      if (type == 'uid' && user?.uid !== id) return false
+      if (type == 'role' && user?.role !== id) return false
+      if (type == 'division' && id !== 'public' && user?.division !== id) return false
+    }
+    return true
+  }
 
   const typeIcon = (type?: string) => {
     switch (type) {

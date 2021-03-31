@@ -3,6 +3,7 @@ import { matchedData, ParamSchema, validationResult } from "express-validator";
 import contest from "../../abacus/contest";
 import { v4 as uuidv4 } from 'uuid'
 import { Clarification } from "abacus";
+import { sendNotification } from "../../server";
 
 export const schema: Record<string, ParamSchema> = {
   body: {
@@ -34,6 +35,37 @@ export const schema: Record<string, ParamSchema> = {
   }
 }
 
+const notify = async (clarification: Clarification) => {
+  if (clarification.parent) {
+    const res = await contest.scanItems('clarification', { args: { cid: clarification.parent } })
+    if (!res) return
+    const parent = res[0]
+
+    const to = parent.type == 'public' ? parent.division ? `division:${parent.division}` : 'public' : `uid:${parent.uid}`
+
+    sendNotification({
+      to,
+      header: 'New Reply',
+      content: clarification.body,
+      context: {
+        type: 'cid',
+        id: clarification.parent
+      }
+    })
+  } else {
+    const to = clarification.type == 'public' ? (clarification.division ? `division:${clarification.division}` : 'public') : `role:judge&division=${clarification.division}`
+    sendNotification({
+      to,
+      header: clarification.title,
+      content: clarification.body,
+      context: {
+        type: 'cid',
+        id: clarification.cid
+      }
+    })
+  }
+}
+
 export const postClarifications = async (req: Request, res: Response) => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {
@@ -58,7 +90,7 @@ export const postClarifications = async (req: Request, res: Response) => {
 
     // Response
     if (parent) {
-      const clarifications = await contest.scanItems('clarification', { cid: parent })
+      const clarifications = await contest.scanItems('clarification', { args: { cid: parent } })
       if (!clarifications?.length) {
         res.status(400).json({ message: `Clarification ${parent} does not exist!` })
         return
@@ -96,6 +128,9 @@ export const postClarifications = async (req: Request, res: Response) => {
     }
 
     await contest.putItem('clarification', { ...clarification })
+
+    notify(clarification)
+
     res.send(clarification)
   } catch (err) {
     console.error(err)
