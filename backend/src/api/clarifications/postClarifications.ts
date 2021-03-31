@@ -79,7 +79,7 @@ export const postClarifications = async (req: Request, res: Response) => {
   }
 
   try {
-    let { body, parent, division, type, title } = matchedData(req)
+    let { body, parent, division, type, title, context } = matchedData(req)
 
     if (!req.user) {
       res.status(400).json({ message: 'User is not valid!' })
@@ -90,6 +90,7 @@ export const postClarifications = async (req: Request, res: Response) => {
       cid: uuidv4().replace(/-/g, ''),
       date: Date.now() / 1000,
       body,
+      context,
       uid: req.user.uid
     }
 
