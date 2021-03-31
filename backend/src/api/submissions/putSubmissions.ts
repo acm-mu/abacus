@@ -84,7 +84,6 @@ export const putSubmissions = async (req: Request, res: Response) => {
   try {
     await contest.updateItem('submission', { sid: item.sid }, item)
 
-    const response = await contest.scanItems('submission', { args: { sid: item.sid } })
     if (item.released == true) notifyTeam(item)
 
     res.send(item)
