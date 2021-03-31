@@ -151,7 +151,11 @@ const Problems = (): JSX.Element => {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {activeProblems.map((problem: ProblemItem, index: number) => (
+          {problems.length == 0 ?
+          <Table.Row>
+            <Table.Cell colSpan={'100%'} style={{ textAlign: "center" }}>No Problems</Table.Cell>
+          </Table.Row> :
+          (activeProblems.map((problem: ProblemItem, index: number) => (
             <Table.Row key={index}>
               <Table.Cell>
                 <input
@@ -169,7 +173,7 @@ const Problems = (): JSX.Element => {
                 <Table.Cell>{problem.pid in submissions ? submissions[problem.pid].length : 0}</Table.Cell>
               </>}
             </Table.Row>
-          ))}
+          )))}
         </Table.Body>
       </Table>
     </Block>
