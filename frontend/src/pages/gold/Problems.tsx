@@ -62,7 +62,7 @@ const Problems = (): JSX.Element => {
         <Table.Body>
           {!(problems?.length) ?
             <Table.Row>
-              <Table.Cell colSpan={'100%'} style={{ textAlign: 'center' }}>We can&apos;t find any problems. If you believe this is an error please contact us.</Table.Cell>
+              <Table.Cell colSpan={'100%'}>We can&apos;t find any problems. If you believe this is an error please contact us.</Table.Cell>
             </Table.Row> :
             problems.map((problem: Problem, index: number) => (
               <Table.Row key={index}>

@@ -1,49 +1,37 @@
 import { Problem, Submission } from "abacus";
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Button } from "semantic-ui-react";
+import { Button, Divider } from "semantic-ui-react";
 import MDEditor from "@uiw/react-md-editor";
 import { Block, Countdown, NotFound, ClarificationModal, PageLoading } from 'components'
 import config from 'environment'
 import AppContext from "AppContext";
 import "./Problem.scss";
 import { Helmet } from "react-helmet";
+import { userHome } from "utils";
 
 const problem = (): JSX.Element => {
   const { user } = useContext(AppContext);
   const [isLoading, setLoading] = useState(true)
   const [problem, setProblem] = useState<Problem>();
-  const [submissions, setSubmissions] = useState<Submission[]>()
   const { pid } = useParams<{ pid: string }>()
+
+  const [submissions, setSubmissions] = useState<Submission[]>()
+  const latestSubmission = useMemo(() => {
+    if (!submissions?.length || !user) return <></>
+    const { sid } = submissions[submissions.length - 1]
+    return <p><b>Last Submission:</b>  <Link to={`${userHome(user)}/submissions/${sid}`}>{sid.substring(0, 7)}</Link></p>
+  }, [submissions])
 
   const [isMounted, setMounted] = useState(true)
 
   useEffect(() => {
-    loadProblem().then(() => {
-      setLoading(false)
-      if (user) loadSubmissions()
-    })
+    loadProblem()
     return () => { setMounted(false) }
   }, []);
 
   const loadProblem = async () => {
-    const response = await fetch(`${config.API_URL}/problems?division=blue&columns=description&id=${pid}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.accessToken}`
-      }
-    })
-
-    if (response.ok && isMounted) {
-      setProblem(Object.values(await response.json())[0] as Problem)
-    }
-
-    setLoading(false)
-  }
-
-  const loadSubmissions = async () => {
-    if (!problem) return
-
-    const submissions = await fetch(`${config.API_URL}/submissions?tid=${user?.uid}&pid=${problem?.pid}`, {
+    let response = await fetch(`${config.API_URL}/problems?division=blue&columns=description&id=${pid}`, {
       headers: {
         Authorization: `Bearer ${localStorage.accessToken}`
       }
@@ -51,7 +39,25 @@ const problem = (): JSX.Element => {
 
     if (!isMounted) return
 
-    setSubmissions(Object.values(await submissions.json()))
+    if (response.ok) {
+      const problem = Object.values(await response.json())[0] as Problem
+      setProblem(problem)
+
+      response = await fetch(`${config.API_URL}/submissions?tid=${user?.uid}&pid=${problem?.pid}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.accessToken}`
+        }
+      })
+
+      if (!isMounted) return
+
+      if (response.ok) {
+        const submissions = Object.values(await response.json()) as Submission[]
+        setSubmissions(submissions)
+      }
+    }
+
+    setLoading(false)
   }
 
   if (isLoading) return <PageLoading />
@@ -62,26 +68,28 @@ const problem = (): JSX.Element => {
     <Countdown />
     <Block size='xs-9' className='problem'>
       <h1>Problem {problem.id}: {problem.name}</h1>
-      <hr />
+      <Divider />
       <MDEditor.Markdown source={problem.description || ''} />
     </Block>
     <Block size='xs-3' className='problem-panel'>
-      {!submissions || submissions.filter((e) => e.status == "accepted").length == 0 ?
-        <Button
-          as={Link}
-          to={`/blue/problems/${problem?.id}/submit`}
-          content="Submit"
-          icon="upload"
-        /> : <></>
-      }
+      <Button
+        disabled={submissions?.filter(({ status, released }) => status == 'accepted' || status == 'pending' || !released).length !== 0}
+        as={Link}
+        to={`/blue/problems/${problem?.id}/submit`}
+        content="Submit"
+        icon="upload"
+      />
       <ClarificationModal title={`${problem.name} | `} trigger={
         <Button content="Ask" icon="question" />
       } />
+      {latestSubmission}
+      <Divider />
       <p><b>Problem ID:</b> {problem.id}</p>
       <p><b>CPU Time limit:</b> {problem.cpu_time_limit}</p>
       <p><b>Memory limit:</b> {problem.memory_limit}</p>
       <p><b>Download:</b> <a href={`${config.API_URL}/sample_files?pid=${problem.pid}`}>Sample data files</a></p>
     </Block>
+
   </>
 }
 

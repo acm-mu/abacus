@@ -1,4 +1,4 @@
-import { Problem, ProblemScore, StandingsUser } from "abacus";
+import { Problem, StandingsUser } from "abacus";
 import React, { useContext, useEffect, useState } from "react";
 import { Link } from 'react-router-dom'
 import { Table } from "semantic-ui-react";
@@ -21,7 +21,7 @@ const Standings = (): JSX.Element => {
     let response = await fetch(`${config.API_URL}/problems?division=blue`)
 
     let problems = Object.values(await response.json()) as Problem[]
-    problems = problems.sort((a: Problem, b: Problem) => a.id.localeCompare(b.id))
+    problems = problems.sort((a, b) => a.id.localeCompare(b.id))
 
     if (!isMounted) return
     setProblems(problems)
@@ -29,7 +29,7 @@ const Standings = (): JSX.Element => {
     response = await fetch(`${config.API_URL}/standings`)
 
     let standings = Object.values(await response.json()) as StandingsUser[]
-    standings = standings.sort((a: StandingsUser, b: StandingsUser) => b.solved - a.solved)
+    standings = standings.sort((a, b) => b.solved - a.solved)
 
     if (!isMounted) return
     setStandings(standings)
@@ -89,24 +89,22 @@ const Standings = (): JSX.Element => {
             <Table.HeaderCell>Team</Table.HeaderCell>
             <Table.HeaderCell collapsing>SLV.</Table.HeaderCell>
             <Table.HeaderCell collapsing>TIME</Table.HeaderCell>
-            {problems.map((problem) => (
+            {problems.map(problem =>
               <Table.HeaderCell key={problem.id} collapsing>
                 <Link to={`/blue/problems/${problem.id}`}>{problem.id}</Link>
               </Table.HeaderCell>
-            ))}
+            )}
           </Table.Row>
         </Table.Header>
         <Table.Body>
           {standings.map((team, index) => (
             <Table.Row key={team.uid}>
               <Table.Cell collapsing>{index + 1}</Table.Cell>
-              <Table.Cell>
-                <Link to="#">{team.display_name}</Link>
-              </Table.Cell>
+              <Table.Cell>{team.display_name}</Table.Cell>
               <Table.Cell>{team.solved}</Table.Cell>
               <Table.Cell>{team.time}</Table.Cell>
               {Object.values(team.problems).map(
-                (problem: ProblemScore, index: number) => {
+                (problem, index) => {
                   if (problem.solved) {
                     return (
                       <Table.Cell key={`${team.uid}-${index}`} className="solved">
