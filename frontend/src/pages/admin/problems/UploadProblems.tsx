@@ -59,10 +59,6 @@ const UploadProblems = (): JSX.Element => {
     const { checked, ...problem1 } = p1
     const { ...problem2 } = p2
 
-    if (JSON.stringify(problem1, Object.keys(problem1).sort()) != JSON.stringify(problem2, Object.keys(problem2).sort())) {
-      console.log(JSON.stringify(problem1, Object.keys(problem1).sort()), JSON.stringify(problem2, Object.keys(problem2).sort()))
-    }
-
     return JSON.stringify(problem1, Object.keys(problem1).sort()) != JSON.stringify(problem2, Object.keys(problem2).sort())
   }
 
