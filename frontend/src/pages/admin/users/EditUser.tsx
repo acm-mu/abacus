@@ -7,6 +7,7 @@ import { Block, NotFound, PageLoading } from "components"
 import { divisions, roles } from "utils"
 import { Helmet } from "react-helmet"
 import StatusMessage, { StatusMessageType } from "components/StatusMessage"
+import './EditUser.scss'
 
 const EditUser = (): JSX.Element => {
   const [user, setUser] = useState<User>()
@@ -77,9 +78,6 @@ const EditUser = (): JSX.Element => {
   return <>
     <Helmet> <title>Abacus | Edit User</title> </Helmet>
     <h1>{user.display_name}</h1>
-    <Block transparent size='xs-12'>
-      <Button content='Back' icon='arrow left' labelPosition='left' onClick={history.goBack} />
-    </Block>
     <StatusMessage message={message} onDismiss={() => setMessage(undefined)} />
     <Menu attached='top' tabular>
       <Menu.Item active>User Info</Menu.Item>
@@ -140,7 +138,10 @@ const EditUser = (): JSX.Element => {
           value={formUser?.password}
           placeholder='Password'
           required />
-        <Button primary type="submit">Save</Button>
+        <div className={'right-align'}>
+          <Button primary type="submit">Save</Button>
+          <Button onClick={history.goBack}>Cancel</Button>
+        </div>
       </Form>
     </Block>
   </>
