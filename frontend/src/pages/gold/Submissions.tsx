@@ -51,8 +51,8 @@ const Submissions = (): JSX.Element => {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {submissions ?
-            (submissions.map((submission: Submission, index: number) => (
+          {submissions?.length != 0 ?
+            (submissions?.sort((s1, s2) => s2.date - s1.date).map((submission: Submission, index: number) => (
               <Table.Row key={index}>
                 <Table.Cell><Link to={`/gold/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link></Table.Cell>
                 <Table.Cell><Link to={`/gold/problems/${submission.pid}`}>{submission.problem?.name} </Link></Table.Cell>
@@ -63,7 +63,9 @@ const Submissions = (): JSX.Element => {
               </Table.Row>
             ))) : (
               <Table.Row>
-                <Table.Cell colSpan={'100%'}>No Submissions</Table.Cell>
+                <Table.Cell colSpan={'100%'}>
+                  You don&lsquo;t have any submissions yet. Go write some code!
+                </Table.Cell>
               </Table.Row>
             )}
         </Table.Body>
