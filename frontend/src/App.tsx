@@ -2,10 +2,11 @@ import { User, Notification } from 'abacus';
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Index, Admin, Blue, Gold } from 'pages'
-import AppContext, { AppContextType } from 'AppContext';
 import config from 'environment'
 import { Footer, Notifications } from 'components';
 import { v4 as uuidv4 } from 'uuid';
+import { AppContext, AppContextType, SocketContext } from 'context';
+import io from 'socket.io-client';
 import './App.scss';
 
 const App = (): JSX.Element => {
@@ -14,6 +15,8 @@ const App = (): JSX.Element => {
   const [isLoading, setLoading] = useState(true)
 
   const error_id = uuidv4()
+
+  const socket = io(config.API_URL, { transports: ['websocket'] })
 
   const checkAuth = async () => {
     try {
@@ -79,16 +82,18 @@ const App = (): JSX.Element => {
   if (isLoading) return <></>
 
   return <AppContext.Provider value={appContext}>
-    <Router>
-      <Notifications />
-      <Switch>
-        <Route path='/admin' component={Admin} />
-        <Route path='/blue' component={Blue} />
-        <Route path='/gold' component={Gold} />
-        <Route path='/' component={Index} />
-      </Switch>
-    </Router>
-    <Footer />
+    <SocketContext.Provider value={socket}>
+      <Router>
+        <Notifications />
+        <Switch>
+          <Route path='/admin' component={Admin} />
+          <Route path='/blue' component={Blue} />
+          <Route path='/gold' component={Gold} />
+          <Route path='/' component={Index} />
+        </Switch>
+      </Router>
+      <Footer />
+    </SocketContext.Provider>
   </AppContext.Provider>
 }
 
