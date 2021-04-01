@@ -6,7 +6,7 @@ import { Helmet } from 'react-helmet';
 import Moment from 'react-moment';
 import { useHistory, useParams } from 'react-router';
 import { Link } from 'react-router-dom';
-import { Button, ButtonProps, Comment, Divider, Form, Label, Message, Popup, Table } from 'semantic-ui-react';
+import { Button, ButtonProps, Comment, Divider, Form, Label, Message, Table } from 'semantic-ui-react';
 import config from '../../environment'
 import './Clarification.scss'
 
@@ -23,7 +23,7 @@ const ClarificationPage = (): JSX.Element => {
   const [body, setBody] = useState('')
   const [isLoading, setLoading] = useState(true)
   const [isMounted, setMounted] = useState(true)
-  const [isChangingState, setChangingState] = useState(true)
+  const [isChangingState, setChangingState] = useState(false)
   const [isReplying, setReplying] = useState(false)
 
   const loadClarification = async () => {
@@ -137,18 +137,17 @@ const ClarificationPage = (): JSX.Element => {
 
   return <>
     <Helmet> <title>Abacus | Admin {clarification.title}</title> </Helmet>
-    <h1 style={{ display: 'inline' }}>{clarification.title} {!clarification.open ? <Label color='red' content="Closed" className='closed' /> : <></>}</h1>
+    <h1 style={{ display: 'inline' }}>{clarification.title} {!clarification.open ? <Label color='red' content="Closed" className='closed' /> : <Label color='green' content='Active' className='active' />}</h1>
     <Block transparent size='xs-12'>
       <Button content='Back' icon='arrow left' labelPosition='left' onClick={goBack} />
+      {user?.role == 'admin' || user?.role == 'judge' ?
+        (clarification?.open ?
+          <Button value={false} icon='unlock' content='Close' labelPosition='left' onClick={handleLock} loading={isChangingState} disabled={isChangingState} /> :
+          <Button value={true} icon='lock' content='Reopen' labelPosition='left' onClick={handleLock} loading={isChangingState} disabled={isChangingState} />
+        ) : <></>}
     </Block>
 
     <Block size='xs-6'>
-      {user?.role == 'admin' || user?.role == 'judge' ?
-        (clarification?.open ?
-          <Popup trigger={<Button icon='unlock' value={false} onClick={handleLock} loading={isChangingState} disabled={isChangingState} />} content='Close Clarification' /> :
-          <Popup trigger={<Button icon='lock' value={true} onClick={handleLock} loading={isChangingState} disabled={isChangingState} />} content='Reopen Clarification' />
-        ) : <></>}
-
       <Comment.Group>
         <ClarificationComment clarification={clarification} />
         {clarification.children.length > 0 ?
