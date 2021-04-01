@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Request, Response } from 'express';
 import { UploadedFile } from 'express-fileupload';
 import { matchedData, ParamSchema, validationResult } from "express-validator";
+import { io } from '../../server';
 import { v4 as uuidv4 } from 'uuid';
 
 import contest from '../../abacus/contest';
@@ -143,6 +144,9 @@ export const postSubmissions = async (req: Request, res: Response) => {
     }
 
     await contest.putItem('submission', submission)
+
+    io.emit('new_submission', submission)
+
     res.send(submission)
   } catch (err) {
     console.error(err)

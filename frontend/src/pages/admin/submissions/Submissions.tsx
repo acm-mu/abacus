@@ -1,5 +1,5 @@
 import { Submission } from 'abacus'
-import React, { ChangeEvent, useState, useEffect, useMemo } from 'react'
+import React, { ChangeEvent, useState, useEffect, useMemo, useContext } from 'react'
 import { Button, Checkbox, Label, Table } from 'semantic-ui-react'
 import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
@@ -7,6 +7,7 @@ import config from 'environment'
 import { compare } from 'utils'
 import { Helmet } from 'react-helmet'
 import { PageLoading } from 'components'
+import { SocketContext } from 'context'
 
 interface SubmissionItem extends Submission {
   checked: boolean
@@ -18,6 +19,7 @@ type SortConfig = {
 }
 
 const Submissions = (): JSX.Element => {
+  const socket = useContext(SocketContext)
   const [isLoading, setLoading] = useState<boolean>(true)
   const [submissions, setSubmissions] = useState<SubmissionItem[]>([])
   const [isMounted, setMounted] = useState<boolean>(true)
@@ -39,11 +41,8 @@ const Submissions = (): JSX.Element => {
 
   useEffect(() => {
     loadSubmissions().then(() => setLoading(false))
-    const timeInterval = setInterval(loadSubmissions, 5 * 1000)
-    return () => {
-      clearInterval(timeInterval)
-      setMounted(false)
-    }
+    socket?.on('new_submission', loadSubmissions)
+    return () => setMounted(false)
   }, [])
 
   const loadSubmissions = async () => {
