@@ -23,7 +23,8 @@ const ClarificationPage = (): JSX.Element => {
   const [body, setBody] = useState('')
   const [isLoading, setLoading] = useState(true)
   const [isMounted, setMounted] = useState(true)
-  const [replyLoading, setReplyLoading] = useState(false)
+  const [isChangingState, setChangingState] = useState(true)
+  const [isReplying, setReplying] = useState(false)
 
   const loadClarification = async () => {
     const response = await fetch(`${config.API_URL}/clarifications?cid=${cid}`, {
@@ -61,7 +62,7 @@ const ClarificationPage = (): JSX.Element => {
   const handleSubmit = async () => {
     if (!clarification) { alert('Invalid clarification'); return }
 
-    setReplyLoading(true)
+    setReplying(true)
     const response = await fetch(`${config.API_URL}/clarifications`, {
       headers: {
         Authorization: `Bearer ${localStorage.accessToken}`,
@@ -73,7 +74,7 @@ const ClarificationPage = (): JSX.Element => {
 
     if (response.ok) {
       await loadClarification()
-      setReplyLoading(false)
+      setReplying(false)
       setBody('')
     }
   }
@@ -83,6 +84,7 @@ const ClarificationPage = (): JSX.Element => {
   const handleLock = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, { value: open }: ButtonProps) => {
     if (!clarification) { alert('Invalid clarification!'); return }
 
+    setChangingState(true)
     const response = await fetch(`${config.API_URL}/clarifications`, {
       headers: {
         Authorization: `Bearer ${localStorage.accessToken}`,
@@ -92,8 +94,10 @@ const ClarificationPage = (): JSX.Element => {
       body: JSON.stringify({ cid: clarification.cid, open })
     })
     if (response.ok) {
+      setChangingState(false)
       loadClarification()
     }
+    setChangingState(false)
   }
 
   const ClarificationComment = ({ clarification }: ClarificationProps) => {
@@ -141,8 +145,8 @@ const ClarificationPage = (): JSX.Element => {
     <Block size='xs-6'>
       {user?.role == 'admin' || user?.role == 'judge' ?
         (clarification?.open ?
-          <Popup trigger={<Button icon='unlock' value={false} onClick={handleLock} />} content='Close Clarification' /> :
-          <Popup trigger={<Button icon='lock' value={true} onClick={handleLock} />} content='Reopen Clarification' />
+          <Popup trigger={<Button icon='unlock' value={false} onClick={handleLock} loading={isChangingState} disabled={isChangingState} />} content='Close Clarification' /> :
+          <Popup trigger={<Button icon='lock' value={true} onClick={handleLock} loading={isChangingState} disabled={isChangingState} />} content='Reopen Clarification' />
         ) : <></>}
 
       <Comment.Group>
@@ -161,7 +165,7 @@ const ClarificationPage = (): JSX.Element => {
               name='body'
               value={body}
               onChange={handleChange} />
-            <Button loading={replyLoading} disabled={replyLoading} content='Add Reply' labelPosition='left' icon='edit' primary onClick={handleSubmit} />
+            <Button loading={isReplying} disabled={isReplying} content='Add Reply' labelPosition='left' icon='edit' primary onClick={handleSubmit} />
           </Form> :
           <Message
             warning

@@ -22,6 +22,7 @@ type SortConfig = {
 const Clarifications = (): JSX.Element => {
   const [isLoading, setLoading] = useState(true)
   const [isMounted, setMounted] = useState(true)
+  const [isDeleting, setDeleting] = useState(false)
   const [clarifications, setClarifications] = useState<ClarificationItem[]>([])
   const [showClosed, setShowClosed] = useState(false)
   const [{ column, direction }, setSortConfig] = useState<SortConfig>({
@@ -58,6 +59,7 @@ const Clarifications = (): JSX.Element => {
   const checkAll = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => setClarifications(clarifications.map(clarification => ({ ...clarification, checked })))
 
   const deleteSelected = async () => {
+    setDeleting(true)
     const clarificationsToDelete = clarifications.filter(clarification => clarification.checked).map(clarification => clarification.cid)
     await fetch(`${config.API_URL}/clarifications`, {
       method: 'DELETE',
@@ -67,6 +69,7 @@ const Clarifications = (): JSX.Element => {
       },
       body: JSON.stringify({ cid: clarificationsToDelete })
     })
+    setDeleting(false)
     loadClarifications()
   }
 
@@ -82,7 +85,7 @@ const Clarifications = (): JSX.Element => {
 
     <ClarificationModal trigger={<Button content="Create Clarification" />} callback={loadClarifications} />
     {clarifications.filter(clarification => clarification.checked).length ?
-      <Button content="Delete Clarification(s)" negative onClick={deleteSelected} /> : <></>}
+      <Button content="Delete Clarification(s)" negative onClick={deleteSelected} loading={isDeleting} disabled={isDeleting} /> : <></>}
 
     <Block transparent size='xs-12'>
       <Checkbox toggle label='Show Closed' checked={showClosed} onChange={onFilterChange} />

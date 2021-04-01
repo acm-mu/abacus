@@ -10,7 +10,7 @@ import { Breadcrumb } from 'semantic-ui-react'
 const submission = (): JSX.Element => {
   const { sid } = useParams<{ sid: string }>()
   const [submission, setSubmission] = useState<Submission>()
-  const [isMounted, setMounted] = useState<boolean>(true)
+  const [isMounted, setMounted] = useState(true)
   const [isLoading, setLoading] = useState(true)
 
   useEffect(() => {

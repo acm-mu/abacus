@@ -22,6 +22,7 @@ const EditUser = (): JSX.Element => {
   })
   const [isLoading, setLoading] = useState(true)
   const [isMounted, setMounted] = useState(true)
+  const [isSaving, setSaving] = useState(false)
   const [message, setMessage] = useState<StatusMessageType>()
   const { uid } = useParams<{ uid: string }>()
 
@@ -31,6 +32,7 @@ const EditUser = (): JSX.Element => {
   const handleSelectChange = (_: never, { name, value }: HTMLInputElement) => setFormUser({ ...formUser, [name]: value })
 
   const handleSubmit = async () => {
+    setSaving(true)
     const response = await fetch(`${config.API_URL}/users`, {
       method: 'PUT',
       headers: {
@@ -48,6 +50,7 @@ const EditUser = (): JSX.Element => {
       const body = await response.json()
       setMessage({ type: 'error', message: body.message })
     }
+    setSaving(false)
   }
 
   const loadUser = async () => {
@@ -139,7 +142,7 @@ const EditUser = (): JSX.Element => {
           placeholder='Password'
           required />
         <div className={'right-align'}>
-          <Button primary type="submit">Save</Button>
+          <Button primary type="submit" loading={isSaving} disabled={isSaving}>Save</Button>
           <Button onClick={history.goBack}>Cancel</Button>
         </div>
       </Form>

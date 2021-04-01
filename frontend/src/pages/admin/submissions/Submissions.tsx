@@ -18,9 +18,10 @@ type SortConfig = {
 }
 
 const Submissions = (): JSX.Element => {
-  const [isLoading, setLoading] = useState<boolean>(true)
+  const [isLoading, setLoading] = useState(true)
   const [submissions, setSubmissions] = useState<SubmissionItem[]>([])
-  const [isMounted, setMounted] = useState<boolean>(true)
+  const [isMounted, setMounted] = useState(true)
+  const [isDeleting, setDeleting] = useState(false)
   const [showReleased, setShowReleased] = useState(false)
 
   const [{ column, direction }, setSortConfig] = useState<SortConfig>({
@@ -66,6 +67,7 @@ const Submissions = (): JSX.Element => {
   const checkAll = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => setSubmissions(submissions.map(submission => ({ ...submission, checked })))
 
   const deleteSelected = async () => {
+    setDeleting(true)
     const submissionsToDelete = submissions.filter(submission => submission.checked).map(submission => submission.sid)
     const response = await fetch(`${config.API_URL}/submissions`, {
       method: 'DELETE',
@@ -78,6 +80,7 @@ const Submissions = (): JSX.Element => {
     if (response.ok) {
       loadSubmissions()
     }
+    setDeleting(false)
   }
 
   const filteredSubmissions = useMemo(() =>
@@ -90,7 +93,7 @@ const Submissions = (): JSX.Element => {
     <Helmet><title>Abacus | Admin Submissions</title></Helmet>
     <Button content="Download Submissions" onClick={downloadSubmissions} />
     {submissions.filter(submission => submission.checked).length ?
-      <Button content="Delete Submission(s)" negative onClick={deleteSelected} /> : <></>}
+      <Button content="Delete Submission(s)" negative onClick={deleteSelected} loading={isDeleting} disabled={isDeleting} /> : <></>}
     <Checkbox toggle label="Show Released" checked={showReleased} onClick={onFilterChange} />
 
     <Table singleLine>

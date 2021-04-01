@@ -26,6 +26,7 @@ const Settings = (): JSX.Element => {
   })
   const [isMounted, setMounted] = useState(true)
   const [isLoading, setLoading] = useState(true)
+  const [isSaving, setSaving] = useState(false)
   const [message, setMessage] = useState<StatusMessageType>()
 
   useEffect(() => {
@@ -52,6 +53,7 @@ const Settings = (): JSX.Element => {
   }
 
   const handleSubmit = async () => {
+    setSaving(true)
     const formData = new FormData()
     formData.set('competition_name', settings.competition_name)
     formData.set('points_per_yes', settings.points_per_yes)
@@ -75,6 +77,7 @@ const Settings = (): JSX.Element => {
       const body = await response.json()
       setMessage({ type: 'error', message: body.message })
     }
+    setSaving(false)
   }
 
   if (isLoading) return <PageLoading />
@@ -114,7 +117,7 @@ const Settings = (): JSX.Element => {
         <Form.Field label='Points per Compilation Error' control={Input} type='number' name='points_per_compilation_error' value={settings.points_per_compilation_error} onChange={handleChange} />
         <Form.Field label='Points per Minute (1st Yes)' control={Input} type='number' name='points_per_yes' value={settings.points_per_minute} onChange={handleChange} />
 
-        <Button primary>Save</Button>
+        <Button primary loading={isSaving} disabled={isSaving}>Save</Button>
       </Form>
     </Block>
   </>

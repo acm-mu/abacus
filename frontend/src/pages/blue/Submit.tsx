@@ -136,8 +136,8 @@ const Submit = (): JSX.Element => {
           <Form.Select inline label='Language' placeholder="Select Language" value={language?.value} options={languages} />
 
           <Form.Group>
-            <Button onClick={history.goBack}>Cancel</Button>
             <Form.Button primary content="Submit" />
+            <Button onClick={history.goBack}>Cancel</Button>
           </Form.Group>
         </Form>
       </Block> :

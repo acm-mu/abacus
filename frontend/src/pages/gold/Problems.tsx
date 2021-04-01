@@ -9,7 +9,7 @@ import { Helmet } from 'react-helmet'
 
 const Problems = (): JSX.Element => {
   const { settings } = useContext(AppContext)
-  const [isMounted, setMounted] = useState<boolean>(true)
+  const [isMounted, setMounted] = useState(true)
   const [isLoading, setLoading] = useState(true)
   const [problems, setProblems] = useState<Problem[]>()
 
