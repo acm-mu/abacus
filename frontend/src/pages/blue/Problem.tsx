@@ -87,8 +87,8 @@ const problem = (): JSX.Element => {
       {latestSubmission}
       <Divider />
       <p><b>Problem ID:</b> {problem.id}</p>
-      <p><b>CPU Time limit:</b> {problem.cpu_time_limit}</p>
-      <p><b>Memory limit:</b> {problem.memory_limit}</p>
+      {problem.cpu_time_limit ? <p><b>CPU Time limit:</b> {problem.cpu_time_limit}</p> : <></>}
+      {problem.memory_limit ? <p><b>Memory limit:</b> {problem.memory_limit}</p> : <></>}
       <p><b>Download:</b> <a href={`${config.API_URL}/sample_files?pid=${problem.pid}`}>Sample data files</a></p>
     </Block>
 
