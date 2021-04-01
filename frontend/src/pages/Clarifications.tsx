@@ -5,7 +5,7 @@ import config from '../environment'
 import Moment from 'react-moment';
 import './Clarifications.scss'
 import { Block, PageLoading } from 'components';
-import AppContext from 'AppContext';
+import { AppContext } from 'context';
 import { useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import ClarificationModal from 'components/ClarificationModal';

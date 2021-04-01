@@ -6,7 +6,7 @@ import { Block } from 'components';
 import SubmissionSource from './SubmissionSource';
 import SubmissionTestOutput from './SubmissionTestOutput';
 import "./Submission.scss"
-import AppContext from 'AppContext';
+import { AppContext } from 'context';
 
 const BlueSubmission = (): JSX.Element => {
   const { user } = useContext(AppContext)

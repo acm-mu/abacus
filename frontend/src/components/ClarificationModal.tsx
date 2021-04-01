@@ -1,7 +1,7 @@
 import React, { ChangeEvent, SyntheticEvent, useContext, useState } from 'react';
 import { Button, DropdownProps, Form, Modal } from 'semantic-ui-react';
 import config from 'environment';
-import AppContext from 'AppContext';
+import { AppContext } from 'context';
 import { useHistory } from 'react-router';
 import { divisions } from 'utils';
 import { Clarification, Context } from 'abacus';

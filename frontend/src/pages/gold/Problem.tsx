@@ -5,7 +5,7 @@ import { Block, Countdown, NotFound, ClarificationModal, PageLoading } from 'com
 import { Button, Message } from 'semantic-ui-react'
 import MDEditor from '@uiw/react-md-editor'
 import config from "environment"
-import AppContext from 'AppContext'
+import { AppContext } from 'context'
 import { Helmet } from 'react-helmet'
 
 const problem = (): JSX.Element => {

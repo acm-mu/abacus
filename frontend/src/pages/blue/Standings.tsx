@@ -5,7 +5,7 @@ import { Table } from "semantic-ui-react";
 import { Block, Countdown, PageLoading, StatusMessage } from "components";
 import config from 'environment'
 import "./Standings.scss";
-import AppContext from "AppContext";
+import { AppContext } from "context";
 import { Helmet } from "react-helmet";
 
 const Standings = (): JSX.Element => {

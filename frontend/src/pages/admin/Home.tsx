@@ -2,7 +2,7 @@
 import { Problem, Submission } from 'abacus'
 import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { LineChart, PieChart } from '@toast-ui/react-chart'
-import AppContext from 'AppContext'
+import { AppContext } from 'context'
 import { Block } from 'components'
 import config from 'environment'
 import '@toast-ui/chart/dist/toastui-chart.min.css'

@@ -1,10 +1,10 @@
-import AppContext from "AppContext"
 import { Block } from "components"
 import React, { useContext } from "react"
 import Moment from "react-moment"
 import { Link } from "react-router-dom"
 import { Loader, Table } from "semantic-ui-react"
 import { userHome } from "utils"
+import { AppContext } from "context"
 import SubmissionContext from "./SubmissionContext"
 
 const SubmissionDetail = (): JSX.Element => {

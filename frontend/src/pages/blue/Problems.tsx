@@ -4,7 +4,7 @@ import { Popup, Table } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { Block, Countdown, PageLoading } from "components";
 import config from 'environment'
-import AppContext from "AppContext";
+import { AppContext } from "context";
 import 'components/Table.scss'
 import { Helmet } from "react-helmet";
 import { userHome } from "utils";
