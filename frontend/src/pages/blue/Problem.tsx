@@ -1,7 +1,7 @@
 import { Problem, Submission } from "abacus";
 import React, { useState, useEffect, useContext, useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Breadcrumb, Button, Divider, Popup } from "semantic-ui-react";
+import { Breadcrumb, Button, Divider } from "semantic-ui-react";
 import MDEditor from "@uiw/react-md-editor";
 import { Block, Countdown, NotFound, ClarificationModal, PageLoading } from 'components'
 import config from 'environment'
@@ -60,8 +60,6 @@ const problem = (): JSX.Element => {
     setLoading(false)
   }
 
-  const isDisabled = submissions?.filter(({ status, released }) => status == 'accepted' || status == 'pending' || !released).length !== 0
-
   if (isLoading) return <PageLoading />
   if (!problem) return <NotFound />
 
@@ -81,24 +79,13 @@ const problem = (): JSX.Element => {
       <MDEditor.Markdown source={problem.description || ''} />
     </Block>
     <Block size='xs-3' className='problem-panel'>
-      
-    {isDisabled ?
-          <Popup trigger={
-          
       <Button
-        disabled={isDisabled}
+        disabled={submissions?.filter(({ status, released }) => status == 'accepted' || status == 'pending' || !released).length !== 0}
         as={Link}
         to={`/blue/problems/${problem?.id}/submit`}
         content="Submit"
         icon="upload"
-      /> } content='Close Clarification' /> :
-      <Button
-        disabled={isDisabled}
-        as={Link}
-        to={`/blue/problems/${problem?.id}/submit`}
-        content="Submit"
-        icon="upload"
-      /> }
+      />
       <ClarificationModal
         title={`${problem.name} | `}
         context={{ type: 'pid', id: problem.pid }}
