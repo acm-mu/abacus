@@ -19,7 +19,7 @@ const ClarificationPage = (): JSX.Element => {
   const { user } = useContext(AppContext)
   const { cid } = useParams<{ cid: string }>()
   const [clarification, setClarification] = useState<Clarification>()
-  const [submissions, setSubmissions] = useState<Submission[]> ([])
+  const [submissions, setSubmissions] = useState<Submission[]>([])
   const [body, setBody] = useState('')
   const [isLoading, setLoading] = useState(true)
   const [isMounted, setMounted] = useState(true)
@@ -54,7 +54,7 @@ const ClarificationPage = (): JSX.Element => {
 
   useEffect(() => {
     loadClarification()
-    if(clarification) loadSubmissions()
+    if (clarification) loadSubmissions()
     return () => { setMounted(false) }
   }, [])
 

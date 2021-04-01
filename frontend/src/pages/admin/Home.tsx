@@ -25,7 +25,6 @@ const Home = (): JSX.Element => {
 
     const getSubmissions = await fetch(`${config.API_URL}/submissions`, { headers: { Authorization: `Bearer ${localStorage.accessToken}` } })
 
-
     if (!isMounted) return
 
     const subs: Submission[] = Object.values(await getSubmissions.json())

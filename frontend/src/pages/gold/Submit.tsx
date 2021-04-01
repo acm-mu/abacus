@@ -83,14 +83,14 @@ const Submit = (): JSX.Element => {
   return <>
     <Helmet> <title>Abacus | Gold Submit</title> </Helmet>
     <Block transparent size='xs-12'>
-        <Breadcrumb>
-          <Breadcrumb.Section as={Link} to='/blue/problems' content="Problems" />
-          <Breadcrumb.Divider />
-          <Breadcrumb.Section as={Link} to={`/blue/problems/${problem?.id}`} content={problem?.name} />
-          <Breadcrumb.Divider />
-          <Breadcrumb.Section active content="Submit" />
-        </Breadcrumb>
-      </Block>
+      <Breadcrumb>
+        <Breadcrumb.Section as={Link} to='/gold/problems' content="Problems" />
+        <Breadcrumb.Divider />
+        <Breadcrumb.Section as={Link} to={`/gold/problems/${problem?.id}`} content={problem?.name} />
+        <Breadcrumb.Divider />
+        <Breadcrumb.Section active content="Submit" />
+      </Breadcrumb>
+    </Block>
     <Block size='xs-12'>
       <Form onSubmit={handleSubmit}>
         <Form.Group>
