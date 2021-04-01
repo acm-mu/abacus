@@ -1,12 +1,11 @@
 import { Problem } from 'abacus'
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Block, StatusMessage } from 'components'
+import { StatusMessage } from 'components'
 import config from 'environment'
 import { Helmet } from 'react-helmet'
 import { ProblemEditor } from 'components/editor'
 import { StatusMessageType } from 'components/StatusMessage'
-import { Button } from 'semantic-ui-react'
 
 const NewProblem = (): JSX.Element => {
   const history = useHistory()
@@ -32,9 +31,6 @@ const NewProblem = (): JSX.Element => {
   return <>
     <Helmet>  <title>Abacus | Admin New Problem</title> </Helmet>
     <h1>New Problem</h1>
-    <Block transparent size='xs-12'>
-        <Button content='Back' icon='arrow left' labelPosition='left' onClick={history.goBack} />
-    </Block>
     <StatusMessage message={message} onDismiss={() => setMessage(undefined)} />
 
     <ProblemEditor handleSubmit={handleSubmit} />
