@@ -91,7 +91,7 @@ declare module "abacus" {
 
   export interface Notification {
     header?: string;
-    to: string;
+    to?: string;
     content: string;
     id?: string;
     context?: Context;
