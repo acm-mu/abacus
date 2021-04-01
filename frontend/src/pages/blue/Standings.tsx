@@ -12,8 +12,8 @@ const Standings = (): JSX.Element => {
   const { settings } = useContext(AppContext);
   const [problems, setProblems] = useState<Problem[]>();
   const [standings, setStandings] = useState<StandingsUser[]>();
-  const [isLoading, setLoading] = useState<boolean>(true)
-  const [isMounted, setMounted] = useState<boolean>(true)
+  const [isLoading, setLoading] = useState(true)
+  const [isMounted, setMounted] = useState(true)
 
   const helmet = <Helmet> <title>Abacus | Blue Standings</title> </Helmet>
 
