@@ -91,12 +91,17 @@ const problem = (): JSX.Element => {
         context={{ type: 'pid', id: problem.pid }}
         trigger={<Button content="Ask" icon="question" />}
       />
+      <Button
+        as={Link}
+        to={`${config.API_URL}/sample_files?pid=${problem.pid}`}
+        content="Skeletons"
+        icon="download"
+      />
       {latestSubmission}
       <Divider />
       <p><b>Problem ID:</b> {problem.id}</p>
       <p><b>CPU Time limit:</b> {problem.cpu_time_limit}</p>
       <p><b>Memory limit:</b> {problem.memory_limit}</p>
-      <p><b>Download:</b> <a href={`${config.API_URL}/sample_files?pid=${problem.pid}`}>Sample data files</a></p>
     </Block>
 
   </>

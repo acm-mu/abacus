@@ -19,6 +19,7 @@ const Submit = (): JSX.Element => {
 
   const [isLoading, setLoading] = useState(true)
   const [isMounted, setMounted] = useState(true)
+  const [isSubmitting, setSubmitting] = useState(false)
 
   const history = useHistory()
 
@@ -51,6 +52,7 @@ const Submit = (): JSX.Element => {
 
   const handleSubmit = async () => {
     if (!(problem && project_id)) return
+    setSubmitting(true)
     const formData = new FormData()
     formData.set('pid', problem.pid)
     formData.set('project_id', project_id)
@@ -66,12 +68,14 @@ const Submit = (): JSX.Element => {
     })
 
     if (response.status !== 200) {
+      setSubmitting(false)
       alert("An error occurred! Please try again")
       return
     }
 
     const body: Submission = await response.json()
 
+    setSubmitting(false)
     history.push(`/gold/submissions/${body.sid}`)
   }
 
@@ -114,6 +118,8 @@ const Submit = (): JSX.Element => {
             label="&nbsp;"
             color="orange"
             content="Submit"
+            loading={isSubmitting}
+            disabled = {isSubmitting}
           />
         </Form.Group>
       </Form>
