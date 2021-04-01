@@ -1,6 +1,6 @@
 import { Problem, Submission } from 'abacus'
 import React, { ChangeEvent, useContext, useEffect, useState } from 'react'
-import { Form, Button } from 'semantic-ui-react'
+import { Form, Button, Breadcrumb } from 'semantic-ui-react'
 import { Link, useHistory, useParams } from 'react-router-dom'
 import { Block, Countdown, FileDialog, NotFound, PageLoading } from 'components'
 import config from 'environment'
@@ -107,6 +107,15 @@ const Submit = (): JSX.Element => {
   return <>
     <Helmet> <title>Abacus | Blue Submit</title> </Helmet>
     <Countdown />
+    <Block transparent size='xs-12'>
+      <Breadcrumb>
+        <Breadcrumb.Section as={Link} to='/blue/problems' content="Problems" />
+        <Breadcrumb.Divider />
+        <Breadcrumb.Section as={Link} to={`/blue/problems/${problem?.id}`} content={problem?.name} />
+        <Breadcrumb.Divider />
+        <Breadcrumb.Section active content="Submit" />
+      </Breadcrumb>
+    </Block>
     {!submissions || submissions?.filter((e) => e.status == "accepted").length == 0 ?
       <Block size='xs-12'>
         <h1>Submit a solution to {problem?.name} </h1>
