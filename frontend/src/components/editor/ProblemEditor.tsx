@@ -1,5 +1,6 @@
 import { Problem } from 'abacus'
 import React, { MouseEvent, useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import { Menu, Button, MenuItemProps, Divider } from 'semantic-ui-react'
 import { Block } from 'components'
 import ProblemInfoEditor from './ProblemInfoEditor'
@@ -8,6 +9,7 @@ import DescriptionEditor from './DescriptionEditor'
 import SkeletonsEditor from './SkeletonsEditor'
 import SolutionsEditor from './SolutionsEditor'
 import TemplateEditor from './TemplateEditor'
+import './ProblemEditor.scss'
 
 interface ProblemEditorProps {
   problem?: Problem
@@ -25,6 +27,7 @@ const ProblemEditor = ({ problem: defaultProblem, handleSubmit }: ProblemEditorP
 
   const [activeItem, setActiveItem] = useState<string>('problem-info')
   const handleItemClick = (_event: MouseEvent, data: MenuItemProps) => setActiveItem(data.tab)
+  const history = useHistory()
 
   return <>
     <Menu attached='top' tabular>
@@ -53,7 +56,10 @@ const ProblemEditor = ({ problem: defaultProblem, handleSubmit }: ProblemEditorP
         }
       })()}
       <Divider />
-      <Button primary onClick={() => handleSubmit(problem)}>Save</Button>
+      <div className={'right-align'}>
+        <Button primary onClick={() => handleSubmit(problem)}>Save</Button>
+        <Button onClick={history.goBack}>Cancel</Button>
+      </div>
     </Block>
   </>
 }

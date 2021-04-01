@@ -1,12 +1,11 @@
 import { Problem } from 'abacus'
 import React, { useState, useEffect } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import config from 'environment'
 import { Helmet } from 'react-helmet'
 import { ProblemEditor } from 'components/editor'
-import { Block, PageLoading, StatusMessage } from 'components'
+import { PageLoading, StatusMessage } from 'components'
 import { StatusMessageType } from 'components/StatusMessage'
-import { Button } from 'semantic-ui-react'
 
 const EditProblems = (): JSX.Element => {
   const { pid } = useParams<{ pid: string }>()
@@ -15,8 +14,6 @@ const EditProblems = (): JSX.Element => {
   const [message, setMessage] = useState<StatusMessageType>()
   const [isMounted, setMounted] = useState(true)
   const [isLoading, setLoading] = useState(true)
-
-  const history = useHistory()
 
   useEffect(() => {
     loadProblem()
@@ -64,9 +61,6 @@ const EditProblems = (): JSX.Element => {
     <Helmet> <title>Abacus | Admin Edit Problem</title> </Helmet>
 
     <h1>{problem?.name}</h1>
-    <Block transparent size='xs-12'>
-      <Button content='Back' icon='arrow left' labelPosition='left' onClick={history.goBack} />
-    </Block>
     <StatusMessage message={message} onDismiss={() => setMessage(undefined)} />
 
     <ProblemEditor problem={problem} handleSubmit={handleSubmit} />

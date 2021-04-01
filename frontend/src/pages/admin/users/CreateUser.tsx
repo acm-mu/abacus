@@ -123,9 +123,9 @@ const CreateUser = ({ trigger, callback }: CreateUserProps): JSX.Element => {
           </Form>
         </Modal.Description>
       </Modal.Content>
-      <Modal.Actions className={'left-align'}>
+      <Modal.Actions>
+        <Button primary onClick={handleSubmit}>Create</Button>
         <Button onClick={() => { setOpen(false) }}>Cancel</Button>
-        <Button positive onClick={handleSubmit}>Create</Button>
       </Modal.Actions>
     </Modal>
   )
