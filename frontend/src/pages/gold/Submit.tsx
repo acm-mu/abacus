@@ -1,11 +1,12 @@
 import { Problem, Submission } from "abacus";
 import React, { ChangeEvent, SyntheticEvent, useEffect, useMemo, useState } from "react";
-import { Form, DropdownProps, InputOnChangeData } from "semantic-ui-react";
+import { Form, DropdownProps, InputOnChangeData, Breadcrumb } from "semantic-ui-react";
 import { Block, PageLoading, ScratchViewer } from "components";
 import config from "environment"
 import { Helmet } from "react-helmet";
 import { useHistory, useParams } from "react-router";
 import MDEditor from "@uiw/react-md-editor";
+import { Link } from "react-router-dom";
 
 const Submit = (): JSX.Element => {
   const { pid: problem_id } = useParams<{ pid: string }>()
@@ -81,6 +82,15 @@ const Submit = (): JSX.Element => {
 
   return <>
     <Helmet> <title>Abacus | Gold Submit</title> </Helmet>
+    <Block transparent size='xs-12'>
+        <Breadcrumb>
+          <Breadcrumb.Section as={Link} to='/blue/problems' content="Problems" />
+          <Breadcrumb.Divider />
+          <Breadcrumb.Section as={Link} to={`/blue/problems/${problem?.id}`} content={problem?.name} />
+          <Breadcrumb.Divider />
+          <Breadcrumb.Section active content="Submit" />
+        </Breadcrumb>
+      </Block>
     <Block size='xs-12'>
       <Form onSubmit={handleSubmit}>
         <Form.Group>
