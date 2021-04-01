@@ -198,7 +198,7 @@ const Users = (): JSX.Element => {
           <Table.HeaderCell
             sorted={column === 'display_name' ? direction : undefined}
             onClick={() => sort('display_name')}
-            content="Displayname" />
+            content="Display Name" />
         </Table.Row>
       </Table.Header>
       <Table.Body>
