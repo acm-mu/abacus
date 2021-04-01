@@ -166,7 +166,7 @@ const Users = (): JSX.Element => {
   return <>
     <Helmet> <title>Abacus | Users</title> </Helmet>
     <CreateUser trigger={<Button content="Add User" primary />} callback={createUserCallback} />
-    <Link to='/admin/users/upload'><Button content="Upload Users" /></Link>
+    <Button as={Link} to={'/admin/users/upload'} content="Upload Users" />
     <Button loading={isImporting} disabled={isImporting} content="Import Users" onClick={importUsers} />
     <Button content="Download Users" onClick={downloadUsers} />
     {users.filter(user => user.checked).length ?

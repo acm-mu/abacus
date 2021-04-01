@@ -9,7 +9,6 @@ import DescriptionEditor from './DescriptionEditor'
 import SkeletonsEditor from './SkeletonsEditor'
 import SolutionsEditor from './SolutionsEditor'
 import TemplateEditor from './TemplateEditor'
-import './ProblemEditor.scss'
 
 interface ProblemEditorProps {
   problem?: Problem
@@ -56,10 +55,8 @@ const ProblemEditor = ({ problem: defaultProblem, handleSubmit }: ProblemEditorP
         }
       })()}
       <Divider />
-      <div className={'right-align'}>
-        <Button primary onClick={() => handleSubmit(problem)}>Save</Button>
-        <Button onClick={history.goBack}>Cancel</Button>
-      </div>
+      <Button floated='right' onClick={history.goBack}>Cancel</Button>
+      <Button floated='right' primary onClick={() => handleSubmit(problem)}>Save</Button>
     </Block>
   </>
 }

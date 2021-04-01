@@ -7,7 +7,6 @@ import { Block, NotFound, PageLoading } from "components"
 import { divisions, roles } from "utils"
 import { Helmet } from "react-helmet"
 import StatusMessage, { StatusMessageType } from "components/StatusMessage"
-import './EditUser.scss'
 
 const EditUser = (): JSX.Element => {
   const [user, setUser] = useState<User>()
@@ -141,10 +140,8 @@ const EditUser = (): JSX.Element => {
           value={formUser?.password}
           placeholder='Password'
           required />
-        <div className={'right-align'}>
-          <Button primary type="submit" loading={isSaving} disabled={isSaving}>Save</Button>
-          <Button onClick={history.goBack}>Cancel</Button>
-        </div>
+        <Button floated='right' onClick={history.goBack}>Cancel</Button>
+        <Button floated='right' primary type="submit" loading={isSaving} disabled={isSaving}>Save</Button>
       </Form>
     </Block>
   </>
