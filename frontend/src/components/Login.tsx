@@ -18,10 +18,12 @@ const LoginModal = ({ trigger, open }: LoginModalProps): JSX.Element => {
   const [error, setError] = useState<string>()
   const [formData, setFormData] = useState({ username: '', password: '' })
   const [isOpen, setOpen] = useState(open || false)
+  const [isLoggingIn, setLoggingIn] = useState(false)
 
   const handleChange = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, [name]: value })
   const handleSubmit = async () => {
     try {
+      setLoggingIn(true)
       const response = await fetch(`${config.API_URL}/auth`, {
         method: 'POST',
         headers: {
@@ -33,6 +35,7 @@ const LoginModal = ({ trigger, open }: LoginModalProps): JSX.Element => {
         const { accessToken, ...user } = await response.json()
         localStorage.setItem('accessToken', accessToken)
         setUser(user)
+        setLoggingIn(false)
         history.push(userHome(user))
       } else {
         const { message } = await response.json()
@@ -41,6 +44,7 @@ const LoginModal = ({ trigger, open }: LoginModalProps): JSX.Element => {
     } catch (err) {
       console.error(err)
     }
+    setLoggingIn(false)
     setFormData({ username: '', password: '' })
   }
 
@@ -71,7 +75,7 @@ const LoginModal = ({ trigger, open }: LoginModalProps): JSX.Element => {
             name="password"
             onChange={handleChange}
           />
-          <Button type="submit" primary>Login</Button>
+          <Button type="submit" primary loading={isLoggingIn} disabled={isLoggingIn}>Login</Button>
         </Form>
       </Modal.Description>
     </Modal>

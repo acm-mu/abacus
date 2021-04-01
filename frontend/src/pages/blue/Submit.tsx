@@ -15,6 +15,7 @@ const Submit = (): JSX.Element => {
   const [isLoading, setLoading] = useState(true)
   const [language, setLanguage] = useState<Language>()
   const [file, setFile] = useState<File>()
+  const [isSubmitting, setSubmitting] = useState(false)
   const history = useHistory()
 
   const [isMounted, setMounted] = useState(true)
@@ -55,6 +56,7 @@ const Submit = (): JSX.Element => {
 
   const handleSubmit = async () => {
     if (!(language && file && problem && user)) return
+    setSubmitting(true)
     const formData = new FormData()
     formData.set('pid', problem.pid)
     formData.set('source', file, file.name)
@@ -70,10 +72,12 @@ const Submit = (): JSX.Element => {
 
     if (res.status != 200) {
       alert("An error occurred! Please try again")
+      setSubmitting(false)
       return
     }
 
     const body: Submission = await res.json()
+    setSubmitting(false)
 
     history.push(`/blue/submissions/${body.sid}`)
   }
@@ -136,7 +140,7 @@ const Submit = (): JSX.Element => {
           <Form.Select inline label='Language' placeholder="Select Language" value={language?.value} options={languages} />
 
           <Form.Group>
-            <Form.Button primary content="Submit" />
+            <Form.Button primary content="Submit" loading={isSubmitting} disabled={isSubmitting} />
             <Button onClick={history.goBack}>Cancel</Button>
           </Form.Group>
         </Form>
