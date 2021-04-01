@@ -78,8 +78,8 @@ const EditUser = (): JSX.Element => {
     <Helmet> <title>Abacus | Edit User</title> </Helmet>
     <h1>{user.display_name}</h1>
     <Block transparent size='xs-12'>
-        <Button content='Back' icon='arrow left' labelPosition='left' onClick={history.goBack} />
-      </Block>
+      <Button content='Back' icon='arrow left' labelPosition='left' onClick={history.goBack} />
+    </Block>
     <StatusMessage message={message} onDismiss={() => setMessage(undefined)} />
     <Menu attached='top' tabular>
       <Menu.Item active>User Info</Menu.Item>
