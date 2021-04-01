@@ -1,6 +1,6 @@
 import { User } from "abacus"
 import React, { ChangeEvent, useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { useHistory, useParams } from "react-router-dom"
 import { Button, Form, Input, Menu, Select } from "semantic-ui-react"
 import config from 'environment'
 import { Block, NotFound, PageLoading } from "components"
@@ -23,6 +23,8 @@ const EditUser = (): JSX.Element => {
   const [isMounted, setMounted] = useState(true)
   const [message, setMessage] = useState<StatusMessageType>()
   const { uid } = useParams<{ uid: string }>()
+
+  const history = useHistory()
 
   const handleChange = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>) => setFormUser({ ...formUser, [name]: value })
   const handleSelectChange = (_: never, { name, value }: HTMLInputElement) => setFormUser({ ...formUser, [name]: value })
@@ -75,6 +77,9 @@ const EditUser = (): JSX.Element => {
   return <>
     <Helmet> <title>Abacus | Edit User</title> </Helmet>
     <h1>{user.display_name}</h1>
+    <Block transparent size='xs-12'>
+        <Button content='Back' icon='arrow left' labelPosition='left' onClick={history.goBack} />
+      </Block>
     <StatusMessage message={message} onDismiss={() => setMessage(undefined)} />
     <Menu attached='top' tabular>
       <Menu.Item active>User Info</Menu.Item>

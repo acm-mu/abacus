@@ -73,6 +73,9 @@ const UploadUsers = (): JSX.Element => {
     <Helmet> <title>Abacus |  Admin Upload Users</title> </Helmet>
     <Block size='xs-12' transparent>
       <h1>Upload Users</h1>
+      <Block transparent size='xs-12'>
+        <Button content='Back' icon='arrow left' labelPosition='left' onClick={history.goBack} />
+      </Block>
 
       <FileDialog file={file} onChange={uploadChange} control={(file?: File) => (
         file ?

@@ -123,7 +123,7 @@ const CreateUser = ({ trigger, callback }: CreateUserProps): JSX.Element => {
           </Form>
         </Modal.Description>
       </Modal.Content>
-      <Modal.Actions>
+      <Modal.Actions className={'left-align'}>
         <Button onClick={() => { setOpen(false) }}>Cancel</Button>
         <Button positive onClick={handleSubmit}>Create</Button>
       </Modal.Actions>
