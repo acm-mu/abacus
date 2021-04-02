@@ -85,13 +85,15 @@ const problem = (): JSX.Element => {
         to={`/blue/problems/${problem?.id}/submit`}
         content="Submit"
         icon="upload"
+        labelPosition='left'
       />
       <ClarificationModal
         title={`${problem.name} | `}
         context={{ type: 'pid', id: problem.pid }}
-        trigger={<Button content="Ask" icon="question" />}
+        trigger={<Button content="Ask" icon="question" labelPosition='left' />}
       />
       <Button
+        labelPosition='left'
         as={Link}
         to={`${config.API_URL}/sample_files?pid=${problem.pid}`}
         content="Skeletons"

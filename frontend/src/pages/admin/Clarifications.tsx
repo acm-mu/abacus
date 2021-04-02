@@ -85,7 +85,7 @@ const Clarifications = (): JSX.Element => {
 
     <ClarificationModal trigger={<Button content="Create Clarification" />} callback={loadClarifications} />
     {clarifications.filter(clarification => clarification.checked).length ?
-      <Button content="Delete Clarification(s)" negative onClick={deleteSelected} loading={isDeleting} disabled={isDeleting} /> : <></>}
+      <Button content="Delete Selected" negative onClick={deleteSelected} loading={isDeleting} disabled={isDeleting} /> : <></>}
 
     <Block transparent size='xs-12'>
       <Checkbox toggle label='Show Closed' checked={showClosed} onChange={onFilterChange} />
@@ -118,7 +118,7 @@ const Clarifications = (): JSX.Element => {
                   </Table.Cell>
                   <Table.Cell>
                     <Link to={`/admin/clarifications/${clarification.cid}`}>{clarification.cid.substring(0, 7)}</Link>
-                    {!clarification.open ? <Label style={{ float: 'right' }} content='Closed' /> : <></>}
+                    {!clarification.open ? <Label color='red' style={{ float: 'right' }} content='Closed' /> : <></>}
                   </Table.Cell>
                   <Table.Cell>{clarification.type}</Table.Cell>
                   <Table.Cell><DivisionLabel division={clarification.division} /></Table.Cell>

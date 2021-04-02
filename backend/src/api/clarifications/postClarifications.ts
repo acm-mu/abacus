@@ -36,7 +36,8 @@ export const schema: Record<string, ParamSchema> = {
   context: {
     in: 'body',
     isObject: true,
-    notEmpty: true
+    notEmpty: true,
+    optional: true
   }
 }
 

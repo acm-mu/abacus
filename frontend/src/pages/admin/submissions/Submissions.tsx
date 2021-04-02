@@ -93,7 +93,7 @@ const Submissions = (): JSX.Element => {
     <Helmet><title>Abacus | Admin Submissions</title></Helmet>
     <Button content="Download Submissions" onClick={downloadSubmissions} />
     {submissions.filter(submission => submission.checked).length ?
-      <Button content="Delete Submission(s)" negative onClick={deleteSelected} loading={isDeleting} disabled={isDeleting} /> : <></>}
+      <Button content="Delete Selected" negative onClick={deleteSelected} loading={isDeleting} disabled={isDeleting} /> : <></>}
     <Checkbox toggle label="Show Released" checked={showReleased} onClick={onFilterChange} />
 
     <Table singleLine>
