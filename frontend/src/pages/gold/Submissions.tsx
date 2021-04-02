@@ -64,7 +64,7 @@ const Submissions = (): JSX.Element => {
             ))) : (
               <Table.Row>
                 <Table.Cell colSpan={'100%'}>
-                  You don&lsquo;t have any submissions yet. Go write some code!
+                  You don&lsquo;t have any submissions yet. Go create a project!
                 </Table.Cell>
               </Table.Row>
             )}

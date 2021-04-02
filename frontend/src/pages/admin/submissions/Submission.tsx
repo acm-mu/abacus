@@ -51,7 +51,6 @@ const submission = (): JSX.Element => {
       body: JSON.stringify({ sid: submission.sid })
     })
     if (response.ok) {
-      setDeleting(false)
       history.push("/admin/submissions")
     }
     setDeleting(false)

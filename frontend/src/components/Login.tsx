@@ -35,7 +35,6 @@ const LoginModal = ({ trigger, open }: LoginModalProps): JSX.Element => {
         const { accessToken, ...user } = await response.json()
         localStorage.setItem('accessToken', accessToken)
         setUser(user)
-        setLoggingIn(false)
         history.push(userHome(user))
       } else {
         const { message } = await response.json()

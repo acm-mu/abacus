@@ -74,9 +74,9 @@ const ClarificationPage = (): JSX.Element => {
 
     if (response.ok) {
       await loadClarification()
-      setReplying(false)
       setBody('')
     }
+    setReplying(false)
   }
 
   const handleChange = ({ target: { value } }: React.ChangeEvent<HTMLTextAreaElement>) => setBody(value)
@@ -94,7 +94,6 @@ const ClarificationPage = (): JSX.Element => {
       body: JSON.stringify({ cid: clarification.cid, open })
     })
     if (response.ok) {
-      setChangingState(false)
       loadClarification()
     }
     setChangingState(false)

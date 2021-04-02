@@ -13,9 +13,10 @@ import './ProblemEditor.scss'
 
 interface ProblemEditorProps {
   problem?: Problem
-  handleSubmit: (problem: Problem) => void;
+  handleSubmit: (problem: Problem) => Promise<void>;
 }
 
+const [isSaving, setSaving] = useState(false)
 const ProblemEditor = ({ problem: defaultProblem, handleSubmit }: ProblemEditorProps): JSX.Element => {
   const [problem, setProblem] = useState<Problem>(defaultProblem || {
     pid: '',
@@ -24,6 +25,12 @@ const ProblemEditor = ({ problem: defaultProblem, handleSubmit }: ProblemEditorP
     division: '',
     description: ''
   })
+
+  const submitPress = () => {
+    setSaving(true)
+    handleSubmit(problem)
+      .then(() => setSaving(false))
+  }
 
   const [activeItem, setActiveItem] = useState<string>('problem-info')
   const handleItemClick = (_event: MouseEvent, data: MenuItemProps) => setActiveItem(data.tab)
@@ -57,7 +64,7 @@ const ProblemEditor = ({ problem: defaultProblem, handleSubmit }: ProblemEditorP
       })()}
       <Divider />
       <div className={'right-align'}>
-        <Button primary onClick={() => handleSubmit(problem)}>Save</Button>
+        <Button primary onClick={submitPress} loading={isSaving} disabled={isSaving}>Save</Button>
         <Button onClick={history.goBack}>Cancel</Button>
       </div>
     </Block>
