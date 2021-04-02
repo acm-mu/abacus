@@ -2,13 +2,11 @@ import { Context, Notification } from 'abacus';
 import React, { useContext, useEffect, useState } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Message } from 'semantic-ui-react';
-import io from 'socket.io-client';
-import config from '../environment';
 import { v4 as uuidv4 } from 'uuid';
-import './Notifications.scss';
 import { Link } from 'react-router-dom';
-import AppContext from 'AppContext';
 import { userHome } from 'utils';
+import { SocketContext, AppContext } from 'context';
+import './Notifications.scss';
 
 declare global {
   interface Window {
@@ -20,6 +18,7 @@ declare global {
 const Notifications = (): JSX.Element => {
   const [notifications, setNotifications] = useState<Notification[]>(window.notifications || [])
   const { user } = useContext(AppContext)
+  const socket = useContext(SocketContext)
 
   window.sendNotification = (notification: Notification) => {
     if (!notification.id) notification.id = uuidv4()
@@ -34,8 +33,7 @@ const Notifications = (): JSX.Element => {
   }
 
   useEffect(() => {
-    const socket = io(config.API_URL, { transports: ['websocket'] })
-    socket.on('notification', (notification: Notification) => {
+    socket?.on('notification', (notification: Notification) => {
       if (forMe(notification)) window.sendNotification(notification)
     })
   }, [])

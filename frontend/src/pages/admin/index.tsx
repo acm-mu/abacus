@@ -18,7 +18,7 @@ import EditUser from "./users/EditUser";
 import UploadUsers from "./users/UploadUsers";
 import UploadProblems from "./problems/UploadProblems";
 import LoginModal from "components/Login";
-import AppContext from "AppContext";
+import { AppContext } from "context";
 import DefaultNavigation from "pages/DefaultNavigation";
 import Clarifications from "./Clarifications";
 import ClarificationPage from "./Clarification";

@@ -5,7 +5,7 @@ import { Table } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { Block, Countdown, PageLoading, Unauthorized } from "components";
 import config from 'environment'
-import AppContext from "AppContext";
+import { AppContext } from "context";
 import "components/Icons.scss";
 import { Helmet } from "react-helmet";
 

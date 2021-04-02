@@ -4,7 +4,7 @@ import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
 import { Block, Countdown, PageLoading, Unauthorized } from 'components'
-import AppContext from 'AppContext'
+import { AppContext } from 'context'
 import { Helmet } from 'react-helmet'
 import config from 'environment'
 

@@ -4,7 +4,7 @@ import { Table, Button } from 'semantic-ui-react'
 import { saveAs } from 'file-saver';
 import { Link } from 'react-router-dom'
 import config from 'environment'
-import AppContext from 'AppContext'
+import { AppContext } from 'context'
 import CreateUser from './CreateUser'
 import { Helmet } from 'react-helmet';
 import { DivisionLabel, PageLoading, StatusMessage } from 'components';

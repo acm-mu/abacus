@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Switch } from "react-router-dom";
 import { Route, useParams } from "react-router";
 import SubmitPractice from "./Submit";
-import AppContext from "AppContext";
+import { AppContext } from "context";
 import { Block, NotFound } from "components";
 
 import PracticeSubmission from "./Submission";

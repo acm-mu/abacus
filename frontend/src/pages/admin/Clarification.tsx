@@ -1,5 +1,5 @@
 import { Clarification, Submission } from 'abacus';
-import AppContext from 'AppContext';
+import { AppContext } from 'context';
 import { Block, DivisionLabel, NotFound, PageLoading } from 'components';
 import React, { useContext, useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';

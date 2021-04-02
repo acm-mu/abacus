@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { NavLink } from "react-router-dom";
 import { Menu } from "semantic-ui-react";
 import { Navigation } from "components";
-import AppContext from "AppContext";
+import { AppContext } from "context";
 
 const BlueNavigation = (): JSX.Element => {
   const { settings } = useContext(AppContext)

@@ -4,7 +4,7 @@ import { Form, Button, Breadcrumb } from 'semantic-ui-react'
 import { Link, useHistory, useParams } from 'react-router-dom'
 import { Block, Countdown, FileDialog, NotFound, PageLoading } from 'components'
 import config from 'environment'
-import AppContext from 'AppContext'
+import { AppContext } from 'context'
 import { Language, languages } from 'utils'
 import { Helmet } from 'react-helmet'
 

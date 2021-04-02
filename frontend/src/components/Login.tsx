@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useContext, useState } from "react";
 import { useHistory } from "react-router";
 import { Button, Form, Modal } from "semantic-ui-react";
-import AppContext from "AppContext";
+import { AppContext } from "context";
 import config from 'environment'
 import fulllogo from 'assets/fulllogo.png'
 import { userHome } from "utils";

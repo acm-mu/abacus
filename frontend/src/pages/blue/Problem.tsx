@@ -5,7 +5,7 @@ import { Breadcrumb, Button, Divider } from "semantic-ui-react";
 import MDEditor from "@uiw/react-md-editor";
 import { Block, Countdown, NotFound, ClarificationModal, PageLoading } from 'components'
 import config from 'environment'
-import AppContext from "AppContext";
+import { AppContext } from "context";
 import "./Problem.scss";
 import { Helmet } from "react-helmet";
 import { userHome } from "utils";

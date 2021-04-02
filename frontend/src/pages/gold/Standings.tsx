@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import AppContext from 'AppContext';
+import { AppContext } from 'context';
 import { Block, Countdown } from 'components'
 import { Helmet } from 'react-helmet';
 
