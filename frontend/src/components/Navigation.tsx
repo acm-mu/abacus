@@ -15,7 +15,7 @@ type Props = {
 const Navigation = (props: Props): JSX.Element => {
   const history = useHistory()
   const { user, setUser } = useContext(AppContext)
-  const [isMounted, setMounted] = useState<boolean>(false)
+  const [isMounted, setMounted] = useState(false)
 
   const handleLogout = () => {
     if (isMounted) {

@@ -16,10 +16,11 @@ type SortConfig = {
 }
 
 const Problems = (): JSX.Element => {
-  const [isLoading, setLoading] = useState<boolean>(true)
+  const [isLoading, setLoading] = useState(true)
   const [problems, setProblems] = useState<ProblemItem[]>([])
   const [submissions, setSubmissions] = useState<{ [key: string]: Submission[] }>()
-  const [isMounted, setMounted] = useState<boolean>(true)
+  const [isMounted, setMounted] = useState(true)
+  const [isDeleting, setDeleting] = useState(false)
   const [activeDivision, setActiveDivision] = useState('blue')
   const activeProblems = useMemo(() => problems.filter(problem => problem.division == activeDivision), [problems, activeDivision])
 
@@ -94,6 +95,7 @@ const Problems = (): JSX.Element => {
     setProblems(problems.map(problem => problem.division == activeDivision ? ({ ...problem, checked }) : problem))
 
   const deleteSelected = async () => {
+    setDeleting(true)
     const problemsToDelete = activeProblems.filter(problem => problem.checked).map(problem => problem.pid)
     const response = await fetch(`${config.API_URL}/problems`, {
       method: 'DELETE',
@@ -106,6 +108,7 @@ const Problems = (): JSX.Element => {
     if (response.ok) {
       setProblems(problems.filter(problem => !problemsToDelete.includes(problem.pid)))
     }
+    setDeleting(false)
   }
 
   const handleItemClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, { name }: MenuItemProps) =>
@@ -120,7 +123,7 @@ const Problems = (): JSX.Element => {
     <Link to='/admin/problems/upload'><Button content="Upload Problems" /></Link>
     <Button content="Download Problems" onClick={downloadProblems} />
     {problems.filter(problem => problem.division == activeDivision && problem.checked).length ?
-      <Button content="Delete Selected" negative onClick={deleteSelected} /> : <></>}
+      <Button content="Delete Selected" negative onClick={deleteSelected} loading={isDeleting} disabled={isDeleting} /> : <></>}
 
     <Block size='xs-12' transparent>
       <Menu pointing secondary>
@@ -151,25 +154,29 @@ const Problems = (): JSX.Element => {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {activeProblems.map((problem: ProblemItem, index: number) => (
-            <Table.Row key={index}>
-              <Table.Cell>
-                <input
-                  type='checkbox'
-                  checked={problem.checked}
-                  id={problem.pid}
-                  onChange={handleChange} />
-              </Table.Cell>
-              <Table.Cell><Link to={`/admin/problems/${problem.pid}`}>{problem.id}</Link></Table.Cell>
-              <Table.Cell><DivisionLabel division={problem.division} /></Table.Cell>
-              <Table.Cell><Link to={`/admin/problems/${problem.pid}`}>{problem.name}</Link></Table.Cell>
-              <Table.Cell>{problem.tests?.length}</Table.Cell>
-              {submissions && <>
-                <Table.Cell>{problem.pid in submissions ? submissions[problem.pid].filter((p) => p.score > 0).length : 0}</Table.Cell>
-                <Table.Cell>{problem.pid in submissions ? submissions[problem.pid].length : 0}</Table.Cell>
-              </>}
-            </Table.Row>
-          ))}
+          {problems.length == 0 ?
+            <Table.Row>
+              <Table.Cell colSpan={'100%'} style={{ textAlign: "center" }}>No Problems</Table.Cell>
+            </Table.Row> :
+            (activeProblems.map((problem: ProblemItem, index: number) => (
+              <Table.Row key={index}>
+                <Table.Cell>
+                  <input
+                    type='checkbox'
+                    checked={problem.checked}
+                    id={problem.pid}
+                    onChange={handleChange} />
+                </Table.Cell>
+                <Table.Cell><Link to={`/admin/problems/${problem.pid}`}>{problem.id}</Link></Table.Cell>
+                <Table.Cell><DivisionLabel division={problem.division} /></Table.Cell>
+                <Table.Cell><Link to={`/admin/problems/${problem.pid}`}>{problem.name}</Link></Table.Cell>
+                <Table.Cell>{problem.tests?.length}</Table.Cell>
+                {submissions && <>
+                  <Table.Cell>{problem.pid in submissions ? submissions[problem.pid].filter((p) => p.score > 0).length : 0}</Table.Cell>
+                  <Table.Cell>{problem.pid in submissions ? submissions[problem.pid].length : 0}</Table.Cell>
+                </>}
+              </Table.Row>
+            )))}
         </Table.Body>
       </Table>
     </Block>

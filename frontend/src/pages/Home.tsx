@@ -15,9 +15,9 @@ type TeamType = {
 
 const Home = (): JSX.Element => {
 
-  const [isLoading, setLoading] = useState<boolean>(true)
+  const [isLoading, setLoading] = useState(true)
   const [teams, setTeams] = useState<TeamType[]>([])
-  const [isMounted, setMounted] = useState<boolean>(true)
+  const [isMounted, setMounted] = useState(true)
 
   const loadTeams = () => {
     fetch('https://mu.acm.org/api/registered_teams')

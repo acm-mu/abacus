@@ -89,7 +89,8 @@ export const getClarifications = async (req: Request, res: Response) => {
           uid: user?.uid,
           username: user?.username,
           display_name: user?.display_name,
-          division: user?.division
+          division: user?.division,
+          school: user?.school
         }
       }
     })

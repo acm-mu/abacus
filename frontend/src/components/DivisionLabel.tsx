@@ -7,9 +7,9 @@ interface DivisionLabelProps {
 
 const DivisionLabel = ({ division }: DivisionLabelProps): JSX.Element => {
   switch (division) {
-    case 'gold': return <Label color='yellow' content="Gold" />
-    case 'blue': return <Label color='blue' content="Blue" />
-    case 'public': return <Label content="Public" />
+    case 'gold': return <Label className='gold' color='yellow' content="Gold" />
+    case 'blue': return <Label className='blue' color='blue' content="Blue" />
+    case 'public': return <Label className='public' content="Public" />
     default: return <></>
   }
 }

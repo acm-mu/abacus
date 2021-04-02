@@ -12,8 +12,9 @@ const submission = (): JSX.Element => {
   const [submission, setSubmission] = useState<Submission>()
   const [isLoading, setLoading] = useState(true)
   const [isMounted, setMounted] = useState(true)
-  const [rerunning, setRerunning] = useState(false)
-  const [releaseLoading, setReleaseLoading] = useState(false)
+  const [isRerunning, setRerunning] = useState(false)
+  const [isReleasing, setReleasing] = useState(false)
+  const [isDeleting, setDeleting] = useState(false)
 
   const history = useHistory()
 
@@ -40,6 +41,7 @@ const submission = (): JSX.Element => {
   if (!submission) return <NotFound />
 
   const deleteSubmission = async () => {
+    setDeleting(true)
     const response = await fetch(`${config.API_URL}/submissions`, {
       method: 'DELETE',
       headers: {
@@ -51,6 +53,7 @@ const submission = (): JSX.Element => {
     if (response.ok) {
       history.push("/admin/submissions")
     }
+    setDeleting(false)
   }
 
   const rerun = async () => {
@@ -75,7 +78,7 @@ const submission = (): JSX.Element => {
   const release = async () => {
     if (!setSubmission) return
     if (!submission) return
-    setReleaseLoading(true)
+    setReleasing(true)
     const response = await fetch(`${config.API_URL}/submissions`, {
       method: 'PUT',
       headers: {
@@ -88,7 +91,7 @@ const submission = (): JSX.Element => {
       const result = await response.json()
       setSubmission({ ...submission, released: result.released })
     }
-    setReleaseLoading(false)
+    setReleasing(false)
   }
 
   const download = () => submission?.source && submission.filename &&
@@ -98,15 +101,16 @@ const submission = (): JSX.Element => {
   return <>
     <Helmet> <title>Abacus | Admin Submission</title> </Helmet>
 
-    <Button disabled={rerunning} loading={rerunning} content="Rerun" icon="redo" labelPosition="left" onClick={rerun} />
+    <Button content='Back' icon='arrow left' labelPosition='left' onClick={history.goBack} />
+    <Button disabled={isRerunning} loading={isRerunning} content="Rerun" icon="redo" labelPosition="left" onClick={rerun} />
 
     {submission.released ?
       <Button icon="check" positive content="Released" labelPosition="left" /> :
-      <Button loading={releaseLoading} disabled={releaseLoading} icon="right arrow" content="Release" labelPosition="left" onClick={release} />}
+      <Button loading={isReleasing} disabled={isReleasing} icon="right arrow" content="Release" labelPosition="left" onClick={release} />}
     <Button content="Download" icon="download" labelPosition="left" onClick={download} />
-    <Button content="Delete" icon="trash" negative labelPosition="left" onClick={deleteSubmission} />
+    <Button disabled={isDeleting} loading={isDeleting} content="Delete" icon="trash" negative labelPosition="left" onClick={deleteSubmission} />
 
-    <SubmissionContext.Provider value={{ submission, rerunning }}>
+    <SubmissionContext.Provider value={{ submission, rerunning: isRerunning }}>
       {submission.division == 'blue' && <BlueSubmission />}
       {submission.division == 'gold' && <GoldSubmission />}
     </SubmissionContext.Provider>

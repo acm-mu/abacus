@@ -79,6 +79,9 @@ const UploadProblems = (): JSX.Element => {
 
     <Block size='xs-12' transparent>
       <h1>Upload Problems</h1>
+      <Block transparent size='xs-12'>
+        <Button content='Back' icon='arrow left' labelPosition='left' onClick={history.goBack} />
+      </Block>
 
       {error ? <StatusMessage message={{ type: 'error', message: 'An Error Has Occurred!' }} /> : <></>}
 
