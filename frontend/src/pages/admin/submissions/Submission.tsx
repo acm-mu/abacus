@@ -1,11 +1,10 @@
 import { Submission } from 'abacus'
 import React, { useState, useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { BlueSubmission, GoldSubmission, NotFound, PageLoading } from 'components'
+import { NotFound, PageLoading, SubmissionView } from 'components'
 import config from 'environment'
 import { Helmet } from 'react-helmet'
 import { Button } from 'semantic-ui-react'
-import SubmissionContext from 'components/submission/SubmissionContext'
 
 const submission = (): JSX.Element => {
   const { sid } = useParams<{ sid: string }>()
@@ -110,10 +109,7 @@ const submission = (): JSX.Element => {
     <Button content="Download" icon="download" labelPosition="left" onClick={download} />
     <Button disabled={isDeleting} loading={isDeleting} content="Delete" icon="trash" negative labelPosition="left" onClick={deleteSubmission} />
 
-    <SubmissionContext.Provider value={{ submission, rerunning: isRerunning }}>
-      {submission.division == 'blue' && <BlueSubmission />}
-      {submission.division == 'gold' && <GoldSubmission />}
-    </SubmissionContext.Provider>
+    <SubmissionView submission={submission} rerunning={isRerunning} />
   </>
 }
 
