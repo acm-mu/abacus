@@ -41,7 +41,7 @@ const Home = (): JSX.Element => {
   }, []);
 
   const timeSubmissions = useMemo(() => {
-    const numBuckets = (Number(settings?.end_date) - Number(settings?.start_date)) / (30 * 60 * 1000)
+    const numBuckets = Math.ceil((Number(settings?.end_date) - Number(settings?.start_date)) / (30 * 60 * 1000))
 
     const data: { [key: string]: { name: string, data: number[] } } = Object.assign({}, ...problems.map(problem => ({
       [problem.pid]: {
