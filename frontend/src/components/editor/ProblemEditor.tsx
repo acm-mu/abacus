@@ -63,7 +63,7 @@ const ProblemEditor = ({ problem: defaultProblem, handleSubmit }: ProblemEditorP
       })()}
       <Divider />
       <Button floated='right' onClick={history.goBack}>Cancel</Button>
-      <Button floated='right' primary onClick={() => handleSubmit(problem)}>Save</Button>
+      <Button floated='right' primary onClick={submitPress} loading={isSaving} disabled={isSaving}>Save</Button>
     </Block>
   </>
 }
