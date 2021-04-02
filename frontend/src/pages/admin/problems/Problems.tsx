@@ -81,10 +81,12 @@ const Problems = (): JSX.Element => {
   }
 
   const downloadProblems = async () => {
-    const response = await fetch(`${config.API_URL}/problems?columns=description,skeletons,solutions,tests`)
+    const response = await fetch(`${config.API_URL}/problems?columns=description,design_document,project_id,skeletons,solutions,tests`, {
+      headers: { Authorization: `Bearer ${localStorage.accessToken}` }
+    })
     if (response.ok) {
-      const problems = await response.json()
-      saveAs(new File([JSON.stringify(problems, null, '\t')], 'problems.json', { type: 'text/json;charset=utf-8' }))
+      const sanitized = JSON.stringify(Object.values(await response.json()), null, '\t')
+      saveAs(new File([sanitized], 'problems.json', { type: 'text/json;charset=utf-8' }))
     }
   }
 

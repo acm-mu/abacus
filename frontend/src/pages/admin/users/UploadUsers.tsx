@@ -2,7 +2,7 @@ import { User } from 'abacus';
 import { createHash } from 'crypto';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Button, Label, Table } from 'semantic-ui-react';
+import { Button, Label, Message, Table } from 'semantic-ui-react';
 import { Block, FileDialog } from 'components';
 import config from "environment"
 import { Helmet } from 'react-helmet';
@@ -14,37 +14,53 @@ interface UserItem extends User {
 const UploadUsers = (): JSX.Element => {
   const history = useHistory()
   const [file, setFile] = useState<File>()
-  const [users, setUsers] = useState<{ [key: string]: User }>()
+  const [existingUsers, setExistingUsers] = useState<{ [key: string]: User }>()
   const [newUsers, setNewUsers] = useState<UserItem[]>()
+  const [isMounted, setMounted] = useState(true)
 
   const uploadChange = ({ target: { files } }: ChangeEvent<HTMLInputElement>) => {
-    if (files?.length) {
-      const reader = new FileReader();
-      reader.onload = async ({ target }: ProgressEvent<FileReader>) => {
-        const text = target?.result as string
-        if (text)
-          setNewUsers(JSON.parse(text).map((user: User) => ({ ...user, checked: true })))
+    if (!files?.length) return
+
+    const reader = new FileReader();
+
+    reader.onload = async ({ target }: ProgressEvent<FileReader>) => {
+      const text = target?.result as string
+      if (text) {
+        let users: UserItem[] = JSON.parse(text).map((user: User) => ({ ...user, checked: true }))
+
+        if (existingUsers) users = users.filter((user: UserItem) => filterUser(user, existingUsers[user.uid]))
+
+        setNewUsers(users)
       }
-      reader.readAsText(files[0])
-      setFile(files[0])
     }
+
+    reader.readAsText(files[0])
+    setFile(files[0])
+  }
+
+  const loadExistingUsers = async () => {
+    const response = await fetch(`${config.API_URL}/users`, {
+      headers: { Authorization: `Bearer ${localStorage.accessToken}` }
+    })
+
+    if (!response.ok || !isMounted) return
+
+    setExistingUsers(await response.json())
   }
 
   useEffect(() => {
-    fetch(`${config.API_URL}/users`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.accessToken}`
-      }
-    })
-      .then(res => res.json())
-      .then(res => setUsers(res))
+    loadExistingUsers()
+
+    return () => setMounted(false)
   }, [])
 
   const filterUser = (u1: UserItem, u2: User) => {
     if (!u2) return true
-    const { ...user1 } = u1
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { checked, ...user1 } = u1
     const { ...user2 } = u2
-    user1.password = createHash('sha256').update(user1.password).digest('hex')
+    if (user1.password) user1.password = createHash('sha256').update(user1.password).digest('hex')
+
     return JSON.stringify(user1, Object.keys(user1).sort()) !== JSON.stringify(user2, Object.keys(user2).sort())
   }
 
@@ -89,12 +105,12 @@ const UploadUsers = (): JSX.Element => {
             <i>(Or click and choose file)</i>
           </p>
       )} />
-      {newUsers ? <>
+      {newUsers?.length ? <>
         <Table>
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell collapsing>
-                <input type="checkbox" onChange={checkAll} />
+                <input type="checkbox" onChange={checkAll} checked={newUsers.length > 0 && newUsers.filter(user => !user.checked).length == 0} />
               </Table.HeaderCell>
               <Table.HeaderCell>User Id</Table.HeaderCell>
               <Table.HeaderCell>Role</Table.HeaderCell>
@@ -105,33 +121,32 @@ const UploadUsers = (): JSX.Element => {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {newUsers.filter(user => users ? filterUser(user, users[user.uid]) : true)
-              .map((user: UserItem, index: number) => (
-                <Table.Row key={index}>
-                  <Table.HeaderCell collapsing>
-                    <input
-                      type="checkbox"
-                      checked={user.checked}
-                      id={user.uid}
-                      onChange={handleChange} />
-                  </Table.HeaderCell>
-                  <Table.Cell>
-                    {user.uid}
-                    {Object.keys(users || {}).includes(user.uid) ?
-                      <Label color='blue' style={{ float: 'right' }}>Update User</Label> :
-                      <Label color='green' style={{ float: 'right' }}>Brand New</Label>}
-                  </Table.Cell>
-                  <Table.Cell>{user.role}</Table.Cell>
-                  <Table.Cell>{user.division}</Table.Cell>
-                  <Table.Cell>{user.username}</Table.Cell>
-                  <Table.Cell>{user.password}</Table.Cell>
-                  <Table.Cell>{user.display_name}</Table.Cell>
-                </Table.Row>
-              ))}
+            {newUsers.map((user, index) => (
+              <Table.Row key={index}>
+                <Table.HeaderCell collapsing>
+                  <input
+                    type="checkbox"
+                    checked={user.checked}
+                    id={user.uid}
+                    onChange={handleChange} />
+                </Table.HeaderCell>
+                <Table.Cell>
+                  {user.uid}
+                  {Object.keys(existingUsers || {}).includes(user.uid) ?
+                    <Label color='blue' style={{ float: 'right' }}>Update User</Label> :
+                    <Label color='green' style={{ float: 'right' }}>Brand New</Label>}
+                </Table.Cell>
+                <Table.Cell>{user.role}</Table.Cell>
+                <Table.Cell>{user.division}</Table.Cell>
+                <Table.Cell>{user.username}</Table.Cell>
+                <Table.Cell>{user.password}</Table.Cell>
+                <Table.Cell>{user.display_name}</Table.Cell>
+              </Table.Row>
+            ))}
           </Table.Body>
         </Table>
         <Button primary onClick={handleSubmit}>Import user(s)</Button>
-      </> : <></>}
+      </> : newUsers ? <Message warning icon='warning sign' content="The file contains no new or modified user(s)." /> : <></>}
     </Block>
   </>
 }
