@@ -19,14 +19,16 @@ const CreateUser = ({ trigger, callback }: CreateUserProps): JSX.Element => {
     password: ''
   }
 
-  const [open, setOpen] = useState<boolean>(false)
+  const [open, setOpen] = useState(false)
   const [error, setError] = useState<string>()
   const [user, setUser] = useState(empty)
+  const [isCreating, setCreating] = useState(false)
 
   const handleChange = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>) => setUser({ ...user, [name]: value })
   const handleSelectChange = (_: never, { name, value }: HTMLInputElement) => setUser({ ...user, [name]: value })
 
   const handleSubmit = async () => {
+    setCreating(true)
     const response = await fetch(`${config.API_URL}/users`, {
       method: 'POST',
       headers: {
@@ -43,6 +45,8 @@ const CreateUser = ({ trigger, callback }: CreateUserProps): JSX.Element => {
       const body = await response.json()
       setError(body.message)
     }
+
+    setCreating(false)
   }
 
   return (
@@ -124,8 +128,8 @@ const CreateUser = ({ trigger, callback }: CreateUserProps): JSX.Element => {
         </Modal.Description>
       </Modal.Content>
       <Modal.Actions>
+        <Button primary onClick={handleSubmit} loading={isCreating} disabled={isCreating}>Create</Button>
         <Button onClick={() => { setOpen(false) }}>Cancel</Button>
-        <Button positive onClick={handleSubmit}>Create</Button>
       </Modal.Actions>
     </Modal>
   )

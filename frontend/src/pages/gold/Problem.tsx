@@ -2,7 +2,7 @@ import { Problem, Submission } from 'abacus'
 import React, { useContext, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Block, Countdown, NotFound, ClarificationModal, PageLoading } from 'components'
-import { Button, Message } from 'semantic-ui-react'
+import { Breadcrumb, Button, Message } from 'semantic-ui-react'
 import MDEditor from '@uiw/react-md-editor'
 import config from "environment"
 import { AppContext } from 'context'
@@ -57,6 +57,13 @@ const problem = (): JSX.Element => {
   return <>
     <Helmet> <title>Abacus | {problem.name}</title> </Helmet>
     <Countdown />
+    <Block transparent size='xs-12'>
+      <Breadcrumb>
+        <Breadcrumb.Section as={Link} to='/gold/problems' content="Problems" />
+        <Breadcrumb.Divider />
+        <Breadcrumb.Section active content={problem.name} />
+      </Breadcrumb>
+    </Block>
     <Block size='xs-9' className='problem'>
       <h1>Problem {problem?.id}: {problem?.name}</h1>
       <hr />

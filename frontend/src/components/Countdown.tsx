@@ -9,7 +9,7 @@ import "./Countdown.scss";
 const Countdown = (): JSX.Element => {
   const { settings } = useContext(AppContext)
   const [time, setTime] = useState<Date>(new Date())
-  const [isMounted, setMounted] = useState<boolean>(true)
+  const [isMounted, setMounted] = useState(true)
 
   const diff = (date1: Date, date2: Date) => date1.getTime() - date2.getTime();
 

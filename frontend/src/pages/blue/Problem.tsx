@@ -1,7 +1,7 @@
 import { Problem, Submission } from "abacus";
 import React, { useState, useEffect, useContext, useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Button, Divider } from "semantic-ui-react";
+import { Breadcrumb, Button, Divider } from "semantic-ui-react";
 import MDEditor from "@uiw/react-md-editor";
 import { Block, Countdown, NotFound, ClarificationModal, PageLoading } from 'components'
 import config from 'environment'
@@ -66,6 +66,13 @@ const problem = (): JSX.Element => {
   return <>
     <Helmet> <title>Abacus | {problem.name}</title> </Helmet>
     <Countdown />
+    <Block transparent size='xs-12'>
+      <Breadcrumb>
+        <Breadcrumb.Section as={Link} to='/blue/problems' content="Problems" />
+        <Breadcrumb.Divider />
+        <Breadcrumb.Section active content={problem.name} />
+      </Breadcrumb>
+    </Block>
     <Block size='xs-9' className='problem'>
       <h1>Problem {problem.id}: {problem.name}</h1>
       <Divider />
@@ -78,18 +85,25 @@ const problem = (): JSX.Element => {
         to={`/blue/problems/${problem?.id}/submit`}
         content="Submit"
         icon="upload"
+        labelPosition='left'
       />
       <ClarificationModal
         title={`${problem.name} | `}
         context={{ type: 'pid', id: problem.pid }}
-        trigger={<Button content="Ask" icon="question" />}
+        trigger={<Button content="Ask" icon="question" labelPosition='left' />}
+      />
+      <Button
+        labelPosition='left'
+        as={Link}
+        to={`${config.API_URL}/sample_files?pid=${problem.pid}`}
+        content="Skeletons"
+        icon="download"
       />
       {latestSubmission}
       <Divider />
       <p><b>Problem ID:</b> {problem.id}</p>
-      <p><b>CPU Time limit:</b> {problem.cpu_time_limit}</p>
-      <p><b>Memory limit:</b> {problem.memory_limit}</p>
-      <p><b>Download:</b> <a href={`${config.API_URL}/sample_files?pid=${problem.pid}`}>Sample data files</a></p>
+      {problem.cpu_time_limit ? <p><b>CPU Time limit:</b> {problem.cpu_time_limit}</p> : <></>}
+      {problem.memory_limit ? <p><b>Memory limit:</b> {problem.memory_limit}</p> : <></>}
     </Block>
 
   </>

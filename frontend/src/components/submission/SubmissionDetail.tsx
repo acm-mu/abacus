@@ -17,10 +17,10 @@ const SubmissionDetail = (): JSX.Element => {
 
   const showUser = submission.tid != user.uid
 
-  const submission_link = <Table.Cell rowSpan={2}><Link to={`/{${user_home}/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link></Table.Cell>
+  const submission_link = <Table.Cell rowSpan={2}><Link to={`${user_home}/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link></Table.Cell>
   const submission_team = <Table.Cell>{submission.team.display_name}</Table.Cell>
   const submission_date = <Table.Cell><Moment fromNow date={submission.date * 1000} /></Table.Cell>
-  const submission_problem = <Table.Cell><Link to={`/${user_home}/problems/${submission.pid}`}>{submission.problem.name}</Link></Table.Cell>
+  const submission_problem = <Table.Cell><Link to={`${user_home}/problems/${submission.problem.id}`}>{submission.problem.name}</Link></Table.Cell>
 
   if (submission.division == 'blue') {
     return <Block transparent size='xs-12'>

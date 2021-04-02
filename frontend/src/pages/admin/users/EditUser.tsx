@@ -1,6 +1,6 @@
 import { User } from "abacus"
 import React, { ChangeEvent, useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { useHistory, useParams } from "react-router-dom"
 import { Button, Form, Input, Menu, Select } from "semantic-ui-react"
 import config from 'environment'
 import { Block, NotFound, PageLoading } from "components"
@@ -21,13 +21,17 @@ const EditUser = (): JSX.Element => {
   })
   const [isLoading, setLoading] = useState(true)
   const [isMounted, setMounted] = useState(true)
+  const [isSaving, setSaving] = useState(false)
   const [message, setMessage] = useState<StatusMessageType>()
   const { uid } = useParams<{ uid: string }>()
+
+  const history = useHistory()
 
   const handleChange = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>) => setFormUser({ ...formUser, [name]: value })
   const handleSelectChange = (_: never, { name, value }: HTMLInputElement) => setFormUser({ ...formUser, [name]: value })
 
   const handleSubmit = async () => {
+    setSaving(true)
     const response = await fetch(`${config.API_URL}/users`, {
       method: 'PUT',
       headers: {
@@ -45,6 +49,7 @@ const EditUser = (): JSX.Element => {
       const body = await response.json()
       setMessage({ type: 'error', message: body.message })
     }
+    setSaving(false)
   }
 
   const loadUser = async () => {
@@ -135,7 +140,8 @@ const EditUser = (): JSX.Element => {
           value={formUser?.password}
           placeholder='Password'
           required />
-        <Button primary type="submit">Save</Button>
+        <Button floated='right' onClick={history.goBack}>Cancel</Button>
+        <Button floated='right' primary type="submit" loading={isSaving} disabled={isSaving}>Save</Button>
       </Form>
     </Block>
   </>

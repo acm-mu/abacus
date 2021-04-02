@@ -1,10 +1,11 @@
 import { Submission } from "abacus"
 import React, { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
-import { Countdown, GoldSubmission, NotFound, PageLoading } from "components"
+import { Link, useParams } from "react-router-dom"
+import { Block, Countdown, GoldSubmission, NotFound, PageLoading } from "components"
 import { Helmet } from "react-helmet"
 import config from 'environment';
 import { SubmissionContext } from "components/submission"
+import { Breadcrumb } from "semantic-ui-react"
 
 const submission = (): JSX.Element => {
   const { sid } = useParams<{ sid: string }>()
@@ -39,6 +40,13 @@ const submission = (): JSX.Element => {
   return <>
     <Helmet> <title>Abacus | Gold Submission</title> </Helmet>
     <Countdown />
+    <Block transparent size='xs-12'>
+      <Breadcrumb>
+        <Breadcrumb.Section as={Link} to='/gold/submissions' content="Submissions" />
+        <Breadcrumb.Divider />
+        <Breadcrumb.Section active content={submission.sid.substring(0, 7)} />
+      </Breadcrumb>
+    </Block>
     <SubmissionContext.Provider value={{ submission }}>
       <GoldSubmission />
     </SubmissionContext.Provider>
