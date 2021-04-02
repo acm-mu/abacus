@@ -1,5 +1,6 @@
 import { Problem } from 'abacus'
 import React, { MouseEvent, useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import { Menu, Button, MenuItemProps, Divider } from 'semantic-ui-react'
 import { Block } from 'components'
 import ProblemInfoEditor from './ProblemInfoEditor'
@@ -11,9 +12,10 @@ import TemplateEditor from './TemplateEditor'
 
 interface ProblemEditorProps {
   problem?: Problem
-  handleSubmit: (problem: Problem) => void;
+  handleSubmit: (problem: Problem) => Promise<void>;
 }
 
+const [isSaving, setSaving] = useState(false)
 const ProblemEditor = ({ problem: defaultProblem, handleSubmit }: ProblemEditorProps): JSX.Element => {
   const [problem, setProblem] = useState<Problem>(defaultProblem || {
     pid: '',
@@ -23,8 +25,15 @@ const ProblemEditor = ({ problem: defaultProblem, handleSubmit }: ProblemEditorP
     description: ''
   })
 
+  const submitPress = () => {
+    setSaving(true)
+    handleSubmit(problem)
+      .then(() => setSaving(false))
+  }
+
   const [activeItem, setActiveItem] = useState<string>('problem-info')
   const handleItemClick = (_event: MouseEvent, data: MenuItemProps) => setActiveItem(data.tab)
+  const history = useHistory()
 
   return <>
     <Menu attached='top' tabular>
@@ -53,7 +62,8 @@ const ProblemEditor = ({ problem: defaultProblem, handleSubmit }: ProblemEditorP
         }
       })()}
       <Divider />
-      <Button primary onClick={() => handleSubmit(problem)}>Save</Button>
+      <Button floated='right' onClick={history.goBack}>Cancel</Button>
+      <Button floated='right' primary onClick={submitPress} loading={isSaving} disabled={isSaving}>Save</Button>
     </Block>
   </>
 }

@@ -23,7 +23,6 @@ const Users = (): JSX.Element => {
 
   const [users, setUsers] = useState<UserItem[]>([])
   const [isLoading, setLoading] = useState(true)
-  const [isDownloading, setDownloading] = useState(false)
   const [isDeleting, setDeleting] = useState(false)
   const [isImporting, setImporting] = useState(false)
   const [error, setError] = useState<string>()
@@ -66,11 +65,9 @@ const Users = (): JSX.Element => {
   }
 
   const downloadUsers = () => {
-    setDownloading(true)
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const sanitized = JSON.stringify(users.map(({ checked, ...user }) => user), null, '\t')
     saveAs(new File([sanitized], 'users.json', { type: 'text/json;charset=utf-8' }))
-    setDownloading(false)
   }
 
   const importUsers = async () => {
@@ -169,9 +166,9 @@ const Users = (): JSX.Element => {
   return <>
     <Helmet> <title>Abacus | Users</title> </Helmet>
     <CreateUser trigger={<Button content="Add User" primary />} callback={createUserCallback} />
-    <Link to='/admin/users/upload'><Button content="Upload Users" /></Link>
+    <Button as={Link} to={'/admin/users/upload'} content="Upload Users" />
     <Button loading={isImporting} disabled={isImporting} content="Import Users" onClick={importUsers} />
-    <Button loading={isDownloading} disabled={isDownloading} content="Download Users" onClick={downloadUsers} />
+    <Button content="Download Users" onClick={downloadUsers} />
     {users.filter(user => user.checked).length ?
       <Button loading={isDeleting} disabled={isDeleting} content="Delete Selected" negative onClick={deleteSelected} /> : <></>}
 
@@ -198,7 +195,7 @@ const Users = (): JSX.Element => {
           <Table.HeaderCell
             sorted={column === 'display_name' ? direction : undefined}
             onClick={() => sort('display_name')}
-            content="Displayname" />
+            content="Display Name" />
         </Table.Row>
       </Table.Header>
       <Table.Body>

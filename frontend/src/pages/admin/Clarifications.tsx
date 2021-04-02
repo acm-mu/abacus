@@ -22,6 +22,7 @@ type SortConfig = {
 const Clarifications = (): JSX.Element => {
   const [isLoading, setLoading] = useState(true)
   const [isMounted, setMounted] = useState(true)
+  const [isDeleting, setDeleting] = useState(false)
   const [clarifications, setClarifications] = useState<ClarificationItem[]>([])
   const [showClosed, setShowClosed] = useState(false)
   const [{ column, direction }, setSortConfig] = useState<SortConfig>({
@@ -58,6 +59,7 @@ const Clarifications = (): JSX.Element => {
   const checkAll = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => setClarifications(clarifications.map(clarification => ({ ...clarification, checked })))
 
   const deleteSelected = async () => {
+    setDeleting(true)
     const clarificationsToDelete = clarifications.filter(clarification => clarification.checked).map(clarification => clarification.cid)
     await fetch(`${config.API_URL}/clarifications`, {
       method: 'DELETE',
@@ -67,6 +69,7 @@ const Clarifications = (): JSX.Element => {
       },
       body: JSON.stringify({ cid: clarificationsToDelete })
     })
+    setDeleting(false)
     loadClarifications()
   }
 
@@ -82,7 +85,7 @@ const Clarifications = (): JSX.Element => {
 
     <ClarificationModal trigger={<Button content="Create Clarification" />} callback={loadClarifications} />
     {clarifications.filter(clarification => clarification.checked).length ?
-      <Button content="Delete Clarification(s)" negative onClick={deleteSelected} /> : <></>}
+      <Button content="Delete Selected" negative onClick={deleteSelected} loading={isDeleting} disabled={isDeleting} /> : <></>}
 
     <Block transparent size='xs-12'>
       <Checkbox toggle label='Show Closed' checked={showClosed} onChange={onFilterChange} />
@@ -115,7 +118,7 @@ const Clarifications = (): JSX.Element => {
                   </Table.Cell>
                   <Table.Cell>
                     <Link to={`/admin/clarifications/${clarification.cid}`}>{clarification.cid.substring(0, 7)}</Link>
-                    {!clarification.open ? <Label style={{ float: 'right' }} content='Closed' /> : <></>}
+                    {!clarification.open ? <Label color='red' style={{ float: 'right' }} content='Closed' /> : <></>}
                   </Table.Cell>
                   <Table.Cell>{clarification.type}</Table.Cell>
                   <Table.Cell><DivisionLabel division={clarification.division} /></Table.Cell>

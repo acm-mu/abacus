@@ -59,8 +59,8 @@ const EditProblems = (): JSX.Element => {
 
   return <>
     <Helmet> <title>Abacus | Admin Edit Problem</title> </Helmet>
-    <h1>{problem?.name}</h1>
 
+    <h1>{problem?.name}</h1>
     <StatusMessage message={message} onDismiss={() => setMessage(undefined)} />
 
     <ProblemEditor problem={problem} handleSubmit={handleSubmit} />

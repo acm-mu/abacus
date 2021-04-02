@@ -1,11 +1,12 @@
 import { Problem, Submission } from "abacus";
 import React, { ChangeEvent, SyntheticEvent, useEffect, useMemo, useState } from "react";
-import { Form, DropdownProps, InputOnChangeData } from "semantic-ui-react";
+import { Form, DropdownProps, InputOnChangeData, Breadcrumb } from "semantic-ui-react";
 import { Block, PageLoading, ScratchViewer } from "components";
 import config from "environment"
 import { Helmet } from "react-helmet";
 import { useHistory, useParams } from "react-router";
 import MDEditor from "@uiw/react-md-editor";
+import { Link } from "react-router-dom";
 
 const Submit = (): JSX.Element => {
   const { pid: problem_id } = useParams<{ pid: string }>()
@@ -18,6 +19,7 @@ const Submit = (): JSX.Element => {
 
   const [isLoading, setLoading] = useState(true)
   const [isMounted, setMounted] = useState(true)
+  const [isSubmitting, setSubmitting] = useState(false)
 
   const history = useHistory()
 
@@ -50,6 +52,7 @@ const Submit = (): JSX.Element => {
 
   const handleSubmit = async () => {
     if (!(problem && project_id)) return
+    setSubmitting(true)
     const formData = new FormData()
     formData.set('pid', problem.pid)
     formData.set('project_id', project_id)
@@ -65,12 +68,14 @@ const Submit = (): JSX.Element => {
     })
 
     if (response.status !== 200) {
+      setSubmitting(false)
       alert("An error occurred! Please try again")
       return
     }
 
     const body: Submission = await response.json()
 
+    setSubmitting(false)
     history.push(`/gold/submissions/${body.sid}`)
   }
 
@@ -81,6 +86,15 @@ const Submit = (): JSX.Element => {
 
   return <>
     <Helmet> <title>Abacus | Gold Submit</title> </Helmet>
+    <Block transparent size='xs-12'>
+      <Breadcrumb>
+        <Breadcrumb.Section as={Link} to='/gold/problems' content="Problems" />
+        <Breadcrumb.Divider />
+        <Breadcrumb.Section as={Link} to={`/gold/problems/${problem?.id}`} content={problem?.name} />
+        <Breadcrumb.Divider />
+        <Breadcrumb.Section active content="Submit" />
+      </Breadcrumb>
+    </Block>
     <Block size='xs-12'>
       <Form onSubmit={handleSubmit}>
         <Form.Group>
@@ -104,6 +118,8 @@ const Submit = (): JSX.Element => {
             label="&nbsp;"
             color="orange"
             content="Submit"
+            loading={isSubmitting}
+            disabled = {isSubmitting}
           />
         </Form.Group>
       </Form>

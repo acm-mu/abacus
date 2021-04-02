@@ -1,3 +1,14 @@
-.ui.label.closed {
-    vertical-align: middle;
+.ui.label {
+    margin-left: 0.5em !important;
+}
+
+.ui.label.closed,
+.ui.label.active {
+    vertical-align: 38%;
+}
+
+.ui.label.gold,
+.ui.label.blue,
+.ui.label.public {
+    vertical-align: 34%;
 }

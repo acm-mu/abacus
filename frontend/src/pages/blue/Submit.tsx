@@ -1,6 +1,6 @@
 import { Problem, Submission } from 'abacus'
 import React, { ChangeEvent, useContext, useEffect, useState } from 'react'
-import { Form, Button } from 'semantic-ui-react'
+import { Form, Button, Breadcrumb } from 'semantic-ui-react'
 import { Link, useHistory, useParams } from 'react-router-dom'
 import { Block, Countdown, FileDialog, NotFound, PageLoading } from 'components'
 import config from 'environment'
@@ -15,6 +15,7 @@ const Submit = (): JSX.Element => {
   const [isLoading, setLoading] = useState(true)
   const [language, setLanguage] = useState<Language>()
   const [file, setFile] = useState<File>()
+  const [isSubmitting, setSubmitting] = useState(false)
   const history = useHistory()
 
   const [isMounted, setMounted] = useState(true)
@@ -55,6 +56,7 @@ const Submit = (): JSX.Element => {
 
   const handleSubmit = async () => {
     if (!(language && file && problem && user)) return
+    setSubmitting(true)
     const formData = new FormData()
     formData.set('pid', problem.pid)
     formData.set('source', file, file.name)
@@ -70,10 +72,12 @@ const Submit = (): JSX.Element => {
 
     if (res.status != 200) {
       alert("An error occurred! Please try again")
+      setSubmitting(false)
       return
     }
 
     const body: Submission = await res.json()
+    setSubmitting(false)
 
     history.push(`/blue/submissions/${body.sid}`)
   }
@@ -107,6 +111,15 @@ const Submit = (): JSX.Element => {
   return <>
     <Helmet> <title>Abacus | Blue Submit</title> </Helmet>
     <Countdown />
+    <Block transparent size='xs-12'>
+      <Breadcrumb>
+        <Breadcrumb.Section as={Link} to='/blue/problems' content="Problems" />
+        <Breadcrumb.Divider />
+        <Breadcrumb.Section as={Link} to={`/blue/problems/${problem?.id}`} content={problem?.name} />
+        <Breadcrumb.Divider />
+        <Breadcrumb.Section active content="Submit" />
+      </Breadcrumb>
+    </Block>
     {!submissions || submissions?.filter((e) => e.status == "accepted").length == 0 ?
       <Block size='xs-12'>
         <h1>Submit a solution to {problem?.name} </h1>
@@ -127,8 +140,8 @@ const Submit = (): JSX.Element => {
           <Form.Select inline label='Language' placeholder="Select Language" value={language?.value} options={languages} />
 
           <Form.Group>
+            <Form.Button primary content="Submit" loading={isSubmitting} disabled={isSubmitting} />
             <Button onClick={history.goBack}>Cancel</Button>
-            <Form.Button primary content="Submit" />
           </Form.Group>
         </Form>
       </Block> :
