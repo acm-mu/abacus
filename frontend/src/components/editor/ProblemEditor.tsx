@@ -15,7 +15,6 @@ interface ProblemEditorProps {
   handleSubmit: (problem: Problem) => Promise<void>;
 }
 
-const [isSaving, setSaving] = useState(false)
 const ProblemEditor = ({ problem: defaultProblem, handleSubmit }: ProblemEditorProps): JSX.Element => {
   const [problem, setProblem] = useState<Problem>(defaultProblem || {
     pid: '',
@@ -24,6 +23,7 @@ const ProblemEditor = ({ problem: defaultProblem, handleSubmit }: ProblemEditorP
     division: '',
     description: ''
   })
+  const [isSaving, setSaving] = useState(false)
 
   const submitPress = () => {
     setSaving(true)
