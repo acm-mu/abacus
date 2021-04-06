@@ -20,8 +20,7 @@ const TestDataEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Element
     }
   }
 
-  const handleTestChange = ({ target: { name, value, style, scrollHeight } }: ChangeEvent<HTMLTextAreaElement>) => {
-    style.height = `${scrollHeight}px`
+  const handleTestChange = ({ target: { name, value } }: ChangeEvent<HTMLTextAreaElement>) =>
     setProblem({
       ...problem, tests: problem.tests?.map((test, index) => {
         if (name == `${index}-in`)
@@ -31,7 +30,6 @@ const TestDataEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Element
         return test
       })
     })
-  }
 
   return <Form>
     <Menu>
@@ -48,8 +46,8 @@ const TestDataEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Element
       <div key={`test-${index}`}>
         {activeTestItem == index ?
           <Form.Group widths='equal'>
-            <Form.Field style={{ height: '18em' }} label='Input' onChange={handleTestChange} control={TextArea} name={`${index}-in`} value={test.in} />
-            <Form.Field style={{ height: '18em' }} label='Answer' onChange={handleTestChange} control={TextArea} name={`${index}-out`} value={test.out} />
+            <Form.Field label='Input' onChange={handleTestChange} control={TextArea} rows={10} name={`${index}-in`} value={test.in} />
+            <Form.Field label='Answer' onChange={handleTestChange} control={TextArea} rows={10} name={`${index}-out`} value={test.out} />
           </Form.Group>
           : <></>}
       </div>
