@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import config from 'environment'
-import { Grid, Header, Icon, Label, Segment } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
+import { Form, Grid, Header, Icon, Label, Radio, Segment, TextArea } from 'semantic-ui-react';
 import Moment from 'react-moment';
 import "./ScratchViewer.scss"
 
@@ -54,19 +53,35 @@ const ScratchViewer = ({ project_id }: ScratchViewerProps): JSX.Element => {
       </Grid.Column>
 
       <Grid.Column className='scratch-info'>
-        {project ? <Segment>
-          <Link to={`https://scratch.mit.edu/projects/${project_id}`}><h2>{project.title}</h2> {project.author.username}</Link>
-          <p>{project.description}</p>
+        <>
+          {project ? <Segment>
+            <a target='_blank' rel='noreferrer' href={`https://scratch.mit.edu/projects/${project_id}`}><h2>{project.title}</h2> {project.author.username}</a>
+            <p>{project.description}</p>
 
-          <div className='history'>
-            <span>Created<br /> <Label><Moment fromNow date={Date.parse(project.history.created)} /></Label></span>
-            <span>Modified<br /> <Label><Moment fromNow date={Date.parse(project.history.modified)} /></Label></span>
-            <span>Shared<br /> <Label><Moment fromNow date={Date.parse(project.history.shared)} /></Label></span>
-          </div>
-        </Segment> : <></>}
+            <div className='history'>
+              <span>Created<br /> <Label><Moment fromNow date={Date.parse(project.history.created)} /></Label></span>
+              <span>Modified<br /> <Label><Moment fromNow date={Date.parse(project.history.modified)} /></Label></span>
+              <span>Shared<br /> <Label><Moment fromNow date={Date.parse(project.history.shared)} /></Label></span>
+            </div>
+          </Segment> : <></>}
+          <Segment>
+            <h1>Feedback</h1>
+            <Form>
+              <Form.Group inline>
+                <label>Score</label>
+                <Form.Field control={Radio} label='1' />
+                <Form.Radio control={Radio} label='2' />
+                <Form.Radio control={Radio} label='3' />
+                <Form.Radio control={Radio} label='4' />
+                <Form.Radio control={Radio} label='5' />
+              </Form.Group>
+              <Form.Field control={TextArea} label='Comments' />
+            </Form>
+          </Segment>
+        </>
       </Grid.Column>
-    </Grid.Row >
-  </Grid >
+    </Grid.Row>
+  </Grid>
 }
 
 export default ScratchViewer
