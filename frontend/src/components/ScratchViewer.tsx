@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import config from 'environment'
 import { Grid, Header, Icon, Label, Segment } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
 import Moment from 'react-moment';
 import "./ScratchViewer.scss"
 
