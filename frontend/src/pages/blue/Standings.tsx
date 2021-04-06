@@ -5,11 +5,12 @@ import { Table } from "semantic-ui-react";
 import { Block, Countdown, PageLoading, StatusMessage } from "components";
 import config from 'environment'
 import "./Standings.scss";
-import { AppContext } from "context";
+import { AppContext, SocketContext } from "context";
 import { Helmet } from "react-helmet";
 
 const Standings = (): JSX.Element => {
   const { settings } = useContext(AppContext);
+  const socket = useContext(SocketContext)
   const [problems, setProblems] = useState<Problem[]>();
   const [standings, setStandings] = useState<StandingsUser[]>();
   const [isLoading, setLoading] = useState(true)
@@ -36,6 +37,8 @@ const Standings = (): JSX.Element => {
 
     setLoading(false)
   }
+
+  socket?.on('new_submission', loadData)
 
   useEffect(() => {
     loadData()
