@@ -55,7 +55,7 @@ const ScratchViewer = ({ project_id }: ScratchViewerProps): JSX.Element => {
 
       <Grid.Column className='scratch-info'>
         {project ? <Segment>
-          <Link to={`https://scratch.mit.edu/projects/${project_id}`}><h2>{project.title}</h2> {project.author.username}</Link>
+          <a target='_blank' rel='noreferrer' href={`https://scratch.mit.edu/projects/${project_id}`}><h2>{project.title}</h2> {project.author.username}</a>
           <p>{project.description}</p>
 
           <div className='history'>
