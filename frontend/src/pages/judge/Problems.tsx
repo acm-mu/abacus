@@ -79,7 +79,7 @@ const Problems = (): JSX.Element => {
   if (isLoading) return <PageLoading />
 
   return <>
-    <Helmet> <title>Abacus | Admin Problems</title> </Helmet>
+    <Helmet> <title>Abacus | Judge Problems</title> </Helmet>
     <Block size='xs-12' transparent>
       <Table sortable>
         <Table.Header>
@@ -104,8 +104,8 @@ const Problems = (): JSX.Element => {
             </Table.Row> :
             (problems.map((problem: Problem, index: number) => (
               <Table.Row key={index}>
-                <Table.Cell><Link to={`/judge/${problem.pid}`}>{problem.id}</Link></Table.Cell>
-                <Table.Cell><Link to={`/judge/Problem/${problem.pid}`}>{problem.name}</Link></Table.Cell>
+                <Table.Cell><Link to={`/judge/problems/${problem.pid}`}>{problem.id}</Link></Table.Cell>
+                <Table.Cell><Link to={`/judge/problems/${problem.pid}`}>{problem.name}</Link></Table.Cell>
                 <Table.Cell>{problem.tests?.length}</Table.Cell>
                 {submissions && <>
                   <Table.Cell>{problem.pid in submissions ? submissions[problem.pid].filter((p) => p.score > 0).length : 0}</Table.Cell>
