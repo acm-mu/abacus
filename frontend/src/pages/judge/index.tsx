@@ -17,7 +17,7 @@ const Judge = (): JSX.Element => (
     <Container text className="main">
       <Switch>
         <Route exact path='/judge/' component={Home} />
-        <Route path='/judge/users' component={Teams} />
+        <Route path='/judge/teams' component={Teams} />
         <Route path='/judge/problems/:pid' component={Problem} />
         <Route path='/judge/problems' component={Problems} />
         <Route path='/judge/submissions/:sid' component={Submission} />
