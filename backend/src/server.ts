@@ -15,7 +15,7 @@ dotenv.config()
 
 const PORT = process.env.PORT || 80;
 
-const app = express();
+export const app = express();
 const server = createServer(app);
 export const io = new Server(server, {
   serveClient: false,
@@ -35,6 +35,8 @@ app.get('/', (_, res) => res.status(200).send(' ')); // Sends 200 OK when AWS EB
 export const sendNotification = ({ header, to, content, type, context }: Notification) =>
   io.sockets.emit('notification', ({ id: uuidv4(), to, header, content, type, context }))
 
-server.listen(PORT, () => {
-  console.log(`🚀 Server is running at :${PORT}`);
-});
+if (require.main === module) {
+  server.listen(PORT, () => {
+    console.log(`🚀 Server is running at :${PORT}`);
+  });
+}
