@@ -92,13 +92,13 @@ const problem = (): JSX.Element => {
         context={{ type: 'pid', id: problem.pid }}
         trigger={<Button content="Ask" icon="question" labelPosition='left' />}
       />
-      <Button
-        labelPosition='left'
-        as={Link}
-        to={`${config.API_URL}/sample_files?pid=${problem.pid}`}
-        content="Skeletons"
-        icon="download"
-      />
+      <a target='_blank' rel='noreferrer' href={`${config.API_URL}/sample_files?pid=${problem.pid}`}>
+        <Button
+          labelPosition='left'
+          content="Skeletons"
+          icon="download"
+        />
+      </a>
       {latestSubmission}
       <Divider />
       <p><b>Problem ID:</b> {problem.id}</p>
