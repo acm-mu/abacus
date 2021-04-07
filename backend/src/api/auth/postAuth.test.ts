@@ -1,7 +1,7 @@
 import * as AWS from 'aws-sdk';
 import { ScanInput } from 'aws-sdk/clients/dynamodb'
-import { app } from '../../server';
 import request from 'supertest';
+import { app } from '../../server';
 
 describe('this module', () => {
 
@@ -19,18 +19,12 @@ describe('this module', () => {
     }))
   })
 
-  it('GET - 403/Forbidden no credentials', async () => {
-    const res = await request(app).get('/auth')
-
-    expect(res.status).toBe(403)
-  })
-
-  it('GET - 403/Forbidden bad credentials', async () => {
+  it('POST /auth', async () => {
     const res = await request(app)
-      .get('/auth')
-      .set('Authorization', '32323232323')
+      .post('/auth')
+      .send({ username: 'user', password: 'password' })
 
-    expect(res.status).toBe(403)
+    expect(res.status).toBe(200)
   })
 
 })
