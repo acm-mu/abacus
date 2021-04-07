@@ -4,6 +4,7 @@ import { Switch, Route } from "react-router-dom";
 import { NotFound } from "components";
 import JudgeNavigation from "./JudgeNavigation";
 import Home from "./Home";
+import Teams from './Users';
 import Problems from './Problems'
 import Problem from "./Problem";
 import Submission from "./Submission";
@@ -16,6 +17,7 @@ const Judge = (): JSX.Element => (
     <Container text className="main">
       <Switch>
         <Route exact path='/judge/' component={Home} />
+        <Route path='/judge/users' component={Teams} />
         <Route path='/judge/problems/:pid' component={Problem} />
         <Route path='/judge/problems' component={Problems} />
         <Route path='/judge/submissions/:sid' component={Submission} />
