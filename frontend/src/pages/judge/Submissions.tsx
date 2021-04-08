@@ -93,12 +93,31 @@ const Submissions = (): JSX.Element => {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.accessToken}`
       },
-      body: JSON.stringify({ submission: sid, claimed: user?.uid })
+      body: JSON.stringify({ sid, claimed: user?.uid })
     })
 
     if (response.ok) {
       const result = await response.json()
-      // go to assignment page
+      console.log(result)
+    }
+
+    setClaiming(false)
+  }
+
+  const unclaim = async (sid: string) => {
+    setClaiming(true)
+    const response = await fetch(`${config.API_URL}/submissions`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.accessToken}`
+      },
+      body: JSON.stringify({ sid, claimed: undefined })
+    })
+
+    if (response.ok) {
+      const result = await response.json()
+      console.log(result)
     }
 
     setClaiming(false)
@@ -152,7 +171,15 @@ const Submissions = (): JSX.Element => {
               <Table.Cell><Link to={`/${user?.role}/teams`}>{submission.team.display_name}</Link></Table.Cell>
               <Table.Cell>{submission.language}</Table.Cell>
               <Table.Cell><span className={`status icn ${submission.status}`} /></Table.Cell>
-              <Table.Cell><Button content="Claim" onClick={() => claim(submission.sid)} icon={'grab'} /></Table.Cell>
+              <Table.Cell>
+              {submission.claimed ?
+                (submission.claimed == user?.uid ?
+                  <Button content="Unclaim" icon={'lock'} onClick={() => unclaim(submission.sid)} loading={isClaiming} disabled={isClaiming} /> :
+                  <Button content="Claimed" icon={'lock'} disabled={true} />
+                )
+                 :
+                <Button content="Claim" icon={'grab'} onClick={() => claim(submission.sid)} loading={isClaiming} disabled={isClaiming} /> }
+                </Table.Cell>
               <Table.Cell>{submission.released ? <Label color='green' icon='check' content="Released" /> : <Label icon='lock' content="Held" />}</Table.Cell>
               <Table.Cell><Moment fromNow date={submission.date * 1000} /> </Table.Cell>
               <Table.Cell>{submission.score}</Table.Cell>
