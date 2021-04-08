@@ -23,7 +23,7 @@ const problem = (): JSX.Element => {
   }, []);
 
   const loadProblem = async () => {
-    const response = await fetch(`${config.API_URL}/problems?division=${user?.division}&columns=description&id=${pid}`, {
+    const response = await fetch(`${config.API_URL}/problems?division=${user?.division}&columns=description&pid=${pid}`, {
       headers: {
         Authorization: `Bearer ${localStorage.accessToken}`
       }
@@ -34,7 +34,6 @@ const problem = (): JSX.Element => {
     if (response.ok) {
       const problem = Object.values(await response.json())[0] as Problem
       setProblem(problem)
-
     }
 
     setLoading(false)
@@ -46,7 +45,7 @@ const problem = (): JSX.Element => {
   return <>
     <Helmet> <title>Abacus | {problem.name}</title> </Helmet>
     <Countdown />
-    
+
     <Block size='xs-9' className='problem'>
       <h1>Problem {problem.id}: {problem.name}</h1>
       <Divider />
