@@ -165,18 +165,19 @@ const Submissions = (): JSX.Element => {
                   onChange={handleChange} />
               </Table.Cell>
               <Table.Cell>
-                <Link to={`/${user?.role}/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link></Table.Cell>
+                <Link to={`/${user?.role}/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link>
+              </Table.Cell>
               <Table.Cell><Link to={`/${user?.role}/problems/${submission.pid}`}>{submission.problem?.name} </Link></Table.Cell>
               <Table.Cell><Link to={`/${user?.role}/teams`}>{submission.team.display_name}</Link></Table.Cell>
               <Table.Cell>{submission.language}</Table.Cell>
               <Table.Cell><span className={`status icn ${submission.status}`} /></Table.Cell>
               <Table.Cell>
                 {submission.claimed ?
-                  (submission.claimed?.uid == user?.uid ?
-                    <Button content="Unclaim" icon={'lock'} onClick={() => unclaim(submission.sid)} loading={isClaiming[submission.sid]} disabled={isClaiming[submission.sid]} /> :
-                    <Button content="Claimed" icon={'lock'} disabled={true} />
+                  (submission.claimed?.uid === user?.uid ?
+                    <Button content="Unclaim" icon={'hand paper'} onClick={() => unclaim(submission.sid)} loading={isClaiming[submission.sid]} disabled={isClaiming[submission.sid]} labelPosition={'left'} /> :
+                    <Button content="Claimed" icon={'lock'} disabled={true} labelPosition={'left'} />
                   ) :
-                  <Button content="Claim" icon={'grab'} onClick={() => claim(submission.sid)} loading={isClaiming[submission.sid]} disabled={isClaiming[submission.sid]} />}
+                  <Button content="Claim" icon={'hand rock'} onClick={() => claim(submission.sid)} loading={isClaiming[submission.sid]} disabled={isClaiming[submission.sid]} labelPosition={'left'} />}
               </Table.Cell>
               <Table.Cell>{submission.released ? <Label color='green' icon='check' content="Released" /> : <Label icon='lock' content="Held" />}</Table.Cell>
               <Table.Cell><Moment fromNow date={submission.date * 1000} /> </Table.Cell>
