@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { matchedData, ParamSchema, validationResult } from "express-validator";
-import { sendNotification } from '../../server';
+import { io, sendNotification } from '../../server';
 import contest from '../../abacus/contest';
 
 export const schema: Record<string, ParamSchema> = {
@@ -89,6 +89,8 @@ export const putSubmissions = async (req: Request, res: Response) => {
     await contest.updateItem('submission', { sid: item.sid }, item)
 
     if (item.released == true) notifyTeam(item)
+
+    io.emit('update_submission')
 
     res.send(item)
   } catch (err) { res.sendStatus(500) }

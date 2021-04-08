@@ -46,6 +46,7 @@ const Submissions = (): JSX.Element => {
   useEffect(() => {
     loadSubmissions().then(() => setLoading(false))
     socket?.on('new_submission', loadSubmissions)
+    socket?.on('update_submission', loadSubmissions)
     return () => setMounted(false)
   }, [])
 
