@@ -29,7 +29,7 @@ declare module "abacus" {
     tid: string;
     team?: Team;
     tests?: Test[];
-    claimed?: string;
+    claimed?: User;
   }
   export interface Problem {
     pid: string;
