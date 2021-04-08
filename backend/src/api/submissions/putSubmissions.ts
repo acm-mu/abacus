@@ -93,5 +93,8 @@ export const putSubmissions = async (req: Request, res: Response) => {
     io.emit('update_submission')
 
     res.send(item)
-  } catch (err) { res.sendStatus(500) }
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500)
+  }
 }
