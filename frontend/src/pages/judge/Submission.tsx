@@ -5,9 +5,10 @@ import { NotFound, PageLoading, SubmissionView } from 'components'
 import config from 'environment'
 import { Helmet } from 'react-helmet'
 import { Button } from 'semantic-ui-react'
-import { AppContext } from 'context'
+import { AppContext, SocketContext } from 'context'
 
 const submission = (): JSX.Element => {
+  const socket = useContext(SocketContext)
   const { sid } = useParams<{ sid: string }>()
   const [submission, setSubmission] = useState<Submission>()
   const [isLoading, setLoading] = useState(true)
@@ -35,7 +36,8 @@ const submission = (): JSX.Element => {
   }
 
   useEffect(() => {
-    loadSubmission()
+    loadSubmission().then(() => setLoading(false))
+    socket?.on('update_submission', loadSubmission)
     return () => { setMounted(false) }
   }, [])
 
