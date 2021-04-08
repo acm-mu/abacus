@@ -24,6 +24,7 @@ const Submissions = (): JSX.Element => {
   const [submissions, setSubmissions] = useState<SubmissionItem[]>([])
   const [isMounted, setMounted] = useState(true)
   const [isDeleting, setDeleting] = useState(false)
+  const [isClaiming, setClaiming] = useState(false)
   const [showReleased, setShowReleased] = useState(false)
 
   const { user } = useContext(AppContext)
@@ -84,6 +85,24 @@ const Submissions = (): JSX.Element => {
     setDeleting(false)
   }
 
+  const claim = async () => {
+    setClaiming(true)
+    const response = await fetch(`${config.API_URL}/submissions`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.accessToken}`
+      },
+      body: JSON.stringify({ sid: submission.sid, claimed: user?.uid })
+    })
+
+    if(response.ok) {
+      const result = await response.json()
+    }
+
+    setClaiming(false)
+  }
+
   const filteredSubmissions = useMemo(() =>
     submissions.filter((submission) => showReleased || !submission.released)
     , [submissions, showReleased])
@@ -104,11 +123,10 @@ const Submissions = (): JSX.Element => {
           <Table.HeaderCell className='sortable' onClick={() => sort('sid')}>Submission ID</Table.HeaderCell>
           <Table.HeaderCell>Problem</Table.HeaderCell>
           <Table.HeaderCell>Team</Table.HeaderCell>
-          <Table.HeaderCell className='sortable' onClick={() => sort('sub_no')}>Submission #</Table.HeaderCell>
           <Table.HeaderCell className='sortable' onClick={() => sort('language')}>Language</Table.HeaderCell>
           <Table.HeaderCell className='sortable' onClick={() => sort('status')}>Status</Table.HeaderCell>
+          <Table.HeaderCell>Claimed</Table.HeaderCell>
           <Table.HeaderCell>Released</Table.HeaderCell>
-          <Table.HeaderCell className='sortable' onClick={() => sort('runtime')}>Runtime</Table.HeaderCell>
           <Table.HeaderCell className='sortable' onClick={() => sort('date')}>Time</Table.HeaderCell>
           <Table.HeaderCell className='sortable' onClick={() => sort('score')}>Score</Table.HeaderCell>
         </Table.Row>
@@ -131,11 +149,10 @@ const Submissions = (): JSX.Element => {
                 <Link to={`/${user?.role}/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link></Table.Cell>
               <Table.Cell><Link to={`/${user?.role}/problems/${submission.pid}`}>{submission.problem?.name} </Link></Table.Cell>
               <Table.Cell><Link to={`/${user?.role}/teams`}>{submission.team.display_name}</Link></Table.Cell>
-              <Table.Cell>{submission.sub_no + 1}</Table.Cell>
               <Table.Cell>{submission.language}</Table.Cell>
               <Table.Cell><span className={`status icn ${submission.status}`} /></Table.Cell>
+              <Table.Cell>Claimed</Table.Cell>
               <Table.Cell>{submission.released ? <Label color='green' icon='check' content="Released" /> : <Label icon='lock' content="Held" />}</Table.Cell>
-              <Table.Cell>{Math.floor(submission.runtime || 0)}</Table.Cell>
               <Table.Cell><Moment fromNow date={submission.date * 1000} /> </Table.Cell>
               <Table.Cell>{submission.score}</Table.Cell>
             </Table.Row>)}

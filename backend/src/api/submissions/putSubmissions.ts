@@ -56,6 +56,11 @@ export const schema: Record<string, ParamSchema> = {
     in: 'body',
     isBoolean: true,
     optional: true
+  },
+  claimed: {
+    in: 'body',
+    isString: true,
+    optional: true
   }
 }
 
