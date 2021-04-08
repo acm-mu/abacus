@@ -24,7 +24,7 @@ const Submissions = (): JSX.Element => {
   const [submissions, setSubmissions] = useState<SubmissionItem[]>([])
   const [isMounted, setMounted] = useState(true)
   const [isDeleting, setDeleting] = useState(false)
-  const [isClaiming, setClaiming] = useState(false)
+  const [isClaiming, setClaiming] = useState<{ [key: string]: boolean }>({})
   const [showReleased, setShowReleased] = useState(false)
 
   const { user } = useContext(AppContext)
@@ -86,7 +86,7 @@ const Submissions = (): JSX.Element => {
   }
 
   const claim = async (sid: string) => {
-    setClaiming(true)
+    setClaiming({ ...isClaiming, [sid]: true })
     const response = await fetch(`${config.API_URL}/submissions`, {
       method: 'PUT',
       headers: {
@@ -101,11 +101,11 @@ const Submissions = (): JSX.Element => {
       console.log(result)
     }
 
-    setClaiming(false)
+    setClaiming({ ...isClaiming, [sid]: false })
   }
 
   const unclaim = async (sid: string) => {
-    setClaiming(true)
+    setClaiming({ ...isClaiming, [sid]: true })
     const response = await fetch(`${config.API_URL}/submissions`, {
       method: 'PUT',
       headers: {
@@ -120,7 +120,7 @@ const Submissions = (): JSX.Element => {
       console.log(result)
     }
 
-    setClaiming(false)
+    setClaiming({ ...isClaiming, [sid]: false })
   }
 
   const filteredSubmissions = useMemo(() =>
@@ -173,11 +173,11 @@ const Submissions = (): JSX.Element => {
               <Table.Cell><span className={`status icn ${submission.status}`} /></Table.Cell>
               <Table.Cell>
                 {submission.claimed ?
-                  (submission.claimed == user?.uid ?
-                    <Button content="Unclaim" icon={'lock'} onClick={() => unclaim(submission.sid)} loading={isClaiming} disabled={isClaiming} /> :
+                  (submission.claimed?.uid == user?.uid ?
+                    <Button content="Unclaim" icon={'lock'} onClick={() => unclaim(submission.sid)} loading={isClaiming[submission.sid]} disabled={isClaiming[submission.sid]} /> :
                     <Button content="Claimed" icon={'lock'} disabled={true} />
                   ) :
-                  <Button content="Claim" icon={'grab'} onClick={() => claim(submission.sid)} loading={isClaiming} disabled={isClaiming} />}
+                  <Button content="Claim" icon={'grab'} onClick={() => claim(submission.sid)} loading={isClaiming[submission.sid]} disabled={isClaiming[submission.sid]} />}
               </Table.Cell>
               <Table.Cell>{submission.released ? <Label color='green' icon='check' content="Released" /> : <Label icon='lock' content="Held" />}</Table.Cell>
               <Table.Cell><Moment fromNow date={submission.date * 1000} /> </Table.Cell>
