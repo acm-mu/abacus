@@ -5,7 +5,7 @@ import { Table } from 'semantic-ui-react';
 import config from 'environment';
 import { Submission } from 'abacus';
 import { Link } from 'react-router-dom';
-import BlueNavigation from 'pages/blue/BlueNavigation';
+import { Helmet } from 'react-helmet';
 
 const Home = (): JSX.Element => {
 
@@ -46,6 +46,8 @@ const Home = (): JSX.Element => {
   if (!user) return <Unauthorized />
 
   return <>
+
+    <Helmet><title>Abacus | Judging Dashboard</title></Helmet>
 
     <Block transparent size='xs-6'>
       <h1>My Claimed Submissions</h1>
