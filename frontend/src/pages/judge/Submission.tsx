@@ -15,6 +15,7 @@ const submission = (): JSX.Element => {
   const [isRerunning, setRerunning] = useState(false)
   const [isReleasing, setReleasing] = useState(false)
   const [isDeleting, setDeleting] = useState(false)
+  const [isClaiming, setClaiming] = useState<{ [key: string]: boolean }>({})
 
   const { user } = useContext(AppContext)
 
@@ -87,13 +88,49 @@ const submission = (): JSX.Element => {
         Authorization: `Bearer ${localStorage.accessToken}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ sid: submission.sid, released: true })
+      body: JSON.stringify({ sid: submission.sid, released: true, claimed: undefined })
     })
     if (response.ok) {
       const result = await response.json()
-      setSubmission({ ...submission, released: result.released })
+      setSubmission({ ...submission, released: result.released, claimed: undefined })
     }
     setReleasing(false)
+  }
+
+  const claim = async (sid: string) => {
+    setClaiming({ ...isClaiming, [sid]: true })
+    const response = await fetch(`${config.API_URL}/submissions`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.accessToken}`
+      },
+      body: JSON.stringify({ sid, claimed: user?.uid })
+    })
+
+    if (response.ok) {
+      setSubmission({ ...submission, claimed: user })
+    }
+
+    setClaiming({ ...isClaiming, [sid]: false })
+  }
+
+  const unclaim = async (sid: string) => {
+    setClaiming({ ...isClaiming, [sid]: true })
+    const response = await fetch(`${config.API_URL}/submissions`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.accessToken}`
+      },
+      body: JSON.stringify({ sid, claimed: null })
+    })
+
+    if (response.ok) {
+      setSubmission({ ...submission, claimed: undefined })
+    }
+
+    setClaiming({ ...isClaiming, [sid]: false })
   }
 
   const download = () => submission?.source && submission.filename &&
@@ -104,13 +141,18 @@ const submission = (): JSX.Element => {
     <Helmet> <title>Abacus | Judge Submission</title> </Helmet>
 
     <Button content='Back' icon='arrow left' labelPosition='left' onClick={history.goBack} />
-    <Button disabled={isRerunning} loading={isRerunning} content="Rerun" icon="redo" labelPosition="left" onClick={rerun} />
-
+    <Button disabled={isRerunning || submission.claimed?.uid != user?.uid} loading={isRerunning} content="Rerun" icon="redo" labelPosition="left" onClick={rerun} />
+    {submission.claimed ?
+      (submission.claimed?.uid === user?.uid ?
+        <Button content="Unclaim" icon={'hand paper'} onClick={() => unclaim(submission.sid)} loading={isClaiming[submission.sid]} disabled={isClaiming[submission.sid]} labelPosition={'left'} /> :
+        <Button content="Claimed" icon={'lock'} disabled={true} labelPosition={'left'} />
+      ) :
+      <Button content="Claim" icon={'hand rock'} onClick={() => claim(submission.sid)} loading={isClaiming[submission.sid]} disabled={isClaiming[submission.sid]} labelPosition={'left'} />}
     {submission.released ?
       <Button icon="check" positive content="Released" labelPosition="left" /> :
-      <Button loading={isReleasing} disabled={isReleasing} icon="right arrow" content="Release" labelPosition="left" onClick={release} />}
+      <Button loading={isReleasing} disabled={isReleasing || submission.claimed?.uid != user?.uid} icon="right arrow" content="Release" labelPosition="left" onClick={release} />}
     <Button content="Download" icon="download" labelPosition="left" onClick={download} />
-    <Button disabled={isDeleting} loading={isDeleting} content="Delete" icon="trash" negative labelPosition="left" onClick={deleteSubmission} />
+    <Button disabled={isDeleting || submission.claimed?.uid != user?.uid} loading={isDeleting} content="Delete" icon="trash" negative labelPosition="left" onClick={deleteSubmission} />
 
     <SubmissionView submission={submission} rerunning={isRerunning} />
   </>
