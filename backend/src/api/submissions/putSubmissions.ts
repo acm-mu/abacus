@@ -59,7 +59,6 @@ export const schema: Record<string, ParamSchema> = {
   },
   claimed: {
     in: 'body',
-    isString: true,
     optional: true
   }
 }

@@ -97,8 +97,7 @@ const Submissions = (): JSX.Element => {
     })
 
     if (response.ok) {
-      const result = await response.json()
-      console.log(result)
+      setSubmissions(submissions.map(sub => sub.sid == sid ? { ...sub, claimed: user } : sub))
     }
 
     setClaiming({ ...isClaiming, [sid]: false })
@@ -112,12 +111,11 @@ const Submissions = (): JSX.Element => {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.accessToken}`
       },
-      body: JSON.stringify({ sid, claimed: undefined })
+      body: JSON.stringify({ sid, claimed: null })
     })
 
     if (response.ok) {
-      const result = await response.json()
-      console.log(result)
+      setSubmissions(submissions.map(sub => sub.sid == sid ? { ...sub, claimed: undefined } : sub))
     }
 
     setClaiming({ ...isClaiming, [sid]: false })
