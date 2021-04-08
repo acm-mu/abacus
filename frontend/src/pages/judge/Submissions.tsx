@@ -35,7 +35,7 @@ const Submissions = (): JSX.Element => {
   })
 
   const sort = (newColumn: SortKey, submission_list: SubmissionItem[] = submissions) => {
-    const newDirection = column === newColumn ? 'descending' : 'ascending'
+    const newDirection = column === newColumn && direction == 'ascending' ? 'descending' : 'ascending'
     setSortConfig({ column: newColumn, direction: newDirection })
 
     setSubmissions(submission_list.sort((s1: Submission, s2: Submission) =>
@@ -136,19 +136,19 @@ const Submissions = (): JSX.Element => {
       <Button content="Delete Selected" negative onClick={deleteSelected} loading={isDeleting} disabled={isDeleting} /> : <></>}
     <Checkbox toggle label="Show Released" checked={showReleased} onClick={onFilterChange} />
 
-    <Table singleLine>
+    <Table singleLine sortable>
       <Table.Header>
         <Table.Row>
           <Table.HeaderCell collapsing><input type='checkbox' onChange={checkAll} /></Table.HeaderCell>
-          <Table.HeaderCell className='sortable' onClick={() => sort('sid')}>Submission ID</Table.HeaderCell>
+          <Table.HeaderCell className='sortable' onClick={() => sort('sid')} sorted={column == 'sid' ? direction : undefined}>Submission ID</Table.HeaderCell>
           <Table.HeaderCell>Problem</Table.HeaderCell>
           <Table.HeaderCell>Team</Table.HeaderCell>
-          <Table.HeaderCell className='sortable' onClick={() => sort('language')}>Language</Table.HeaderCell>
-          <Table.HeaderCell className='sortable' onClick={() => sort('status')}>Status</Table.HeaderCell>
+          <Table.HeaderCell className='sortable' onClick={() => sort('language')} sorted={column == 'language' ? direction : undefined}>Language</Table.HeaderCell>
+          <Table.HeaderCell className='sortable' onClick={() => sort('status')} sorted={column == 'status' ? direction : undefined}>Status</Table.HeaderCell>
           <Table.HeaderCell>Claimed</Table.HeaderCell>
           <Table.HeaderCell>Released</Table.HeaderCell>
-          <Table.HeaderCell className='sortable' onClick={() => sort('date')}>Time</Table.HeaderCell>
-          <Table.HeaderCell className='sortable' onClick={() => sort('score')}>Score</Table.HeaderCell>
+          <Table.HeaderCell className='sortable' onClick={() => sort('date')} sorted={column == 'date' ? direction : undefined}>Time</Table.HeaderCell>
+          <Table.HeaderCell className='sortable' onClick={() => sort('score')} sorted={column == 'score' ? direction : undefined}>Score</Table.HeaderCell>
         </Table.Row>
       </Table.Header>
       <Table.Body>
@@ -172,14 +172,13 @@ const Submissions = (): JSX.Element => {
               <Table.Cell>{submission.language}</Table.Cell>
               <Table.Cell><span className={`status icn ${submission.status}`} /></Table.Cell>
               <Table.Cell>
-              {submission.claimed ?
-                (submission.claimed == user?.uid ?
-                  <Button content="Unclaim" icon={'lock'} onClick={() => unclaim(submission.sid)} loading={isClaiming} disabled={isClaiming} /> :
-                  <Button content="Claimed" icon={'lock'} disabled={true} />
-                )
-                 :
-                <Button content="Claim" icon={'grab'} onClick={() => claim(submission.sid)} loading={isClaiming} disabled={isClaiming} /> }
-                </Table.Cell>
+                {submission.claimed ?
+                  (submission.claimed == user?.uid ?
+                    <Button content="Unclaim" icon={'lock'} onClick={() => unclaim(submission.sid)} loading={isClaiming} disabled={isClaiming} /> :
+                    <Button content="Claimed" icon={'lock'} disabled={true} />
+                  ) :
+                  <Button content="Claim" icon={'grab'} onClick={() => claim(submission.sid)} loading={isClaiming} disabled={isClaiming} />}
+              </Table.Cell>
               <Table.Cell>{submission.released ? <Label color='green' icon='check' content="Released" /> : <Label icon='lock' content="Held" />}</Table.Cell>
               <Table.Cell><Moment fromNow date={submission.date * 1000} /> </Table.Cell>
               <Table.Cell>{submission.score}</Table.Cell>
