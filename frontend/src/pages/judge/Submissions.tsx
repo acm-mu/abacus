@@ -85,7 +85,7 @@ const Submissions = (): JSX.Element => {
     setDeleting(false)
   }
 
-  const claim = async () => {
+  const claim = async (sid: string) => {
     setClaiming(true)
     const response = await fetch(`${config.API_URL}/submissions`, {
       method: 'PUT',
@@ -93,10 +93,10 @@ const Submissions = (): JSX.Element => {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.accessToken}`
       },
-      body: JSON.stringify({ claimed: user?.uid })
+      body: JSON.stringify({ submission: sid, claimed: user?.uid })
     })
 
-    if(response.ok) {
+    if (response.ok) {
       const result = await response.json()
       // go to assignment page
     }
@@ -152,7 +152,7 @@ const Submissions = (): JSX.Element => {
               <Table.Cell><Link to={`/${user?.role}/teams`}>{submission.team.display_name}</Link></Table.Cell>
               <Table.Cell>{submission.language}</Table.Cell>
               <Table.Cell><span className={`status icn ${submission.status}`} /></Table.Cell>
-              <Table.Cell><Button content="Claim" onClick={() => console.log('button click!')} icon={'grab'} /></Table.Cell>
+              <Table.Cell><Button content="Claim" onClick={() => claim(submission.sid)} icon={'grab'} /></Table.Cell>
               <Table.Cell>{submission.released ? <Label color='green' icon='check' content="Released" /> : <Label icon='lock' content="Held" />}</Table.Cell>
               <Table.Cell><Moment fromNow date={submission.date * 1000} /> </Table.Cell>
               <Table.Cell>{submission.score}</Table.Cell>
