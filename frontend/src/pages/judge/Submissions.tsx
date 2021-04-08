@@ -97,10 +97,6 @@ const Submissions = (): JSX.Element => {
       body: JSON.stringify({ sid, claimed: user?.uid })
     })
 
-    if (response.ok) {
-      setSubmissions(submissions.map(sub => sub.sid == sid ? { ...sub, claimed: user } : sub))
-    }
-
     setClaiming({ ...isClaiming, [sid]: false })
   }
 
@@ -114,10 +110,6 @@ const Submissions = (): JSX.Element => {
       },
       body: JSON.stringify({ sid, claimed: null })
     })
-
-    if (response.ok) {
-      setSubmissions(submissions.map(sub => sub.sid == sid ? { ...sub, claimed: undefined } : sub))
-    }
 
     setClaiming({ ...isClaiming, [sid]: false })
   }
