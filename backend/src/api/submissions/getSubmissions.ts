@@ -68,7 +68,7 @@ export const getSubmissions = async (req: Request, res: Response) => {
     return
   }
   const problems = transpose(await contest.scanItems('problem', { columns: ['pid', 'division', 'id', 'name'] }), 'pid')
-  const teams = transpose(await contest.scanItems('user', { args: { role: 'team' } }), 'uid')
+  const users = transpose(await contest.scanItems('user'), 'uid')
 
   try {
     const item = matchedData(req)
@@ -83,12 +83,16 @@ export const getSubmissions = async (req: Request, res: Response) => {
 
     submissions?.map((submission: any) => {
       submission.problem = problems[submission.pid]
-      const team = teams[submission.tid]
+      const team = users[submission.tid]
       submission.team = {
         uid: team.uid,
         username: team.username,
         display_name: team.display_name,
         division: team.division
+      }
+      if (submission.claimed) {
+        const claimee = users[submission.claimed]
+        submission.claimed = claimee
       }
       if (req.user?.role == 'team' && !submission.released) {
         submission.status = 'pending'

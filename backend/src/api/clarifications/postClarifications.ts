@@ -9,8 +9,11 @@ export const schema: Record<string, ParamSchema> = {
   body: {
     in: 'body',
     isString: true,
+    custom: {
+      options: value => value.trim() !== ''
+    },
     notEmpty: true,
-    errorMessage: 'body is not provided!'
+    errorMessage: 'Missing body'
   },
   parent: {
     in: 'body',
@@ -24,6 +27,9 @@ export const schema: Record<string, ParamSchema> = {
   title: {
     in: 'body',
     isString: true,
+    custom: {
+      options: value => value.trim() !== ''
+    },
     notEmpty: true,
     optional: true
   },
