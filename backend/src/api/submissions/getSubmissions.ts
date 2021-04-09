@@ -90,9 +90,14 @@ export const getSubmissions = async (req: Request, res: Response) => {
         display_name: team.display_name,
         division: team.division
       }
-      if (submission.claimed) {
+      if (submission.claimed !== undefined) {
         const claimee = users[submission.claimed]
-        submission.claimed = claimee
+        submission.claimed = {
+          uid: claimee.uid,
+          username: claimee.username,
+          display_name: claimee.display_name,
+          division: claimee.division
+        }
       }
       if (req.user?.role == 'team' && !submission.released) {
         submission.status = 'pending'
