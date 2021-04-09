@@ -16,7 +16,7 @@ const App = (): JSX.Element => {
 
   const error_id = uuidv4()
 
-  const socket = io(config.API_URL, { transports: ['websocket'] })
+  const socket = io(config.API_URL)
 
   const checkAuth = async () => {
     try {
