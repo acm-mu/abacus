@@ -3,7 +3,7 @@ import { Request, Response } from 'express'
 import contest from '../../abacus/contest'
 
 export const getStandings = async (_req: Request, res: Response) => {
-  let standings = await contest.scanItems('user', { args: { role: 'team', division: 'blue' } }) || {}
+  const standings = await contest.scanItems('user', { args: { role: 'team', division: 'blue' } }) || {}
   const submissions = await contest.scanItems('submission', { args: { division: 'blue' } }) || {}
   const problems = await contest.scanItems('problem', { args: { division: 'blue' } }) || {} as unknown as Problem[]
 
