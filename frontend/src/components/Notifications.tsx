@@ -1,5 +1,5 @@
 import { Context, Notification } from 'abacus';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Message } from 'semantic-ui-react';
 import { v4 as uuidv4 } from 'uuid';
