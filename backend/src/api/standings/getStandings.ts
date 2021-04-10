@@ -3,7 +3,7 @@ import { Request, Response } from 'express'
 import contest from '../../abacus/contest'
 
 export const getStandings = async (_req: Request, res: Response) => {
-  const standings = await contest.scanItems('user', { args: { role: 'team', division: 'blue' } }) || {}
+  let standings = await contest.scanItems('user', { args: { role: 'team', division: 'blue' } }) || {}
   const submissions = await contest.scanItems('submission', { args: { division: 'blue' } }) || {}
   const problems = await contest.scanItems('problem', { args: { division: 'blue' } }) || {} as unknown as Problem[]
 
@@ -66,5 +66,13 @@ export const getStandings = async (_req: Request, res: Response) => {
       }
     })
   })
-  res.send(standings)
+
+  type StandingsItems = { solved: number, time: number }
+
+  const data = (Object.values(standings) as StandingsItems[]).sort((s1, s2) => {
+    if (s1.solved == s2.solved) return s1.time - s2.time
+    return s2.solved - s1.solved
+  })
+
+  res.send(data)
 }
