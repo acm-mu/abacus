@@ -18,7 +18,12 @@ const Home = (): JSX.Element => {
   const claimedSubmissions = useMemo(() => submissions?.filter(({ claimed }) => claimed !== undefined && claimed?.uid !== user?.uid), [submissions])
   const pendingSubmissions = useMemo(() => submissions?.filter(({ released }) => !released), [submissions])
   const recentSubmissions = useMemo(() => submissions?.filter(({ released }) => released).sort(({ date: date1 }, { date: date2 }) => date2 - date1), [submissions])
-  const myClaimedSubmissions = useMemo(() => submissions?.filter(submission => submission.claimed == user?.uid), [submissions])
+  const myClaimedSubmissions = useMemo(() => submissions?.filter(({ claimed }) => claimed?.uid == user?.uid), [submissions])
+
+  console.log(claimedSubmissions?.length)
+  console.log(pendingSubmissions?.length)
+  console.log(recentSubmissions?.length)
+  console.log(myClaimedSubmissions?.length)
 
   const loadData = async () => {
     const response = await fetch(`${config.API_URL}/submissions`, {
