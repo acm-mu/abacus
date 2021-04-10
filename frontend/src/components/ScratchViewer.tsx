@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import config from 'environment'
-import { Form, Grid, Header, Icon, Label, Radio, Segment, TextArea } from 'semantic-ui-react';
+import { Checkbox, CheckboxProps, Form, Grid, Header, Icon, Label, Segment, TextArea } from 'semantic-ui-react';
 import Moment from 'react-moment';
 import "./ScratchViewer.scss"
 
@@ -26,6 +26,7 @@ interface ScratchProject {
 
 const ScratchViewer = ({ project_id }: ScratchViewerProps): JSX.Element => {
   const [project, setProject] = useState<ScratchProject>()
+  const [score, setScore] = useState<number>()
 
   useEffect(() => {
     fetch(`${config.API_URL}/scratch/project?project_id=${project_id}`)
@@ -33,6 +34,8 @@ const ScratchViewer = ({ project_id }: ScratchViewerProps): JSX.Element => {
       .then(data => setProject(data))
       .catch(() => setProject(undefined))
   }, [project_id])
+
+  const handleScoreChange = (event: React.FormEvent<HTMLInputElement>, { value }: CheckboxProps) => setScore(value as number)
 
   if (project_id == undefined) return <></>
 
@@ -69,11 +72,11 @@ const ScratchViewer = ({ project_id }: ScratchViewerProps): JSX.Element => {
             <Form>
               <Form.Group inline>
                 <label>Score</label>
-                <Form.Field control={Radio} label='1' />
-                <Form.Radio control={Radio} label='2' />
-                <Form.Radio control={Radio} label='3' />
-                <Form.Radio control={Radio} label='4' />
-                <Form.Radio control={Radio} label='5' />
+                <Checkbox radio name='score' label='1' value={1} checked={score == 1} onChange={handleScoreChange} />
+                <Checkbox radio name='score' label='2' value={2} checked={score == 2} onChange={handleScoreChange} />
+                <Checkbox radio name='score' label='3' value={3} checked={score == 3} onChange={handleScoreChange} />
+                <Checkbox radio name='score' label='4' value={4} checked={score == 4} onChange={handleScoreChange} />
+                <Checkbox radio name='score' label='5' value={5} checked={score == 5} onChange={handleScoreChange} />
               </Form.Group>
               <Form.Field control={TextArea} label='Comments' />
             </Form>
