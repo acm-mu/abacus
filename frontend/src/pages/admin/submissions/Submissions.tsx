@@ -67,7 +67,7 @@ const Submissions = (): JSX.Element => {
 
   const deleteSelected = async () => {
     setDeleting(true)
-    const submissionsToDelete = submissions.filter(submission => submission.checked).map(submission => submission.sid)
+    const submissionsToDelete = submissions.filter(submission => submission.checked && (!submission.released || showReleased)).map(submission => submission.sid)
     const response = await fetch(`${config.API_URL}/submissions`, {
       method: 'DELETE',
       headers: {
