@@ -6,6 +6,8 @@ import fileUpload from 'express-fileupload';
 import { createServer } from 'http'
 import morgan from 'morgan';
 import { Server } from 'socket.io'
+import { createAdapter } from 'socket.io-redis'
+import { RedisClient } from 'redis'
 import { v4 as uuidv4 } from 'uuid'
 
 import api from "./api";
@@ -23,6 +25,13 @@ export const io = new Server(server, {
     origin: "*"
   }
 });
+
+if (process.env.REDIS_HOST) {
+  const pubClient = new RedisClient({ host: process.env.REDIS_HOST, port: 6379 });
+  const subClient = pubClient.duplicate();
+
+  io.adapter(createAdapter({ pubClient, subClient }))
+}
 
 app.use(cors()); // Enables CORS on all endpoints
 app.use(bodyParser.json()); // Middleware to parse body of requests as JSON
