@@ -90,7 +90,7 @@ export const putSubmissions = async (req: Request, res: Response) => {
 
     if (item.released == true) notifyTeam(item)
 
-    io.emit('update_submission')
+    io.emit('update_submission', { sid: item.sid })
 
     res.send(item)
   } catch (err) {
