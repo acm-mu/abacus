@@ -61,13 +61,18 @@ const Submissions = (): JSX.Element => {
 
   const onFilterChange = () => setShowReleased(!showReleased)
 
-  const downloadSubmissions = () => saveAs(new File([JSON.stringify(submissions, null, '\t')], 'submissions.json', { type: 'text/json;charset=utf-8' }))
-  const handleChange = ({ target: { id, checked } }: ChangeEvent<HTMLInputElement>) => setSubmissions(submissions.map(submission => submission.sid == id ? { ...submission, checked } : submission))
-  const checkAll = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => setSubmissions(submissions.map(submission => ({ ...submission, checked })))
+  const downloadSubmissions = () =>
+    saveAs(new File([JSON.stringify(submissions, null, '\t')], 'submissions.json', { type: 'text/json;charset=utf-8' }))
+
+  const handleChange = ({ target: { id, checked } }: ChangeEvent<HTMLInputElement>) =>
+    setSubmissions(submissions.map(submission => submission.sid == id ? { ...submission, checked } : submission))
+
+  const checkAll = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) =>
+    setSubmissions(submissions.map(submission => (showReleased || !submission.released) ? { ...submission, checked } : submission))
 
   const deleteSelected = async () => {
     setDeleting(true)
-    const submissionsToDelete = submissions.filter(submission => submission.checked).map(submission => submission.sid)
+    const submissionsToDelete = submissions.filter(submission => submission.checked && (!submission.released || showReleased)).map(submission => submission.sid)
     const response = await fetch(`${config.API_URL}/submissions`, {
       method: 'DELETE',
       headers: {
