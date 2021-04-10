@@ -22,19 +22,21 @@ const Submissions = (): JSX.Element => {
   const socket = useContext(SocketContext)
   const [isLoading, setLoading] = useState(true)
   const [isMounted, setMounted] = useState(true)
-  const [isDeleting, setDeleting] = useState(false)
-  const [showReleased, setShowReleased] = useState(false)
-
   const [{ column, direction }, setSortConfig] = useState<SortConfig>({
     column: 'date',
     direction: 'ascending'
   })
 
+  const [isDeleting, setDeleting] = useState(false)
+  const [showReleased, setShowReleased] = useState(false)
+
   const [submissionMap, setSubmissionMap] = useState<{ [key: string]: SubmissionItem }>({})
 
-  const submissions = useMemo<SubmissionItem[]>(() =>
-    sorted(Object.values(submissionMap) as unknown as Record<string, unknown>[], column, direction).filter(submission => showReleased || !submission.released) as unknown[] as SubmissionItem[]
-    , [submissionMap, column, direction, showReleased])
+  const submissions = useMemo<SubmissionItem[]>(() => {
+    const list: Record<string, any>[] = Object.values(submissionMap)
+
+    return sorted(list, column, direction).filter(submission => showReleased || !submission.released) as SubmissionItem[]
+  }, [submissionMap, column, direction, showReleased])
 
   const sort = (newColumn: SortKey) =>
     setSortConfig({ column: newColumn, direction: column === newColumn ? 'descending' : 'ascending' })
@@ -51,27 +53,17 @@ const Submissions = (): JSX.Element => {
         Authorization: `Bearer ${localStorage.accessToken}`
       }
     })
-    const submissions = Object.values(await response.json()) as SubmissionItem[]
 
     if (!isMounted) return
 
-    // setSubmissions(submissions.map(submission => ({ ...submission, checked: false })))
+    setSubmissionMap(await response.json()) // may need to default
   }
 
   const onFilterChange = () => setShowReleased(!showReleased)
 
   const downloadSubmissions = () => saveAs(new File([JSON.stringify(submissions, null, '\t')], 'submissions.json', { type: 'text/json;charset=utf-8' }))
-  const handleChange = ({ target: { id, checked } }: ChangeEvent<HTMLInputElement>) => {
-    submissionMap[id].checked = checked
-    setSubmissionMap(submissionMap)
-  }
-  const checkAll = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => {
-    Object.keys(submissionMap).forEach(sid => { submissionMap[sid].checked = checked })
-    setSubmissionMap(submissionMap)
-  }
-
-  console.log(submissionMap)
-  // setSubmissionMap(Object.assign({}, Object.entries(submissionMap).map(([k, v] => ([k, { ...v, checked }]))))
+  const handleChange = ({ target: { id, checked } }: ChangeEvent<HTMLInputElement>) => { return } //setSubmissionsMap(submissions.map(submission => submission.sid == id ? { ...submission, checked } : submission))
+  const checkAll = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => { return } // setSubmissionsMap(submissions.map(submission => ({ ...submission, checked })))
 
   const deleteSelected = async () => {
     setDeleting(true)
@@ -89,10 +81,6 @@ const Submissions = (): JSX.Element => {
     }
     setDeleting(false)
   }
-
-  const filteredSubmissions = useMemo(() =>
-    submissions.filter((submission) => showReleased || !submission.released)
-    , [submissions, showReleased])
 
   if (isLoading) return <PageLoading />
 
@@ -120,19 +108,13 @@ const Submissions = (): JSX.Element => {
         </Table.Row>
       </Table.Header>
       <Table.Body>
-        {filteredSubmissions.length == 0 ?
+        {submissions.length == 0 ?
           <Table.Row>
             <Table.Cell colSpan={'100%'}>No Submissions</Table.Cell>
           </Table.Row> :
-          filteredSubmissions.map((submission) =>
+          submissions.map(submission =>
             <Table.Row key={submission.sid}>
-              <Table.Cell>
-                <input
-                  type='checkbox'
-                  checked={submission.checked}
-                  id={submission.sid}
-                  onChange={handleChange} />
-              </Table.Cell>
+              <Table.Cell><input type='checkbox' checked={submission.checked} id={submission.sid} onChange={handleChange} /></Table.Cell>
               <Table.Cell>
                 <Link to={`/admin/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link></Table.Cell>
               <Table.Cell><Link to={`/admin/problems/${submission.pid}`}>{submission.problem?.name} </Link></Table.Cell>
@@ -144,7 +126,8 @@ const Submissions = (): JSX.Element => {
               <Table.Cell>{Math.floor(submission.runtime || 0)}</Table.Cell>
               <Table.Cell><Moment fromNow date={submission.date * 1000} /> </Table.Cell>
               <Table.Cell>{submission.score}</Table.Cell>
-            </Table.Row>)}
+            </Table.Row>
+          )}
       </Table.Body>
     </Table>
   </>
