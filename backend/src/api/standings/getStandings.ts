@@ -10,7 +10,6 @@ export const getStandings = async (_req: Request, res: Response) => {
   const subs: { [key: string]: { [key: string]: Submission[] } } = {}
 
   Object.values(submissions).forEach((submission: any) => {
-    if (!submission.released) return
     const { tid, pid } = submission;
     if (!(tid in subs)) subs[tid] = {}
     if (!(pid in subs[tid])) subs[tid][pid] = []
@@ -21,6 +20,12 @@ export const getStandings = async (_req: Request, res: Response) => {
     delete submission.md5
     delete submission.division
     delete submission.language
+    delete submission.tests
+    delete submission.runtime
+
+    if (!submission.released) {
+      submission.status = 'pending'
+    }
 
     subs[tid][pid].push(submission)
   })

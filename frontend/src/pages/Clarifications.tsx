@@ -126,9 +126,9 @@ const Clarifications = (): JSX.Element => {
 
       if (response.ok) {
         await loadClarifications()
-        setReplyLoading(false)
         setBody('')
       }
+      setReplyLoading(false)
     }
 
     const handleLock = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, { value: open }: ButtonProps) => {

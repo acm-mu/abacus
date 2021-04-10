@@ -38,7 +38,7 @@ class ContestService {
 
   scanItems(tableName: string, query?: { args?: Args, columns?: string[] }): Promise<ItemList | undefined> {
     const db = new DocumentClient()
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       let params: ScanInput = {
         TableName: tableName
       }
@@ -60,10 +60,18 @@ class ContestService {
             params.ExpressionAttributeNames = Object.assign({}, ...query.columns.map((e) => ({ [`#${e}`]: `${e}` })))
         }
       }
-      db.scan(params, (err, data) => {
-        if (err) reject(err)
-        else resolve(data.Items)
-      })
+      const scanResults: ItemList = []
+      let items;
+      try {
+        do {
+          items = await db.scan(params).promise();
+          items.Items?.forEach(item => scanResults.push(item))
+          params.ExclusiveStartKey = items.LastEvaluatedKey
+        } while (typeof items.LastEvaluatedKey != "undefined")
+        resolve(scanResults)
+      } catch (err) {
+        reject(err)
+      }
     })
   }
 
@@ -101,12 +109,27 @@ class ContestService {
     const db = new DocumentClient()
     return new Promise((resolve, reject) => {
       const entries = Object.entries(args).filter(entry => !Object.keys(key).includes(entry[0]))
+
+      const setEntries = entries.filter(e => e[1] != null)
+      const remEntries = entries.filter(e => e[1] == null)
+
+      const params: any = {}
+
+      const updateExpression: string[] = []
+
+      if (setEntries.length > 0) {
+        updateExpression.push("SET " + (setEntries.map(e => `#${e[0]} = :${e[0]}`).join(", ")))
+        params.ExpressionAttributeValues = Object.assign({}, ...entries.filter(e => e[1] != null).map((x) => ({ [`:${x[0]}`]: x[1] })))
+      }
+
+      if (remEntries.length > 0) updateExpression.push("REMOVE " + (remEntries.map(e => `#${e[0]}`)))
+
       db.update({
+        ...params,
         TableName: tableName,
         Key: key,
-        UpdateExpression: "SET " + (entries.map((e) => (`#${e[0]} = :${e[0]}`)).join(", ")),
         ExpressionAttributeNames: Object.assign({}, ...entries.map((x) => ({ [`#${x[0]}`]: x[0] }))),
-        ExpressionAttributeValues: Object.assign({}, ...entries.map((x) => ({ [`:${x[0]}`]: x[1] })))
+        UpdateExpression: updateExpression.join(" | ")
       }, (err, data) => {
         if (err) {
           reject(err)
