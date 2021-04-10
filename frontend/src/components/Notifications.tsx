@@ -1,5 +1,5 @@
 import { Context, Notification } from 'abacus';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Message } from 'semantic-ui-react';
 import { v4 as uuidv4 } from 'uuid';
@@ -32,11 +32,9 @@ const Notifications = (): JSX.Element => {
 
   }
 
-  useEffect(() => {
-    socket?.on('notification', (notification: Notification) => {
-      if (forMe(notification)) window.sendNotification(notification)
-    })
-  }, [])
+  socket?.on('notification', (notification: Notification) => {
+    if (forMe(notification)) window.sendNotification(notification)
+  })
 
   const forMe = ({ to }: Notification) => {
     if (!to || to == 'public') return true
