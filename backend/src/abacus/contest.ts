@@ -47,7 +47,7 @@ class ContestService {
   }
 
   scanItems(tableName: string, query?: { args?: Args, columns?: string[] }): Promise<ItemList | undefined> {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       let params: ScanInput = {
         TableName: tableName
       }
@@ -69,10 +69,18 @@ class ContestService {
             params.ExpressionAttributeNames = Object.assign({}, ...query.columns.map((e) => ({ [`#${e}`]: `${e}` })))
         }
       }
-      this.db.scan(params, (err, data) => {
-        if (err) reject(err)
-        else resolve(data.Items)
-      })
+      const scanResults: ItemList = []
+      let items;
+      try {
+        do {
+          items = await this.db.scan(params).promise();
+          items.Items?.forEach(item => scanResults.push(item))
+          params.ExclusiveStartKey = items.LastEvaluatedKey
+        } while (typeof items.LastEvaluatedKey != "undefined")
+        resolve(scanResults)
+      } catch (err) {
+        reject(err)
+      }
     })
   }
 
