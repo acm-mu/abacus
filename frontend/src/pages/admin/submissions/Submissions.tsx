@@ -4,7 +4,7 @@ import { Button, Checkbox, Label, Table } from 'semantic-ui-react'
 import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
 import config from 'environment'
-import { sorted } from 'utils'
+import { compare } from 'utils'
 import { Helmet } from 'react-helmet'
 import { PageLoading } from 'components'
 import { SocketContext } from 'context'
@@ -21,25 +21,24 @@ type SortConfig = {
 const Submissions = (): JSX.Element => {
   const socket = useContext(SocketContext)
   const [isLoading, setLoading] = useState(true)
+  const [submissions, setSubmissions] = useState<SubmissionItem[]>([])
   const [isMounted, setMounted] = useState(true)
+  const [isDeleting, setDeleting] = useState(false)
+  const [showReleased, setShowReleased] = useState(false)
+
   const [{ column, direction }, setSortConfig] = useState<SortConfig>({
     column: 'date',
     direction: 'ascending'
   })
 
-  const [isDeleting, setDeleting] = useState(false)
-  const [showReleased, setShowReleased] = useState(false)
+  const sort = (newColumn: SortKey, submission_list: SubmissionItem[] = submissions) => {
+    const newDirection = column === newColumn ? 'descending' : 'ascending'
+    setSortConfig({ column: newColumn, direction: newDirection })
 
-  const [submissionMap, setSubmissionMap] = useState<{ [key: string]: SubmissionItem }>({})
-
-  const submissions = useMemo<SubmissionItem[]>(() => {
-    const list: Record<string, any>[] = Object.values(submissionMap)
-
-    return sorted(list, column, direction).filter(submission => showReleased || !submission.released) as SubmissionItem[]
-  }, [submissionMap, column, direction, showReleased])
-
-  const sort = (newColumn: SortKey) =>
-    setSortConfig({ column: newColumn, direction: column === newColumn ? 'descending' : 'ascending' })
+    setSubmissions(submission_list.sort((s1: Submission, s2: Submission) =>
+    (compare(s1[newColumn] || 'ZZ', s2[newColumn] || 'ZZ') * (direction == 'ascending' ? 1 : -1)
+    )))
+  }
 
   useEffect(() => {
     loadSubmissions().then(() => setLoading(false))
@@ -53,17 +52,23 @@ const Submissions = (): JSX.Element => {
         Authorization: `Bearer ${localStorage.accessToken}`
       }
     })
+    const submissions = Object.values(await response.json()) as SubmissionItem[]
 
     if (!isMounted) return
 
-    setSubmissionMap(await response.json()) // may need to default
+    setSubmissions(submissions.map(submission => ({ ...submission, checked: false })))
   }
 
   const onFilterChange = () => setShowReleased(!showReleased)
 
-  const downloadSubmissions = () => saveAs(new File([JSON.stringify(submissions, null, '\t')], 'submissions.json', { type: 'text/json;charset=utf-8' }))
-  const handleChange = ({ target: { id, checked } }: ChangeEvent<HTMLInputElement>) => { return } //setSubmissionsMap(submissions.map(submission => submission.sid == id ? { ...submission, checked } : submission))
-  const checkAll = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => { return } // setSubmissionsMap(submissions.map(submission => ({ ...submission, checked })))
+  const downloadSubmissions = () =>
+    saveAs(new File([JSON.stringify(submissions, null, '\t')], 'submissions.json', { type: 'text/json;charset=utf-8' }))
+
+  const handleChange = ({ target: { id, checked } }: ChangeEvent<HTMLInputElement>) =>
+    setSubmissions(submissions.map(submission => submission.sid == id ? { ...submission, checked } : submission))
+
+  const checkAll = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) =>
+    setSubmissions(submissions.map(submission => (showReleased || !submission.released) ? { ...submission, checked } : submission))
 
   const deleteSelected = async () => {
     setDeleting(true)
@@ -81,6 +86,10 @@ const Submissions = (): JSX.Element => {
     }
     setDeleting(false)
   }
+
+  const filteredSubmissions = useMemo(() =>
+    submissions.filter((submission) => showReleased || !submission.released)
+    , [submissions, showReleased])
 
   if (isLoading) return <PageLoading />
 
@@ -108,13 +117,19 @@ const Submissions = (): JSX.Element => {
         </Table.Row>
       </Table.Header>
       <Table.Body>
-        {submissions.length == 0 ?
+        {filteredSubmissions.length == 0 ?
           <Table.Row>
             <Table.Cell colSpan={'100%'}>No Submissions</Table.Cell>
           </Table.Row> :
-          submissions.map(submission =>
+          filteredSubmissions.map((submission) =>
             <Table.Row key={submission.sid}>
-              <Table.Cell><input type='checkbox' checked={submission.checked} id={submission.sid} onChange={handleChange} /></Table.Cell>
+              <Table.Cell>
+                <input
+                  type='checkbox'
+                  checked={submission.checked}
+                  id={submission.sid}
+                  onChange={handleChange} />
+              </Table.Cell>
               <Table.Cell>
                 <Link to={`/admin/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link></Table.Cell>
               <Table.Cell><Link to={`/admin/problems/${submission.pid}`}>{submission.problem?.name} </Link></Table.Cell>
@@ -126,8 +141,7 @@ const Submissions = (): JSX.Element => {
               <Table.Cell>{Math.floor(submission.runtime || 0)}</Table.Cell>
               <Table.Cell><Moment fromNow date={submission.date * 1000} /> </Table.Cell>
               <Table.Cell>{submission.score}</Table.Cell>
-            </Table.Row>
-          )}
+            </Table.Row>)}
       </Table.Body>
     </Table>
   </>

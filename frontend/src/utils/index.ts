@@ -46,19 +46,6 @@ export const languages: Language[] = [
   { key: 'java', value: 'Java', text: 'Java', file_extension: '.java' },
 ]
 
-export const sorted = (list: Record<string, unknown>[], column: string, direction: 'ascending' | 'descending'): Record<string, unknown>[] =>
-  list.sort((s1: Record<string, unknown>, s2: Record<string, unknown>) => {
-    let s1Val: string | number = 'ZZ'
-    let s2Val: string | number = 'ZZ'
-
-    if (typeof s1[column] == 'string') s1Val = s1[column] as string
-    if (typeof s1[column] == 'number') s1Val = s1[column] as number
-    if (typeof s2[column] == 'string') s2Val = s2[column] as string
-    if (typeof s2[column] == 'number') s2Val = s2[column] as number
-
-    return compare(s1Val, s2Val) * (direction == 'ascending' ? 1 : -1)
-  })
-
 export const format_text = (str: string): string => str.replace(/(^.*$)/gm, (c: string) => isNaN(+c) ? `"${c}"` : c)
 
 // Capitalizes the first letter of a string
