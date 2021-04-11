@@ -1,21 +1,15 @@
-import AWS, { Lambda, S3 } from "aws-sdk";
+import AWS, { Lambda } from "aws-sdk";
 import { v4 as uuidv4 } from 'uuid';
 import { AttributeMap, DeleteItemOutput, DocumentClient, ItemList, PutItemOutput, ScanInput, UpdateItemOutput } from "aws-sdk/clients/dynamodb";
+import { InvocationResponse } from "aws-sdk/clients/lambda";
 
 class ContestService {
-  db: DocumentClient;
-  s3: S3;
-  lambda: Lambda;
-
   constructor() {
     AWS.config.region = process.env.AWS_REGION || 'us-east-1';
-
-    this.db = new DocumentClient();
-    this.s3 = new S3();
-    this.lambda = new Lambda();
   }
 
   scanItems(tableName: string, query?: { args?: Record<string, unknown>, columns?: string[] }): Promise<ItemList | undefined> {
+    const db = new DocumentClient()
     return new Promise(async (resolve, reject) => {
       let params: ScanInput = {
         TableName: tableName
@@ -42,7 +36,7 @@ class ContestService {
       let items;
       try {
         do {
-          items = await this.db.scan(params).promise();
+          items = await db.scan(params).promise();
           items.Items?.forEach(item => scanResults.push(item))
           params.ExclusiveStartKey = items.LastEvaluatedKey
         } while (typeof items.LastEvaluatedKey != "undefined")
@@ -54,8 +48,9 @@ class ContestService {
   }
 
   getItem(tableName: string, key: Record<string, unknown>): Promise<AttributeMap | undefined> {
+    const db = new DocumentClient()
     return new Promise((resolve, reject) => {
-      this.db.get({
+      db.get({
         TableName: tableName,
         Key: key
       }, (err, data) => {
@@ -66,8 +61,9 @@ class ContestService {
   }
 
   putItem(tableName: string, item: Record<string, unknown>): Promise<PutItemOutput> {
+    const db = new DocumentClient();
     return new Promise((resolve, reject) => {
-      this.db.put({
+      db.put({
         TableName: tableName,
         Item: item
       }, (err, data) => {
@@ -82,6 +78,7 @@ class ContestService {
   }
 
   updateItem(tableName: string, key: Record<string, unknown>, args: Record<string, unknown>): Promise<UpdateItemOutput> {
+    const db = new DocumentClient()
     return new Promise((resolve, reject) => {
       const entries = Object.entries(args).filter(entry => !Object.keys(key).includes(entry[0]))
 
@@ -99,7 +96,7 @@ class ContestService {
 
       if (remEntries.length > 0) updateExpression.push("REMOVE " + (remEntries.map(e => `#${e[0]}`)))
 
-      this.db.update({
+      db.update({
         ...params,
         TableName: tableName,
         Key: key,
@@ -117,8 +114,9 @@ class ContestService {
   }
 
   deleteItem(tableName: string, key: Record<string, unknown>): Promise<DeleteItemOutput> {
+    const db = new DocumentClient()
     return new Promise((resolve, reject) => {
-      this.db.delete({
+      db.delete({
         TableName: tableName,
         Key: key
       }, (err, data) => {
@@ -132,8 +130,25 @@ class ContestService {
     })
   }
 
+  invoke(FunctionName: string, Payload: Record<string, unknown>): Promise<InvocationResponse> {
+    const lambda = new Lambda()
+    return new Promise((resolve, reject) => {
+      lambda.invoke({
+        FunctionName,
+        Payload: JSON.stringify(Payload)
+      }, (err, data) => {
+        if (err) {
+          reject(err)
+          return
+        }
+        resolve(data)
+      })
+    })
+  }
+
   logActivity(tableName: string, action: string, newValue: Record<string, unknown>) {
-    this.db.put({
+    const db = new DocumentClient()
+    db.put({
       TableName: 'activity',
       Item: {
         aid: uuidv4(),
