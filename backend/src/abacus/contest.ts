@@ -1,7 +1,6 @@
-import { Args, Settings } from "abacus";
 import AWS, { Lambda, S3 } from "aws-sdk";
 import { v4 as uuidv4 } from 'uuid';
-import { AttributeMap, BatchWriteItemOutput, DeleteItemOutput, DocumentClient, ItemList, PutItemOutput, ScanInput, UpdateItemOutput } from "aws-sdk/clients/dynamodb";
+import { AttributeMap, DeleteItemOutput, DocumentClient, ItemList, PutItemOutput, ScanInput, UpdateItemOutput } from "aws-sdk/clients/dynamodb";
 
 class ContestService {
   db: DocumentClient;
@@ -9,10 +8,6 @@ class ContestService {
   lambda: Lambda;
 
   constructor() {
-    this.init_aws();
-  }
-
-  init_aws() {
     AWS.config.region = process.env.AWS_REGION || 'us-east-1';
 
     this.db = new DocumentClient();
@@ -20,33 +15,7 @@ class ContestService {
     this.lambda = new Lambda();
   }
 
-  async get_settings(): Promise<Settings> {
-    return new Promise((resolve, reject) => {
-      this.scanItems('setting')
-        .then((itemList?: ItemList) => {
-          if (itemList)
-            resolve(Object.assign({}, ...itemList.map(((x: any) => ({ [x.key]: x.value })))))
-          else
-            reject()
-        })
-        .catch(err => reject(err))
-    })
-  }
-
-  save_settings(settings: Settings): Promise<BatchWriteItemOutput> {
-    return new Promise((resolve, reject) => {
-      this.db.batchWrite({
-        RequestItems: {
-          'setting': Object.entries(settings).map((e) => ({ PutRequest: { Item: { "key": e[0], "value": e[1] } } }))
-        }
-      }, (err, data) => {
-        if (err) reject(err)
-        else resolve(data)
-      })
-    })
-  }
-
-  scanItems(tableName: string, query?: { args?: Args, columns?: string[] }): Promise<ItemList | undefined> {
+  scanItems(tableName: string, query?: { args?: Record<string, unknown>, columns?: string[] }): Promise<ItemList | undefined> {
     return new Promise(async (resolve, reject) => {
       let params: ScanInput = {
         TableName: tableName
@@ -84,7 +53,7 @@ class ContestService {
     })
   }
 
-  getItem(tableName: string, key: Args): Promise<AttributeMap | undefined> {
+  getItem(tableName: string, key: Record<string, unknown>): Promise<AttributeMap | undefined> {
     return new Promise((resolve, reject) => {
       this.db.get({
         TableName: tableName,
@@ -96,7 +65,7 @@ class ContestService {
     })
   }
 
-  putItem(tableName: string, item: Args): Promise<PutItemOutput> {
+  putItem(tableName: string, item: Record<string, unknown>): Promise<PutItemOutput> {
     return new Promise((resolve, reject) => {
       this.db.put({
         TableName: tableName,
@@ -112,7 +81,7 @@ class ContestService {
     })
   }
 
-  updateItem(tableName: string, key: Args, args: Args): Promise<UpdateItemOutput> {
+  updateItem(tableName: string, key: Record<string, unknown>, args: Record<string, unknown>): Promise<UpdateItemOutput> {
     return new Promise((resolve, reject) => {
       const entries = Object.entries(args).filter(entry => !Object.keys(key).includes(entry[0]))
 
@@ -147,7 +116,7 @@ class ContestService {
     })
   }
 
-  deleteItem(tableName: string, key: Args): Promise<DeleteItemOutput> {
+  deleteItem(tableName: string, key: Record<string, unknown>): Promise<DeleteItemOutput> {
     return new Promise((resolve, reject) => {
       this.db.delete({
         TableName: tableName,
@@ -163,7 +132,7 @@ class ContestService {
     })
   }
 
-  logActivity(tableName: string, action: string, newValue: Args) {
+  logActivity(tableName: string, action: string, newValue: Record<string, unknown>) {
     this.db.put({
       TableName: 'activity',
       Item: {
@@ -177,18 +146,4 @@ class ContestService {
   }
 }
 
-const transpose = (itemList: ItemList | undefined, key: string): { [key: string]: any } => itemList ? Object.assign({}, ...itemList.map((obj: any) => ({ [obj[key]]: obj }))) : {}
-
-const makeJSON = (itemList: ItemList, columns: string[] = []): string => {
-  itemList.map((e) => {
-    Object.keys(e).forEach((key) => {
-      if (!columns.includes(key)) {
-        delete e[key]
-      }
-    })
-  })
-  return JSON.stringify(itemList)
-}
-
 export default new ContestService()
-export { transpose, makeJSON };

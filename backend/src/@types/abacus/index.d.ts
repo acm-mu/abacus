@@ -97,6 +97,4 @@ declare module "abacus" {
     context?: Context;
     type?: 'success' | 'warning' | 'error';
   }
-
-  export interface Args { [key: string]: unknown }
 }
