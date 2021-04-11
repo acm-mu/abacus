@@ -62,7 +62,10 @@ export const putContest = async (req: Request, res: Response) => {
   }
 
   try {
-    await contest.save_settings(settings)
+    for (const [key, value] of Object.entries(settings)) {
+      await contest.updateItem('setting', { key }, { value })
+    }
+
     res.send(settings)
   } catch (err) {
     console.error(err)
