@@ -23,12 +23,15 @@ export const io = new Server(server, {
   serveClient: false,
   cors: {
     origin: "*"
-  }
+  },
+  transports: ['websocket']
 });
 
 if (process.env.REDIS_HOST) {
-  const pubClient = new RedisClient({ host: process.env.REDIS_HOST, port: 6379 });
-  const subClient = pubClient.duplicate();
+  const { REDIS_HOST: host, REDIS_PASS: auth_pass } = process.env
+
+  const pubClient = new RedisClient({ host, port: 6379, auth_pass })
+  const subClient = pubClient.duplicate()
 
   io.adapter(createAdapter({ pubClient, subClient }))
 }
