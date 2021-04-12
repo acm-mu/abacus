@@ -32,8 +32,8 @@ const Submissions = (): JSX.Element => {
     setLoading(false)
   }
 
-  if (!user) return <Unauthorized />
   if (isLoading) return <PageLoading />
+  if (user?.division != 'gold' && user?.role != 'admin') return <Unauthorized />
 
   return <>
     <Helmet> <title>Abacus | Gold Submissions</title> </Helmet>

@@ -9,7 +9,7 @@ import { AppContext, SocketContext } from "context";
 import { Helmet } from "react-helmet";
 
 const Standings = (): JSX.Element => {
-  const { settings } = useContext(AppContext);
+  const { user, settings } = useContext(AppContext);
   const socket = useContext(SocketContext)
   const [problems, setProblems] = useState<Problem[]>();
   const [standings, setStandings] = useState<StandingsUser[]>();
@@ -90,7 +90,10 @@ const Standings = (): JSX.Element => {
             <Table.HeaderCell collapsing>TIME</Table.HeaderCell>
             {problems.map(problem =>
               <Table.HeaderCell key={problem.id} collapsing>
-                <Link to={`/blue/problems/${problem.id}`}>{problem.id}</Link>
+                {user?.division === 'blue' || user?.role === 'admin' ?
+                  <Link to={`/blue/problems/${problem.id}`}>{problem.id}</Link> :
+                  problem.id
+                }
               </Table.HeaderCell>
             )}
           </Table.Row>

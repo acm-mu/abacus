@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext, useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Breadcrumb, Button, Divider } from "semantic-ui-react";
 import MDEditor from "@uiw/react-md-editor";
-import { Block, Countdown, NotFound, ClarificationModal, PageLoading } from 'components'
+import { Block, Countdown, NotFound, ClarificationModal, PageLoading, Unauthorized } from 'components'
 import config from 'environment'
 import { AppContext } from "context";
 import "./Problem.scss";
@@ -62,6 +62,7 @@ const problem = (): JSX.Element => {
 
   if (isLoading) return <PageLoading />
   if (!problem) return <NotFound />
+  if (user?.division != 'blue' && user?.role != 'admin') return <Unauthorized />
 
   return <>
     <Helmet> <title>Abacus | {problem.name}</title> </Helmet>
