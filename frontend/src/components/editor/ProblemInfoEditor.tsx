@@ -18,6 +18,11 @@ const ProblemInfoEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Elem
         solutions: undefined,
         tests: undefined
       })
+    } else if (value == 'eagle') {
+      setProblem({
+        ...problem,
+        division: 'eagle'
+      })
     } else if (value == 'blue') {
 
       const filename = problem.name.replace(/[ !@#$%^&*()-]/g, '')

@@ -131,6 +131,7 @@ const Problems = (): JSX.Element => {
       <Menu pointing secondary>
         <Menu.Item name='blue' active={activeDivision == 'blue'} onClick={handleItemClick}>Blue</Menu.Item>
         <Menu.Item name='gold' active={activeDivision == 'gold'} onClick={handleItemClick}>Gold</Menu.Item>
+        <Menu.Item name='eagle' active={activeDivision == 'eagle'} onClick={handleItemClick}>Eagle</Menu.Item>
       </Menu>
       <Table sortable>
         <Table.Header>
