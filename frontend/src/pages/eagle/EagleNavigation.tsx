@@ -11,7 +11,7 @@ const EagleNavigation = (): JSX.Element => {
   return (
     <Navigation className="eagle-div">
       <Menu.Item as={NavLink} exact to="/eagle" content="Home" />
-      {hasAccessTo() ? <Menu.Item as={NavLink} to="/eagle/problem" content="Problems" /> : <></>}
+      {hasAccessTo() ? <Menu.Item as={NavLink} to="/eagle/problem" content="Problem" /> : <></>}
       {hasAccessTo() ? <Menu.Item as={NavLink} to="/eagle/clarifications" content="Clarifications" /> : <></>}
     </Navigation>
   )
