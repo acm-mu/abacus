@@ -1,7 +1,7 @@
 import { Problem, Submission } from 'abacus'
 import React, { useContext, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { Block, Countdown, NotFound, ClarificationModal, PageLoading } from 'components'
+import { Block, Countdown, NotFound, ClarificationModal, PageLoading, Unauthorized } from 'components'
 import { Breadcrumb, Button, Message } from 'semantic-ui-react'
 import MDEditor from '@uiw/react-md-editor'
 import config from "environment"
@@ -53,6 +53,7 @@ const problem = (): JSX.Element => {
 
   if (isLoading) return <PageLoading />
   if (!problem) return <NotFound />
+  if (user?.division != 'gold') return <Unauthorized />
 
   return <>
     <Helmet> <title>Abacus | {problem.name}</title> </Helmet>
