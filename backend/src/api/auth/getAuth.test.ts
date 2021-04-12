@@ -1,22 +1,21 @@
-import * as AWS from 'aws-sdk';
-import { ScanInput } from 'aws-sdk/clients/dynamodb'
 import { app } from '../../server';
 import request from 'supertest';
+import { contest } from '../../abacus';
+import { JSONDB } from '../../abacus/db';
+import { sha256 } from '../../utils';
 
 describe('this module', () => {
 
   beforeEach(() => {
-    const awsMock = jest.spyOn(AWS.DynamoDB, 'DocumentClient');
-
-    awsMock.mockImplementation((): any => ({
-      scan: async (_params: ScanInput, callback: Function) => {
-        callback(null, {
-          Items: [
-            { username: 'user', password: '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8' }
-          ]
-        })
+    contest.db = new JSONDB({
+      'user': {
+        'aw8fawe9f8awe9fawe9f7awe9f7': {
+          uid: 'aw8fawe9f8awe9fawe9f7awe9f7',
+          username: 'user',
+          password: sha256('afawefawef')
+        }
       }
-    }))
+    })
   })
 
   it('GET - 403/Forbidden no credentials', async () => {

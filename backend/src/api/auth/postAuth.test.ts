@@ -1,28 +1,33 @@
-import * as AWS from 'aws-sdk';
-import { ScanInput } from 'aws-sdk/clients/dynamodb'
+import { sha256 } from '../../utils';
 import request from 'supertest';
 import { app } from '../../server';
+import { contest } from '../../abacus';
+import { JSONDB } from '../../abacus/db';
 
-describe('this module', () => {
+describe('POST /auth endpoint', () => {
 
-  beforeEach(() => {
-    const awsMock = jest.spyOn(AWS.DynamoDB, 'DocumentClient');
+  it('No credentials', async () => {
 
-    awsMock.mockImplementation((): any => ({
-      scan: async (_params: ScanInput, callback: Function) => {
-        callback(null, {
-          Items: [
-            { username: 'user', password: '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8' }
-          ]
-        })
-      }
-    }))
+    contest.db = new JSONDB({
+      'user': {}
+    })
+
+    const res = await request(app).post('/auth').send({ username: '', password: '' })
+
+    expect(res.status).toBe(400)
   })
 
-  it('POST /auth', async () => {
-    const res = await request(app)
-      .post('/auth')
-      .send({ username: 'user', password: 'password' })
+  it('Correct credentials', async () => {
+
+    const user = { username: 'user', password: 'password' }
+
+    contest.db = new JSONDB({
+      'user': {
+        'awefawefawefawefawefawefawefawef': { ...user, password: sha256(user.password) }
+      }
+    })
+
+    const res = await request(app).post('/auth').send(user)
 
     expect(res.status).toBe(200)
   })
