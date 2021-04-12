@@ -48,12 +48,14 @@ const Home = (): JSX.Element => {
             <Block size='xs-12' className='problem'>
                 {(!settings || new Date() < settings.start_date) ?
                     <p>The problem cannot be viewed because the competition has not yet started.</p> :
-                    <>
-                        <h1>Problem {problem?.id}: {problem?.name}</h1>
-                        <Divider />
-                        <MDEditor.Markdown source={problem?.description || ''} />
-                    </>
-                }
+                    (!problem ?
+                        <h2>There are no a problems, yet.</h2> :
+                        <>
+                            <h1>Problem {problem?.id}: {problem?.name}</h1>
+                            <Divider />
+                            <MDEditor.Markdown source={problem?.description || ''} />
+                        </>
+                    )}
             </Block>
         </>
     )
