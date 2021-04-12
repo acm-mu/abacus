@@ -1,10 +1,12 @@
 import React, { useContext } from 'react'
 import { AppContext } from 'context';
-import { Block, Countdown } from 'components'
+import { Block, Countdown, Unauthorized } from 'components'
 import { Helmet } from 'react-helmet';
 
 const Standings = (): JSX.Element => {
-  const { settings } = useContext(AppContext);
+  const { user, settings } = useContext(AppContext);
+
+  if (user?.division != 'gold' && user?.role != 'admin') return <Unauthorized />
 
   if (!settings || new Date() < settings.start_date)
     return <>

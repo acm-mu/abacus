@@ -35,6 +35,7 @@ const Submissions = (): JSX.Element => {
 
   if (!user) return <Unauthorized />
   if (isLoading) return <PageLoading />
+  if (user?.division != 'blue' && user?.role != 'admin') return <Unauthorized />
 
   return <>
     <Helmet> <title>Abacus | Blue Submissions</title> </Helmet>

@@ -1,13 +1,15 @@
 import React, { useContext } from 'react';
-import { Block, Countdown } from 'components';
+import { Block, Countdown, Unauthorized } from 'components';
 import { Helmet } from 'react-helmet';
 import { AppContext } from 'context';
 
 const Home = (): JSX.Element => {
 
-    const { settings } = useContext(AppContext);
+    const { user, settings } = useContext(AppContext);
 
     const helmet = <Helmet> <title>Abacus | Eagle Problem</title> </Helmet>
+
+    if (user?.division != 'eagle' && user?.role != 'admin') return <Unauthorized />
 
     return (
         <>
