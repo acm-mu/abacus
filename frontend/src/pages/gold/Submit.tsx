@@ -1,12 +1,13 @@
 import { Problem, Submission } from "abacus";
-import React, { ChangeEvent, SyntheticEvent, useEffect, useMemo, useState } from "react";
+import React, { ChangeEvent, SyntheticEvent, useContext, useEffect, useMemo, useState } from "react";
 import { Form, DropdownProps, InputOnChangeData, Breadcrumb } from "semantic-ui-react";
-import { Block, PageLoading, ScratchViewer } from "components";
+import { Block, NotFound, PageLoading, ScratchViewer, Unauthorized } from "components";
 import config from "environment"
 import { Helmet } from "react-helmet";
 import { useHistory, useParams } from "react-router";
 import MDEditor from "@uiw/react-md-editor";
 import { Link } from "react-router-dom";
+import { AppContext } from "context";
 
 const Submit = (): JSX.Element => {
   const { pid: problem_id } = useParams<{ pid: string }>()
@@ -20,6 +21,8 @@ const Submit = (): JSX.Element => {
   const [isLoading, setLoading] = useState(true)
   const [isMounted, setMounted] = useState(true)
   const [isSubmitting, setSubmitting] = useState(false)
+
+  const { user } = useContext(AppContext)
 
   const history = useHistory()
 
@@ -83,6 +86,8 @@ const Submit = (): JSX.Element => {
   const handleChange = async (event: ChangeEvent<HTMLInputElement>, { value }: InputOnChangeData) => setProjectUrl(value)
 
   if (isLoading) return <PageLoading />
+  if (!problem) return <NotFound />
+  if (user?.division != 'gold' && user?.role != 'admin') return <Unauthorized />
 
   return <>
     <Helmet> <title>Abacus | Gold Submit</title> </Helmet>
@@ -119,7 +124,7 @@ const Submit = (): JSX.Element => {
             color="orange"
             content="Submit"
             loading={isSubmitting}
-            disabled = {isSubmitting}
+            disabled={isSubmitting}
           />
         </Form.Group>
       </Form>

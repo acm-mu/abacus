@@ -80,7 +80,7 @@ const Problems = (): JSX.Element => {
 
 
   if (isLoading) return <PageLoading />
-  if (user?.division != 'blue') return <Unauthorized />
+  if (user?.division != 'blue' && user?.role != 'admin') return <Unauthorized />
 
   return <>
     {helmet}

@@ -2,7 +2,7 @@ import { Problem, Submission } from 'abacus'
 import React, { ChangeEvent, useContext, useEffect, useState } from 'react'
 import { Form, Button, Breadcrumb } from 'semantic-ui-react'
 import { Link, useHistory, useParams } from 'react-router-dom'
-import { Block, Countdown, FileDialog, NotFound, PageLoading } from 'components'
+import { Block, Countdown, FileDialog, NotFound, PageLoading, Unauthorized } from 'components'
 import config from 'environment'
 import { AppContext } from 'context'
 import { Language, languages } from 'utils'
@@ -107,6 +107,7 @@ const Submit = (): JSX.Element => {
 
   if (isLoading) return <PageLoading />
   if (!problem) return <NotFound />
+  if (user?.division != 'blue' && user?.role != 'admin') return <Unauthorized />
 
   return <>
     <Helmet> <title>Abacus | Blue Submit</title> </Helmet>
