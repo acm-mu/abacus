@@ -1,11 +1,8 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Block } from 'components';
 import { Helmet } from 'react-helmet';
-import { AppContext } from 'context';
 
-const Eagle = (): JSX.Element => {
-
-    const { settings } = useContext(AppContext);
+const Home = (): JSX.Element => {
 
     const helmet = <Helmet> <title>Abacus | Eagle Division</title> </Helmet>
 
@@ -14,8 +11,6 @@ const Eagle = (): JSX.Element => {
             {helmet}
             <Block size="xs-12">
                 <h1>Eagle Division</h1>
-            </Block>
-            <Block size="xs-12">
                 <h2>Overview</h2>
                 <p>
                     Teams of two to four students will be working together to solve a problem
@@ -30,16 +25,8 @@ const Eagle = (): JSX.Element => {
                     will have a Google Meet call where students will present and gain the feedback mentioned earlier.
                 </p>
             </Block>
-            <Block size="xs-12">
-                <h2>Problem Statement</h2>
-
-                {(!settings || new Date() < settings.start_date) ?
-                    <p>The competition has not yet started.</p> :
-                    <p>The problem statement will be displayed here on competition day.</p>
-                }
-            </Block>
         </>
     )
 }
 
-export default Eagle;
+export default Home;

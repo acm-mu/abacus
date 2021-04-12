@@ -5,7 +5,6 @@ import { Route, Switch } from 'react-router-dom';
 import Home from './Home';
 import About from './About';
 import Help from './Help';
-import Eagle from './Eagle'
 import DefaultNavigation from './DefaultNavigation';
 import { NotFound } from 'components';
 import Clarifications from './Clarifications';
@@ -17,7 +16,6 @@ export const Index = (): JSX.Element => (
       <Switch>
         <Route exact path="/" component={Home} />
         <Route path="/about" component={About} />
-        <Route path="/eagle" component={Eagle} />
         <Route path="/help" component={Help} />
         <Route path='/clarifications/:cid' component={Clarifications} />
         <Route path='/clarifications' component={Clarifications} />
@@ -28,6 +26,7 @@ export const Index = (): JSX.Element => (
 );
 
 export { default as Gold } from './gold'
-export { default as Admin } from './admin'
 export { default as Blue } from './blue'
+export { default as Eagle } from './eagle'
+export { default as Admin } from './admin'
 export { default as Judge } from './judge'
