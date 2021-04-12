@@ -47,7 +47,7 @@ const Problems = (): JSX.Element => {
     </>
 
   if (isLoading) return <PageLoading />
-  if (user?.division != 'gold') return <Unauthorized />
+  if (user?.division != 'gold' && user?.role != 'admin') return <Unauthorized />
 
   return <>
     {helmet}
