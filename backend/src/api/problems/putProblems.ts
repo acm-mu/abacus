@@ -90,7 +90,7 @@ export const putProblems = async (req: Request, res: Response) => {
   }
 
   if (item.id) {
-    const problems = Object.values(await contest.scanItems('problem', { args: { id: item.id, division: item.division } }) || {})
+    const problems = Object.values(await contest.db.scan('problem', { args: { id: item.id, division: item.division } }) || {})
     if (problems.length > 0 && problems[0].pid != item.pid) {
       res.status(400).json({ message: "Problem id is taken!" })
       return
@@ -98,7 +98,7 @@ export const putProblems = async (req: Request, res: Response) => {
   }
 
   try {
-    await contest.updateItem('problem', { pid: req.body.pid }, item)
+    await contest.db.update('problem', { pid: req.body.pid }, item)
     res.send(item)
   } catch (err) { res.sendStatus(500) }
 }

@@ -53,7 +53,7 @@ export const postUsers = async (req: Request, res: Response) => {
   item.username = item.username.toLowerCase()
   item.password = createHash('sha256').update(item.password).digest('hex')
 
-  const users = await contest.scanItems('user', { args: { username: item.username } }) || {}
+  const users = await contest.get_users({ args: { username: item.username } })
   if (Object.values(users).length) {
     res.status(400).json({ message: 'Username is taken!' })
     return
@@ -61,7 +61,7 @@ export const postUsers = async (req: Request, res: Response) => {
   item.uid = uuidv4().replace(/-/g, '')
 
   try {
-    await contest.putItem('user', item)
+    await contest.db.put('user', item)
     res.send(item)
   } catch (err) {
     res.sendStatus(500)

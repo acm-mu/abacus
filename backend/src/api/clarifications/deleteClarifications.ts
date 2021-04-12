@@ -17,16 +17,16 @@ export const deleteClarifications = async (req: Request, res: Response) => {
     return
   }
 
-  const clarifications = await contest.scanItems('clarification') || []
+  const clarifications = await contest.db.scan('clarification') || []
 
   if (req.body.cid instanceof Array) {
     let [success, failed] = [0, 0]
     for (const cid of req.body.cid) {
       try {
-        await contest.deleteItem('clarification', { cid })
+        await contest.db.delete('clarification', { cid })
         for (const clarification of clarifications)
           if (clarification.parent == cid)
-            await contest.deleteItem('clarification', { cid: clarification.parent })
+            await contest.db.delete('clarification', { cid: clarification.parent as string })
 
         success++
       } catch (err) {
@@ -37,10 +37,10 @@ export const deleteClarifications = async (req: Request, res: Response) => {
     res.json({ message: `Successfully deleted ${success} clarification(s) (${failed} failed).` })
   } else {
     try {
-      await contest.deleteItem('clarification', { cid: req.body.cid })
+      await contest.db.delete('clarification', { cid: req.body.cid })
       for (const clarification of clarifications)
         if (clarification.parent == req.body.cid)
-          await contest.deleteItem('clarification', { cid: clarification.cid })
+          await contest.db.delete('clarification', { cid: clarification.cid as string })
       res.json({ message: "Clarification successfully deleted" })
     } catch (err) {
       console.error(err)

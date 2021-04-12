@@ -51,13 +51,13 @@ export const postSubmissions = async (req: Request, res: Response) => {
   try {
     const item = matchedData(req)
 
-    const user = await contest.getItem('user', { uid: req.user?.uid }) as unknown as User
+    const user = await contest.db.get('user', { uid: req.user?.uid as string }) as unknown as User
     if (!user) {
       res.status(400).send('Team does not exist!')
       return
     }
 
-    const problem = await contest.getItem('problem', { pid: item.pid }) as unknown as Problem
+    const problem = await contest.db.get('problem', { pid: item.pid }) as unknown as Problem
     if (!problem) {
       res.status(400).send('Problem does not exist!')
       return
@@ -67,17 +67,17 @@ export const postSubmissions = async (req: Request, res: Response) => {
       return
     }
 
-    const settings = await contest.get_settings()
+    const { start_date, end_date } = await contest.get_settings()
     const now = Date.now()
-    if (now < settings.start_date * 1000) {
+    if (now < start_date * 1000) {
       res.status(400).send('Competition has not started yet!')
       return
-    } else if (now > settings.end_date * 1000) {
+    } else if (now > end_date * 1000) {
       res.status(400).send('Competition has ended!')
       return
     }
 
-    const submissions = await contest.scanItems('submission', { args: { tid: req.user?.uid, pid: item.pid } })
+    const submissions = await contest.db.scan('submission', { args: { tid: req.user?.uid, pid: item.pid } })
 
     if (submissions) {
       for (const submission of submissions) {
@@ -143,7 +143,7 @@ export const postSubmissions = async (req: Request, res: Response) => {
       }
     }
 
-    await contest.putItem('submission', submission)
+    await contest.db.put('submission', submission)
 
     io.emit('new_submission', { sid: submission.sid })
 

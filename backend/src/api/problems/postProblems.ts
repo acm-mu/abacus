@@ -81,14 +81,14 @@ export const postProblems = async (req: Request, res: Response) => {
     }
   }
 
-  const problems = await contest.scanItems('problem', { args: { id: item.id, division: item.division } }) || {}
+  const problems = await contest.db.scan('problem', { args: { id: item.id, division: item.division } }) || {}
   if (Object.values(problems).length > 0) {
     res.status(400).json({ message: "Problem id is taken!" })
     return
   }
 
   try {
-    await contest.putItem('problem', item)
+    await contest.db.put('problem', item)
     res.send(item)
   }
   catch (err) {

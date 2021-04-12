@@ -1,7 +1,7 @@
 import { Converter } from 'aws-sdk/clients/dynamodb';
 import { Request, Response } from 'express';
 import { matchedData, ParamSchema, validationResult } from "express-validator"
-import contest from '../../abacus/contest'
+import { contest } from '../../abacus'
 
 export const schema: Record<string, ParamSchema> = {
   sid: {
@@ -19,7 +19,7 @@ export const rerunSubmission = async (req: Request, res: Response) => {
     return
   }
 
-  const submission = await contest.scanItems('submission', { args: matchedData(req) })
+  const submission = await contest.db.scan('submission', { args: matchedData(req) })
   if (submission) {
     try {
       const data = await contest.invoke('PistonRunner', {

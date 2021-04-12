@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
 import { matchedData, ParamSchema, validationResult } from "express-validator";
 import { authenticate } from '../../abacus/authlib';
-import contest, { transpose } from '../../abacus/contest';
+import { contest } from '../../abacus';
+import { transpose } from '../../utils';
 
 export const schema: Record<string, ParamSchema> = {
   pid: {
@@ -72,7 +73,8 @@ export const getProblems = async (req: Request, res: Response) => {
   }
 
   try {
-    let problems: any = await contest.scanItems('problem', { args: query, columns })
+    let problems: any = await contest.db.scan('problem', { args: query })
+    // let problems: any = await contest.db.scan('problem', { args: query, columns })
     if (!problems.length) {
       res.send([])
       return

@@ -1,7 +1,7 @@
 import { createHash } from 'crypto';
 import { Request, Response } from 'express';
 import { matchedData, ParamSchema, validationResult } from "express-validator";
-import contest from "../../abacus/contest"
+import { contest } from "../../abacus"
 
 export const schema: Record<string, ParamSchema> = {
   uid: {
@@ -67,15 +67,15 @@ export const putUsers = async (req: Request, res: Response) => {
 
   try {
     if (item.username) {
-      let users = Object.values(await contest.scanItems('user', { args: { username: item.username } }) || {})
-      users = users.filter((user) => user.uid != item.uid)
+      const users = Object.values(await contest.get_users({ args: { username: item.username } }))
+        .filter(user => user.uid != item.uid)
       if (users.length > 0) {
         res.status(400).json({ message: "Username is taken!" })
         return
       }
     }
 
-    await contest.updateItem('user', { uid: item.uid }, item)
+    await contest.db.update('user', { uid: item.uid }, item)
     res.send(item)
   } catch (err) {
     console.error(err)

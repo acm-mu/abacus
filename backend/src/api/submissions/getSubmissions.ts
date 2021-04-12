@@ -1,7 +1,8 @@
 import { Test } from 'abacus'
 import { Request, Response } from 'express'
 import { matchedData, ParamSchema, validationResult } from "express-validator"
-import contest, { transpose } from '../../abacus/contest'
+import { transpose } from '../../utils'
+import contest from '../../abacus/contest'
 
 export const schema: Record<string, ParamSchema> = {
   sid: {
@@ -67,8 +68,9 @@ export const getSubmissions = async (req: Request, res: Response) => {
     res.status(400).json({ message: errors[0].msg })
     return
   }
-  const problems = transpose(await contest.scanItems('problem', { columns: ['pid', 'division', 'id', 'name'] }), 'pid')
-  const users = transpose(await contest.scanItems('user'), 'uid')
+  // const problems = transpose(await contest.db.scan('problem', { columns: ['pid', 'division', 'id', 'name'] }), 'pid')
+  const problems = transpose(await contest.db.scan('problem'), 'pid')
+  const users = await contest.get_users()
 
   try {
     const item = matchedData(req)
@@ -79,7 +81,7 @@ export const getSubmissions = async (req: Request, res: Response) => {
       item.tid = req.user.uid
     }
 
-    const submissions = await contest.scanItems('submission', { args: item })
+    const submissions = await contest.db.scan('submission', { args: item })
 
     submissions?.map((submission: any) => {
       submission.problem = problems[submission.pid]

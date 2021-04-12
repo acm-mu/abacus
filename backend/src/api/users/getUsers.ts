@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { matchedData, ParamSchema, validationResult } from "express-validator";
-import contest, { transpose } from '../../abacus/contest';
+import { contest } from '../../abacus';
+import { transpose } from '../../utils'
 
 export const schema: Record<string, ParamSchema> = {
   uid: {
@@ -63,7 +64,7 @@ export const getUsers = async (req: Request, res: Response) => {
   }
 
   try {
-    const users = await contest.scanItems('user', { args: params })
+    const users = Object.values(await contest.get_users({ args: params })) as Record<string, unknown>[]
     users?.map(user => delete user.password)
     res.send(transpose(users, 'uid'))
   } catch (err) {
