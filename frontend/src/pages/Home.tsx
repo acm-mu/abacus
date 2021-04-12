@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { Table, Label, Loader, Message, Icon } from 'semantic-ui-react'
-import { Countdown, Block } from 'components';
-import { capitalize } from 'utils';
+import { Table, Loader, Message, Icon } from 'semantic-ui-react'
+import { Countdown, Block, DivisionLabel } from 'components';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 
@@ -39,18 +38,6 @@ const Home = (): JSX.Element => {
     }
   })
 
-  const labelColor = (division: string): 'blue' | 'yellow' | 'teal' | 'grey' => {
-    switch (division) {
-      case "blue":
-        return "blue";
-      case "gold":
-        return "yellow";
-      case "eagle":
-        return "teal";
-      default:
-        return "grey";
-    }
-  }
   return (
     <>
       <Helmet> <title>Abacus</title> </Helmet>
@@ -87,9 +74,7 @@ const Home = (): JSX.Element => {
                   <Table.Row key={`${team.team_name}-${index}`}>
                     <Table.Cell>{team.team_name}</Table.Cell>
                     <Table.Cell>
-                      <Label color={labelColor(team.division)}>
-                        {capitalize(team.division)}
-                      </Label>
+                      <DivisionLabel division={team.division} />
                     </Table.Cell>
                     <Table.Cell>{team.school_name}</Table.Cell>
                     <Table.Cell>{team.num_of_students}</Table.Cell>

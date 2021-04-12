@@ -8,6 +8,7 @@
     --bg-color: #eee;
     --gold: #ffca08;
     --blue: #1b3665;
+    --teal: #00b5ad;
     --sky-blue: #00b1bc;
     --light-green: #aae2ab;
     --dark-green: #4aae4b;
@@ -72,6 +73,10 @@ h6 {
 
 .ui.fixed.menu.inverted.gold-div {
     border-bottom-color: var(--gold);
+}
+
+.ui.fixed.menu.inverted.eagle-div {
+    border-bottom-color: var(--teal);
 }
 
 .ui.fixed.menu.inverted.admin-div {
