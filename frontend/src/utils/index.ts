@@ -17,7 +17,9 @@ export const userHome = (user: User): string => {
     case 'team':
       return `/${user.division}`
     case 'judge':
-      return `/judge`
+      return '/judge'
+    case 'proctor':
+      return '/proctor'
     default:
       return '/'
   }
