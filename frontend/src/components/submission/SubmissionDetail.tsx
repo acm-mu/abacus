@@ -64,7 +64,7 @@ const SubmissionDetail = (): JSX.Element => {
       </Table>
     </Block>
   } else if (submission.division == 'gold') {
-    return <Block size='xs-12'>
+    return <Block transparent size='xs-12'>
       <Table celled>
         <Table.Header>
           <Table.Row>

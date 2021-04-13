@@ -54,7 +54,7 @@ export const getProblems = async (req: Request, res: Response) => {
   }
 
   const { type, ...query } = matchedData(req)
-  let columns = ['pid', 'division', 'id', 'name']
+  let columns = ['pid', 'division', 'id', 'name', 'max_points']
   /// IF OTHER COLUMNS AUTHENTICATE FOR JUDGE / ADMIN
   if (query.columns) {
     columns = columns.concat(query.columns.split(','))

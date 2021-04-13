@@ -14,6 +14,7 @@ const ProblemInfoEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Elem
       setProblem({
         ...problem,
         division: 'gold',
+        max_points: 0,
         skeletons: undefined,
         solutions: undefined,
         tests: undefined
@@ -53,7 +54,10 @@ const ProblemInfoEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Elem
         required />
     </Form.Group>
 
-    {problem.division == 'gold' ? <Form.Checkbox label='Design Document' name='design_document' onChange={handleCheckChange} checked={problem.design_document} /> : <></>}
+    {problem.division == 'gold' ? <Form.Group style={{ display: 'flex', alignItems: 'center' }}>
+      <Form.Field label='Max Points' name='max_points' control={Input} onChange={handleChange} value={problem?.max_points} />
+      <Form.Checkbox label='Design Document' name='design_document' onChange={handleCheckChange} checked={problem.design_document} />
+    </Form.Group> : <></>}
 
     {problem?.division == 'blue' ? <Form.Group widths='equal'>
       <Form.Field label='Memory Limit' name='memory_limit' control={Input} onChange={handleChange} value={problem?.memory_limit || ''} />

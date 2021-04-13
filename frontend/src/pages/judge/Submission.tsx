@@ -156,7 +156,7 @@ const submission = (): JSX.Element => {
     <Button content="Download" icon="download" labelPosition="left" onClick={download} />
     <Button disabled={isDeleting || submission.claimed?.uid != user?.uid} loading={isDeleting} content="Delete" icon="trash" negative labelPosition="left" onClick={deleteSubmission} />
 
-    <SubmissionView submission={submission} rerunning={isRerunning} />
+    <SubmissionView submission={submission} setSubmission={submission?.claimed?.uid == user?.uid ? setSubmission : undefined} rerunning={isRerunning} />
   </>
 }
 

@@ -60,6 +60,14 @@ export const schema: Record<string, ParamSchema> = {
   claimed: {
     in: 'body',
     optional: true
+  },
+  score: {
+    in: 'body',
+    optional: true
+  },
+  feedback: {
+    in: 'body',
+    optional: true
   }
 }
 

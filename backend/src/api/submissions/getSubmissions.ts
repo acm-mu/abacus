@@ -67,7 +67,7 @@ export const getSubmissions = async (req: Request, res: Response) => {
     res.status(400).json({ message: errors[0].msg })
     return
   }
-  const problems = transpose(await contest.scanItems('problem', { columns: ['pid', 'division', 'id', 'name'] }), 'pid')
+  const problems = transpose(await contest.scanItems('problem', { columns: ['pid', 'division', 'id', 'name', 'max_points'] }), 'pid')
   const users = transpose(await contest.scanItems('user'), 'uid')
 
   try {

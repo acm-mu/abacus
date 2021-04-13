@@ -78,13 +78,14 @@ const submission = (): JSX.Element => {
     if (!setSubmission) return
     if (!submission) return
     setReleasing(true)
+    console.log(submission)
     const response = await fetch(`${config.API_URL}/submissions`, {
       method: 'PUT',
       headers: {
         Authorization: `Bearer ${localStorage.accessToken}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ sid: submission.sid, released: true })
+      body: JSON.stringify({ sid: submission.sid, released: true, feedback: submission.feedback, score: submission.score })
     })
     if (response.ok) {
       const result = await response.json()
@@ -109,7 +110,7 @@ const submission = (): JSX.Element => {
     <Button content="Download" icon="download" labelPosition="left" onClick={download} />
     <Button disabled={isDeleting} loading={isDeleting} content="Delete" icon="trash" negative labelPosition="left" onClick={deleteSubmission} />
 
-    <SubmissionView submission={submission} rerunning={isRerunning} />
+    <SubmissionView submission={submission} setSubmission={setSubmission} rerunning={isRerunning} />
   </>
 }
 
