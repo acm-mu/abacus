@@ -85,6 +85,7 @@ const Rules = (): JSX.Element => {
             </p>
             <ul>
                 <li>There are no restrictions on the number of computers or devices you can use.</li>
+                <li>You <b>may</b> use online communication software like email, Zoom, Teams, Skype, Discord, etc. for communication <b>solely between</b> you and your teammates.</li>
                 <li>Your solutions have a runtime limit of <b>30 seconds</b>. When judging, solutions are stopped if they take longer than 30 seconds to execute.</li>
                 <li>Ask questions regarding logistics and problems to the judges. This includes:</li>
                 <ul>
