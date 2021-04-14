@@ -78,14 +78,18 @@ const submission = (): JSX.Element => {
     if (!setSubmission) return
     if (!submission) return
     setReleasing(true)
-    console.log(submission)
     const response = await fetch(`${config.API_URL}/submissions`, {
       method: 'PUT',
       headers: {
         Authorization: `Bearer ${localStorage.accessToken}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ sid: submission.sid, released: true, feedback: submission.feedback, score: submission.score })
+      body: JSON.stringify({
+        sid: submission.sid,
+        released: true,
+        feedback: submission.feedback,
+        score: submission.score
+      })
     })
     if (response.ok) {
       const result = await response.json()

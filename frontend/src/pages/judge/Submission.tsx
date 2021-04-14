@@ -90,11 +90,21 @@ const submission = (): JSX.Element => {
         Authorization: `Bearer ${localStorage.accessToken}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ sid: submission.sid, released: true, claimed: undefined })
+      body: JSON.stringify({
+        sid: submission.sid,
+        feedback: submission.feedback,
+        score: submission.score,
+        released: true,
+        claimed: undefined
+      })
     })
     if (response.ok) {
       const result = await response.json()
-      setSubmission({ ...submission, released: result.released, claimed: undefined })
+      setSubmission({
+        ...submission,
+        released: result.released,
+        claimed: undefined
+      })
     }
     setReleasing(false)
   }
