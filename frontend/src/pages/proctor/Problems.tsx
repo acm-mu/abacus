@@ -1,11 +1,10 @@
-import { Problem, Submission } from 'abacus'
-import React, { useState, useEffect, useContext } from 'react'
+import { Problem } from 'abacus'
+import React, { useState, useEffect } from 'react'
 import { Table } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import config from 'environment'
 import { Block, PageLoading } from 'components'
 import { Helmet } from 'react-helmet'
-import { AppContext } from 'context'
 
 type SortKey = 'id' | 'name'
 type SortConfig = {
@@ -16,9 +15,7 @@ type SortConfig = {
 const Problems = (): JSX.Element => {
   const [isLoading, setLoading] = useState(true)
   const [problems, setProblems] = useState<Problem[]>([])
-  const [submissions, setSubmissions] = useState<{ [key: string]: Submission[] }>()
   const [isMounted, setMounted] = useState(true)
-  const { user } = useContext(AppContext)
 
   const [{ column, direction }, setSortConfig] = useState<SortConfig>({
     column: 'id',
@@ -40,7 +37,7 @@ const Problems = (): JSX.Element => {
   }, [])
 
   const loadProblems = async () => {
-    let response = await fetch(`${config.API_URL}/problems?columns=tests&division=${user?.division}`, {
+    const response = await fetch(`${config.API_URL}/problems?columns=tests&division=blue`, {
       headers: {
         authorization: `Bearer ${localStorage.accessToken}`
       }
@@ -53,25 +50,8 @@ const Problems = (): JSX.Element => {
 
       sort('id', problems)
 
-      response = await fetch(`${config.API_URL}/submissions`, {
-        headers: {
-          authorization: `Bearer ${localStorage.accessToken}`
-        }
-      })
-
-      if (!isMounted) return
-
-      const submissions = Object.values(await response.json()) as Submission[]
-      const subs: { [key: string]: Submission[] } = {}
-      submissions.forEach((sub: Submission) => {
-        const { pid } = sub;
-        if (!(pid in subs)) subs[pid] = []
-        subs[pid].push(sub)
-      })
-      setSubmissions(subs)
     } else {
       setProblems([])
-      setSubmissions({})
     }
     setLoading(false)
   }
@@ -79,7 +59,7 @@ const Problems = (): JSX.Element => {
   if (isLoading) return <PageLoading />
 
   return <>
-    <Helmet> <title>Abacus | Judge Problems</title> </Helmet>
+    <Helmet> <title>Abacus | Proctor Problems</title> </Helmet>
     <Block size='xs-12' transparent>
       <Table sortable>
         <Table.Header>
@@ -93,8 +73,6 @@ const Problems = (): JSX.Element => {
               onClick={() => sort('name')}
               content="Problem Name" />
             <Table.HeaderCell># of Tests</Table.HeaderCell>
-            <Table.HeaderCell>Solved Attempts</Table.HeaderCell>
-            <Table.HeaderCell>Total Attempts</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -104,13 +82,9 @@ const Problems = (): JSX.Element => {
             </Table.Row> :
             (problems.map((problem: Problem, index: number) => (
               <Table.Row key={index}>
-                <Table.Cell><Link to={`/judge/problems/${problem.pid}`}>{problem.id}</Link></Table.Cell>
-                <Table.Cell><Link to={`/judge/problems/${problem.pid}`}>{problem.name}</Link></Table.Cell>
+                <Table.Cell><Link to={`/proctor/problems/${problem.pid}`}>{problem.id}</Link></Table.Cell>
+                <Table.Cell><Link to={`/proctor/problems/${problem.pid}`}>{problem.name}</Link></Table.Cell>
                 <Table.Cell>{problem.tests?.length}</Table.Cell>
-                {submissions && <>
-                  <Table.Cell>{problem.pid in submissions ? submissions[problem.pid].filter((p) => p.score > 0).length : 0}</Table.Cell>
-                  <Table.Cell>{problem.pid in submissions ? submissions[problem.pid].length : 0}</Table.Cell>
-                </>}
               </Table.Row>
             )))}
         </Table.Body>

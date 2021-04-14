@@ -1,16 +1,15 @@
 import { Problem } from "abacus";
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Divider } from "semantic-ui-react";
+import { Divider, Menu, MenuItemProps } from "semantic-ui-react";
 import MDEditor from "@uiw/react-md-editor";
 import { Block, Countdown, NotFound, PageLoading } from 'components'
 import config from 'environment'
-import { AppContext } from "context";
 import "./Problem.scss";
 import { Helmet } from "react-helmet";
+import SolutionsEditor from "components/editor/SolutionsEditor";
 
 const problem = (): JSX.Element => {
-  const { user } = useContext(AppContext);
   const [isLoading, setLoading] = useState(true)
   const [problem, setProblem] = useState<Problem>();
   const { pid } = useParams<{ pid: string }>()
@@ -23,7 +22,7 @@ const problem = (): JSX.Element => {
   }, []);
 
   const loadProblem = async () => {
-    const response = await fetch(`${config.API_URL}/problems?division=${user?.division}&columns=description&pid=${pid}`, {
+    const response = await fetch(`${config.API_URL}/problems?division=blue&columns=description&pid=${pid}`, {
       headers: {
         Authorization: `Bearer ${localStorage.accessToken}`
       }
@@ -39,18 +38,31 @@ const problem = (): JSX.Element => {
     setLoading(false)
   }
 
+  const [activeItem, setActiveItem] = useState('problem')
+  const handleItemClick = (_event: MouseEvent, { tab }: MenuItemProps) => setActiveItem(tab)
+
   if (isLoading) return <PageLoading />
   if (!problem) return <NotFound />
 
   return <>
-    <Helmet> <title>Abacus | {problem.name}</title> </Helmet>
+    <Helmet> <title>Abacus | Proctor {problem.name}</title> </Helmet>
     <Countdown />
 
-    <Block size='xs-9' className='problem'>
-      <h1>Problem {problem.id}: {problem.name}</h1>
-      <Divider />
-      <MDEditor.Markdown source={problem.description || ''} />
+    <Menu attached='top' tabular>
+      <Menu.Item name='Problem Description' tab='problem' active={activeItem === 'problem'} onClick={handleItemClick} />
+      <Menu.Item name='Solution' tab='solution' active={activeItem === 'solution'} onClick={handleItemClick} />
+    </Menu>
+
+    <Block size='xs-9' menuAttached="top" className='problem'>
+      {activeItem == 'problem' ? <>
+
+        <h1>Problem {problem.id}: {problem.name}</h1>
+        <Divider />
+        <MDEditor.Markdown source={problem.description || ''} />
+      </> :
+        activeItem == 'solution' ? <SolutionsEditor problem={problem} setProblem={setProblem} /> : <></>}
     </Block>
+
     <Block size='xs-3' className='problem-panel'>
       <p><b>Problem ID:</b> {problem.id}</p>
       <p><b>Problem Name:</b> {problem.name}</p>
