@@ -32,7 +32,7 @@ const Rules = (): JSX.Element => {
                 <li>The <a href="https://docs.oracle.com/javase/7/docs/api/" target="_blank" rel="noreferrer">Java API Documentation</a> and <a href="https://docs.python.org/3/library/" target="_blank" rel="noreferrer">Python API Documentation</a></li>
                 <li>Our competition website, <a href="https://codeabac.us" target="_blank" rel="noreferrer">Abacus</a></li>
                 <li>Your IDE&apos;s documentation</li>
-                <li>Blank paper and writing utencils</li>
+                <li>Blank paper and writing utensils</li>
             </ul>
 
             <Divider />
@@ -55,7 +55,7 @@ const Rules = (): JSX.Element => {
 
             <h3><b>
                 Marquette ACM adopts a zero tolerance policy when it comes to cheating.
-                If you are caught violating any of the rules, your team will be removed and disqualified from the competiton without a refund.
+                If you are caught violating any of the rules, your team will be removed and disqualified from the competition without a refund.
         </b></h3>
 
             <Divider />
@@ -68,7 +68,7 @@ const Rules = (): JSX.Element => {
                 To break ties, there is an additional &quot;penalty&quot; score. Here&apos;s an explanation:
         </p>
             <ul>
-                <li>When you correctly solve a problem, one &quot;penalty&quot; point is added per minute since the start of the competiton.</li>
+                <li>When you correctly solve a problem, one &quot;penalty&quot; point is added per minute since the start of the competition.</li>
                 <ul>
                     <li><em>Ex:</em> If you correctly solve the first question 35 minutes into the competition,
                 you will also earn 35 &quot;penalty&quot; points. This means solving questions more quickly is better.</li>
@@ -84,6 +84,7 @@ const Rules = (): JSX.Element => {
                 Here are some other general guidelines that you might find useful:
             </p>
             <ul>
+                <li>There are no restrictions on the number of computers or devices you can use.</li>
                 <li>Your solutions have a runtime limit of <b>30 seconds</b>. When judging, solutions are stopped if they take longer than 30 seconds to execute.</li>
                 <li>Ask questions regarding logistics and problems to the judges. This includes:</li>
                 <ul>
@@ -103,10 +104,10 @@ const Rules = (): JSX.Element => {
                 Some finals things to take note of:
             </p>
             <ul>
-                <li>The competition probelms have <b>strict input and output formatting requirements</b>. Input and output should match exactly as they appear
+                <li>The competition problems have <b>strict input and output formatting requirements</b>. Input and output should match exactly as they appear
                 in the problem descriptions.</li>
                 <ul>
-                    <li><b>We highly reccommend the use of the &quot;Skeletons&quot;, which can be found on each problem page underneath the
+                    <li><b>We highly recommend the use of the &quot;Skeletons&quot;, which can be found on each problem page underneath the
                         &quot;Submit&quot; and &quot;Ask&quot; buttons.</b></li>
                 </ul>
                 <li>Submit your source code file (<code>.java</code> or <code>.py</code>). <b>Do not</b> submit <code>.class</code> or <code>.pyc</code> files.</li>
