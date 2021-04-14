@@ -13,10 +13,9 @@ const submission = (): JSX.Element => {
   const [submission, setSubmission] = useState<Submission>()
   const [isLoading, setLoading] = useState(true)
   const [isMounted, setMounted] = useState(true)
-  const [isRerunning, setRerunning] = useState(false)
-  const [isReleasing, setReleasing] = useState(false)
-  const [isDeleting, setDeleting] = useState(false)
-  const [isClaiming, setClaiming] = useState<{ [key: string]: boolean }>({})
+  const [isViewing, setViewing] = useState(false)
+  const [isFlagging, setFlagging] = useState<{ [key: string]: boolean }>({})
+  const [isUnFlagging, setUnFlagging] = useState<{ [key: string]: boolean }>({})
 
   const { user } = useContext(AppContext)
 
@@ -41,122 +40,76 @@ const submission = (): JSX.Element => {
     return () => { setMounted(false) }
   }, [])
 
-
-  if (isLoading) return <PageLoading />
-  if (!submission) return <NotFound />
-
-  const deleteSubmission = async () => {
-    setDeleting(true)
-    const response = await fetch(`${config.API_URL}/submissions`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.accessToken}`
-      },
-      body: JSON.stringify({ sid: submission.sid })
-    })
-    if (response.ok) {
-      history.push(`/${user?.role}/submissions`)
-    }
-    setDeleting(false)
-  }
-
-  const rerun = async () => {
-    if (!setSubmission) return
-    setRerunning(true)
-    const response = await fetch(`${config.API_URL}/submissions/rerun`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.accessToken}`
-      },
-      body: JSON.stringify({ sid: submission.sid })
-    })
-    if (response.ok) {
-      const result = await response.json()
-      if (result.submissions && submission.sid in result.submissions) {
-        setSubmission({ team: submission?.team, problem: submission?.problem, ...result.submissions[submission.sid] })
-      }
-    }
-    setRerunning(false)
-  }
-  const release = async () => {
+  const view = async (sid: string) => {
     if (!setSubmission) return
     if (!submission) return
-    setReleasing(true)
+    setViewing(true)
     const response = await fetch(`${config.API_URL}/submissions`, {
       method: 'PUT',
       headers: {
         Authorization: `Bearer ${localStorage.accessToken}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ sid: submission.sid, released: true, claimed: undefined })
+      body: JSON.stringify({ sid, viewed: true })
     })
     if (response.ok) {
-      const result = await response.json()
-      setSubmission({ ...submission, released: result.released, claimed: undefined })
+      setSubmission({ ...submission, viewed: true })
     }
-    setReleasing(false)
+    setViewing(false)
   }
 
-  const claim = async (sid: string) => {
-    setClaiming({ ...isClaiming, [sid]: true })
+  const flag = async (sid: string) => {
+    setFlagging({ ...isFlagging, [sid]: true })
     const response = await fetch(`${config.API_URL}/submissions`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.accessToken}`
       },
-      body: JSON.stringify({ sid, claimed: user?.uid })
+      body: JSON.stringify({ sid, viewed: true, flagged: user?.uid })
     })
 
     if (response.ok) {
-      setSubmission({ ...submission, claimed: user })
+      setSubmission({ ...submission, viewed: true, flagged: user })
     }
 
-    setClaiming({ ...isClaiming, [sid]: false })
+    setFlagging({ ...isFlagging, [sid]: false })
   }
 
-  const unclaim = async (sid: string) => {
-    setClaiming({ ...isClaiming, [sid]: true })
+  const unflag = async (sid: string) => {
+    setUnFlagging({ ...isUnFlagging, [sid]: true })
     const response = await fetch(`${config.API_URL}/submissions`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.accessToken}`
       },
-      body: JSON.stringify({ sid, claimed: null })
+      body: JSON.stringify({ sid, flagged: null })
     })
 
     if (response.ok) {
-      setSubmission({ ...submission, claimed: undefined })
+      setSubmission({ ...submission, flagged: undefined })
     }
 
-    setClaiming({ ...isClaiming, [sid]: false })
+    setUnFlagging({ ...isUnFlagging, [sid]: false })
   }
 
-  const download = () => submission?.source && submission.filename &&
-    saveAs(new File([submission?.source], submission.filename, { type: 'text/plain;charset=utf-8' }))
-
+  if (isLoading) return <PageLoading />
+  if (!submission) return <NotFound />
 
   return <>
     <Helmet> <title>Abacus | Judge Submission</title> </Helmet>
 
     <Button content='Back' icon='arrow left' labelPosition='left' onClick={history.goBack} />
-    <Button disabled={isRerunning || submission.claimed?.uid != user?.uid} loading={isRerunning} content="Rerun" icon="redo" labelPosition="left" onClick={rerun} />
-    {submission.claimed ?
-      (submission.claimed?.uid === user?.uid ?
-        <Button content="Unclaim" icon={'hand paper'} onClick={() => unclaim(submission.sid)} loading={isClaiming[submission.sid]} disabled={isClaiming[submission.sid]} labelPosition={'left'} /> :
-        <Button content="Claimed" icon={'lock'} disabled={true} labelPosition={'left'} />
-      ) :
-      <Button content="Claim" icon={'hand rock'} onClick={() => claim(submission.sid)} loading={isClaiming[submission.sid]} disabled={isClaiming[submission.sid]} labelPosition={'left'} />}
-    {submission.released ?
-      <Button icon="check" positive content="Released" labelPosition="left" /> :
-      <Button loading={isReleasing} disabled={isReleasing || submission.claimed?.uid != user?.uid} icon="right arrow" content="Release" labelPosition="left" onClick={release} />}
-    <Button content="Download" icon="download" labelPosition="left" onClick={download} />
-    <Button disabled={isDeleting || submission.claimed?.uid != user?.uid} loading={isDeleting} content="Delete" icon="trash" negative labelPosition="left" onClick={deleteSubmission} />
+    {submission.viewed ?
+      <Button content="Viewed" icon='check' disabled={true} labelPosition={'left'} /> :
+      <Button content="Mark as Viewed" icon='eye' onClick={() => view(submission.sid)} loading={isViewing} disabled={isViewing} labelPosition={'left'} />}
+    {submission.flagged ?
+      <Button loading={isUnFlagging[submission.sid]} disabled={isUnFlagging[submission.sid]} icon="warning" color='orange' content="Flagged" labelPosition="left" onClick={() => unflag(submission.sid)} /> :
+      <Button loading={isFlagging[submission.sid]} disabled={isFlagging[submission.sid]} icon="flag" content="Flag" labelPosition="left" onClick={() => flag(submission.sid)} />
+    }
 
-    <SubmissionView submission={submission} rerunning={isRerunning} />
+    <SubmissionView submission={submission} />
   </>
 }
 
