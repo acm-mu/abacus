@@ -59,6 +59,8 @@ const submission = (): JSX.Element => {
   }
 
   const flag = async (sid: string) => {
+    if (!setSubmission) return
+    if (!submission) return
     setFlagging({ ...isFlagging, [sid]: true })
     const response = await fetch(`${config.API_URL}/submissions`, {
       method: 'PUT',
@@ -77,6 +79,8 @@ const submission = (): JSX.Element => {
   }
 
   const unflag = async (sid: string) => {
+    if (!setSubmission) return
+    if (!submission) return
     setUnFlagging({ ...isUnFlagging, [sid]: true })
     const response = await fetch(`${config.API_URL}/submissions`, {
       method: 'PUT',
