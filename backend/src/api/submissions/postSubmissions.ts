@@ -137,6 +137,7 @@ export const postSubmissions = async (req: Request, res: Response) => {
 
       submission = {
         ...submission,
+        status: 'accepted',
         language: 'scratch',
         design_document: item.design_document,
         project_id: item.project_id
