@@ -23,7 +23,7 @@ const problem = (): JSX.Element => {
   }, []);
 
   const loadProblem = async () => {
-    const response = await fetch(`${config.API_URL}/problems?division=blue&columns=description,solutions&pid=${pid}`, {
+    const response = await fetch(`${config.API_URL}/problems?division=blue&columns=description,solutions,tests&pid=${pid}`, {
       headers: {
         Authorization: `Bearer ${localStorage.accessToken}`
       }
