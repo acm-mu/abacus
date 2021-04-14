@@ -1,11 +1,7 @@
 import { User, Notification } from 'abacus';
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-<<<<<<< HEAD
 import { Index, Admin, Blue, Gold, Judge, Eagle, Proctor } from 'pages'
-=======
-import { Index, Admin, Blue, Gold, Judge, Proctor } from 'pages'
->>>>>>> 0c106a3ece7e4dcc28c557f36f5a6f2b7aeccc61
 import config from 'environment'
 import { Footer, Notifications } from 'components';
 import { v4 as uuidv4 } from 'uuid';
@@ -94,10 +90,7 @@ const App = (): JSX.Element => {
           <Route path='/blue' component={Blue} />
           <Route path='/gold' component={Gold} />
           <Route path='/judge' component={Judge} />
-<<<<<<< HEAD
           <Route path='/eagle' component={Eagle} />
-=======
->>>>>>> 0c106a3ece7e4dcc28c557f36f5a6f2b7aeccc61
           <Route path='/proctor' component={Proctor} />
           <Route path='/' component={Index} />
         </Switch>
