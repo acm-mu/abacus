@@ -8,6 +8,9 @@ import { AppContext } from 'context'
 const Rules = (): JSX.Element => {
 
     const { user } = useContext(AppContext);
+    const { settings } = useContext(AppContext)
+
+    const isBeforeCompetition = () => !settings || new Date() < settings.start_date
     const hasAccessTo = () => user?.role == 'admin' || user?.division == 'blue'
 
     return <>
@@ -89,8 +92,8 @@ const Rules = (): JSX.Element => {
                     <li>Questions regarding any confusing parts of the competition problems</li>
                 </ul>
                 <p>These questions can be asked through the {hasAccessTo() ? <Link to={'/blue/clarifications'}>Clarifications</Link> : 'Clarifications'} tab.</p>
-                <li>For issues with technology, feel free to reach out to our tech support staff online using <a href="https://meet.google.com/ifq-fcwf-unr" target="_blank" rel="noreferrer">Google Meet</a> or,
-                if your internet is not working, by phone at <a href="tel:4143755336">(414) 375-5336</a>.</li>
+                <li>For issues with technology, feel free to reach out to our tech support staff online using {isBeforeCompetition() ? <a href="https://meet.google.com/ifq-fcwf-unr" target="_blank" rel="noreferrer">Google Meet</a> : <a href="#">Google Meet</a>} or,
+                if your internet is not working, by phone at <a href={isBeforeCompetition() ? "tel:4143755336" : "#"}>(414) 375-5336</a>.</li>
             </ul>
 
             <Divider />
