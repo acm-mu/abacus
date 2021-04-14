@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 import { Navigation } from 'components';
 
 const JudgeNavigation = (): JSX.Element => (
-    <Navigation className="judge-div">
+    <Navigation className="proctor-div">
         <Menu.Item as={NavLink} exact to="/proctor" content="Home" />
         <Menu.Item as={NavLink} to="/proctor/problems" content="Problems" />
         <Menu.Item as={NavLink} to="/proctor/submissions" content="Submissions" />

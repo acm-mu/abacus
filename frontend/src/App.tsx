@@ -1,7 +1,7 @@
 import { User, Notification } from 'abacus';
 import React, { useEffect, useState } from 'react';
-import { Route, Switch } from 'react-router-dom';
-import { Index, Admin, Blue, Gold, Judge, Eagle } from 'pages'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { Index, Admin, Blue, Gold, Judge, Eagle, Proctor } from 'pages'
 import config from 'environment'
 import { Footer, Notifications } from 'components';
 import { v4 as uuidv4 } from 'uuid';
@@ -83,15 +83,18 @@ const App = (): JSX.Element => {
 
   return <AppContext.Provider value={appContext}>
     <SocketContext.Provider value={socket}>
-      <Notifications />
-      <Switch>
-        <Route path='/admin' component={Admin} />
-        <Route path='/blue' component={Blue} />
-        <Route path='/gold' component={Gold} />
-        <Route path='/eagle' component={Eagle} />
-        <Route path='/judge' component={Judge} />
-        <Route path='/' component={Index} />
-      </Switch>
+      <Router>
+        <Notifications />
+        <Switch>
+          <Route path='/admin' component={Admin} />
+          <Route path='/blue' component={Blue} />
+          <Route path='/gold' component={Gold} />
+          <Route path='/judge' component={Judge} />
+          <Route path='/eagle' component={Eagle} />
+          <Route path='/proctor' component={Proctor} />
+          <Route path='/' component={Index} />
+        </Switch>
+      </Router>
       <Footer />
     </SocketContext.Provider>
   </AppContext.Provider>
