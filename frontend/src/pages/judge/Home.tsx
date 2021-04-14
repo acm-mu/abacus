@@ -20,11 +20,6 @@ const Home = (): JSX.Element => {
   const recentSubmissions = useMemo(() => submissions?.filter(({ released }) => released).sort(({ date: date1 }, { date: date2 }) => date2 - date1), [submissions])
   const myClaimedSubmissions = useMemo(() => submissions?.filter(({ claimed }) => claimed?.uid == user?.uid), [submissions])
 
-  console.log(claimedSubmissions?.length)
-  console.log(pendingSubmissions?.length)
-  console.log(recentSubmissions?.length)
-  console.log(myClaimedSubmissions?.length)
-
   const loadData = async () => {
     const response = await fetch(`${config.API_URL}/submissions`, {
       headers: { Authorization: `Bearer ${localStorage.accessToken}` }
