@@ -17,7 +17,7 @@ const Home = (): JSX.Element => {
         localStorage.dismissedRules = true
         setDismissed(true)
       }}>
-        <Icon name='eye' />
+        <Icon name='warning' />
         <Message.Content>
           <Message.Header>Read the Rules!</Message.Header>
           Please read the rules before beginning the competition. You can find them on the <Link to={'/blue/rules'}>Rules</Link> page.
