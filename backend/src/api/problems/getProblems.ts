@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { matchedData, ParamSchema, validationResult } from "express-validator";
-import { authenticate } from '../../abacus/authlib';
+import { authenticate, userHasRole } from '../../abacus/authlib';
 import contest, { transpose } from '../../abacus/contest';
 
 export const schema: Record<string, ParamSchema> = {
@@ -61,7 +61,7 @@ export const getProblems = async (req: Request, res: Response) => {
     if (columns.includes('solutions')) {
       try {
         const user = await authenticate(req, res)
-        if (!user || user.role !== 'admin') {
+        if (!userHasRole(user, 'proctor')) {
           columns = columns.filter(e => e != 'solutions')
         }
       } catch (err) {
