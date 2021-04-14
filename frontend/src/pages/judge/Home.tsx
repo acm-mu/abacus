@@ -40,8 +40,6 @@ const Home = (): JSX.Element => {
     return () => { setMounted(false) }
   }, [])
 
-  socket?.on('new_submission', loadData)
-
   if (isLoading) return <PageLoading />
   if (!user) return <Unauthorized />
 
