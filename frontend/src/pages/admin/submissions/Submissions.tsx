@@ -147,7 +147,10 @@ const Submissions = (): JSX.Element => {
               <Table.Cell><span className={`status icn ${submission.status}`} /></Table.Cell>
               <Table.Cell>{submission.released ? <Label color='green' icon='check' content="Released" /> : <Label icon='lock' content="Held" />}</Table.Cell>
               {showFlagged ?
-                <Table.Cell>{submission.flagged ? <Label color='orange' icon='flag' content={`Flagged: ${submission.flagged.display_name}`} /> : <Label icon='check' content="Unflagged" />}</Table.Cell> :
+                <Table.Cell>
+                  {submission.flagged ? <Label color='orange' icon='flag' content={`Flagged: ${submission.flagged.display_name}`} /> :
+                    <Label icon='cancel' content="Unflagged" />}
+                </Table.Cell> :
                 <></>
               }
               <Table.Cell>{Math.floor(submission.runtime || 0)}</Table.Cell>
