@@ -1,13 +1,36 @@
 import { Problem, Submission } from 'abacus'
 import { Request, Response } from 'express'
+import { matchedData, ParamSchema, validationResult } from 'express-validator'
 import contest from '../../abacus/contest'
 
-export const getStandings = async (_req: Request, res: Response) => {
-  const standings = await contest.scanItems('user', { args: { role: 'team', division: 'blue' } }) || {}
+export const schema: Record<string, ParamSchema> = {
+  division: {
+    in: ['body', 'query'],
+    isString: true,
+    errorMessage: 'Division is not supplied!'
+  }
+}
+
+interface BlueStandingsUser {
+  display_name: string;
+  uid: string;
+  username: string;
+  solved: number;
+  time: number;
+  problems: Record<string, {
+    num_submissions: number;
+    problem_score: number;
+    solved: boolean;
+    submissions: Submission[];
+  }>
+};
+
+const getBlueStandings = async (): Promise<BlueStandingsUser[]> => {
+  const standings = (await contest.scanItems('user', { args: { role: 'team', division: 'blue' } }) || {}) as Record<string, BlueStandingsUser>
   const submissions = await contest.scanItems('submission', { args: { division: 'blue' } }) || {}
   const problems = await contest.scanItems('problem', { args: { division: 'blue' } }) || {} as unknown as Problem[]
 
-  const subs: { [key: string]: { [key: string]: Submission[] } } = {}
+  const subs: Record<string, Record<string, Submission[]>> = {}
 
   Object.values(submissions).forEach((submission: any) => {
     const { tid, pid } = submission;
@@ -67,12 +90,76 @@ export const getStandings = async (_req: Request, res: Response) => {
     })
   })
 
-  type StandingsItems = { solved: number, time: number }
+  return Object.values(standings).sort((s1: any, s2: any) =>
+    s1.solved === s2.solved ? s1.time - s2.time : s2.solved - s1.solved)
+}
 
-  const data = (Object.values(standings) as StandingsItems[]).sort((s1, s2) => {
-    if (s1.solved == s2.solved) return s1.time - s2.time
-    return s2.solved - s1.solved
+interface GoldStandingsUser {
+  display_name: string;
+  uid: string;
+  username: string;
+  score: number;
+  problems: Record<string, Submission>;
+}
+
+const getGoldStandings = async (): Promise<GoldStandingsUser[]> => {
+  const standings = (await contest.scanItems('user', { args: { role: 'team', division: 'gold' } }) || {}) as Record<string, GoldStandingsUser>
+  const submissions = await contest.scanItems('submission', { args: { division: 'gold' } }) || {}
+  const problems = await contest.scanItems('problem', { args: { division: 'gold' } }) || {} as unknown as Problem[]
+
+  const subs: { [key: string]: { [key: string]: Submission } } = {}
+
+  Object.values(submissions).forEach((submission: any) => {
+    const { tid, pid } = submission;
+    if (!(tid in subs)) subs[tid] = {}
+
+    if (!submission.released) {
+      submission.status = 'pending'
+    }
+
+    subs[tid][pid] = submission
   })
 
-  res.send(data)
+  Object.values(standings).forEach((team: any) => {
+    delete team.password
+    delete team.role
+    delete team.division
+    delete team.username
+
+    team.problems = {}
+    team.score = 0
+
+    Object.values(problems).sort((p1, p2) => p1.id.localeCompare(p2.id)).forEach((problem: Problem) => {
+      team.problems[problem.id] = {}
+      if (team.uid in subs) {
+        if (problem.pid in subs[team.uid]) {
+          team.problems[problem.id] = subs[team.uid][problem.pid]
+          team.score += subs[team.uid][problem.pid].score
+        }
+      }
+    })
+  })
+
+  return Object.values(standings).sort((s1: any, s2: any) =>
+    s2.score - s1.score)
+}
+
+export const getStandings = async (req: Request, res: Response) => {
+  const errors = validationResult(req).array()
+  if (errors.length > 0) {
+    res.status(400).send({ message: errors[0].msg })
+    return
+  }
+
+  const { division } = matchedData(req)
+
+  if (division == 'blue') {
+    res.send(await getBlueStandings())
+    return
+  } else if (division == 'gold') {
+    res.send(await getGoldStandings())
+    return
+  }
+
+  res.status(400).send({ message: `${division} is not allowed!` })
 }
