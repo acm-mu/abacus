@@ -8,6 +8,7 @@ import config from 'environment'
 import "./Problem.scss";
 import { Helmet } from "react-helmet";
 import SolutionsEditor from "components/editor/SolutionsEditor";
+import TestDataEditor from "components/editor/TestDataEditor";
 
 const problem = (): JSX.Element => {
   const [isLoading, setLoading] = useState(true)
@@ -51,25 +52,24 @@ const problem = (): JSX.Element => {
     <Menu attached='top' tabular>
       <Menu.Item name='Problem Description' tab='problem' active={activeItem === 'problem'} onClick={handleItemClick} />
       <Menu.Item name='Solution' tab='solution' active={activeItem === 'solution'} onClick={handleItemClick} />
+      <Menu.Item name='Test Data' tab='test-data' active={activeItem === 'test-data'} onClick={handleItemClick} />
     </Menu>
 
-    <Block size='xs-9' menuAttached="top" className='problem'>
-      {activeItem == 'problem' ? <>
+    <Block size='xs-12' menuAttached="top" className='problem'>
+      {(() => {
+        switch (activeItem) {
+          case 'problem':
+            return <>
+              <h1>Problem {problem.id}: {problem.name}</h1>
+              <Divider />
+              <MDEditor.Markdown source={problem.description || ''} />
+            </>
+          case 'solution': return <SolutionsEditor problem={problem} />
+          case 'test-data': return <TestDataEditor problem={problem} />
+          default: return <></>
+        }
+      })()}
 
-        <h1>Problem {problem.id}: {problem.name}</h1>
-        <Divider />
-        <MDEditor.Markdown source={problem.description || ''} />
-      </> :
-        activeItem == 'solution' ? <SolutionsEditor problem={problem} /> : <></>}
-    </Block>
-
-    <Block size='xs-3' className='problem-panel'>
-      <p><b>Problem ID:</b> {problem.id}</p>
-      <p><b>Problem Name:</b> {problem.name}</p>
-      {problem.cpu_time_limit ? <p><b>CPU Time limit:</b> {problem.cpu_time_limit}</p> : <></>}
-      {problem.memory_limit ? <p><b>Memory limit:</b> {problem.memory_limit}</p> : <></>}
-      <Divider />
-      <p><b>Test Data</b></p>
     </Block>
 
   </>
