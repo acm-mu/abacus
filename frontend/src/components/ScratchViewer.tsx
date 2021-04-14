@@ -25,7 +25,7 @@ interface ScratchProject {
   }
 }
 
-const ScratchViewer = ({ project_id, content }: ScratchViewerProps): JSX.Element => {
+const ScratchViewer = ({ project_id, content = <></> }: ScratchViewerProps): JSX.Element => {
   const [project, setProject] = useState<ScratchProject>()
 
   useEffect(() => {
@@ -66,10 +66,7 @@ const ScratchViewer = ({ project_id, content }: ScratchViewerProps): JSX.Element
             </div>
           </div>
         </Segment> : <></>}
-
-        {content ? <Segment>
-          {content}
-        </Segment> : <></>}
+        {content}
       </Grid.Column>
     </Grid.Row>
   </Grid >

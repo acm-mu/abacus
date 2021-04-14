@@ -4,9 +4,11 @@ import { Block, ScratchViewer } from 'components';
 import SubmissionContext from './SubmissionContext';
 import SubmissionDetail from './SubmissionDetail';
 import "./Submission.scss"
-import { Form, Rating, RatingProps, TextArea } from 'semantic-ui-react';
+import { Form, Header, Rating, RatingProps, Segment, TextArea } from 'semantic-ui-react';
+import { AppContext } from 'context';
 
 const GoldFeedback = (): JSX.Element => {
+  const { user } = useContext(AppContext);
   const { submission, setSubmission } = useContext(SubmissionContext);
 
   const handleScore = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, { rating: score }: RatingProps) => {
@@ -20,22 +22,32 @@ const GoldFeedback = (): JSX.Element => {
     setSubmission({ ...submission, feedback })
   }
 
-  return <Form>
-    <h2>Scorecard</h2>
-
-    <div className="field">
-      <label>Score</label>
-      <Rating icon='star' disabled={!setSubmission} rating={submission?.score} maxRating={submission?.problem.max_points || 5} size='massive' onRate={handleScore} />
-    </div>
-
-    {setSubmission ?
-      <Form.Field label='Feedback' control={TextArea} value={submission?.feedback} onChange={handleChange} /> :
-      <>
-        <label>Feedback</label>
-        <p>{submission?.feedback}</p>
-      </>
+  if (!submission?.released) {
+    if (user?.role != 'judge' && user?.role != 'admin') {
+      return <Segment placeholder>
+        <Header>Pending Judgement!</Header>
+      </Segment>
     }
-  </Form>
+  }
+
+  return <Segment>
+    <Form>
+      <h2>Scorecard</h2>
+
+      <div className="field">
+        <label>Score</label>
+        <Rating icon='star' disabled={!setSubmission} rating={submission?.score} maxRating={submission?.problem.max_points || 5} size='massive' onRate={handleScore} />
+      </div>
+
+      {setSubmission ?
+        <Form.Field label='Feedback' control={TextArea} value={submission?.feedback} onChange={handleChange} /> :
+        <>
+          <label>Feedback</label>
+          <p>{submission?.feedback}</p>
+        </>
+      }
+    </Form>
+  </Segment>
 }
 
 const GoldSubmission = (): JSX.Element => {
