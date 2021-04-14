@@ -25,6 +25,7 @@ const Submissions = (): JSX.Element => {
   const [isMounted, setMounted] = useState(true)
   const [isDeleting, setDeleting] = useState(false)
   const [showReleased, setShowReleased] = useState(false)
+  const [showFlagged, setShowFlagged] = useState(false)
 
   const [{ column, direction }, setSortConfig] = useState<SortConfig>({
     column: 'date',
@@ -43,6 +44,7 @@ const Submissions = (): JSX.Element => {
   useEffect(() => {
     loadSubmissions().then(() => setLoading(false))
     socket?.on('new_submission', loadSubmissions)
+    socket?.on('update_submission', loadSubmissions)
     return () => setMounted(false)
   }, [])
 
@@ -59,7 +61,8 @@ const Submissions = (): JSX.Element => {
     setSubmissions(submissions.map(submission => ({ ...submission, checked: false })))
   }
 
-  const onFilterChange = () => setShowReleased(!showReleased)
+  const onReleaseChange = () => setShowReleased(!showReleased)
+  const onFlagChange = () => setShowFlagged(!showFlagged)
 
   const downloadSubmissions = () =>
     saveAs(new File([JSON.stringify(submissions, null, '\t')], 'submissions.json', { type: 'text/json;charset=utf-8' }))
@@ -68,11 +71,11 @@ const Submissions = (): JSX.Element => {
     setSubmissions(submissions.map(submission => submission.sid == id ? { ...submission, checked } : submission))
 
   const checkAll = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) =>
-    setSubmissions(submissions.map(submission => (showReleased || !submission.released) ? { ...submission, checked } : submission))
+    setSubmissions(submissions.map(submission => (!submission.released || showReleased) && (!submission.flagged || showFlagged) ? { ...submission, checked } : submission))
 
   const deleteSelected = async () => {
     setDeleting(true)
-    const submissionsToDelete = submissions.filter(submission => submission.checked && (!submission.released || showReleased)).map(submission => submission.sid)
+    const submissionsToDelete = submissions.filter(submission => submission.checked && (!submission.released || showReleased) && (!submission.flagged || showFlagged)).map(submission => submission.sid)
     const response = await fetch(`${config.API_URL}/submissions`, {
       method: 'DELETE',
       headers: {
@@ -88,7 +91,7 @@ const Submissions = (): JSX.Element => {
   }
 
   const filteredSubmissions = useMemo(() =>
-    submissions.filter((submission) => showReleased || !submission.released)
+    submissions.filter((submission) => !submission.released || showReleased)
     , [submissions, showReleased])
 
   if (isLoading) return <PageLoading />
@@ -98,7 +101,8 @@ const Submissions = (): JSX.Element => {
     <Button content="Download Submissions" onClick={downloadSubmissions} />
     {submissions.filter(submission => submission.checked).length ?
       <Button content="Delete Selected" negative onClick={deleteSelected} loading={isDeleting} disabled={isDeleting} /> : <></>}
-    <Checkbox toggle label="Show Released" checked={showReleased} onClick={onFilterChange} />
+    <Checkbox toggle label="Show Released" checked={showReleased} onClick={onReleaseChange} />
+    <Checkbox toggle label="Show Flagged" checked={showFlagged} onClick={onFlagChange} />
 
     <Table singleLine>
       <Table.Header>
@@ -111,6 +115,10 @@ const Submissions = (): JSX.Element => {
           <Table.HeaderCell className='sortable' onClick={() => sort('language')}>Language</Table.HeaderCell>
           <Table.HeaderCell className='sortable' onClick={() => sort('status')}>Status</Table.HeaderCell>
           <Table.HeaderCell>Released</Table.HeaderCell>
+          {showFlagged ?
+            <Table.HeaderCell>Flagged</Table.HeaderCell> :
+            <></>
+          }
           <Table.HeaderCell className='sortable' onClick={() => sort('runtime')}>Runtime</Table.HeaderCell>
           <Table.HeaderCell className='sortable' onClick={() => sort('date')}>Time</Table.HeaderCell>
           <Table.HeaderCell className='sortable' onClick={() => sort('score')}>Score</Table.HeaderCell>
@@ -138,6 +146,10 @@ const Submissions = (): JSX.Element => {
               <Table.Cell>{submission.language}</Table.Cell>
               <Table.Cell><span className={`status icn ${submission.status}`} /></Table.Cell>
               <Table.Cell>{submission.released ? <Label color='green' icon='check' content="Released" /> : <Label icon='lock' content="Held" />}</Table.Cell>
+              {showFlagged ?
+                <Table.Cell>{submission.flagged ? <Label color='orange' icon='flag' content={`Flagged: ${submission.flagged.display_name}`} /> : <Label icon='check' content="Unflagged" />}</Table.Cell> :
+                <></>
+              }
               <Table.Cell>{Math.floor(submission.runtime || 0)}</Table.Cell>
               <Table.Cell><Moment fromNow date={submission.date * 1000} /> </Table.Cell>
               <Table.Cell>{submission.score}</Table.Cell>

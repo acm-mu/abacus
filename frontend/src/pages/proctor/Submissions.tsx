@@ -91,7 +91,7 @@ const Submissions = (): JSX.Element => {
               <Table.Cell><Link to={`/${user?.role}/problems/${submission.pid}`}>{submission.problem?.name} </Link></Table.Cell>
               <Table.Cell>{submission.language}</Table.Cell>
               <Table.Cell>
-                {submission.flagged ? <Label color='orange' icon='flag' content={`Flagged: ${submission.flagged.display_name}`} /> :
+                {submission.flagged ? <Label color='orange' icon='flag' content={`Flagged: ${submission.flagged.uid === user?.uid ? 'You' : submission.flagged.display_name}`} /> :
                   (submission.viewed ?
                     <Label icon='eye' color='green' content="Viewed" /> :
                     <Label icon='cloud download' content="Unviewed" />
