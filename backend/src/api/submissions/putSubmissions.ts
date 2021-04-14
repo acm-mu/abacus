@@ -60,6 +60,15 @@ export const schema: Record<string, ParamSchema> = {
   claimed: {
     in: 'body',
     optional: true
+  },
+  flagged: {
+    in: 'body',
+    optional: true
+  },
+  viewed: {
+    in: 'body',
+    isBoolean: true,
+    optional: true
   }
 }
 
