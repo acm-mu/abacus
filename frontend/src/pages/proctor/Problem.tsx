@@ -22,7 +22,7 @@ const problem = (): JSX.Element => {
   }, []);
 
   const loadProblem = async () => {
-    const response = await fetch(`${config.API_URL}/problems?division=blue&columns=description&pid=${pid}`, {
+    const response = await fetch(`${config.API_URL}/problems?division=blue&columns=description,solutions&pid=${pid}`, {
       headers: {
         Authorization: `Bearer ${localStorage.accessToken}`
       }
@@ -39,7 +39,7 @@ const problem = (): JSX.Element => {
   }
 
   const [activeItem, setActiveItem] = useState('problem')
-  const handleItemClick = (_event: MouseEvent, { tab }: MenuItemProps) => setActiveItem(tab)
+  const handleItemClick = (_event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, { tab }: MenuItemProps) => setActiveItem(tab)
 
   if (isLoading) return <PageLoading />
   if (!problem) return <NotFound />
@@ -60,7 +60,7 @@ const problem = (): JSX.Element => {
         <Divider />
         <MDEditor.Markdown source={problem.description || ''} />
       </> :
-        activeItem == 'solution' ? <SolutionsEditor problem={problem} setProblem={setProblem} /> : <></>}
+        activeItem == 'solution' ? <SolutionsEditor problem={problem} /> : <></>}
     </Block>
 
     <Block size='xs-3' className='problem-panel'>
