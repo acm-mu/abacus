@@ -40,9 +40,10 @@ const submission = (): JSX.Element => {
     return () => { setMounted(false) }
   }, [])
 
-  const view = async (sid: string) => {
-    if (!setSubmission) return
-    if (!submission) return
+  if (isLoading) return <PageLoading />
+  if (!submission) return <NotFound />
+
+  const view = async () => {
     setViewing(true)
     const response = await fetch(`${config.API_URL}/submissions`, {
       method: 'PUT',
@@ -58,9 +59,7 @@ const submission = (): JSX.Element => {
     setViewing(false)
   }
 
-  const flag = async (sid: string) => {
-    if (!setSubmission) return
-    if (!submission) return
+  const flag = async () => {
     setFlagging({ ...isFlagging, [sid]: true })
     const response = await fetch(`${config.API_URL}/submissions`, {
       method: 'PUT',
@@ -78,9 +77,7 @@ const submission = (): JSX.Element => {
     setFlagging({ ...isFlagging, [sid]: false })
   }
 
-  const unflag = async (sid: string) => {
-    if (!setSubmission) return
-    if (!submission) return
+  const unflag = async () => {
     setUnFlagging({ ...isUnFlagging, [sid]: true })
     const response = await fetch(`${config.API_URL}/submissions`, {
       method: 'PUT',
@@ -98,19 +95,16 @@ const submission = (): JSX.Element => {
     setUnFlagging({ ...isUnFlagging, [sid]: false })
   }
 
-  if (isLoading) return <PageLoading />
-  if (!submission) return <NotFound />
-
   return <>
     <Helmet> <title>Abacus | Judge Submission</title> </Helmet>
 
     <Button content='Back' icon='arrow left' labelPosition='left' onClick={history.goBack} />
     {submission.viewed ?
       <Button content="Viewed" icon='check' disabled={true} labelPosition={'left'} /> :
-      <Button content="Mark as Viewed" icon='eye' onClick={() => view(submission.sid)} loading={isViewing} disabled={isViewing} labelPosition={'left'} />}
+      <Button content="Mark as Viewed" icon='eye' onClick={view} loading={isViewing} disabled={isViewing} labelPosition={'left'} />}
     {submission.flagged ?
-      <Button loading={isUnFlagging[submission.sid]} disabled={isUnFlagging[submission.sid]} icon="warning" color='orange' content="Flagged" labelPosition="left" onClick={() => unflag(submission.sid)} /> :
-      <Button loading={isFlagging[submission.sid]} disabled={isFlagging[submission.sid]} icon="flag" content="Flag" labelPosition="left" onClick={() => flag(submission.sid)} />
+      <Button loading={isUnFlagging[submission.sid]} disabled={isUnFlagging[submission.sid]} icon="warning" color='orange' content="Flagged" labelPosition="left" onClick={unflag} /> :
+      <Button loading={isFlagging[submission.sid]} disabled={isFlagging[submission.sid]} icon="flag" content="Flag" labelPosition="left" onClick={flag} />
     }
 
     <SubmissionView submission={submission} />
