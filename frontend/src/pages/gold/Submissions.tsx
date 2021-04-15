@@ -20,7 +20,7 @@ const Submissions = (): JSX.Element => {
   }, [])
 
   const loadSubmissions = async () => {
-    const response = await fetch(`${config.API_URL}/submissions`, {
+    const response = await fetch(`${config.API_URL}/submissions?division=gold&tid=${user?.uid}`, {
       headers: {
         Authorization: `Bearer ${localStorage.accessToken}`
       }
@@ -32,6 +32,7 @@ const Submissions = (): JSX.Element => {
     setLoading(false)
   }
 
+  if (!user) return <Unauthorized />
   if (isLoading) return <PageLoading />
   if (user?.division != 'gold' && user?.role != 'admin') return <Unauthorized />
 

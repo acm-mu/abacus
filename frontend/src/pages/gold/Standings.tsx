@@ -18,15 +18,16 @@ const Standings = (): JSX.Element => {
   const helmet = <Helmet><title>Abacus | Gold Standings</title></Helmet>
 
   const loadData = async () => {
-    let response = await fetch(`${config.API_URL}/problems?division=gold`)
-    let problems = Object.values(await response.json()) as Problem[]
-    problems = problems.sort((a, b) => a.id.localeCompare(b.id))
+    const response = await fetch(`${config.API_URL}/standings?division=gold`)
+
+    const data = await response.json()
 
     if (!isMounted) return
-    setProblems(problems)
 
-    response = await fetch(`${config.API_URL}/standings?division=gold`)
-    setStandings(await response.json())
+    setStandings(data.standings)
+
+    const problems = Object.values(data.problems) as Problem[]
+    setProblems(problems.sort((p1, p2) => p1.id.localeCompare(p2.id)))
 
     setLoading(false)
   }
