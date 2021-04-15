@@ -20,6 +20,8 @@ const Home = (): JSX.Element => {
   const [isMounted, setMounted] = useState(true)
 
   const livestream = 'https://teams.microsoft.com/l/meetup-join/19%3ameeting_N2M0ZGQzM2ItN2I2Ny00NjRkLWIyNGQtZTI5NTgzYzViY2Vm%40thread.v2/0?context=%7b%22Tid%22%3a%22abe32f68-c72d-420d-b5bd-750c63a268e4%22%2c%22Oid%22%3a%22d701d0b6-587c-40bc-9ea2-95f03b5383d8%22%2c%22IsBroadcastMeeting%22%3atrue%7d&btype=a&role=a'
+  const welcome = 'https://youtu.be/dmqXTOhNQng'
+
 
   const loadTeams = () => {
     fetch('https://mu.acm.org/api/registered_teams')
@@ -52,7 +54,7 @@ const Home = (): JSX.Element => {
           <Icon name='bullhorn' />
           <Message.Content>
             <Message.Header>Teams</Message.Header>
-          Watch our welcome video! Click <b><a href=''>here</a></b> to view it on YouTube.
+          Watch our welcome video! Click <b><a href={welcome}>here</a></b> to view it on YouTube.
           </Message.Content>
         </Message> : isAfterCompetition() ?
           <Message icon color='blue'>
