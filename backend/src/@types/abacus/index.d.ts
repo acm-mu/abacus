@@ -25,6 +25,9 @@ declare module "abacus" {
     sub_no: number;
     tid: string;
     tests: Test[];
+    claimed?: string;
+    viewed?: boolean;
+    flagged?: string;
   }
   export interface Problem {
     pid: string;
@@ -45,6 +48,7 @@ declare module "abacus" {
     display_name: string;
     division?: string;
     school?: string;
+    disabled?: boolean;
   }
   export interface Test {
     in: string;

@@ -25,7 +25,7 @@ const Home = (): JSX.Element => {
     if (!isMounted) return
 
     const subs: Submission[] = Object.values(await getSubmissions.json())
-    setSubmissions(subs.filter(({ date }) => date * 1000 > Number(settings?.start_date) && date * 1000 < Number(settings?.end_date)))
+    setSubmissions(subs.filter(({ team, date }) => !team.disabled && date * 1000 > Number(settings?.start_date) && date * 1000 < Number(settings?.end_date)))
     setLoading(false)
   }
 

@@ -101,6 +101,7 @@ h6 {
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
+    overflow-x: scroll;
 }
 
 
@@ -144,4 +145,14 @@ a.button {
 .ui.checkbox {
     display: flex;
     align-items: center;
+}
+
+.justify-center {
+    display: flex;
+    align-items: center;
+}
+
+.space-between {
+    display: flex;
+    justify-content: space-between;
 }
