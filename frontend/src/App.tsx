@@ -38,7 +38,9 @@ const App = (): JSX.Element => {
       setSettings({
         ...data,
         start_date: new Date(parseInt(data.start_date) * 1000),
-        end_date: new Date(parseInt(data.end_date) * 1000)
+        end_date: new Date(parseInt(data.end_date) * 1000),
+        practice_start_date: new Date(parseInt(data.practice_start_date) * 1000),
+        practice_end_date: new Date(parseInt(data.practice_end_date) * 1000),
       })
       return true
     }

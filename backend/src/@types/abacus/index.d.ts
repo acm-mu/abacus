@@ -1,5 +1,5 @@
 declare module "abacus" {
-  export interface Settings {
+  export interface Settings extends Record<string, string | number> {
     competition_name: string;
     points_per_yes: number;
     points_per_no: number;
@@ -7,6 +7,8 @@ declare module "abacus" {
     points_per_minute: number;
     start_date: number;
     end_date: number;
+    practice_start_date: number;
+    practice_end_date: number;
   }
   export interface Submission {
     sid: string;
@@ -31,6 +33,7 @@ declare module "abacus" {
   }
   export interface Problem {
     pid: string;
+    practice?: boolean;
     id: string;
     division: string;
     name: string;

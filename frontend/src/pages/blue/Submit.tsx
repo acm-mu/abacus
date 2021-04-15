@@ -38,18 +38,20 @@ const Submit = (): JSX.Element => {
 
     if (response.ok) {
       const problem = Object.values(await response.json())[0] as Problem
+
       setProblem(problem)
+      if (problem) {
+        response = await fetch(`${config.API_URL}/submissions?tid=${user?.uid}&pid=${problem.pid}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.accessToken}`
+          }
+        })
 
-      response = await fetch(`${config.API_URL}/submissions?tid=${user?.uid}&pid=${problem.pid}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.accessToken}`
+        if (!isMounted) return
+
+        if (response.ok) {
+          setSubmissions(Object.values(await response.json()))
         }
-      })
-
-      if (!isMounted) return
-
-      if (response.ok) {
-        setSubmissions(Object.values(await response.json()))
       }
     }
     setLoading(false)

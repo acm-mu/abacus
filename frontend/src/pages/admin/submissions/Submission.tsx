@@ -92,6 +92,7 @@ const submission = (): JSX.Element => {
       body: JSON.stringify({
         sid: submission.sid,
         released: true,
+        status: submission.status,
         feedback: submission.feedback,
         score: submission.score
       })

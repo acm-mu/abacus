@@ -1,4 +1,4 @@
-import { Problem, Submission } from 'abacus'
+import { Submission } from 'abacus'
 import { Request, Response } from 'express'
 import { matchedData, ParamSchema, validationResult } from 'express-validator'
 import contest from '../../abacus/contest'
@@ -28,12 +28,23 @@ interface BlueStandingsUser {
 const getBlueStandings = async (): Promise<BlueStandingsUser[]> => {
   let standings = (await contest.scanItems('user', { args: { role: 'team', division: 'blue' } }) || {}) as Record<string, BlueStandingsUser>
   const submissions = await contest.scanItems('submission', { args: { division: 'blue' } }) || {}
-  const problems = await contest.scanItems('problem', { args: { division: 'blue' } }) || {} as unknown as Problem[]
+
+  let problemsList = await contest.scanItems('problem', { args: { division: 'blue' }, columns: ['pid', 'division', 'id', 'name', 'practice'] }) || []
+  problemsList = problemsList.filter(({ practice }) => {
+    if (isPractice)
+      return practice
+    return practice == undefined || practice == false
+  })
+
+  console.log(problemsList)
+
+  const problems = transpose(problemsList, 'pid')
 
   const subs: Record<string, Record<string, Submission[]>> = {}
 
   Object.values(submissions).forEach((submission: any) => {
     const { tid, pid } = submission;
+    if (!Object.keys(problems).includes(pid)) return
     if (!(tid in subs)) subs[tid] = {}
     if (!(pid in subs[tid])) subs[tid][pid] = []
 
@@ -66,30 +77,32 @@ const getBlueStandings = async (): Promise<BlueStandingsUser[]> => {
     team.time = 0
     team.solved = 0
 
-    Object.values(problems).sort((p1, p2) => p1.id.localeCompare(p2.id)).forEach((problem: Problem) => {
-      team.problems[problem.id] = {
-        solved: false,
-        problem_score: 0,
-        num_submissions: 0,
-        submissions: []
-      }
-      if (team.uid in subs) {
-        if (problem.pid in subs[team.uid]) {
-          team.problems[problem.id].num_submissions = subs[team.uid][problem.pid].length
-          team.problems[problem.id].submissions = subs[team.uid][problem.pid]
-          subs[team.uid][problem.pid].every((sub: any) => {
-            if (sub.status === "accepted") {
-              team.problems[problem.id].problem_score = sub.score
-              team.problems[problem.id].solved = true
-              team.solved++
-              team.time += sub.score
-              return false
-            }
-            return true
-          })
+    Object.values(problems)
+      .sort((p1, p2) => p1.id.localeCompare(p2.id))
+      .forEach(problem => {
+        team.problems[problem.id] = {
+          solved: false,
+          problem_score: 0,
+          num_submissions: 0,
+          submissions: []
         }
-      }
-    })
+        if (team.uid in subs) {
+          if (problem.pid in subs[team.uid]) {
+            team.problems[problem.id].num_submissions = subs[team.uid][problem.pid].length
+            team.problems[problem.id].submissions = subs[team.uid][problem.pid]
+            subs[team.uid][problem.pid].every((sub: any) => {
+              if (sub.status === "accepted") {
+                team.problems[problem.id].problem_score = sub.score
+                team.problems[problem.id].solved = true
+                team.solved++
+                team.time += sub.score
+                return false
+              }
+              return true
+            })
+          }
+        }
+      })
   })
 
   return Object.values(standings).sort((s1: any, s2: any) =>

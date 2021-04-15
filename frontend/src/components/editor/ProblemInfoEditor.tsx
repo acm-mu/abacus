@@ -7,7 +7,7 @@ const ProblemInfoEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Elem
   if (!problem || !setProblem) return <></>
 
   const handleChange = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>) => setProblem({ ...problem, [name]: value })
-  const handleCheckChange = (event: FormEvent<HTMLInputElement>, { checked }: CheckboxProps) => setProblem({ ...problem, design_document: checked })
+  const handleCheckChange = (_event: FormEvent<HTMLInputElement>, { name, checked }: CheckboxProps) => name && setProblem({ ...problem, [name]: checked })
 
   const handleSelectChange = (_: never, { value }: HTMLInputElement) => {
     if (value == 'gold') {
@@ -64,10 +64,12 @@ const ProblemInfoEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Elem
       <Form.Checkbox label='Design Document' name='design_document' onChange={handleCheckChange} checked={problem.design_document} />
     </Form.Group> : <></>}
 
-    {problem?.division == 'blue' ? <Form.Group widths='equal'>
+    <Form.Checkbox label='Practice Problem' name='practice' onChange={handleCheckChange} checked={problem.practice || false} />
+    {/* {problem?.division == 'blue' ? <Form.Group widths='equal'>
       <Form.Field label='Memory Limit' name='memory_limit' control={Input} onChange={handleChange} value={problem?.memory_limit || ''} />
       <Form.Field label='CPU Time Limit' name='cpu_time_limit' control={Input} onChange={handleChange} value={problem?.cpu_time_limit || ''} />
-    </Form.Group> : <></>}
+    </Form.Group>
+     : <></>} */}
   </Form>
 }
 

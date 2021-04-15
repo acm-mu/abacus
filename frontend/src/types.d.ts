@@ -7,6 +7,8 @@ declare module "abacus" {
     points_per_minute: number;
     start_date: Date;
     end_date: Date;
+    practice_start_date: Date;
+    practice_end_date: Date;
   }
   export interface Submission {
     sid: string;
@@ -39,6 +41,7 @@ declare module "abacus" {
   }
   export interface Problem {
     pid: string;
+    practice?: boolean;
     id: string;
     division: string;
     name: string;

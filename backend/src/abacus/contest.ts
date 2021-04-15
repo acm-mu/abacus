@@ -33,7 +33,7 @@ class ContestService {
     })
   }
 
-  save_settings(settings: Settings): Promise<BatchWriteItemOutput> {
+  save_settings(settings: Record<string, number | string>): Promise<BatchWriteItemOutput> {
     return new Promise((resolve, reject) => {
       this.db.batchWrite({
         RequestItems: {

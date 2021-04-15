@@ -1,3 +1,5 @@
+import { Settings, User } from 'abacus';
+import { AttributeMap } from 'aws-sdk/clients/dynamodb';
 import { Request, Response } from 'express';
 import { matchedData, ParamSchema, validationResult } from "express-validator";
 import { authenticate, userHasRole } from '../../abacus/authlib';
@@ -39,11 +41,23 @@ export const schema: Record<string, ParamSchema> = {
     optional: true,
     isString: true
   },
-  type: {
-    in: ['body', 'query'],
-    optional: true,
-    isString: true
+  practice: {
+    in: 'body',
+    isBoolean: true,
+    optional: true
   }
+}
+
+const showToUser = (user: User | undefined, problem: AttributeMap, settings: Settings): boolean => {
+  const now = Date.now() / 1000
+
+  if (userHasRole(user, 'admin')) return true
+  if (user !== undefined) {
+    if (problem.practice) return now > settings.practice_start_date && now < settings.practice_end_date
+    else return now > settings.start_date && now < settings.end_date
+  }
+  if (now > settings.end_date) return true
+  return false
 }
 
 export const getProblems = async (req: Request, res: Response) => {
@@ -53,14 +67,18 @@ export const getProblems = async (req: Request, res: Response) => {
     return
   }
 
-  const { type, ...query } = matchedData(req)
-  let columns = ['pid', 'division', 'id', 'name', 'max_points']
+  const query = matchedData(req)
+  let user: User | undefined = undefined
+  try {
+    user = await authenticate(req, res)
+  } catch (err) { }
+
+  let columns = ['pid', 'division', 'id', 'name', 'practice', 'max_points'] // Default columns
   /// IF OTHER COLUMNS AUTHENTICATE FOR JUDGE / ADMIN
   if (query.columns) {
     columns = columns.concat(query.columns.split(','))
     if (columns.includes('solutions')) {
       try {
-        const user = await authenticate(req, res)
         if (!userHasRole(user, 'proctor')) {
           columns = columns.filter(e => e != 'solutions')
         }
@@ -72,14 +90,11 @@ export const getProblems = async (req: Request, res: Response) => {
   }
 
   try {
-    let problems: any = await contest.scanItems('problem', { args: query, columns })
-    if (!problems.length) {
-      res.send([])
-      return
-    }
-    if (type !== "list")
-      problems = transpose(problems, 'pid')
-    res.send(problems)
+    const settings = await contest.get_settings()
+
+    let problems = await contest.scanItems('problem', { args: query, columns })
+    problems = problems?.filter(problem => showToUser(user, problem, settings))
+    res.send(transpose(problems, 'pid'))
   } catch (err) {
     console.error(err);
     res.sendStatus(500)

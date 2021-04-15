@@ -84,7 +84,8 @@ const submission = (): JSX.Element => {
         feedback: submission.feedback,
         score: submission.score,
         released: true,
-        claimed: undefined
+        claimed: undefined,
+        status: submission.status,
       })
     })
     if (response.ok) {
@@ -175,7 +176,11 @@ const submission = (): JSX.Element => {
 
     <Button content="Download" icon="download" labelPosition="left" onClick={download} />
 
-    <SubmissionView submission={submission} setSubmission={submission?.claimed?.uid == user?.uid ? setSubmission : undefined} rerunning={isRerunning} />
+    <SubmissionView
+      submission={submission}
+      rerunning={isRerunning}
+      setSubmission={!submission.released && submission.claimed?.uid == user?.uid ? setSubmission : undefined}
+    />
   </>
 }
 
