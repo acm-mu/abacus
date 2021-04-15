@@ -96,6 +96,7 @@ export const getSubmissions = async (req: Request, res: Response) => {
       submission.team = {
         uid: team?.uid,
         username: team?.username,
+        disabled: team.disabled,
         display_name: team?.display_name,
         division: team?.division
       }
