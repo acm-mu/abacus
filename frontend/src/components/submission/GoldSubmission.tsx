@@ -66,7 +66,7 @@ const GoldFeedback = (): JSX.Element => {
     {user && submissions?.length > 0 ? <Segment>
       <h3>Team&apos;s Previous Submissions</h3>
       <ul>
-        {submissions.filter((sub: any) => sub.sid != submission?.sid).map((sub: any) => (
+        {submissions.filter((sub: { sid: string }) => sub.sid != submission?.sid).map((sub: { sid: string }) => (
           <li key={sub.sid}>
             <Link to={`${userHome(user)}/submissions/${sub.sid}`}>{sub.sid}</Link>
           </li>

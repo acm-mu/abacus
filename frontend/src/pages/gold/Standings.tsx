@@ -8,6 +8,16 @@ import { Table } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import '../Standings.scss';
 
+interface GoldStandingsUser {
+  uid: string,
+  display_name: string,
+  score: number,
+  problems: Record<string, {
+    score: number;
+    status: string;
+  }>
+}
+
 const Standings = (): JSX.Element => {
   const { user, settings } = useContext(AppContext);
   const socket = useContext(SocketContext);
@@ -106,13 +116,13 @@ const Standings = (): JSX.Element => {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {standings.map((team: any, index) => (
+          {standings.map((team: GoldStandingsUser, index) => (
             <Table.Row key={team.uid}>
               <Table.Cell collapsing>{index + 1}</Table.Cell>
               <Table.Cell>{team.display_name}</Table.Cell>
               <Table.Cell>{team.score}</Table.Cell>
               {Object.values(team.problems).map(
-                (problem: any, index) =>
+                (problem, index) =>
                   problem.status == 'accepted' ?
                     <Table.Cell key={`${team.uid}-${index}`} className={`score ${statusToClass(problem.status)}`}>
                       {problem.score}
