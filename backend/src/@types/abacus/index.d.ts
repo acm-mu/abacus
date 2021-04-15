@@ -29,7 +29,7 @@ declare module "abacus" {
     tests: Test[];
     claimed: string;
     viewed: boolean;
-    flagged: boolean;
+    flagged: string;
   }
   export interface Problem {
     pid: string;
