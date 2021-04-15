@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Table, Loader, Message, Icon } from 'semantic-ui-react'
 import { Countdown, Block, DivisionLabel } from 'components';
-import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
+import { AppContext } from 'context';
 
 type TeamType = {
   division: string,
@@ -14,9 +14,12 @@ type TeamType = {
 
 const Home = (): JSX.Element => {
 
+  const { settings } = useContext(AppContext)
   const [isLoading, setLoading] = useState(true)
   const [teams, setTeams] = useState<TeamType[]>([])
   const [isMounted, setMounted] = useState(true)
+
+  const livestream = 'https://teams.microsoft.com/l/meetup-join/19%3ameeting_N2M0ZGQzM2ItN2I2Ny00NjRkLWIyNGQtZTI5NTgzYzViY2Vm%40thread.v2/0?context=%7b%22Tid%22%3a%22abe32f68-c72d-420d-b5bd-750c63a268e4%22%2c%22Oid%22%3a%22d701d0b6-587c-40bc-9ea2-95f03b5383d8%22%2c%22IsBroadcastMeeting%22%3atrue%7d&btype=a&role=a'
 
   const loadTeams = () => {
     fetch('https://mu.acm.org/api/registered_teams')
@@ -38,9 +41,29 @@ const Home = (): JSX.Element => {
     }
   })
 
+  const isBeforeCompetition = () => !settings || new Date() < settings.start_date
+  const isAfterCompetition = () => !settings || new Date() > settings.end_date
+
   return (
     <>
       <Helmet> <title>Abacus</title> </Helmet>
+      {isBeforeCompetition() ?
+        <Message icon color='blue'>
+          <Icon name='bullhorn' />
+          <Message.Content>
+            <Message.Header>Teams</Message.Header>
+          Watch our welcome video! Click <b><a href=''>here</a></b> to view it on YouTube.
+          </Message.Content>
+        </Message> : isAfterCompetition() ?
+          <Message icon color='blue'>
+            <Icon name='bullhorn' />
+            <Message.Content>
+              <Message.Header>Teams</Message.Header>
+                Join us for the awards and closing ceremony at <b>1:00 PM</b>! Click <b><a href={livestream}>here</a></b> to join the event on Microsoft Teams.
+              </Message.Content>
+          </Message> :
+          <></>
+      }
       <Countdown />
       <Block size='xs-12'>
         <h1>Welcome to Abacus</h1>
