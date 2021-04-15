@@ -73,7 +73,7 @@ export const getProblems = async (req: Request, res: Response) => {
     user = await authenticate(req, res)
   } catch (err) { }
 
-  let columns = ['pid', 'division', 'id', 'name', 'practice', 'max_points'] // Default columns
+  let columns = ['pid', 'division', 'id', 'name', 'practice', 'max_points', 'capped_points'] // Default columns
   /// IF OTHER COLUMNS AUTHENTICATE FOR JUDGE / ADMIN
   if (query.columns) {
     columns = columns.concat(query.columns.split(','))

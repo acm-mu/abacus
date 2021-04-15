@@ -6,6 +6,7 @@ import { Problem } from 'abacus';
 import config from 'environment';
 import { Table } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
+import '../Standings.scss';
 
 const Standings = (): JSX.Element => {
   const { user, settings } = useContext(AppContext);
@@ -88,7 +89,7 @@ const Standings = (): JSX.Element => {
     </Block>
 
     <Block transparent size='xs-12'>
-      <Table celled id={"standings"}>
+      <Table celled id='gold standings'>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell collapsing>RK</Table.HeaderCell>
@@ -111,13 +112,12 @@ const Standings = (): JSX.Element => {
               <Table.Cell>{team.display_name}</Table.Cell>
               <Table.Cell>{team.score}</Table.Cell>
               {Object.values(team.problems).map(
-                (problem: any, index) => {
-                  return (
-                    <Table.Cell key={`${team.uid}-${index}`} className={statusToClass(problem.status)}>
+                (problem: any, index) =>
+                  problem.status == 'accepted' ?
+                    <Table.Cell key={`${team.uid}-${index}`} className={`score ${statusToClass(problem.status)}`}>
                       {problem.score}
                     </Table.Cell>
-                  );
-                }
+                    : <></>
               )}
             </Table.Row>
           ))}

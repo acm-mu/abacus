@@ -96,7 +96,7 @@ export const postSubmissions = async (req: Request, res: Response) => {
 
     if (submissions) {
       for (const submission of submissions) {
-        if (submission.status === 'accepted') {
+        if (submission.status === 'accepted' && problem.division != 'gold') {
           res.status(403).send({ message: "You have already solved this problem!" })
           return
         }

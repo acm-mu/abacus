@@ -57,7 +57,7 @@ const Submissions = (): JSX.Element => {
             (submissions?.sort((s1, s2) => s2.date - s1.date).map((submission: Submission, index: number) => (
               <Table.Row key={index}>
                 <Table.Cell><Link to={`/gold/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link></Table.Cell>
-                <Table.Cell><Link to={`/gold/problems/${submission.pid}`}>{submission.problem?.name} </Link></Table.Cell>
+                <Table.Cell><Link to={`/gold/problems/${submission.problem.id}`}>{submission.problem?.name} </Link></Table.Cell>
                 <Table.Cell>{submission.sub_no + 1}</Table.Cell>
                 <Table.Cell><span className={`icn status ${submission.status}`} /></Table.Cell>
                 <Table.Cell><Moment fromNow date={submission.date * 1000} /></Table.Cell>

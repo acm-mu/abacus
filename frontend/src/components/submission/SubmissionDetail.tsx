@@ -17,15 +17,7 @@ const SubmissionDetail = (): JSX.Element => {
   const handleDropdownChange = (_event: React.SyntheticEvent<HTMLElement, Event>, { value }: DropdownProps) => {
     if (setSubmission) {
       if (value && settings) {
-        let score = submission.score
-        if (value == 'accepted') {
-          const start_date = Math.floor((submission.problem.practice ? settings?.practice_start_date : settings.start_date).getTime() / 1000)
-          const minutes = (submission.date - start_date) / 60;
-          score = Math.floor((minutes * settings.points_per_minute) + (settings.points_per_no * submission.sub_no) + settings.points_per_yes);
-        } else if (value == 'rejected') {
-          score = 0
-        }
-        setSubmission({ ...submission, status: `${value}`, score })
+        setSubmission({ ...submission, status: `${value}`, score: 0 })
       }
     }
   }
@@ -106,7 +98,7 @@ const SubmissionDetail = (): JSX.Element => {
             {showUser && submission_team}
             {submission_date}
             {submission_problem}
-            <Table.Cell><span className={`icn status ${submission.status}`} /></Table.Cell>
+            {submission_status}
             <Table.Cell>{submission.score}</Table.Cell>
           </Table.Row>
         </Table.Body>

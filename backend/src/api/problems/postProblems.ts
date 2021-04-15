@@ -56,6 +56,10 @@ export const schema: Record<string, ParamSchema> = {
     in: 'body',
     optional: true
   },
+  capped_points: {
+    in: 'body',
+    optional: true
+  },
   project_id: {
     in: 'body',
     optional: true

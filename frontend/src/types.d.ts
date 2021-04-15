@@ -57,6 +57,7 @@ declare module "abacus" {
     project_id?: string;
     design_document?: boolean;
     max_points?: number;
+    capped_points?: boolean;
   }
   export interface User {
     uid: string;

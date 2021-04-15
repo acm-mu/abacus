@@ -137,17 +137,18 @@ const getGoldStandings = async (isPractice: boolean): Promise<Record<string, any
 
   const problems = transpose(problemsList, 'pid')
 
-  const subs: Record<string, Record<string, Submission>> = {}
+  const subs: Record<string, Record<string, Submission[]>> = {}
 
   Object.values(submissions).forEach((submission: any) => {
     const { tid, pid } = submission;
     if (!(tid in subs)) subs[tid] = {}
+    if (!(pid in subs[tid])) subs[tid][pid] = []
 
     if (!submission.released) {
       submission.status = 'pending'
     }
 
-    subs[tid][pid] = submission
+    subs[tid][pid].push(submission)
   })
 
   Object.values(standings).forEach((team: any) => {
@@ -163,8 +164,16 @@ const getGoldStandings = async (isPractice: boolean): Promise<Record<string, any
       team.problems[problem.id] = {}
       if (team.uid in subs) {
         if (problem.pid in subs[team.uid]) {
-          team.problems[problem.id] = subs[team.uid][problem.pid]
-          team.score += subs[team.uid][problem.pid].score
+          let score = 0
+          subs[team.uid][problem.pid].forEach((sub: any) => {
+            score = Math.max(score, sub.score)
+
+          })
+          team.problems[problem.id] = {
+            score,
+            status: score > 0 ? 'accepted' : undefined
+          }
+          team.score += score
         }
       }
     })
