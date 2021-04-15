@@ -90,7 +90,7 @@ const Rules = (): JSX.Element => {
                 <li>Ask questions regarding logistics and problems to the judges. This includes:</li>
                 <ul>
                     <li>Questions regarding the rules of the competition</li>
-                    <li>Questions regarding how to use the competition website, <a>Abacus</a></li>
+                    <li>Questions regarding how to use the competition website, Abacus</li>
                     <li>Questions regarding any confusing parts of the competition problems</li>
                 </ul>
                 <p>These questions can be asked through the {hasAccessTo() ? <Link to={'/blue/clarifications'}>Clarifications</Link> : 'Clarifications'} tab.</p>
