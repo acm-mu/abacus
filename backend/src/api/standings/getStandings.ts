@@ -43,7 +43,7 @@ export const getStandings = async (_req: Request, res: Response) => {
     team.time = 0
     team.solved = 0
 
-    Object.values(problems).sort((p1, p2) => p1.id.localeCompare(p2.id)).forEach((problem: Problem) => {
+    Object.values(problems).filter(problem => !problem.practice).sort((p1, p2) => p1.id.localeCompare(p2.id)).forEach((problem: Problem) => {
       team.problems[problem.id] = {
         solved: false,
         problem_score: 0,
