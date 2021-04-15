@@ -19,17 +19,16 @@ const Standings = (): JSX.Element => {
   const helmet = <Helmet> <title>Abacus | Blue Standings</title> </Helmet>
 
   const loadData = async () => {
-    let response = await fetch(`${config.API_URL}/problems?division=blue`)
+    const response = await fetch(`${config.API_URL}/standings`)
 
-    let problems = Object.values(await response.json()) as Problem[]
-    problems = problems.sort((a, b) => a.id.localeCompare(b.id))
+    const data = await response.json()
 
     if (!isMounted) return
-    setProblems(problems)
 
-    response = await fetch(`${config.API_URL}/standings`)
+    setStandings(data.standings)
 
-    setStandings(await response.json())
+    const problems = Object.values(data.problems) as Problem[]
+    setProblems(problems.sort((p1, p2) => p1.id.localeCompare(p2.id)))
 
     setLoading(false)
   }
@@ -41,11 +40,11 @@ const Standings = (): JSX.Element => {
     return () => { setMounted(false) }
   }, []);
 
-  if (!settings || new Date() < settings.start_date)
+  if (!settings || new Date() < settings.practice_start_date)
     return <>
       {helmet}
       <Countdown />
-      <Block center size='xs-12'>
+      <Block size='xs-12'>
         <h1>Competition not yet started!</h1>
         <p>Standings will become available when the competition begins, and submissions start rolling in.</p>
       </Block>
