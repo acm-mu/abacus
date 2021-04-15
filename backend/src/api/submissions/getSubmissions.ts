@@ -61,6 +61,12 @@ export const schema: Record<string, ParamSchema> = {
   },
   flagged: {
     in: ['query', 'body'],
+    isString: true,
+    optional: true
+  },
+  claimed: {
+    in: ['query', 'body'],
+    isString: true,
     optional: true
   },
   viewed: {
