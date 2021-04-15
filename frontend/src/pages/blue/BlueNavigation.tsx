@@ -9,7 +9,7 @@ const BlueNavigation = (): JSX.Element => {
   const { user } = useContext(AppContext)
 
   const hasAccessTo = () => user?.role == 'admin' || user?.division == 'blue'
-  const isBeforeCompetition = () => !settings || new Date() < settings.start_date
+  const isBeforeCompetition = () => !settings || new Date() < settings.practice_start_date
 
   return (
     <Navigation className="blue-div">

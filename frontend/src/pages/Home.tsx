@@ -41,13 +41,6 @@ const Home = (): JSX.Element => {
   return (
     <>
       <Helmet> <title>Abacus</title> </Helmet>
-      <Message icon color='blue'>
-        <Icon name='bullhorn' />
-        <Message.Content>
-          <Message.Header>Blue Division!</Message.Header>
-          Our new practice system is now available. Click <b><Link to='/blue/practice'>here</Link></b> to practice with some of our problems from years past.
-          </Message.Content>
-      </Message>
       <Countdown />
       <Block size='xs-12'>
         <h1>Welcome to Abacus</h1>
