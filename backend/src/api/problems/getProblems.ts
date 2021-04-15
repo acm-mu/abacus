@@ -48,15 +48,15 @@ export const schema: Record<string, ParamSchema> = {
   }
 }
 
-const canView = (user: User | undefined, problem: AttributeMap, settings: Settings): boolean => {
-  const now = Date.now()
+const showToUser = (user: User | undefined, problem: AttributeMap, settings: Settings): boolean => {
+  const now = Date.now() / 1000
 
-  if (userHasRole(user, 'proctor')) return true
-  if (user?.role == 'team') {
-    if (problem.practice && now > settings.practice_start_date * 1000 && now < settings.practice_end_date * 1000) return true
-    else if (now > settings.start_date * 1000 && now < settings.end_date * 1000) return true
+  if (userHasRole(user, 'admin')) return true
+  if (user !== undefined) {
+    if (problem.practice) return now > settings.practice_start_date && now < settings.practice_end_date
+    else return now > settings.start_date && now < settings.end_date
   }
-  if (now > settings.end_date * 1000) return true
+  if (now > settings.end_date) return true
   return false
 }
 
@@ -93,7 +93,7 @@ export const getProblems = async (req: Request, res: Response) => {
     const settings = await contest.get_settings()
 
     let problems = await contest.scanItems('problem', { args: query, columns })
-    problems = problems?.filter(problem => canView(user, problem, settings))
+    problems = problems?.filter(problem => showToUser(user, problem, settings))
     res.send(transpose(problems, 'pid'))
   } catch (err) {
     console.error(err);
