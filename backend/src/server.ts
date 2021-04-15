@@ -42,7 +42,13 @@ app.use(fileUpload()); // Middleware for uploading files to express (accessible 
 app.use(morgan('dev'));
 
 app.use(api);
+app.get('/loaderio-49210dbfd48d683f3536e6af2bc2110c.txt', (_, res) => {
+  res.attachment('loaderio-49210dbfd48d683f3536e6af2bc2110c.txt')
+  res.type('txt')
+  res.send('loaderio-49210dbfd48d683f3536e6af2bc2110c')
+});
 app.get('/', (_, res) => res.status(200).send(' ')); // Sends 200 OK when AWS EBS pings server for health check
+
 
 export const sendNotification = ({ header, to, content, type, context }: Notification) =>
   io.sockets.emit('notification', ({ id: uuidv4(), to, header, content, type, context }))

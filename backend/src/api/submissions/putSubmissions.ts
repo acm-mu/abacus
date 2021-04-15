@@ -62,6 +62,10 @@ export const schema: Record<string, ParamSchema> = {
     in: 'body',
     optional: true
   },
+  score: {
+    in: 'body',
+    optional: true
+  },
   flagged: {
     in: 'body',
     optional: true
@@ -69,6 +73,10 @@ export const schema: Record<string, ParamSchema> = {
   viewed: {
     in: 'body',
     isBoolean: true,
+    optional: true
+  },
+  feedback: {
+    in: 'body',
     optional: true
   }
 }

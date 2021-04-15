@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { Table } from "semantic-ui-react";
 import { Block, Countdown, PageLoading, StatusMessage } from "components";
 import config from 'environment'
-import "./Standings.scss";
+import "../Standings.scss";
 import { AppContext, SocketContext } from "context";
 import { Helmet } from "react-helmet";
 
@@ -19,7 +19,7 @@ const Standings = (): JSX.Element => {
   const helmet = <Helmet> <title>Abacus | Blue Standings</title> </Helmet>
 
   const loadData = async () => {
-    const response = await fetch(`${config.API_URL}/standings`)
+    const response = await fetch(`${config.API_URL}/standings?division=blue`)
 
     const data = await response.json()
 
@@ -27,8 +27,10 @@ const Standings = (): JSX.Element => {
 
     setStandings(data.standings)
 
-    const problems = Object.values(data.problems) as Problem[]
-    setProblems(problems.sort((p1, p2) => p1.id.localeCompare(p2.id)))
+    if (data.problems) {
+      const problems = Object.values(data.problems) as Problem[]
+      setProblems(problems.sort((p1, p2) => p1.id.localeCompare(p2.id)))
+    }
 
     setLoading(false)
   }
@@ -119,7 +121,7 @@ const Standings = (): JSX.Element => {
                       <Table.Cell key={`${team.uid}-${index}`} className="pending">
                         {problem.submissions.length}
                         <br />
-                            --
+                        <small>--</small>
                       </Table.Cell>
                     );
                   } else if (problem.submissions.length) {
@@ -127,7 +129,7 @@ const Standings = (): JSX.Element => {
                       <Table.Cell key={`${team.uid}-${index}`} className="attempted">
                         {problem.submissions.length}
                         <br />
-                            --
+                        <small>--</small>
                       </Table.Cell>
                     );
                   } else {

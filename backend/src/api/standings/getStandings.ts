@@ -1,17 +1,31 @@
-import { Submission } from 'abacus'
+import { Problem, Submission } from 'abacus'
 import { Request, Response } from 'express'
+import { matchedData, ParamSchema, validationResult } from 'express-validator'
 import contest, { transpose } from '../../abacus/contest'
 
-export const getStandings = async (_req: Request, res: Response) => {
-
-  const settings = await contest.get_settings()
-  const now = Date.now() / 1000
-  if (now < settings.practice_start_date || (now > settings.practice_end_date && now < settings.start_date)) {
-    res.sendStatus(204)
-    return
+export const schema: Record<string, ParamSchema> = {
+  division: {
+    in: ['body', 'query'],
+    isString: true,
+    errorMessage: 'Division is not supplied!'
   }
-  const isPractice = now < settings.practice_end_date
+}
 
+// interface BlueStandingsUser {
+//   display_name: string;
+//   uid: string;
+//   username: string;
+//   solved: number;
+//   time: number;
+//   problems: Record<string, {
+//     num_submissions: number;
+//     problem_score: number;
+//     solved: boolean;
+//     submissions: Submission[];
+//   }>
+// };
+
+const getBlueStandings = async (isPractice: boolean): Promise<Record<string, any>> => {
   let standings = Object.values(await contest.scanItems('user', { args: { role: 'team', division: 'blue' } }) || {})
   const submissions = await contest.scanItems('submission', { args: { division: 'blue' } }) || {}
 
@@ -22,11 +36,9 @@ export const getStandings = async (_req: Request, res: Response) => {
     return practice == undefined || practice == false
   })
 
-  console.log(problemsList)
-
   const problems = transpose(problemsList, 'pid')
 
-  const subs: { [key: string]: { [key: string]: Submission[] } } = {}
+  const subs: Record<string, Record<string, Submission[]>> = {}
 
   Object.values(submissions).forEach((submission: any) => {
     const { tid, pid } = submission;
@@ -98,8 +110,108 @@ export const getStandings = async (_req: Request, res: Response) => {
     return s2.solved - s1.solved
   })
 
-  res.send({
+  return {
     problems,
     standings: data
+  }
+}
+
+interface GoldStandingsUser {
+  display_name: string;
+  uid: string;
+  username: string;
+  score: number;
+  problems: Record<string, Submission>;
+}
+
+const getGoldStandings = async (isPractice: boolean): Promise<Record<string, any>> => {
+  const standings = (await contest.scanItems('user', { args: { role: 'team', division: 'gold' } }) || {}) as Record<string, GoldStandingsUser>
+  const submissions = await contest.scanItems('submission', { args: { division: 'gold' } }) || {}
+
+  let problemsList = await contest.scanItems('problem', { args: { division: 'gold' } }) || []
+  problemsList = problemsList.filter(({ practice }) => {
+    if (isPractice)
+      return practice
+    return practice == undefined || practice == false
   })
+
+  const problems = transpose(problemsList, 'pid')
+
+  const subs: Record<string, Record<string, Submission[]>> = {}
+
+  Object.values(submissions).forEach((submission: any) => {
+    const { tid, pid } = submission;
+    if (!(tid in subs)) subs[tid] = {}
+    if (!(pid in subs[tid])) subs[tid][pid] = []
+
+    if (!submission.released) {
+      submission.status = 'pending'
+    }
+
+    subs[tid][pid].push(submission)
+  })
+
+  Object.values(standings).forEach((team: any) => {
+    delete team.password
+    delete team.role
+    delete team.division
+    delete team.username
+
+    team.problems = {}
+    team.score = 0
+
+    Object.values(problems).sort((p1, p2) => p1.id.localeCompare(p2.id)).forEach((problem: Problem) => {
+      team.problems[problem.id] = {}
+      if (team.uid in subs) {
+        if (problem.pid in subs[team.uid]) {
+          let score = 0
+          subs[team.uid][problem.pid].forEach((sub: any) => {
+            score = Math.max(score, sub.score)
+
+          })
+          team.problems[problem.id] = {
+            score,
+            status: score > 0 ? 'accepted' : undefined
+          }
+          team.score += score
+        }
+      }
+    })
+  })
+
+  const data = Object.values(standings).sort((s1: any, s2: any) =>
+    s2.score - s1.score)
+  return {
+    standings: data,
+    problems
+  }
+}
+
+export const getStandings = async (req: Request, res: Response) => {
+  const errors = validationResult(req).array()
+  if (errors.length > 0) {
+    res.status(400).send({ message: errors[0].msg })
+    return
+  }
+
+  const settings = await contest.get_settings()
+  const now = Date.now() / 1000
+  if (now < settings.practice_start_date || (now > settings.practice_end_date && now < settings.start_date)) {
+    res.sendStatus(204)
+    return
+  }
+
+  const isPractice = now < settings.practice_end_date
+
+  const { division } = matchedData(req)
+
+  if (division == 'blue') {
+    res.send(await getBlueStandings(isPractice))
+    return
+  } else if (division == 'gold') {
+    res.send(await getGoldStandings(isPractice))
+    return
+  }
+
+  res.status(400).send({ message: `${division} is not allowed!` })
 }

@@ -8,7 +8,7 @@ interface SubmissionContextType {
 }
 
 const SubmissionContext = createContext<SubmissionContextType>({
-  submission: undefined
+  submission: undefined,
 })
 
 export default SubmissionContext

@@ -6,7 +6,7 @@ import SubmissionContext from './SubmissionContext';
 interface SubmissionProps {
   submission: Submission;
   setSubmission?: React.Dispatch<React.SetStateAction<Submission | undefined>>;
-  rerunning?: boolean
+  rerunning?: boolean;
 }
 
 const SubmissionView = ({ submission, setSubmission, rerunning }: SubmissionProps): JSX.Element =>

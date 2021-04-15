@@ -1,7 +1,7 @@
 import { Problem, Submission } from "abacus";
 import React, { ChangeEvent, SyntheticEvent, useContext, useEffect, useMemo, useState } from "react";
 import { Form, DropdownProps, InputOnChangeData, Breadcrumb } from "semantic-ui-react";
-import { Block, PageLoading, ScratchViewer, Unauthorized } from "components";
+import { Block, PageLoading, ScratchViewer, StatusMessage, Unauthorized } from "components";
 import config from "environment"
 import { Helmet } from "react-helmet";
 import { useHistory, useParams } from "react-router";
@@ -21,6 +21,8 @@ const Submit = (): JSX.Element => {
   const [isLoading, setLoading] = useState(true)
   const [isMounted, setMounted] = useState(true)
   const [isSubmitting, setSubmitting] = useState(false)
+
+  const [error, setError] = useState<string>()
 
   const { user } = useContext(AppContext)
 
@@ -72,7 +74,8 @@ const Submit = (): JSX.Element => {
 
     if (response.status !== 200) {
       setSubmitting(false)
-      alert("An error occurred! Please try again")
+      const { message } = await response.json()
+      setError(message)
       return
     }
 
@@ -99,6 +102,7 @@ const Submit = (): JSX.Element => {
         <Breadcrumb.Section active content="Submit" />
       </Breadcrumb>
     </Block>
+    {error && <StatusMessage message={{ type: 'error', message: error }} />}
     <Block size='xs-12'>
       <Form onSubmit={handleSubmit}>
         <Form.Group>
