@@ -1,7 +1,7 @@
 import { Problem, Submission } from "abacus";
 import React, { ChangeEvent, SyntheticEvent, useContext, useEffect, useMemo, useState } from "react";
 import { Form, DropdownProps, InputOnChangeData, Breadcrumb } from "semantic-ui-react";
-import { Block, NotFound, PageLoading, ScratchViewer, Unauthorized } from "components";
+import { Block, PageLoading, ScratchViewer, Unauthorized } from "components";
 import config from "environment"
 import { Helmet } from "react-helmet";
 import { useHistory, useParams } from "react-router";
