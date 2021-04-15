@@ -1,7 +1,7 @@
 import { Submission } from 'abacus'
 import React, { useState, useEffect, useContext } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { NotFound, PageLoading, SubmissionView } from 'components'
+import { NotFound, PageLoading, StatusMessage, SubmissionView } from 'components'
 import config from 'environment'
 import { Helmet } from 'react-helmet'
 import { Button } from 'semantic-ui-react'
@@ -15,8 +15,8 @@ const submission = (): JSX.Element => {
   const [isMounted, setMounted] = useState(true)
   const [isRerunning, setRerunning] = useState(false)
   const [isReleasing, setReleasing] = useState(false)
-  const [isDeleting, setDeleting] = useState(false)
   const [isClaiming, setClaiming] = useState<{ [key: string]: boolean }>({})
+  const [error, setError] = useState<string>()
 
   const { user } = useContext(AppContext)
 
@@ -45,22 +45,6 @@ const submission = (): JSX.Element => {
   if (isLoading) return <PageLoading />
   if (!submission) return <NotFound />
 
-  const deleteSubmission = async () => {
-    setDeleting(true)
-    const response = await fetch(`${config.API_URL}/submissions`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.accessToken}`
-      },
-      body: JSON.stringify({ sid: submission.sid })
-    })
-    if (response.ok) {
-      history.push(`/${user?.role}/submissions`)
-    }
-    setDeleting(false)
-  }
-
   const rerun = async () => {
     if (!setSubmission) return
     setRerunning(true)
@@ -77,6 +61,11 @@ const submission = (): JSX.Element => {
       if (result.submissions && submission.sid in result.submissions) {
         setSubmission({ team: submission?.team, problem: submission?.problem, ...result.submissions[submission.sid] })
       }
+    } else {
+      try {
+        const { message } = await response.json()
+        setError(message)
+      } catch (_err) { return }
     }
     setRerunning(false)
   }
@@ -100,11 +89,12 @@ const submission = (): JSX.Element => {
     })
     if (response.ok) {
       const result = await response.json()
-      setSubmission({
-        ...submission,
-        released: result.released,
-        claimed: undefined
-      })
+      setSubmission({ ...submission, released: result.released, claimed: undefined })
+    } else {
+      try {
+        const { message } = await response.json()
+        setError(message)
+      } catch (_err) { return }
     }
     setReleasing(false)
   }
@@ -122,6 +112,11 @@ const submission = (): JSX.Element => {
 
     if (response.ok) {
       setSubmission({ ...submission, claimed: user })
+    } else {
+      try {
+        const { message } = await response.json()
+        setError(message)
+      } catch (_err) { return }
     }
 
     setClaiming({ ...isClaiming, [sid]: false })
@@ -140,6 +135,11 @@ const submission = (): JSX.Element => {
 
     if (response.ok) {
       setSubmission({ ...submission, claimed: undefined })
+    } else {
+      try {
+        const { message } = await response.json()
+        setError(message)
+      } catch (_err) { return }
     }
 
     setClaiming({ ...isClaiming, [sid]: false })
@@ -152,19 +152,28 @@ const submission = (): JSX.Element => {
   return <>
     <Helmet> <title>Abacus | Judge Submission</title> </Helmet>
 
+    {error && <StatusMessage message={{ type: 'error', message: error }} />}
+
     <Button content='Back' icon='arrow left' labelPosition='left' onClick={history.goBack} />
-    <Button disabled={isRerunning || submission.claimed?.uid != user?.uid} loading={isRerunning} content="Rerun" icon="redo" labelPosition="left" onClick={rerun} />
-    {submission.claimed ?
-      (submission.claimed?.uid === user?.uid ?
-        <Button content="Unclaim" icon={'hand paper'} onClick={() => unclaim(submission.sid)} loading={isClaiming[submission.sid]} disabled={isClaiming[submission.sid]} labelPosition={'left'} /> :
-        <Button content="Claimed" icon={'lock'} disabled={true} labelPosition={'left'} />
+
+    {!submission.released ?
+      (submission.claimed ?
+        <>
+          {submission.claimed?.uid === user?.uid ?
+            <>
+              <Button content="Unclaim" icon={'hand paper'} onClick={() => unclaim(submission.sid)} loading={isClaiming[submission.sid]} disabled={isClaiming[submission.sid]} labelPosition={'left'} />
+              <Button disabled={isRerunning || submission.claimed?.uid != user?.uid} loading={isRerunning} content="Rerun" icon="redo" labelPosition="left" onClick={rerun} />
+              <Button loading={isReleasing} disabled={isReleasing || submission.claimed?.uid != user?.uid} icon="right arrow" content="Release" labelPosition="left" onClick={release} />
+            </> :
+            <Button content="Claimed" icon={'lock'} disabled={true} labelPosition={'left'} />
+          }
+        </> :
+        <Button content="Claim" icon={'hand rock'} onClick={() => claim(submission.sid)} loading={isClaiming[submission.sid]} disabled={isClaiming[submission.sid]} labelPosition={'left'} />
       ) :
-      <Button content="Claim" icon={'hand rock'} onClick={() => claim(submission.sid)} loading={isClaiming[submission.sid]} disabled={isClaiming[submission.sid]} labelPosition={'left'} />}
-    {submission.released ?
-      <Button icon="check" positive content="Released" labelPosition="left" /> :
-      <Button loading={isReleasing} disabled={isReleasing || submission.claimed?.uid != user?.uid} icon="right arrow" content="Release" labelPosition="left" onClick={release} />}
+      <Button icon="check" positive content="Released" labelPosition="left" />
+    }
+
     <Button content="Download" icon="download" labelPosition="left" onClick={download} />
-    <Button disabled={isDeleting || submission.claimed?.uid != user?.uid} loading={isDeleting} content="Delete" icon="trash" negative labelPosition="left" onClick={deleteSubmission} />
 
     <SubmissionView submission={submission} setSubmission={submission?.claimed?.uid == user?.uid ? setSubmission : undefined} rerunning={isRerunning} />
   </>

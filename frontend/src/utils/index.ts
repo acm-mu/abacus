@@ -17,7 +17,9 @@ export const userHome = (user: User): string => {
     case 'team':
       return `/${user.division}`
     case 'judge':
-      return `/judge`
+      return '/judge'
+    case 'proctor':
+      return '/proctor'
     default:
       return '/'
   }
@@ -25,7 +27,8 @@ export const userHome = (user: User): string => {
 
 export const divisions = [
   { key: 1, text: "Blue", value: 'blue' },
-  { key: 2, text: "Gold", value: 'gold' }
+  { key: 2, text: "Gold", value: 'gold' },
+  { key: 3, text: "Eagle", value: 'eagle' }
 ]
 
 export const roles = [

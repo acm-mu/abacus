@@ -6,7 +6,7 @@ import { AppContext } from "context";
 
 const BlueNavigation = (): JSX.Element => {
   const { settings } = useContext(AppContext)
-  const { user } = useContext(AppContext);
+  const { user } = useContext(AppContext)
 
   const hasAccessTo = () => user?.role == 'admin' || user?.division == 'blue'
   const isBeforeCompetition = () => !settings || new Date() < settings.start_date
@@ -14,6 +14,7 @@ const BlueNavigation = (): JSX.Element => {
   return (
     <Navigation className="blue-div">
       <Menu.Item as={NavLink} exact to="/blue" content="Home" />
+      <Menu.Item as={NavLink} to='/blue/rules' content='Rules' />
       {hasAccessTo() ? <Menu.Item as={NavLink} to="/blue/problems" content="Problems" /> : <></>}
       <Menu.Item as={NavLink} to="/blue/standings" content="Standings" />
       {hasAccessTo() ? <Menu.Item as={NavLink} to="/blue/submissions" content="Submissions" /> : <></>}

@@ -2,7 +2,7 @@ import { Problem, Submission } from "abacus";
 import React, { useContext, useEffect, useState } from "react";
 import { Popup, Table } from "semantic-ui-react";
 import { Link } from "react-router-dom";
-import { Block, Countdown, PageLoading } from "components";
+import { Block, Countdown, PageLoading, Unauthorized } from "components";
 import config from 'environment'
 import { AppContext } from "context";
 import 'components/Table.scss'
@@ -80,6 +80,7 @@ const Problems = (): JSX.Element => {
 
 
   if (isLoading) return <PageLoading />
+  if (user?.division != 'blue' && user?.role != 'admin') return <Unauthorized />
 
   return <>
     {helmet}

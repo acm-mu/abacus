@@ -23,6 +23,9 @@ declare module "abacus" {
     status: string;
     score: number;
     feedback?: string;
+    claimed?: User;
+    flagged?: User;
+    viewed?: boolean;
     //Blue
     runtime?: number;
     md5?: string;
@@ -60,6 +63,7 @@ declare module "abacus" {
     display_name: string;
     division?: string;
     school?: string;
+    disabled?: boolean;
   }
   export interface Test {
     in: string;

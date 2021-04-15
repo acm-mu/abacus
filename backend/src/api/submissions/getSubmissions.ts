@@ -58,6 +58,21 @@ export const schema: Record<string, ParamSchema> = {
     isBoolean: true,
     notEmpty: true,
     optional: true
+  },
+  flagged: {
+    in: ['query', 'body'],
+    isString: true,
+    optional: true
+  },
+  claimed: {
+    in: ['query', 'body'],
+    isString: true,
+    optional: true
+  },
+  viewed: {
+    in: ['query', 'body'],
+    isBoolean: true,
+    optional: true
   }
 }
 
@@ -87,6 +102,7 @@ export const getSubmissions = async (req: Request, res: Response) => {
       submission.team = {
         uid: team?.uid,
         username: team?.username,
+        disabled: team.disabled,
         display_name: team?.display_name,
         division: team?.division
       }
@@ -97,6 +113,14 @@ export const getSubmissions = async (req: Request, res: Response) => {
           username: claimee?.username,
           display_name: claimee?.display_name,
           division: claimee?.division
+        }
+      }
+      if (submission.flagged !== undefined) {
+        const flagger = users[submission.flagged]
+        submission.flagged = {
+          uid: flagger?.uid,
+          username: flagger?.username,
+          display_name: flagger?.display_name
         }
       }
       if (req.user?.role == 'team' && !submission.released) {

@@ -2,13 +2,13 @@ import { Problem } from 'abacus'
 import React, { useState, useEffect, useContext } from 'react'
 import { Table } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
-import { Block, Countdown, PageLoading } from 'components'
+import { Block, Countdown, PageLoading, Unauthorized } from 'components'
 import config from 'environment'
 import { AppContext } from 'context'
 import { Helmet } from 'react-helmet'
 
 const Problems = (): JSX.Element => {
-  const { settings } = useContext(AppContext)
+  const { user, settings } = useContext(AppContext)
   const [isMounted, setMounted] = useState(true)
   const [isLoading, setLoading] = useState(true)
   const [problems, setProblems] = useState<Problem[]>()
@@ -47,6 +47,7 @@ const Problems = (): JSX.Element => {
     </>
 
   if (isLoading) return <PageLoading />
+  if (user?.division != 'gold' && user?.role != 'admin') return <Unauthorized />
 
   return <>
     {helmet}
