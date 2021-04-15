@@ -69,6 +69,11 @@ export const schema: Record<string, ParamSchema> = {
     in: 'body',
     isBoolean: true,
     optional: true
+  },
+  practice: {
+    in: 'body',
+    isBoolean: true,
+    optional: true
   }
 }
 

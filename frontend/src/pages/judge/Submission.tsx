@@ -79,7 +79,7 @@ const submission = (): JSX.Element => {
         Authorization: `Bearer ${localStorage.accessToken}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ sid: submission.sid, released: true, claimed: undefined })
+      body: JSON.stringify({ sid: submission.sid, released: true, claimed: undefined, status: submission.status, score: submission.score })
     })
     if (response.ok) {
       const result = await response.json()
@@ -169,7 +169,11 @@ const submission = (): JSX.Element => {
 
     <Button content="Download" icon="download" labelPosition="left" onClick={download} />
 
-    <SubmissionView submission={submission} rerunning={isRerunning} />
+    <SubmissionView
+      submission={submission}
+      rerunning={isRerunning}
+      setSubmission={!submission.released && submission.claimed?.uid == user?.uid ? setSubmission : undefined}
+    />
   </>
 }
 
