@@ -10,6 +10,12 @@ export const schema: Record<string, ParamSchema> = {
     isString: true,
     errorMessage: 'String competition_name is not supplied'
   },
+  practice_name: {
+    in: 'body',
+    notEmpty: true,
+    isString: true,
+    errorMessage: 'String practice_name is not supplied'
+  },
   points_per_yes: {
     in: 'body',
     notEmpty: true,

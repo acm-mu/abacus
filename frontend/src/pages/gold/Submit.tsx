@@ -86,7 +86,6 @@ const Submit = (): JSX.Element => {
   const handleChange = async (event: ChangeEvent<HTMLInputElement>, { value }: InputOnChangeData) => setProjectUrl(value)
 
   if (isLoading) return <PageLoading />
-  if (!problem) return <NotFound />
   if (user?.division != 'gold' && user?.role != 'admin') return <Unauthorized />
 
   return <>

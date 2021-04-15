@@ -1,6 +1,7 @@
 declare module "abacus" {
   export interface Settings extends Record<string, string | number> {
     competition_name: string;
+    practice_name: string;
     points_per_yes: number;
     points_per_no: number;
     points_per_compilation_error: number;

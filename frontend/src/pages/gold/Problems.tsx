@@ -36,7 +36,7 @@ const Problems = (): JSX.Element => {
     setLoading(false)
   }
 
-  if (!settings || new Date() < settings.start_date)
+  if (!settings || new Date() < settings.practice_start_date)
     return <>
       {helmet}
       <Countdown />

@@ -15,6 +15,7 @@ const toLocalTimeString = (date: number): string => toLocal(date).toISOString().
 const Settings = (): JSX.Element => {
   const [settings, setSettings] = useState<{ [key: string]: string }>({
     competition_name: '',
+    practice_name: '',
     start_date: `${Date.now()}`,
     start_time: `${Date.now()}`,
     end_date: `${Date.now()}`,
@@ -65,6 +66,7 @@ const Settings = (): JSX.Element => {
     setSaving(true)
     const formData = new FormData()
     formData.set('competition_name', settings.competition_name)
+    formData.set('practice_name', settings.practice_name)
     formData.set('points_per_yes', settings.points_per_yes)
     formData.set('points_per_no', settings.points_per_no)
     formData.set('points_per_compilation_error', settings.points_per_compilation_error)
@@ -104,7 +106,7 @@ const Settings = (): JSX.Element => {
         <h3>Competition Settings</h3>
 
         <Form.Input
-          label="Competition Name"
+          label="Competition Display Name"
           type="text"
           required
           onChange={handleChange}
@@ -112,17 +114,14 @@ const Settings = (): JSX.Element => {
           name="competition_name"
         />
 
-        <h3>Competition Time</h3>
-
-        <Form.Group widths='equal'>
-          <Form.Field label='Start Date' control={Input} type='date' onChange={handleChange} name='start_date' value={settings.start_date} />
-          <Form.Field label='Start Time' control={Input} type='time' onChange={handleChange} name='start_time' value={settings.start_time} />
-        </Form.Group>
-
-        <Form.Group widths='equal'>
-          <Form.Field label='End Date' control={Input} type='date' onChange={handleChange} name='end_date' value={settings.end_date} />
-          <Form.Field label='End Time' control={Input} type='time' onChange={handleChange} name='end_time' value={settings.end_time} />
-        </Form.Group>
+        <Form.Input
+          label="Practice Display Name"
+          type="text"
+          required
+          onChange={handleChange}
+          value={settings.practice_name}
+          name="practice_name"
+        />
 
         <h3>Practice Period</h3>
 
@@ -134,6 +133,18 @@ const Settings = (): JSX.Element => {
         <Form.Group widths='equal'>
           <Form.Field label='End Date' control={Input} type='date' onChange={handleChange} name='practice_end_date' value={settings.practice_end_date} />
           <Form.Field label='End Time' control={Input} type='time' onChange={handleChange} name='practice_end_time' value={settings.practice_end_time} />
+        </Form.Group>
+
+        <h3>Competition Time</h3>
+
+        <Form.Group widths='equal'>
+          <Form.Field label='Start Date' control={Input} type='date' onChange={handleChange} name='start_date' value={settings.start_date} />
+          <Form.Field label='Start Time' control={Input} type='time' onChange={handleChange} name='start_time' value={settings.start_time} />
+        </Form.Group>
+
+        <Form.Group widths='equal'>
+          <Form.Field label='End Date' control={Input} type='date' onChange={handleChange} name='end_date' value={settings.end_date} />
+          <Form.Field label='End Time' control={Input} type='time' onChange={handleChange} name='end_time' value={settings.end_time} />
         </Form.Group>
 
         <h3>Scoring System</h3>
