@@ -100,7 +100,7 @@ const Standings = (): JSX.Element => {
         </Table.Header>
         <Table.Body>
           {standings.map((team, index) => (
-            <Table.Row key={team.uid}>
+            <Table.Row key={team.uid} warning={team.uid == user?.uid} style={{ fontWeight: team.uid == user?.uid ? 'bold' : 'normal' }}>
               <Table.Cell collapsing>{index + 1}</Table.Cell>
               <Table.Cell>{team.display_name}</Table.Cell>
               <Table.Cell>{team.solved}</Table.Cell>
