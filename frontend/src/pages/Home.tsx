@@ -43,7 +43,7 @@ const Home = (): JSX.Element => {
     }
   })
 
-  const isBeforeCompetition = () => !settings || new Date() < settings.start_date
+  const isBeforeCompetition = () => !settings || (new Date() < settings.start_date && new Date() > settings.practice_start_date)
   const isAfterCompetition = () => !settings || new Date() > settings.end_date
 
   return (
@@ -51,16 +51,16 @@ const Home = (): JSX.Element => {
       <Helmet> <title>Abacus</title> </Helmet>
       {isBeforeCompetition() ?
         <Message icon color='blue'>
-          <Icon name='bullhorn' />
+          <Icon name='youtube' />
           <Message.Content>
-            <Message.Header>Teams</Message.Header>
+            <Message.Header>Teams!</Message.Header>
           Watch our welcome video! Click <b><a href={welcome}>here</a></b> to view it on YouTube.
           </Message.Content>
         </Message> : isAfterCompetition() ?
           <Message icon color='blue'>
-            <Icon name='bullhorn' />
+            <Icon name='video' />
             <Message.Content>
-              <Message.Header>Teams</Message.Header>
+              <Message.Header>Teams!</Message.Header>
                 Join us for the awards and closing ceremony at <b>1:00 PM</b>! Click <b><a href={livestream}>here</a></b> to join the event on Microsoft Teams.
               </Message.Content>
           </Message> :
