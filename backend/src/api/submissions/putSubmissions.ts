@@ -73,6 +73,7 @@ export const schema: Record<string, ParamSchema> = {
   viewed: {
     in: 'body',
     isBoolean: true,
+    optional: true
   },
   feedback: {
     in: 'body',

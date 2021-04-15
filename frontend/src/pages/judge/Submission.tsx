@@ -163,7 +163,7 @@ const submission = (): JSX.Element => {
           {submission.claimed?.uid === user?.uid ?
             <>
               <Button content="Unclaim" icon={'hand paper'} onClick={() => unclaim(submission.sid)} loading={isClaiming[submission.sid]} disabled={isClaiming[submission.sid]} labelPosition={'left'} />
-              <Button disabled={isRerunning || submission.claimed?.uid != user?.uid} loading={isRerunning} content="Rerun" icon="redo" labelPosition="left" onClick={rerun} />
+              {submission.division == 'blue' && <Button disabled={isRerunning || submission.claimed?.uid != user?.uid} loading={isRerunning} content="Rerun" icon="redo" labelPosition="left" onClick={rerun} />}
               <Button loading={isReleasing} disabled={isReleasing || submission.claimed?.uid != user?.uid} icon="right arrow" content="Release" labelPosition="left" onClick={release} />
             </> :
             <Button content="Claimed" icon={'lock'} disabled={true} labelPosition={'left'} />
@@ -174,7 +174,7 @@ const submission = (): JSX.Element => {
       <Button icon="check" positive content="Released" labelPosition="left" />
     }
 
-    <Button content="Download" icon="download" labelPosition="left" onClick={download} />
+    {submission.division == 'blue' && <Button content="Download" icon="download" labelPosition="left" onClick={download} />}
 
     <SubmissionView
       submission={submission}

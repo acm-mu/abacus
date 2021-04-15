@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import config from 'environment'
-import { Grid, Header, Icon, Label, Segment } from 'semantic-ui-react';
+import { Button, Grid, Header, Icon, Label, Message, Segment } from 'semantic-ui-react';
 import Moment from 'react-moment';
 import "./ScratchViewer.scss"
+import { SubmissionContext } from './submission';
 
 interface ScratchViewerProps {
   project_id?: string;
@@ -27,6 +28,8 @@ interface ScratchProject {
 
 const ScratchViewer = ({ project_id, content = <></> }: ScratchViewerProps): JSX.Element => {
   const [project, setProject] = useState<ScratchProject>()
+
+  const { submission } = useContext(SubmissionContext)
 
   useEffect(() => {
     fetch(`${config.API_URL}/scratch/project?project_id=${project_id}`)
@@ -65,6 +68,16 @@ const ScratchViewer = ({ project_id, content = <></> }: ScratchViewerProps): JSX
               <span>Shared<br /> <Label><Moment fromNow date={Date.parse(project.history.shared)} /></Label></span>
             </div>
           </div>
+          {submission && parseInt(project.history.modified) < submission?.date &&
+            <Message
+              warning
+              icon='warning sign'
+              header="This Project has been Modified!"
+              content={<>
+                <p>This project has been changed since it&apos;s last submission.</p>
+                <Button floated='right'>Resubmit</Button>
+              </>}
+            />}
         </Segment> : <></>}
         {content}
       </Grid.Column>

@@ -7,6 +7,7 @@ import { Block, Countdown, PageLoading, Unauthorized } from 'components'
 import { AppContext } from 'context'
 import { Helmet } from 'react-helmet'
 import config from 'environment'
+import 'components/Icons.scss'
 
 const Submissions = (): JSX.Element => {
   const { user } = useContext(AppContext)

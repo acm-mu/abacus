@@ -24,8 +24,8 @@ const GoldFeedback = (): JSX.Element => {
 
   if (!submission?.released) {
     if (user?.role != 'judge' && user?.role != 'admin') {
-      return <Segment placeholder>
-        <Header>Pending Judgement!</Header>
+      return <Segment placeholder style={{ alignItems: 'center' }}>
+        <Header size='huge'>Pending Judgement!</Header>
       </Segment>
     }
   }
