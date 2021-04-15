@@ -60,20 +60,6 @@ declare module "abacus" {
     source: string;
     file_name: string;
   }
-  export interface ProblemScore {
-    num_submissions: number;
-    problem_score: number;
-    solved: boolean;
-    submissions: Submission[];
-  }
-  export interface StandingsUser {
-    display_name: string;
-    uid: string;
-    username: string;
-    solved: number;
-    time: number;
-    problems: { [key: string]: ProblemScore };
-  }
 
   export interface Context {
     type: 'pid' | 'cid' | 'sid';

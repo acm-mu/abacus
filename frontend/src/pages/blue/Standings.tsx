@@ -27,7 +27,7 @@ const Standings = (): JSX.Element => {
     if (!isMounted) return
     setProblems(problems)
 
-    response = await fetch(`${config.API_URL}/standings`)
+    response = await fetch(`${config.API_URL}/standings?division=blue`)
 
     setStandings(await response.json())
 
