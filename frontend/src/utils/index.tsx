@@ -1,3 +1,4 @@
+import React from 'react';
 import { User } from "abacus";
 
 // Convert's stored language values in to syntax highlighter friendly values
@@ -36,6 +37,11 @@ export const roles = [
   { key: 'proctor', text: 'Proctor', value: 'proctor' },
   { key: 'judge', text: 'Judge', value: 'judge' },
   { key: 'admin', text: 'Admin', value: 'admin' }
+]
+
+export const statuses = [
+  { key: 'accepted', text: 'Accepted', value: 'accepted', children: <span className='icn accepted status' /> },
+  { key: 'rejected', text: 'Wrong Answer', value: 'rejected', children: <span className='icn wrong_answer status' /> },
 ]
 
 export interface Language {

@@ -25,7 +25,7 @@ const Problems = (): JSX.Element => {
   }, [])
 
   const loadProblems = async () => {
-    let response = await fetch(`${config.API_URL}/problems?type=list&division=blue`, {
+    let response = await fetch(`${config.API_URL}/problems?division=blue`, {
       headers: {
         Authorization: `Bearer ${localStorage.accessToken}`
       }
@@ -68,7 +68,7 @@ const Problems = (): JSX.Element => {
     return <Popup content={<div className={`icn status ${submission.status}`} />} trigger={<Link to={`${userHome(user)}/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link>} />
   }
 
-  if (!settings || new Date() < settings.start_date)
+  if (!settings || new Date() < settings.practice_start_date)
     return <>
       {helmet}
       <Countdown />

@@ -74,12 +74,22 @@ export const postSubmissions = async (req: Request, res: Response) => {
 
     const settings = await contest.get_settings()
     const now = Date.now()
-    if (now < settings.start_date * 1000) {
-      res.status(403).send({ message: "The competition has not yet begun!" })
-      return
-    } else if (now > settings.end_date * 1000) {
-      res.status(403).send({ message: "Cannot submit after the competition has finished!" })
-      return
+    if (problem.practice) {
+      if (now < settings.practice_start_date * 1000) {
+        res.status(403).send({ message: "The practice period has not yet begun!" })
+        return
+      } else if (now > settings.practice_end_date * 1000) {
+        res.status(403).send({ message: "Cannot submit after the practice period has finished!" })
+        return
+      }
+    } else {
+      if (now < settings.start_date * 1000) {
+        res.status(403).send({ message: "The competition has not yet begun!" })
+        return
+      } else if (now > settings.end_date * 1000) {
+        res.status(403).send({ message: "Cannot submit after the competition has finished!" })
+        return
+      }
     }
 
     const submissions = await contest.scanItems('submission', { args: { tid: req.user?.uid, pid: item.pid } })

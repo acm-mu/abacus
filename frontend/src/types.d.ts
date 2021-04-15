@@ -1,12 +1,15 @@
 declare module "abacus" {
   export interface Settings {
     competition_name: string;
+    practice_name: string;
     points_per_yes: number;
     points_per_no: number;
     points_per_compilation_error: number;
     points_per_minute: number;
     start_date: Date;
     end_date: Date;
+    practice_start_date: Date;
+    practice_end_date: Date;
   }
   export interface Submission {
     sid: string;
@@ -35,6 +38,7 @@ declare module "abacus" {
   }
   export interface Problem {
     pid: string;
+    practice?: boolean;
     id: string;
     division: string;
     name: string;
