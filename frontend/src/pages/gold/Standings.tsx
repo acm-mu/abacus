@@ -13,8 +13,8 @@ interface GoldStandingsUser {
   display_name: string,
   score: number,
   problems: Record<string, {
-    score: number;
-    status: string;
+    score: number,
+    status: string
   }>
 }
 
@@ -121,13 +121,12 @@ const Standings = (): JSX.Element => {
               <Table.Cell collapsing>{index + 1}</Table.Cell>
               <Table.Cell>{team.display_name}</Table.Cell>
               <Table.Cell>{team.score}</Table.Cell>
-              {Object.values(team.problems).map(
-                (problem, index) =>
-                  problem.status == 'accepted' ?
-                    <Table.Cell key={`${team.uid}-${index}`} className={`score ${statusToClass(problem.status)}`}>
-                      {problem.score}
-                    </Table.Cell>
-                    : <></>
+              {problems.map(problem =>
+                team.problems[problem.pid].status == 'accepted' ?
+                  <Table.Cell key={`${team.uid}-${index}`} className={`score ${statusToClass(team.problems[problem.pid].status)}`}>
+                    {team.problems[problem.pid].score}
+                  </Table.Cell>
+                  : <Table.Cell key={`${team.uid}-${index}}`}></Table.Cell>
               )}
             </Table.Row>
           ))}

@@ -1,4 +1,4 @@
-import { Problem, Submission } from 'abacus'
+import { Submission } from 'abacus'
 import { Request, Response } from 'express'
 import { matchedData, ParamSchema, validationResult } from 'express-validator'
 import contest, { transpose } from '../../abacus/contest'
@@ -116,19 +116,19 @@ const getBlueStandings = async (isPractice: boolean): Promise<Record<string, any
   }
 }
 
-interface GoldStandingsUser {
-  display_name: string;
-  uid: string;
-  username: string;
-  score: number;
-  problems: Record<string, Submission>;
-}
+// interface GoldStandingsUser {
+//   display_name: string;
+//   uid: string;
+//   username: string;
+//   score: number;
+//   problems: Record<string, Submission>;
+// }
 
 const getGoldStandings = async (isPractice: boolean): Promise<Record<string, any>> => {
-  const standings = (await contest.scanItems('user', { args: { role: 'team', division: 'gold' } }) || {}) as Record<string, GoldStandingsUser>
+  let standings = Object.values(await contest.scanItems('user', { args: { role: 'team', division: 'gold' } }) || {})
   const submissions = await contest.scanItems('submission', { args: { division: 'gold' } }) || {}
 
-  let problemsList = await contest.scanItems('problem', { args: { division: 'gold' } }) || []
+  let problemsList = await contest.scanItems('problem', { args: { division: 'gold' }, columns: ['pid', 'division', 'id', 'name', 'practice', 'max_points', 'capped_points'] }) || []
   problemsList = problemsList.filter(({ practice }) => {
     if (isPractice)
       return practice
@@ -141,6 +141,7 @@ const getGoldStandings = async (isPractice: boolean): Promise<Record<string, any
 
   Object.values(submissions).forEach((submission: any) => {
     const { tid, pid } = submission;
+    if (!Object.keys(problems).includes(pid)) return
     if (!(tid in subs)) subs[tid] = {}
     if (!(pid in subs[tid])) subs[tid][pid] = []
 
@@ -151,7 +152,10 @@ const getGoldStandings = async (isPractice: boolean): Promise<Record<string, any
     subs[tid][pid].push(submission)
   })
 
-  Object.values(standings).forEach((team: any) => {
+  standings = standings.filter((user: any) => !user.disabled)
+
+  standings.forEach((team: any) => {
+
     delete team.password
     delete team.role
     delete team.division
@@ -159,31 +163,42 @@ const getGoldStandings = async (isPractice: boolean): Promise<Record<string, any
 
     team.problems = {}
     team.score = 0
+    let capped_score = 0;
 
-    Object.values(problems).sort((p1, p2) => p1.id.localeCompare(p2.id)).forEach((problem: Problem) => {
-      team.problems[problem.id] = {}
-      if (team.uid in subs) {
-        if (problem.pid in subs[team.uid]) {
-          let score = 0
-          subs[team.uid][problem.pid].forEach((sub: any) => {
-            score = Math.max(score, sub.score)
-
-          })
-          team.problems[problem.id] = {
-            score,
-            status: score > 0 ? 'accepted' : undefined
+    Object.values(problems)
+      .sort((p1, p2) => p1.id.localeCompare(p2.id))
+      .forEach(problem => {
+        if (team.uid in subs) {
+          if (problem.pid in subs[team.uid]) {
+            let problem_score = 0
+            subs[team.uid][problem.pid].every((sub: any) => {
+              if (sub.score > problem_score) problem_score = sub.score
+            })
+            team.problems[problem.pid] = {
+              score: problem_score,
+              status: problem_score > 0 ? 'accepted' : 'rejected'
+            }
+            console.log(problem)
+            if (problem.capped_points) {
+              capped_score += problem_score
+            } else {
+              team.score += problem_score
+            }
           }
-          team.score += score
         }
-      }
-    })
+      })
+    team.score += Math.min(20, capped_score)
   })
 
-  const data = Object.values(standings).sort((s1: any, s2: any) =>
-    s2.score - s1.score)
+  type StandingsItems = { score: number }
+
+  const data = (standings as StandingsItems[]).sort((s1, s2) => {
+    return s2.score - s1.score
+  })
+
   return {
-    standings: data,
-    problems
+    problems,
+    standings: data
   }
 }
 
