@@ -82,7 +82,7 @@ const problem = (): JSX.Element => {
 
     <Block size='xs-3' className='problem-panel'>
       <Button
-        disabled={submissions?.length !== 0}
+        disabled={submissions?.filter(({ status, released }) => status == 'accepted' || status == 'pending' || !released).length !== 0}
         as={Link}
         to={`/gold/problems/${problem?.id}/submit`}
         content="Submit"
