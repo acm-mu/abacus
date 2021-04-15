@@ -54,14 +54,14 @@ const Home = (): JSX.Element => {
           <Icon name='youtube' />
           <Message.Content>
             <Message.Header>Teams!</Message.Header>
-          Watch our welcome video! Click <b><a href={welcome}>here</a></b> to view it on YouTube.
+          Watch our welcome video! Click <b><a href={welcome} target="_blank" rel="noreferrer">here</a></b> to view it on YouTube.
           </Message.Content>
         </Message> : isAfterCompetition() ?
           <Message icon color='blue'>
             <Icon name='video' />
             <Message.Content>
               <Message.Header>Teams!</Message.Header>
-                Join us for the awards and closing ceremony at <b>1:00 PM</b>! Click <b><a href={livestream}>here</a></b> to join the event on Microsoft Teams.
+                Join us for the awards and closing ceremony at <b>1:00 PM</b>! Click <b><a href={livestream} target="_blank" rel="noreferrer">here</a></b> to join the event on Microsoft Teams.
               </Message.Content>
           </Message> :
           <></>

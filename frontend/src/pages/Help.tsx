@@ -18,6 +18,12 @@ const Help = (): JSX.Element => {
       </Block>
 
       <Block size="xs-12">
+        <h2>Tech Support</h2>
+        <h3>Phone: <a href="tel:4143755336">(414) 375-5336</a></h3>
+        <h3>Google Meet: <a href="https://meet.google.com/ifq-fcwf-unr">Join Here</a></h3>
+      </Block>
+
+      <Block size="xs-12">
         <h2>Frequently Asked Questions</h2>
         <Accordion fluid styled>
           <Accordion.Title
