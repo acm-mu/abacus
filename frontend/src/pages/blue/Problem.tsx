@@ -60,12 +60,12 @@ const problem = (): JSX.Element => {
     setLoading(false)
   }
 
-  if (!problem) return <NotFound />
 
   if (!settings || new Date() < settings.start_date)
     if (user?.division != 'blue' && user?.role != 'admin') return <Unauthorized />
 
   if (isLoading) return <PageLoading />
+  if (!problem) return <NotFound />
 
   return <>
     <Helmet> <title>Abacus | {problem.name}</title> </Helmet>
