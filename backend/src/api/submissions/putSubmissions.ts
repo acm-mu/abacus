@@ -105,7 +105,7 @@ export const putSubmissions = async (req: Request, res: Response) => {
   const item = matchedData(req)
 
   try {
-    const submission = await contest.getItem('submission', { sid: item.sid }) as unknown as Submission
+    const submission = await contest.db.get('submission', { sid: item.sid }) as unknown as Submission
 
     if (item.claimed !== undefined && submission.claimed !== undefined) { // Trying to change a claimed submission
       if (item.claimed !== null) {

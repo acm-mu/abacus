@@ -19,7 +19,9 @@
         "express-validator": "^6.9.2",
         "jsonwebtoken": "^8.5.1",
         "morgan": "^1.10.0",
+        "redis": "^3.1.1",
         "socket.io": "^3.1.1",
+        "socket.io-redis": "^6.1.0",
         "uuid": "^3.3.2"
     },
     "devDependencies": {
@@ -34,6 +36,7 @@
         "@types/jsonwebtoken": "^8.5.0",
         "@types/morgan": "^1.9.2",
         "@types/node": "^14.14.22",
+        "@types/redis": "^2.8.28",
         "@types/supertest": "^2.0.11",
         "@types/uuid": "^8.3.0",
         "jest": "^26.6.3",

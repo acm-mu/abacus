@@ -3,6 +3,7 @@ import { Request, Response } from 'express'
 import { matchedData, ParamSchema, validationResult } from "express-validator"
 import { transpose } from '../../utils'
 import contest from '../../abacus/contest'
+import { userHasRole } from '../../abacus/authlib'
 
 export const schema: Record<string, ParamSchema> = {
   sid: {
@@ -111,7 +112,7 @@ export const getSubmissions = async (req: Request, res: Response) => {
       item.tid = req.user.uid
     }
 
-    const submissions = await contest.db.scan('submission', { args: item })
+    let submissions = await contest.db.scan('submission', { args: item })
 
     submissions = submissions?.map((submission: any) => {
       submission.problem = problems[submission.pid]
