@@ -30,7 +30,7 @@ export const postAuth = async (req: Request, res: Response) => {
 
     const user: Record<string, unknown> | undefined = await contest.get_user({ username: username.toLowerCase(), password: sha256(password) })
     if (!user) {
-      res.status(400).send({ message: 'Could not find user given with provided username & password' })
+      res.status(400).send({ message: "mmm... We can't find a user with that username and password!" })
       return
     }
 

@@ -1,12 +1,15 @@
 declare module "abacus" {
-  export interface Settings extends Record<string, unknown> {
+  export interface Settings extends Record<string, string | number> {
     competition_name: string;
+    practice_name: string;
     points_per_yes: number;
     points_per_no: number;
     points_per_compilation_error: number;
     points_per_minute: number;
     start_date: number;
     end_date: number;
+    practice_start_date: number;
+    practice_end_date: number;
   }
   export interface Submission extends Record<string, unknown> {
     sid: string;
@@ -25,9 +28,13 @@ declare module "abacus" {
     sub_no: number;
     tid: string;
     tests: Test[];
+    claimed?: string;
+    viewed?: boolean;
+    flagged?: string;
   }
   export interface Problem extends Record<string, unknown> {
     pid: string;
+    practice?: boolean;
     id: string;
     division: string;
     name: string;
@@ -45,6 +52,7 @@ declare module "abacus" {
     display_name: string;
     division?: string;
     school?: string;
+    disabled?: boolean;
   }
   export interface Test extends Record<string, unknown> {
     in: string;
