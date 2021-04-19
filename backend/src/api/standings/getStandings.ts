@@ -171,7 +171,7 @@ const getGoldStandings = async (isPractice: boolean): Promise<Record<string, any
         if (team.uid in subs) {
           if (problem.pid in subs[team.uid]) {
             let problem_score = 0
-            subs[team.uid][problem.pid].every((sub: any) => {
+            subs[team.uid][problem.pid].forEach((sub: any) => {
               if (sub.score > problem_score) problem_score = sub.score
             })
             team.problems[problem.pid] = {
