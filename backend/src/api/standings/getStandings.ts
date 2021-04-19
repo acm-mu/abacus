@@ -178,7 +178,6 @@ const getGoldStandings = async (isPractice: boolean): Promise<Record<string, any
               score: problem_score,
               status: problem_score > 0 ? 'accepted' : 'rejected'
             }
-            console.log(problem)
             if (problem.capped_points) {
               capped_score += problem_score
             } else {
