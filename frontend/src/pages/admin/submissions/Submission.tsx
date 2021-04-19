@@ -108,7 +108,7 @@ const submission = (): JSX.Element => {
   const save = async () => {
     setSaving(true)
 
-    const response = await fetch(`${config.API_URL}/submissions`, {
+    await fetch(`${config.API_URL}/submissions`, {
       method: 'PUT',
       headers: {
         Authorization: `Bearer ${localStorage.accessToken}`,
