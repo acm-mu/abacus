@@ -123,8 +123,8 @@ const Standings = (): JSX.Element => {
               <Table.Cell>{team.score}</Table.Cell>
               {problems.map(problem =>
                 team.problems[problem.pid]?.status == 'accepted' ?
-                  <Table.Cell key={`${team.uid}-${index}`} className={`score ${statusToClass(team.problems[problem.pid].status)}`}>
-                    {team.problems[problem.pid].score}
+                  <Table.Cell key={`${team.uid}-${index}`} className={`score ${statusToClass(team.problems[problem.pid]?.status)}`}>
+                    {team.problems[problem.pid]?.score}
                   </Table.Cell>
                   : <Table.Cell key={`${team.uid}-${index}}`}></Table.Cell>
               )}
