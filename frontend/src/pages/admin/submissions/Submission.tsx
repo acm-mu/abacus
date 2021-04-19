@@ -17,6 +17,7 @@ const submission = (): JSX.Element => {
   const [isDeleting, setDeleting] = useState(false)
   const [isFlagging, setFlagging] = useState<{ [key: string]: boolean }>({})
   const [isUnFlagging, setUnFlagging] = useState<{ [key: string]: boolean }>({})
+  const [isSaving, setSaving] = useState(false)
 
   const { user } = useContext(AppContext)
 
@@ -104,6 +105,20 @@ const submission = (): JSX.Element => {
     setReleasing(false)
   }
 
+  const save = async () => {
+    setSaving(true)
+
+    const response = await fetch(`${config.API_URL}/submissions`, {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${localStorage.accessToken}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(submission)
+    })
+    setSaving(false)
+  }
+
   const flag = async () => {
     setFlagging({ ...isFlagging, [sid]: true })
     const response = await fetch(`${config.API_URL}/submissions`, {
@@ -158,6 +173,7 @@ const submission = (): JSX.Element => {
       <Button loading={isFlagging[submission.sid]} disabled={isFlagging[submission.sid]} icon="flag" content="Flag" labelPosition="left" onClick={flag} />
     }
     <Button content="Download" icon="download" labelPosition="left" onClick={download} />
+    <Button disabled={isSaving} loading={isSaving} content="Save" icon="save" labelPosition="left" onClick={save} />
     <Button disabled={isDeleting} loading={isDeleting} content="Delete" icon="trash" negative labelPosition="left" onClick={deleteSubmission} />
 
     <SubmissionView submission={submission} setSubmission={setSubmission} rerunning={isRerunning} />
