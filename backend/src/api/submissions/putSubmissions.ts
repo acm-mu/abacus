@@ -108,7 +108,7 @@ export const putSubmissions = async (req: Request, res: Response) => {
     const submission = await contest.getItem('submission', { sid: item.sid }) as unknown as Submission
 
     if (item.claimed !== undefined && submission.claimed !== undefined) { // Trying to change a claimed submission
-      if (item.claimed !== null) {
+      if (req.user?.role !== 'admin' && item.claimed !== null) {
         res.status(403).send({ message: "This submission is already claimed!" })
         return
       }
