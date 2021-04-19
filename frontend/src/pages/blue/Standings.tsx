@@ -105,7 +105,7 @@ const Standings = (): JSX.Element => {
         <Table.Body>
           {standings.map((team, index) => {
             if (index == 0) rk = 1
-            else if (last != team.time) rk++
+            else if (last != team.time) rk = index + 1
             last = team.time
             return <Table.Row key={team.uid} warning={team.uid == user?.uid} style={{ fontWeight: team.uid == user?.uid ? 'bold' : 'normal' }}>
               <Table.Cell collapsing>{rk}</Table.Cell>

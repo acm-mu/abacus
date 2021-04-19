@@ -122,7 +122,7 @@ const Standings = (): JSX.Element => {
         <Table.Body>
           {standings.map((team: GoldStandingsUser, index) => {
             if (index == 0) rk = 1
-            else if (last != team.score) rk++
+            else if (last != team.score) rk = index + 1
             last = team.score
             return <Table.Row key={team.uid}>
               <Table.Cell collapsing>{rk}</Table.Cell>
