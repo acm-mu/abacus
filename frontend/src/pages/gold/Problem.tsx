@@ -8,6 +8,7 @@ import config from 'environment'
 import { AppContext } from "context";
 import { Helmet } from "react-helmet";
 import { userHome } from "utils";
+import { settings } from "node:cluster";
 
 const problem = (): JSX.Element => {
   const { user } = useContext(AppContext)
@@ -58,7 +59,8 @@ const problem = (): JSX.Element => {
     }
   }
 
-  if (user?.division != 'gold' && user?.role != 'admin') return <Unauthorized />
+  if (!settings || new Date() < settings.start_date)
+    if (user?.division != 'gold' && user?.role != 'admin') return <Unauthorized />
 
   if (isLoading) return <PageLoading />
   if (!problem) return <NotFound />
