@@ -8,10 +8,9 @@ import config from 'environment'
 import { AppContext } from "context";
 import { Helmet } from "react-helmet";
 import { userHome } from "utils";
-import { settings } from "node:cluster";
 
 const problem = (): JSX.Element => {
-  const { user } = useContext(AppContext)
+  const { user, settings } = useContext(AppContext)
   const [isLoading, setLoading] = useState(true)
   const [problem, setProblem] = useState<Problem>()
   const { pid } = useParams<{ pid: string }>()
