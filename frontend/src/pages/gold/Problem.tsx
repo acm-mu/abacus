@@ -83,30 +83,28 @@ const problem = (): JSX.Element => {
     </Block>
 
     <Block size='xs-3' className='problem-panel'>
-      <Button
-        disabled={submissions?.filter(({ status, released }) => status == 'pending' || !released).length !== 0}
-        as={Link}
-        to={`/gold/problems/${problem?.id}/submit`}
-        content="Submit"
-        icon="upload"
-      />
-      <ClarificationModal
-        title={`${problem.name} | `}
-        context={{ type: 'pid', id: problem.pid }}
-        trigger={<Button content="Ask" icon="question" />}
-      />
-      {problem.project_id ?
-        <a
-          rel="noreferrer"
-          target="_blank"
-          href={`https://scratch.mit.edu/projects/${problem?.project_id}`}
-        >
-          <Button
-            color='orange'
-            content="Template"
-            icon='linkify'
-          />
-        </a> : <Message warning><b>Note:</b> A project template is not provided for this problem.</Message>}
+      {settings && new Date() < settings?.end_date ? <>
+        <Button
+          disabled={submissions?.filter(({ status, released }) => status == 'pending' || !released).length !== 0}
+          as={Link}
+          to={`/gold/problems/${problem?.id}/submit`}
+          content="Submit"
+          icon="upload" />
+        <ClarificationModal
+          title={`${problem.name} | `}
+          context={{ type: 'pid', id: problem.pid }}
+          trigger={<Button content="Ask" icon="question" />} />
+      </> :
+        problem.project_id ?
+          <a rel="noreferrer"
+            target="_blank"
+            href={`https://scratch.mit.edu/projects/${problem?.project_id}`}>
+            <Button
+              color='orange'
+              content="Template"
+              icon='linkify' />
+          </a> : <Message warning><b>Note:</b> A project template is not provided for this problem.</Message>
+      }
       {latestSubmission}
     </Block>
   </>
