@@ -58,9 +58,10 @@ const problem = (): JSX.Element => {
     }
   }
 
+  if (user?.division != 'gold' && user?.role != 'admin') return <Unauthorized />
+
   if (isLoading) return <PageLoading />
   if (!problem) return <NotFound />
-  if (user?.division != 'gold' && user?.role != 'admin') return <Unauthorized />
 
   return <>
     <Helmet> <title>Abacus | {problem.name}</title> </Helmet>
