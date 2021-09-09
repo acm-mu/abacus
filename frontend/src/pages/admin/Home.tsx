@@ -98,7 +98,7 @@ const Home = (): JSX.Element => {
       <h1>Submission Breakdown</h1>
       {submissions?.length ?
 
-       <p>submissions!</p>
+       <p>There are submissions!</p>
         : <p>There are not any submissions yet!</p>}
     </Block>
 
