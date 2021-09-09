@@ -37,7 +37,17 @@ const Home = (): JSX.Element => {
 
   const flaggedSubmissions = useMemo(() => submissions?.filter(({ flagged }) => flagged !== undefined), [submissions])
 
-  const breakdownData = useMemo(() => {
+ 
+
+  const categories: string[] = []
+  if (settings?.start_date && settings?.end_date) {
+    for (let time = Number(settings?.start_date); time <= Number(settings?.end_date); time += 1800000) {
+      categories.push(moment(time).format('hh:mm a'))
+    }
+  }
+
+  /* TODO: These went with the PieChart component in @toast-ui/react-chart, we need to find an alternative.
+   const breakdownData = useMemo(() => {
     const statuses: { [key: string]: { name: string, data: number } } = {};
 
     if (submissions) {
@@ -54,14 +64,6 @@ const Home = (): JSX.Element => {
       series: Object.values(statuses)
     }
   }, [submissions])
-
-  const categories: string[] = []
-  if (settings?.start_date && settings?.end_date) {
-    for (let time = Number(settings?.start_date); time <= Number(settings?.end_date); time += 1800000) {
-      categories.push(moment(time).format('hh:mm a'))
-    }
-  }
-
   const breakdownOptions = {
     theme: {
       series: {
@@ -85,6 +87,7 @@ const Home = (): JSX.Element => {
       align: 'bottom',
     }
   };
+  */
 
   if (isLoading) return <PageLoading />
 
