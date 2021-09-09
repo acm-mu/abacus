@@ -25,7 +25,7 @@ const Users = (): JSX.Element => {
   const [isLoading, setLoading] = useState(true)
   const [isDeleting, setDeleting] = useState(false)
   const [isImporting, setImporting] = useState(false)
-  const [error, setError] = useState<string>()
+  const [error, setError] = useState<string>('')
 
   const [isMounted, setMounted] = useState(true)
   const [{ column, direction }, setSortConfig] = useState<SortConfig>({
@@ -60,7 +60,7 @@ const Users = (): JSX.Element => {
         setLoading(false)
       }
     } catch (err) {
-      setError(err)
+      setError(err as string)
     }
   }
 
@@ -120,7 +120,7 @@ const Users = (): JSX.Element => {
       }
     } catch (err) {
       console.log(err)
-      setError(err)
+      setError(err as string)
     }
     setImporting(false)
   }

@@ -1,11 +1,9 @@
 
 import { Submission } from 'abacus'
 import React, { useContext, useEffect, useMemo, useState } from 'react'
-import { PieChart } from '@toast-ui/react-chart'
 import { AppContext, SocketContext } from 'context'
 import { Block, PageLoading } from 'components'
 import config from 'environment'
-import '@toast-ui/chart/dist/toastui-chart.min.css'
 import { Helmet } from 'react-helmet'
 import moment from 'moment'
 import { Table } from 'semantic-ui-react'
@@ -100,10 +98,7 @@ const Home = (): JSX.Element => {
       <h1>Submission Breakdown</h1>
       {submissions?.length ?
 
-        <PieChart
-          data={breakdownData}
-          options={breakdownOptions}
-        />
+       <p>submissions!</p>
         : <p>There are not any submissions yet!</p>}
     </Block>
 
