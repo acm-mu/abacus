@@ -25,7 +25,7 @@ const Users = (): JSX.Element => {
   const [isLoading, setLoading] = useState(true)
   const [isDeleting, setDeleting] = useState(false)
   const [isImporting, setImporting] = useState(false)
-  const [error, setError] = useState<string>('')
+  const [error, setError] = useState<string>()
 
   const [isMounted, setMounted] = useState(true)
   const [{ column, direction }, setSortConfig] = useState<SortConfig>({
