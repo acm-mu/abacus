@@ -60,7 +60,7 @@ const Users = (): JSX.Element => {
         setLoading(false)
       }
     } catch (err) {
-      setError(err)
+      setError(err as string)
     }
   }
 
@@ -120,7 +120,7 @@ const Users = (): JSX.Element => {
       }
     } catch (err) {
       console.log(err)
-      setError(err)
+      setError(err as string)
     }
     setImporting(false)
   }
