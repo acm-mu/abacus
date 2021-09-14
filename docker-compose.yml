@@ -1,0 +1,33 @@
+version: "3.8"
+services:
+  backend:
+    container_name: backend
+    build:
+      context: backend
+    volumes:
+      - "./backend:/app"
+    ports:
+      - "8080:80"
+  frontend:
+    container_name: frontend
+    build:
+      context: frontend
+    volumes:
+      - "./frontend:/app"
+    ports:
+      - "80:3000"
+  mongo:
+    container_name: mongo
+    image: mongo
+    environment:
+      - MONGO_INITDB_DATABASE=abacus
+      - MONGO_INITDB_ROOT_USERNAME=username
+      - MONGO_INITDB_ROOT_PASSWORD=secret
+    volumes:
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - ./mongo-volume:/data/db
+    ports:
+      - "27017-27019:27017-27019"
+  # piston:
+  #   ports:
+  #     -
