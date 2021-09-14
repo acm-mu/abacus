@@ -72,15 +72,15 @@ export const putUsers = async (req: Request, res: Response) => {
 
   try {
     if (item.username) {
-      let users = Object.values(await contest.get_users({ username: item.username }))
-      users = users.filter((user: any) => user.uid != item.uid)
+      const users = Object.values(await contest.get_users({ args: { username: item.username } }))
+        .filter(user => user.uid != item.uid)
       if (users.length > 0) {
         res.status(400).json({ message: "Username is taken!" })
         return
       }
     }
 
-    await contest.update_user(item.uid, item)
+    await contest.db.update('user', { uid: item.uid }, item)
     res.send(item)
   } catch (err) {
     console.error(err)

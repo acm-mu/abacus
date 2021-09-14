@@ -78,10 +78,6 @@ const Standings = (): JSX.Element => {
       <StatusMessage message={{ type: 'error', message: "An error has occurred! Please contact support" }} />
     </>
 
-
-  let rk = 0
-  let last = 0
-
   return <>
     {helmet}
     <Countdown />
@@ -120,23 +116,20 @@ const Standings = (): JSX.Element => {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {standings.map((team: GoldStandingsUser, index) => {
-            if (index == 0) rk = 1
-            else if (last != team.score) rk = index + 1
-            last = team.score
-            return <Table.Row key={team.uid}>
-              <Table.Cell collapsing>{rk}</Table.Cell>
+          {standings.map((team: GoldStandingsUser, index) => (
+            <Table.Row key={team.uid}>
+              <Table.Cell collapsing>{index + 1}</Table.Cell>
               <Table.Cell>{team.display_name}</Table.Cell>
               <Table.Cell>{team.score}</Table.Cell>
               {problems.map(problem =>
-                team.problems[problem.pid]?.status == 'accepted' ?
-                  <Table.Cell key={`${team.uid}-${index}`} className={`score ${statusToClass(team.problems[problem.pid]?.status)}`}>
-                    {team.problems[problem.pid]?.score}
+                team.problems[problem.pid].status == 'accepted' ?
+                  <Table.Cell key={`${team.uid}-${index}`} className={`score ${statusToClass(team.problems[problem.pid].status)}`}>
+                    {team.problems[problem.pid].score}
                   </Table.Cell>
                   : <Table.Cell key={`${team.uid}-${index}}`}></Table.Cell>
               )}
             </Table.Row>
-          })}
+          ))}
         </Table.Body>
       </Table>
     </Block>

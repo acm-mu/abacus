@@ -19,21 +19,21 @@ export const rerunSubmission = async (req: Request, res: Response) => {
     return
   }
 
-  const submission = await contest.get_submissions({ args: matchedData(req) })
+  const submission = await contest.db.scan('submission', { args: matchedData(req) })
   if (submission) {
-    contest.lambda.invoke({
-      FunctionName: 'PistonRunner',
-      Payload: {
+    try {
+      const data = await contest.invoke('PistonRunner', {
         Records: [{
           eventName: "INSERT",
           dynamodb: {
             NewImage: Converter.marshall(submission[0])
           }
         }]
-      }
-    }, (err, data) => {
-      if (err) res.sendStatus(500)
-      else if (data.StatusCode == 200) res.send(data.Payload)
-    })
+      })
+      if (data.StatusCode == 200) res.send(data.Payload)
+    } catch (err) {
+      console.error(err)
+      res.sendStatus(500)
+    }
   }
 }

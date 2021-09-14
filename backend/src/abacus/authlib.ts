@@ -15,11 +15,10 @@ export const authenticate = (req: Request, _: Response): Promise<User | undefine
 
         try {
           const { username, password } = data
-          const users = await contest.get_users({username, password}) 
-          // const users = await contest.scanItems('user', { args: { username, password } }) as unknown as User[]
-          if (users.length) {
-            req.user = users[0]
-            return resolve(users[0])
+          const user = await contest.get_user({ username, password })
+          if (user) {
+            req.user = user
+            resolve(user)
           }
         } catch (err) { }
         reject()

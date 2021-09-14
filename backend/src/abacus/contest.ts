@@ -1,138 +1,87 @@
-import { Clarification, Problem, Settings, Submission, User } from "abacus";
+import { Clarification, Settings, User } from "abacus";
 import { Lambda } from "aws-sdk";
-import { Database } from "../services";
-import { MongoDB } from "../services/db";
+import { transpose } from "../utils";
+import { AWSDB, Database } from "./db";
 
 class ContestService {
+
   db: Database;
+  user?: User;
   lambda: Lambda;
 
-  constructor() {
-    this.init_aws();
+  constructor(db: Database) {
+    this.db = db
+    this.lambda = new Lambda()
   }
 
-  init_aws() {
-    this.db = new MongoDB();
-    this.lambda = new Lambda();
+  auth(user: User) {
+    this.user = user
   }
 
-  /* Users */
-
-  async create_user(item: any): Promise<User> {
-    return this.db.put('user', item) as Promise<User>
-  }
-
-  async get_user(uid: string): Promise<User> {
-    return this.db.get('user', { uid }) as Promise<User>
-  }
-
-  async get_users(args?: any): Promise<User[]> {
-    return this.db.scan('user', { args }) as Promise<User[]>
-  }
-
-  async update_user(uid: string, item: any): Promise<User> {
-    return this.db.update('user', { uid }, item) as Promise<User>
-  }
-
-  async delete_user(uid: string): Promise<void> {
-    return this.db.delete('user', { uid })
-  }
-
-  /* Clarifications */
-
-  async create_clarification(item: any): Promise<Clarification> {
-    return this.db.put('clarification', item) as Promise<Clarification>
-  }
-
-  async get_clarification(cid: string): Promise<Clarification> {
-    return this.db.get('clarification', { cid }) as Promise<Clarification>
-  }
-
-  async get_clarifications(args?: any): Promise<Clarification[]> {
-    return this.db.scan('clarification', { args }) as Promise<Clarification[]>
-  }
-
-  async update_clarification(cid: string, item: any): Promise<Clarification> {
-    return this.db.update('clarification', { cid }, item) as Promise<Clarification>
-  }
-
-  async delete_clarification(cid: string): Promise<void> {
-    return this.db.delete('clarification', { cid })
-  }
-
-  /* Submissions */
-
-  async create_submission(item: any): Promise<Submission> {
-    return this.db.put('submission', item) as Promise<Submission>
-  }
-
-  async get_submission(sid: string): Promise<Submission> {
-    return this.db.get('submission', { sid }) as Promise<Submission>
-  }
-
-  async get_submissions(args: any): Promise<Submission[]> {
-    return this.db.scan('submission', { args }) as Promise<Submission[]>
-  }
-
-  async update_submission(sid: string, item: any): Promise<Submission> {
-    return this.db.update('submission', { sid }, item) as Promise<Submission>
-  }
-
-  async delete_submission(sid: string): Promise<void> {
-    return this.db.delete('submission', { sid })
-  }
-
-  /* Problems */
-
-  async create_problem(item: any): Promise<Problem> {
-    return this.db.put('problem', item) as Promise<Problem>
-  }
-
-  async get_problem(pid: string): Promise<Problem> {
-    return this.db.get('problem', { pid }) as Promise<Problem>
-  }
-
-  async get_problems(args: any, ...columns: any): Promise<Problem[]> {
-    return this.db.scan('problem', { args, columns }) as Promise<Problem[]>
-  }
-
-  async update_problem(pid: string, item: any): Promise<Problem> {
-    return this.db.update('problem', { pid }, item) as Promise<Problem>
-  }
-
-  async delete_problem(pid: string): Promise<void> {
-    return this.db.delete('problem', { pid })
-  }
-
-  /* Settings */
-
-  async get_settings(): Promise<Settings> {
-    return new Promise((resolve, reject) => {
-      this.db.scan('setting')
-        .then(data => resolve(data[0] as Settings))
-        .catch(err => reject(err))
+  get_user(data: Record<string, unknown>): Promise<User | undefined> {
+    return new Promise(async (resolve, reject) => {
+      const users = await this.db.scan('user', data)
+      if (!users?.length) {
+        reject()
+        return
+      }
+      if (users?.length > 1) reject('Too many users returned!')
+      if (users?.length == 1) resolve(users[0] as User)
     })
   }
 
-  save_settings(settings: Record<string, number | string>): Promise<Settings> {
-    return this.db.update('setting', {}, settings) as Promise<Settings>
-  }
-}
-
-export const transpose = (itemList: any[] | undefined, key: string): { [key: string]: any } => {
-  if (!itemList) return {}
-  return Object.assign({}, ...itemList.map((obj: any) => ({ [obj[key]]: obj })))
-}
-
-export const makeJSON = (itemList: any, columns: string[] = []): string => {
-  itemList.map((e: any) => {
-    Object.keys(e).forEach((key) => {
-      if (!columns.includes(key)) {
-        delete e[key]
+  get_users(query?: { args?: Record<string, unknown>, columns?: string[] }): Promise<Record<string, User>> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const map = transpose(await this.db.scan('user', query), 'uid') as Record<string, User>
+        resolve(map)
+      } catch (err) {
+        reject(err)
       }
     })
-  })
-  return JSON.stringify(itemList)
+  }
+
+  get_clarifications(query?: { args?: Record<string, unknown>, columns?: string[] }): Promise<Record<string, Clarification>> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const map = transpose(await contest.db.scan('clarification', query), 'cid') as Record<string, Clarification>
+        resolve(map)
+      } catch (err) {
+        reject(err)
+      }
+    })
+  }
+
+  get_settings(): Promise<Settings> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const settings = await this.db.scan('setting') as Record<string, string | number>[]
+        resolve(Object.assign({}, ...settings?.map(x => ({ [x.key]: x.value }))))
+      } catch (err) { reject(err) }
+    })
+  }
+
+  invoke(FunctionName: string, Payload: Record<string, unknown>): Promise<Lambda.InvocationResponse> {
+    return new Promise((resolve, reject) => {
+      this.lambda.invoke({
+        FunctionName,
+        Payload: JSON.stringify(Payload)
+      }, (err, data) => {
+        if (err) {
+          reject(err)
+          return
+        }
+        resolve(data)
+      })
+    })
+  }
+
+  transpose(items: Record<string, unknown>[] | undefined, key: string): { [key: string]: any } {
+    return items ? Object.assign({}, ...items.map((obj: Record<string, unknown>) => ({ [`${obj[key]}`]: obj }))) : {}
+  }
 }
 
-export default new ContestService()
+const awsdb = new AWSDB(process.env.AWS_REGION || 'us-east-1')
+const contest = new ContestService(awsdb)
+
+export default contest

@@ -12,11 +12,11 @@ export const schema: Record<string, ParamSchema> = {
 
 const deleteSubmissionsForUser = async (tid: string) => {
   try {
-    const submissions = await contest.get_submissions({ tid })
+    const submissions = await contest.db.scan('submission', { args: { tid } })
     if (!submissions) return
     for (const { sid } of submissions) {
       try {
-        contest.delete_submission(sid)
+        contest.db.delete('submission', { sid: sid as string })
         console.log(`Deleted submission ${sid}`)
       } catch (err) { console.log(`Error deleting submission ${sid}`) }
     }
@@ -25,11 +25,11 @@ const deleteSubmissionsForUser = async (tid: string) => {
 
 const deleteClarificationsForUser = async (tid: string) => {
   try {
-    const clarifications = await contest.get_clarifications({ uid: tid })
+    const clarifications = await contest.db.scan('clarification', { args: { uid: tid } })
     if (!clarifications) return
     for (const { cid } of clarifications) {
       try {
-        contest.delete_clarification(cid)
+        contest.db.delete('clarification', { cid: cid as string })
         console.log(`Deleted clarification ${cid}`)
       } catch (err) { console.log(`Error deleting clarification ${cid}`) }
     }
@@ -50,7 +50,7 @@ export const deleteUsers = async (req: Request, res: Response) => {
       await deleteSubmissionsForUser(uid)
       await deleteClarificationsForUser(uid)
       try {
-        await contest.delete_user(uid)
+        await contest.db.delete('user', { uid })
         success++
       } catch (err) { failed++ }
     }
@@ -59,7 +59,7 @@ export const deleteUsers = async (req: Request, res: Response) => {
     await deleteSubmissionsForUser(req.body.uid)
     await deleteClarificationsForUser(req.body.uid)
     try {
-      contest.delete_user(req.body.uid)
+      contest.db.delete('user', { uid: req.body.uid })
       res.json({ message: "User deleted successfully!" })
     } catch (err) { res.sendStatus(500) }
   }

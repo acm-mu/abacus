@@ -72,10 +72,10 @@ export const getClarifications = async (req: Request, res: Response) => {
   }
 
   const query = matchedData(req)
-  const users = transpose(await contest.get_users(), 'uid') as Record<string, User>
+  const users = await contest.get_users()
 
   try {
-    let clarifications = await contest.get_clarifications()
+    let clarifications = Object.values(await contest.get_clarifications())
     if (clarifications.length == 0) {
       res.sendStatus(404)
       return

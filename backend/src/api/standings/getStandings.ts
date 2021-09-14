@@ -27,11 +27,11 @@ export const schema: Record<string, ParamSchema> = {
 // };
 
 const getBlueStandings = async (isPractice: boolean): Promise<Record<string, any>> => {
-  let standings = Object.values(await contest.get_users({ role: 'team', division: 'blue' }))
-  const submissions = await contest.get_submissions({ division: 'blue' })
+  let standings = Object.values(await contest.get_users({ args: { role: 'team', division: 'blue' } }))
+  const submissions = await contest.db.scan('submission', { args: { division: 'blue' } }) || {}
+  let problemsList = Object.values((await contest.db.scan('problem', { args: { division: 'blue' } }) || {}) as Record<string, Problem>)
 
-  let problemsList = await contest.get_problems({ division: 'blue' },  ['pid', 'division', 'id', 'name', 'practice'])
-  problemsList = problemsList.filter(({ practice }: any) => {
+  problemsList = problemsList.filter(({ practice }) => {
     if (isPractice)
       return practice
     return practice == undefined || practice == false
@@ -105,8 +105,7 @@ const getBlueStandings = async (isPractice: boolean): Promise<Record<string, any
   })
 
   interface StandingsItems extends User {
-     solved: number, 
-     time: number 
+    solved: number, time: number
   }
 
   const data = (standings as StandingsItems[]).sort((s1, s2) => {
@@ -129,11 +128,13 @@ const getBlueStandings = async (isPractice: boolean): Promise<Record<string, any
 // }
 
 const getGoldStandings = async (isPractice: boolean): Promise<Record<string, any>> => {
-  let standings = Object.values(await contest.get_users({ role: 'team', division: 'gold' }))
-  const submissions = await contest.get_submissions( { division: 'gold' })
+  let standings = Object.values(await contest.db.scan('user', { args: { role: 'team', division: 'gold' } }) || {})
+  const submissions = await contest.db.scan('submission', { args: { division: 'gold' } }) || {}
 
-  let problemsList = await contest.get_problems({ division: 'gold' }, ['pid', 'division', 'id', 'name', 'practice', 'max_points', 'capped_points'])
-  problemsList = problemsList.filter(({ practice }: any) => {
+
+  // let problemsList = await contest.db.scan('problem', { args: { division: 'gold' }, columns: ['pid', 'division', 'id', 'name', 'practice', 'max_points', 'capped_points'] }) || []
+  let problemsList = await contest.db.scan('problem', { args: { division: 'gold' } }) || []
+  problemsList = problemsList.filter(({ practice }) => {
     if (isPractice)
       return practice
     return practice == undefined || practice == false
@@ -175,13 +176,14 @@ const getGoldStandings = async (isPractice: boolean): Promise<Record<string, any
         if (team.uid in subs) {
           if (problem.pid in subs[team.uid]) {
             let problem_score = 0
-            subs[team.uid][problem.pid].forEach((sub: any) => {
+            subs[team.uid][problem.pid].every((sub: any) => {
               if (sub.score > problem_score) problem_score = sub.score
             })
             team.problems[problem.pid] = {
               score: problem_score,
               status: problem_score > 0 ? 'accepted' : 'rejected'
             }
+            console.log(problem)
             if (problem.capped_points) {
               capped_score += problem_score
             } else {
@@ -193,9 +195,7 @@ const getGoldStandings = async (isPractice: boolean): Promise<Record<string, any
     team.score += Math.min(20, capped_score)
   })
 
-  interface StandingsItems extends User { 
-    score: number 
-  }
+  type StandingsItems = { score: number }
 
   const data = (standings as StandingsItems[]).sort((s1, s2) => {
     return s2.score - s1.score

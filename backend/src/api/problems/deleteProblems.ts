@@ -12,9 +12,9 @@ export const schema: Record<string, ParamSchema> = {
 
 const deleteSubmissionsForProblem = async (pid: string) => {
   try {
-    const submissions = await contest.get_submissions({ pid }) || []
+    const submissions = await contest.db.scan('submission', { args: { pid } }) || []
     for (const { sid } of submissions) {
-      await contest.delete_submission(sid)
+      await contest.db.delete('submission', { sid: sid as string })
         .then(_ => console.log(`Deleted submission ${sid}`))
         .catch(_ => console.log(`Error deleting submission ${sid}`))
     }
@@ -35,7 +35,7 @@ export const deleteProblems = async (req: Request, res: Response) => {
     for (const pid of req.body.pid) {
       deleteSubmissionsForProblem(pid)
       try {
-        await contest.delete_problem(pid)
+        await contest.db.delete('problem', { pid })
         success++
       } catch (err) { failed++ }
     }
@@ -43,7 +43,7 @@ export const deleteProblems = async (req: Request, res: Response) => {
   } else {
     deleteSubmissionsForProblem(req.body.pid)
     try {
-      await contest.delete_problem(req.body.pid)
+      await contest.db.delete('problem', { pid: req.body.pid })
       res.json({ message: "Problem successfully deleted" })
     } catch (err) { res.sendStatus(500) }
   }

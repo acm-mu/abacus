@@ -1,9 +1,11 @@
 
 import { Submission } from 'abacus'
 import React, { useContext, useEffect, useMemo, useState } from 'react'
+import { PieChart } from '@toast-ui/react-chart'
 import { AppContext, SocketContext } from 'context'
 import { Block, PageLoading } from 'components'
 import config from 'environment'
+import '@toast-ui/chart/dist/toastui-chart.min.css'
 import { Helmet } from 'react-helmet'
 import moment from 'moment'
 import { Table } from 'semantic-ui-react'
@@ -37,17 +39,7 @@ const Home = (): JSX.Element => {
 
   const flaggedSubmissions = useMemo(() => submissions?.filter(({ flagged }) => flagged !== undefined), [submissions])
 
- 
-
-  const categories: string[] = []
-  if (settings?.start_date && settings?.end_date) {
-    for (let time = Number(settings?.start_date); time <= Number(settings?.end_date); time += 1800000) {
-      categories.push(moment(time).format('hh:mm a'))
-    }
-  }
-
-  /* TODO: These went with the PieChart component in @toast-ui/react-chart, we need to find an alternative.
-   const breakdownData = useMemo(() => {
+  const breakdownData = useMemo(() => {
     const statuses: { [key: string]: { name: string, data: number } } = {};
 
     if (submissions) {
@@ -64,6 +56,14 @@ const Home = (): JSX.Element => {
       series: Object.values(statuses)
     }
   }, [submissions])
+
+  const categories: string[] = []
+  if (settings?.start_date && settings?.end_date) {
+    for (let time = Number(settings?.start_date); time <= Number(settings?.end_date); time += 1800000) {
+      categories.push(moment(time).format('hh:mm a'))
+    }
+  }
+
   const breakdownOptions = {
     theme: {
       series: {
@@ -87,7 +87,6 @@ const Home = (): JSX.Element => {
       align: 'bottom',
     }
   };
-  */
 
   if (isLoading) return <PageLoading />
 
@@ -101,7 +100,10 @@ const Home = (): JSX.Element => {
       <h1>Submission Breakdown</h1>
       {submissions?.length ?
 
-       <p>There are submissions!</p>
+        <PieChart
+          data={breakdownData}
+          options={breakdownOptions}
+        />
         : <p>There are not any submissions yet!</p>}
     </Block>
 
