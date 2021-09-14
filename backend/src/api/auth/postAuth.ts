@@ -1,8 +1,8 @@
+import { createHash } from 'crypto';
 import { Request, Response } from 'express'
 import { matchedData, ParamSchema, validationResult } from 'express-validator'
 import { contest } from '../../abacus'
 import jwt from 'jsonwebtoken';
-import { createHash } from 'crypto';
 
 export const schema: Record<string, ParamSchema> = {
   username: {

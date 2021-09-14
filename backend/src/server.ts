@@ -17,7 +17,7 @@ dotenv.config()
 
 const PORT = process.env.PORT || 80;
 
-export const app = express();
+const app = express();
 const server = createServer(app);
 export const io = new Server(server, {
   serveClient: false,
@@ -55,8 +55,6 @@ io.on('connection', (socket: Socket) => {
   })
 })
 
-if (require.main === module) {
-  server.listen(PORT, () => {
-    console.log(`🚀 Server is running at :${PORT}`);
-  });
-}
+server.listen(PORT, () => {
+  console.log(`🚀 Server is running at :${PORT}`);
+});

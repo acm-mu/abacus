@@ -31,7 +31,7 @@ const getBlueStandings = async (isPractice: boolean): Promise<Record<string, any
   const submissions = await contest.get_submissions({ division: 'blue' })
 
   let problemsList = await contest.get_problems({ division: 'blue' },  ['pid', 'division', 'id', 'name', 'practice'])
-  problemsList = problemsList.filter(({ practice }: any) => {
+  problemsList = problemsList.filter(({ practice }) => {
     if (isPractice)
       return practice
     return practice == undefined || practice == false
