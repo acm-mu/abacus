@@ -113,17 +113,4 @@ export default class DynamoDB extends Database {
       })
     })
   }
-
-  batchWrite(TableName: string, PutItems: Record<string, any>[]): Promise<void> {
-    return new Promise((resolve, reject) => {
-      this.db.batchWrite({
-        RequestItems: {
-          [TableName]: PutItems.map((Item) => ({ PutRequest: { Item } }))
-        }
-      }, (err, _data) => {
-        if (err) reject(err)
-        else resolve()
-      })
-    })
-  }
 }

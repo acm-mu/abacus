@@ -109,25 +109,19 @@ class ContestService {
   async get_settings(): Promise<Settings> {
     return new Promise((resolve, reject) => {
       this.db.scan('setting')
-        .then((itemList: any) => {
-          if (itemList) 
-            resolve(Object.assign({}, ...itemList.map(((x: any) => ({[x.key]: x.value})))))
-          else
-            reject()
-        })
+        .then(data => resolve(data[0] as Settings))
         .catch(err => reject(err))
     })
   }
 
-  save_settings(settings: Record<string, number | string>): Promise<void> {
-    return this.db.batchWrite('setting', [settings])
+  save_settings(settings: Record<string, number | string>): Promise<Settings> {
+    return this.db.update('setting', {}, settings) as Promise<Settings>
   }
 }
 
 export const transpose = (itemList: any[] | undefined, key: string): { [key: string]: any } => {
-  if(!itemList) return {}
-
-  return Object.assign({}, ...itemList.map((obj: any) => ({ [obj[key]]: obj }))) 
+  if (!itemList) return {}
+  return Object.assign({}, ...itemList.map((obj: any) => ({ [obj[key]]: obj })))
 }
 
 export const makeJSON = (itemList: any, columns: string[] = []): string => {
