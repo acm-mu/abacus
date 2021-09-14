@@ -5,8 +5,7 @@ import { Navigation } from "components";
 import { AppContext } from "context";
 
 const BlueNavigation = (): JSX.Element => {
-  const { settings } = useContext(AppContext)
-  const { user } = useContext(AppContext)
+  const { user, settings } = useContext(AppContext)
 
   const hasAccessTo = () => user?.role == 'admin' || user?.division == 'blue'
   const isBeforeCompetition = () => !settings || new Date() < settings.practice_start_date

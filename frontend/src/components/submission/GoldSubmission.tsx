@@ -64,7 +64,7 @@ const GoldFeedback = (): JSX.Element => {
       </Form>
     </Segment>
     {user && submissions?.length > 0 ? <Segment>
-      <h3>Team&apos;s Previous Submissions</h3>
+      <h3>Team&apos;s Other Submissions</h3>
       <ul>
         {submissions.filter((sub: { sid: string }) => sub.sid != submission?.sid).map((sub: { sid: string }) => (
           <li key={sub.sid}>

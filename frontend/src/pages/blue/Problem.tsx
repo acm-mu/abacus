@@ -83,27 +83,29 @@ const problem = (): JSX.Element => {
       <MDEditor.Markdown source={problem.description || ''} />
     </Block>
     <Block size='xs-3' className='problem-panel'>
-      {settings && new Date() < settings?.end_date ? <></> :
-        <Button
-          disabled={submissions?.filter(({ status, released }) => status == 'accepted' || status == 'pending' || !released).length !== 0}
-          as={Link}
-          to={`/blue/problems/${problem?.id}/submit`}
-          content="Submit"
-          icon="upload"
-          labelPosition='left'
-        />}
-      <ClarificationModal
-        title={`${problem.name} | `}
-        context={{ type: 'pid', id: problem.pid }}
-        trigger={<Button content="Ask" icon="question" labelPosition='left' />}
-      />
-      <a target='_blank' rel='noreferrer' href={`${config.API_URL}/sample_files?pid=${problem.pid}`}>
-        <Button
-          labelPosition='left'
-          content="Skeletons"
-          icon="download"
-        />
-      </a>
+      {settings && new Date() < settings?.end_date ?
+        <>
+          <Button
+            disabled={submissions?.filter(({ status, released }) => status == 'accepted' || status == 'pending' || !released).length !== 0}
+            as={Link}
+            to={`/blue/problems/${problem?.id}/submit`}
+            content="Submit"
+            icon="upload"
+            labelPosition='left'
+          />
+          <ClarificationModal
+            title={`${problem.name} | `}
+            context={{ type: 'pid', id: problem.pid }}
+            trigger={<Button content="Ask" icon="question" labelPosition='left' />}
+          />
+        </> :
+        <a target='_blank' rel='noreferrer' href={`${config.API_URL}/sample_files?pid=${problem.pid}`}>
+          <Button
+            labelPosition='left'
+            content="Skeletons"
+            icon="download"
+          />
+        </a>}
       {latestSubmission}
       <Divider />
       <p><b>Problem ID:</b> {problem.id}</p>

@@ -26,8 +26,6 @@
     },
     "dependencies": {
         "@monaco-editor/react": "^4.0.10",
-        "@toast-ui/chart": "^4.1.1",
-        "@toast-ui/react-chart": "^4.1.1",
         "@uiw/react-markdown-preview": "^1.0.9",
         "@uiw/react-md-editor": "^1.13.3",
         "dotenv": "^8.2.0",

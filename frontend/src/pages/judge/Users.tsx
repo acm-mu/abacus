@@ -52,7 +52,7 @@ const Teams = (): JSX.Element => {
         setLoading(false)
       }
     } catch (err) {
-      setError(err)
+      setError(err as string)
     }
   }
 

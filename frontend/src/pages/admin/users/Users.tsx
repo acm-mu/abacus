@@ -60,7 +60,7 @@ const Users = (): JSX.Element => {
         setLoading(false)
       }
     } catch (err) {
-      setError(err)
+      setError(err as string)
     }
   }
 
@@ -118,11 +118,9 @@ const Users = (): JSX.Element => {
         const sanitized = JSON.stringify(passwords, null, '\t')
         saveAs(new File([sanitized], 'imported_users.json', { type: 'text/json;charset=utf-8' }))
       }
-
-
     } catch (err) {
       console.log(err)
-      setError(err)
+      setError(err as string)
     }
     setImporting(false)
   }
