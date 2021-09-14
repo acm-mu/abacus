@@ -75,8 +75,10 @@ const Problems = (): JSX.Element => {
       </Block>
     </>
 
+  if (!settings || new Date() < settings.start_date)
+    if (user?.division != 'gold' && user?.role != 'admin') return <Unauthorized />
+
   if (isLoading) return <PageLoading />
-  if (user?.division != 'gold' && user?.role != 'admin') return <Unauthorized />
 
   return <>
     {helmet}

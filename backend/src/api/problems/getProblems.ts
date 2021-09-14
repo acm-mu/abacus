@@ -92,8 +92,7 @@ export const getProblems = async (req: Request, res: Response) => {
   try {
     const settings = await contest.get_settings()
 
-    let problems = await contest.db.scan('problem', { args: query }) as Problem[]
-    // let problems: any = await contest.db.scan('problem', { args: query, columns })
+    let problems = await contest.get_problems(query, columns)
     problems = problems?.filter(problem => showToUser(user, problem, settings))
     res.send(transpose(problems, 'pid'))
   } catch (err) {

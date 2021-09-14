@@ -1,4 +1,3 @@
-import { Problem, User } from 'abacus';
 import axios from 'axios';
 import { Request, Response } from 'express';
 import { UploadedFile } from 'express-fileupload';
@@ -48,10 +47,15 @@ export const postSubmissions = async (req: Request, res: Response) => {
     return
   }
 
+  if (!req.user) {
+    res.status(401).send({ message: "Your credentials could not be recognized!" })
+    return
+  }
+
   try {
     const item = matchedData(req)
 
-    const user = await contest.db.get('user', { uid: req.user?.uid as string }) as unknown as User
+    const user = await contest.get_user(req.user?.uid)
     if (!user) {
       res.status(401).send({ message: "Your credentials could not be recognized!" })
       return
@@ -62,7 +66,7 @@ export const postSubmissions = async (req: Request, res: Response) => {
       return
     }
 
-    const problem = await contest.db.get('problem', { pid: item.pid }) as unknown as Problem
+    const problem = await contest.get_problem(item.pid)
     if (!problem) {
       res.status(400).send({ message: "Problem does not exist!" })
       return
@@ -92,7 +96,7 @@ export const postSubmissions = async (req: Request, res: Response) => {
       }
     }
 
-    const submissions = await contest.db.scan('submission', { args: { tid: req.user?.uid, pid: item.pid } })
+    const submissions = await contest.get_submissions({ tid: req.user?.uid, pid: item.pid })
 
     if (submissions) {
       for (const submission of submissions) {
@@ -164,7 +168,7 @@ export const postSubmissions = async (req: Request, res: Response) => {
       }
     }
 
-    await contest.db.put('submission', submission)
+    await contest.create_submission(submission)
 
     io.emit('new_submission', { sid: submission.sid })
 

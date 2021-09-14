@@ -61,6 +61,9 @@ const Standings = (): JSX.Element => {
       <StatusMessage message={{ type: 'error', message: "An error has occurred! Please contact support" }} />
     </>
 
+  let rk = 0
+  let last = 0
+
   return <>
     {helmet}
     <Countdown />
@@ -100,9 +103,12 @@ const Standings = (): JSX.Element => {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {standings.map((team, index) => (
-            <Table.Row key={team.uid} warning={team.uid == user?.uid} style={{ fontWeight: team.uid == user?.uid ? 'bold' : 'normal' }}>
-              <Table.Cell collapsing>{index + 1}</Table.Cell>
+          {standings.map((team, index) => {
+            if (index == 0) rk = 1
+            else if (last != team.time) rk = index + 1
+            last = team.time
+            return <Table.Row key={team.uid} warning={team.uid == user?.uid} style={{ fontWeight: team.uid == user?.uid ? 'bold' : 'normal' }}>
+              <Table.Cell collapsing>{rk}</Table.Cell>
               <Table.Cell>{team.display_name}</Table.Cell>
               <Table.Cell>{team.solved}</Table.Cell>
               <Table.Cell>{team.time}</Table.Cell>
@@ -138,7 +144,7 @@ const Standings = (): JSX.Element => {
                 }
               )}
             </Table.Row>
-          ))}
+          })}
         </Table.Body>
       </Table>
     </Block>

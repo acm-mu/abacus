@@ -64,8 +64,11 @@ export const getUsers = async (req: Request, res: Response) => {
   }
 
   try {
-    const users = Object.values(await contest.get_users({ args: params })) as Record<string, unknown>[]
-    users?.map(user => delete user.password)
+    const users = await contest.get_users(params)
+    users?.map((user: any) => {
+      const {password, ...returnUser} = user
+      return returnUser 
+    })
     res.send(transpose(users, 'uid'))
   } catch (err) {
     res.sendStatus(500)

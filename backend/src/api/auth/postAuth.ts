@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { matchedData, ParamSchema, validationResult } from 'express-validator'
 import { contest } from '../../abacus'
 import jwt from 'jsonwebtoken';
-import { sha256 } from '../../utils';
+import { createHash } from 'crypto';
 
 export const schema: Record<string, ParamSchema> = {
   username: {
@@ -25,23 +25,27 @@ export const postAuth = async (req: Request, res: Response) => {
     res.status(400).json({ message: errors[0].msg })
     return
   }
-  try {
-    const { username, password } = matchedData(req)
 
-    const user: Record<string, unknown> | undefined = await contest.get_user({ username: username.toLowerCase(), password: sha256(password) })
-    if (!user) {
-      res.status(400).send({ message: "mmm... We can't find a user with that username and password!" })
+  const bodyData = matchedData(req)
+  bodyData.username = bodyData.username.toLowerCase()
+  bodyData.password = createHash('sha256').update(bodyData.password).digest('hex')
+
+  try {
+    const users = await contest.get_users(bodyData)
+    if (!users?.length) {
+      res.status(400).send({ message: "Hmmm... We can't find a user with that username and password!" })
       return
     }
+    const user = users[0]
 
     const accessToken = jwt.sign({
       username: user.username,
       password: user.password
     }, process.env.ACCESS_TOKEN_SECRET || '')
 
-    delete user.password
+    const {password, ...responseUser} = user
 
-    res.send({ accessToken, ...user })
+    res.send({ accessToken, ...responseUser })
   } catch (err) {
     console.error(err)
     res.sendStatus(500)

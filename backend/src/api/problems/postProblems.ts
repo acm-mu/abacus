@@ -94,14 +94,14 @@ export const postProblems = async (req: Request, res: Response) => {
     }
   }
 
-  const problems = await contest.db.scan('problem', { args: { id: item.id, division: item.division } }) || {}
+  const problems = await contest.get_problems({ id: item.id, division: item.division })
   if (Object.values(problems).length > 0) {
     res.status(400).json({ message: "Problem id is taken!" })
     return
   }
 
   try {
-    await contest.db.put('problem', item)
+    await contest.create_problem(item)
     res.send(item)
   }
   catch (err) {

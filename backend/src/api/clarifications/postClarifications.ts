@@ -49,7 +49,7 @@ export const schema: Record<string, ParamSchema> = {
 
 const notify = async (clarification: Clarification) => {
   if (clarification.parent) {
-    const res = await contest.db.scan('clarification', { args: { cid: clarification.parent } })
+    const res = await contest.get_clarifications({ cid: clarification.parent })
     if (!res) return
     const parent = res[0]
 
@@ -103,7 +103,7 @@ export const postClarifications = async (req: Request, res: Response) => {
 
     // Response
     if (parent) {
-      const clarifications = await contest.db.scan('clarification', { args: { cid: parent } })
+      const clarifications = await contest.get_clarifications({ cid: parent })
       if (!clarifications?.length) {
         res.status(400).json({ message: `Clarification ${parent} does not exist!` })
         return
@@ -140,7 +140,7 @@ export const postClarifications = async (req: Request, res: Response) => {
       }
     }
 
-    await contest.db.put('clarification', { ...clarification })
+    await contest.create_clarification(clarification)
 
     notify(clarification)
 

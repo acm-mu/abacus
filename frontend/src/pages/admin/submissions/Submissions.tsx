@@ -1,12 +1,12 @@
 import { Submission } from 'abacus'
 import React, { ChangeEvent, useState, useEffect, useMemo, useContext } from 'react'
-import { Button, Checkbox, Label, Table } from 'semantic-ui-react'
+import { Button, Checkbox, Label, Menu, MenuItemProps, Table } from 'semantic-ui-react'
 import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
 import config from 'environment'
 import { compare } from 'utils'
 import { Helmet } from 'react-helmet'
-import { PageLoading } from 'components'
+import { Block, DivisionLabel, PageLoading } from 'components'
 import { SocketContext } from 'context'
 
 interface SubmissionItem extends Submission {
@@ -25,6 +25,7 @@ const Submissions = (): JSX.Element => {
   const [isMounted, setMounted] = useState(true)
   const [isDeleting, setDeleting] = useState(false)
   const [showReleased, setShowReleased] = useState(false)
+  const [activeDivision, setActiveDivision] = useState('blue')
 
   const [{ column, direction }, setSortConfig] = useState<SortConfig>({
     column: 'date',
@@ -69,7 +70,7 @@ const Submissions = (): JSX.Element => {
     setSubmissions(submissions.map(submission => submission.sid == id ? { ...submission, checked } : submission))
 
   const checkAll = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) =>
-    setSubmissions(submissions.map(submission => (!submission.released || showReleased) ? { ...submission, checked } : submission))
+    setSubmissions(submissions.map(submission => (!submission.released || showReleased) && (submission.division == activeDivision) ? { ...submission, checked } : submission))
 
   const deleteSelected = async () => {
     setDeleting(true)
@@ -88,60 +89,73 @@ const Submissions = (): JSX.Element => {
     setDeleting(false)
   }
 
+  const handleItemClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, { name }: MenuItemProps) =>
+    name && setActiveDivision(name)
+
   const filteredSubmissions = useMemo(() =>
-    submissions.filter((submission) => (!submission.released || showReleased))
-    , [submissions, showReleased])
+    submissions.filter((submission) => (!submission.released || showReleased) && (submission.division == activeDivision))
+    , [submissions, showReleased, activeDivision])
 
   if (isLoading) return <PageLoading />
 
   return <>
     <Helmet><title>Abacus | Admin Submissions</title></Helmet>
     <Button content="Download Submissions" onClick={downloadSubmissions} />
-    {submissions.filter(submission => submission.checked).length ?
+    {submissions.filter(submission => submission.checked && submission.division == activeDivision).length ?
       <Button content="Delete Selected" negative onClick={deleteSelected} loading={isDeleting} disabled={isDeleting} /> : <></>}
     <Checkbox toggle label="Show Released" checked={showReleased} onClick={onReleaseChange} />
 
-    <Table singleLine>
-      <Table.Header>
-        <Table.Row>
-          <Table.HeaderCell collapsing><input type='checkbox' onChange={checkAll} /></Table.HeaderCell>
-          <Table.HeaderCell className='sortable' onClick={() => sort('sid')}>Submission ID</Table.HeaderCell>
-          <Table.HeaderCell>Problem</Table.HeaderCell>
-          <Table.HeaderCell>Team</Table.HeaderCell>
-          <Table.HeaderCell className='sortable' onClick={() => sort('status')}>Status</Table.HeaderCell>
-          <Table.HeaderCell>Released</Table.HeaderCell>
-          <Table.HeaderCell>Flagged</Table.HeaderCell>
-          <Table.HeaderCell className='sortable' onClick={() => sort('date')}>Time</Table.HeaderCell>
-        </Table.Row>
-      </Table.Header>
-      <Table.Body>
-        {filteredSubmissions.length == 0 ?
+    <Block size='xs-12' transparent>
+      <Menu pointing secondary>
+        <Menu.Item name='blue' active={activeDivision == 'blue'} onClick={handleItemClick}>Blue</Menu.Item>
+        <Menu.Item name='gold' active={activeDivision == 'gold'} onClick={handleItemClick}>Gold</Menu.Item>
+        <Menu.Item name='eagle' active={activeDivision == 'eagle'} onClick={handleItemClick}>Eagle</Menu.Item>
+      </Menu>
+
+      <Table singleLine>
+        <Table.Header>
           <Table.Row>
-            <Table.Cell colSpan={'100%'}>No Submissions</Table.Cell>
-          </Table.Row> :
-          filteredSubmissions.map((submission) =>
-            <Table.Row key={submission.sid}>
-              <Table.Cell>
-                <input
-                  type='checkbox'
-                  checked={submission.checked}
-                  id={submission.sid}
-                  onChange={handleChange} />
-              </Table.Cell>
-              <Table.Cell>
-                <Link to={`/admin/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link></Table.Cell>
-              <Table.Cell><Link to={`/admin/problems/${submission.pid}`}>{submission.problem?.name} </Link></Table.Cell>
-              <Table.Cell><Link to={`/admin/users/${submission.team.uid}`}>{submission.team.display_name}</Link></Table.Cell>
-              <Table.Cell><span className={`status icn ${submission.status}`} /></Table.Cell>
-              <Table.Cell>{submission.released ? <Label color='green' icon='check' content="Released" /> : <Label icon='lock' content="Held" />}</Table.Cell>
-              <Table.Cell>
-                {submission.flagged ? <Label color='orange' icon='flag' content={`Flagged: ${submission.flagged.display_name}`} /> :
-                  <Label icon='cancel' content="Unflagged" />}
-              </Table.Cell>
-              <Table.Cell><Moment fromNow date={submission.date * 1000} /> </Table.Cell>
-            </Table.Row>)}
-      </Table.Body>
-    </Table>
+            <Table.HeaderCell collapsing><input type='checkbox' onChange={checkAll} /></Table.HeaderCell>
+            <Table.HeaderCell className='sortable' onClick={() => sort('sid')}>Submission ID</Table.HeaderCell>
+            <Table.HeaderCell>Problem</Table.HeaderCell>
+            <Table.HeaderCell>Division</Table.HeaderCell>
+            <Table.HeaderCell>Team</Table.HeaderCell>
+            <Table.HeaderCell className='sortable' onClick={() => sort('status')}>Status</Table.HeaderCell>
+            <Table.HeaderCell>Released</Table.HeaderCell>
+            <Table.HeaderCell>Flagged</Table.HeaderCell>
+            <Table.HeaderCell className='sortable' onClick={() => sort('date')}>Time</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {filteredSubmissions.length == 0 ?
+            <Table.Row>
+              <Table.Cell colSpan={'100%'}>No Submissions</Table.Cell>
+            </Table.Row> :
+            filteredSubmissions.map((submission) =>
+              <Table.Row key={submission.sid}>
+                <Table.Cell>
+                  <input
+                    type='checkbox'
+                    checked={submission.checked}
+                    id={submission.sid}
+                    onChange={handleChange} />
+                </Table.Cell>
+                <Table.Cell>
+                  <Link to={`/admin/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link></Table.Cell>
+                <Table.Cell><Link to={`/admin/problems/${submission.pid}`}>{submission.problem?.name} </Link></Table.Cell>
+                <Table.Cell><DivisionLabel division={submission.division} /></Table.Cell>
+                <Table.Cell><Link to={`/admin/users/${submission.team.uid}`}>{submission.team.display_name}</Link></Table.Cell>
+                <Table.Cell><span className={`status icn ${submission.status}`} /></Table.Cell>
+                <Table.Cell>{submission.released ? <Label color='green' icon='check' content="Released" /> : <Label icon='lock' content="Held" />}</Table.Cell>
+                <Table.Cell>
+                  {submission.flagged ? <Label color='orange' icon='flag' content={`Flagged: ${submission.flagged.display_name}`} /> :
+                    <Label icon='cancel' content="Unflagged" />}
+                </Table.Cell>
+                <Table.Cell><Moment fromNow date={submission.date * 1000} /> </Table.Cell>
+              </Table.Row>)}
+        </Table.Body>
+      </Table>
+    </Block>
   </>
 }
 
