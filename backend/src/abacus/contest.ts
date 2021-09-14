@@ -1,7 +1,7 @@
 import { Clarification, Problem, Settings, Submission, User } from "abacus";
-import AWS, { Lambda } from "aws-sdk";
-import { Database } from "src/services";
-import { MongoDB } from "src/services/db";
+import { Lambda } from "aws-sdk";
+import { Database } from "../services";
+import { MongoDB } from "../services/db";
 
 class ContestService {
   db: Database;

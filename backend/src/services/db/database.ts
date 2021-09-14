@@ -22,5 +22,5 @@ export default abstract class Database {
 
   abstract delete(TableName: string, Key: Key): Promise<void>;
 
-  abstract batchWrite(tableName: string, PutItems: Record<string, any>[]): Promise<void>;
+  abstract batchWrite(TableName: string, PutItems: Record<string, any>[]): Promise<void>;
 }

@@ -4,7 +4,7 @@ import { Item, Key, ScanOptions } from "./database";
 
 export default class DynamoDB extends Database {
 
-  db: DocumentClient;
+  db: DocumentClient
 
   constructor() {
     super()

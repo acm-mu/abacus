@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 import { matchedData, ParamSchema, validationResult } from 'express-validator'
 import { contest } from '../../abacus'
 import jwt from 'jsonwebtoken';
+import { createHash } from 'crypto';
 
 export const schema: Record<string, ParamSchema> = {
   username: {
@@ -24,21 +25,25 @@ export const postAuth = async (req: Request, res: Response) => {
     res.status(400).json({ message: errors[0].msg })
     return
   }
-  try {
-    const bodyData = matchedData(req)
 
+  const bodyData = matchedData(req)
+  bodyData.username = bodyData.username.toLowerCase()
+  bodyData.password = createHash('sha256').update(bodyData.password).digest('hex')
+
+  try {
     const users = await contest.get_users(bodyData)
     if (!users?.length) {
       res.status(400).send({ message: "Hmmm... We can't find a user with that username and password!" })
       return
     }
+    const user = users[0]
 
     const accessToken = jwt.sign({
-      username: users[0].username,
-      password: users[0].password
+      username: user.username,
+      password: user.password
     }, process.env.ACCESS_TOKEN_SECRET || '')
 
-    const {password, ...responseUser} = users[0]
+    const {password, ...responseUser} = user
 
     res.send({ accessToken, ...responseUser })
   } catch (err) {
