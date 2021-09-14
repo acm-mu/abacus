@@ -15,7 +15,7 @@ export default class MongoDB extends Database {
     const {MONGO_HOST, MONGO_USER, MONGO_PASS, MONGO_DBNAME} = process.env
     const url = `mongodb://${MONGO_USER}:${MONGO_PASS}@${MONGO_HOST}/${MONGO_DBNAME}`
 
-    MongoClient.connect(url, (err, db) => {
+    MongoClient.connect(url, (err: any, db) => {
       if (err) throw err;
       if (!db) throw new Error("Could not connect to MongoDB database")
       this.db = db.db("abacus")
@@ -24,7 +24,7 @@ export default class MongoDB extends Database {
 
   scan(TableName: string, query?: ScanOptions): Promise<Item[]> {
     return new Promise(async (resolve, reject) => {
-      await this.db.collection(TableName).find(query?.args || {}).toArray((err, data) => {
+      await this.db.collection(TableName).find(query?.args || {}).toArray((err: any, data) => {
         if (err) {
           reject(err)
           return
@@ -36,7 +36,7 @@ export default class MongoDB extends Database {
 
   get(TableName: string, Key: Key): Promise<Item> {
     return new Promise(async (resolve, reject) => {
-      await this.db.collection(TableName).findOne(Key, (err, data) => {
+      await this.db.collection(TableName).findOne(Key, (err: any, data) => {
         if (err) {
           reject(err)
           return
@@ -48,7 +48,7 @@ export default class MongoDB extends Database {
 
   put(TableName: string, Item: Item): Promise<Item> {
     return new Promise(async (resolve, reject) => {
-      await this.db.collection(TableName).insertOne(Item, (err, data) => {
+      await this.db.collection(TableName).insertOne(Item, (err: any, data) => {
         if (err) {
           reject(err)
           return
@@ -65,7 +65,7 @@ export default class MongoDB extends Database {
       await this.db.collection(TableName).updateOne(Key, {
         $set: Item,
         $unset: unsetFields
-      }, (err, data) => {
+      }, (err: any, data) => {
         if (err) {
           reject(err)
           return
@@ -77,7 +77,7 @@ export default class MongoDB extends Database {
 
   delete(TableName: string, Key: Key): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      await this.db.collection(TableName).deleteOne(Key, (err, _data) => {
+      await this.db.collection(TableName).deleteOne(Key, (err: any, _data) => {
         if (err) {
           reject(err)
           return
