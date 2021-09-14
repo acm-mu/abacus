@@ -5,7 +5,6 @@ import { MongoDB } from "../services/db";
 
 class ContestService {
   db: Database;
-  // s3: FileSystem;
   lambda: Lambda;
 
   constructor() {
@@ -14,7 +13,6 @@ class ContestService {
 
   init_aws() {
     this.db = new MongoDB();
-    // this.s3 = new S3();
     this.lambda = new Lambda();
   }
 
@@ -124,19 +122,6 @@ class ContestService {
   save_settings(settings: Record<string, number | string>): Promise<void> {
     return this.db.batchWrite('setting', [settings])
   }
-
-  // logActivity(tableName: string, action: string, newValue: Args) {
-  //   this.db.put({
-  //     TableName: 'activity',
-  //     Item: {
-  //       aid: uuidv4(),
-  //       table_name: tableName,
-  //       action,
-  //       ...newValue,
-  //       date: Date.now() / 1000
-  //     }
-  //   })
-  // }
 }
 
 export const transpose = (itemList: any[] | undefined, key: string): { [key: string]: any } => {

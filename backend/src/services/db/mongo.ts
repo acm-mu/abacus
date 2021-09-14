@@ -24,26 +24,64 @@ export default class MongoDB extends Database {
 
   get(TableName: string, Key: Key): Promise<Item> {
     return new Promise(async (resolve, reject) => {
-      const result = await this.db.collection(TableName).findOne(Key)
-
-      if (result) resolve(result)
-      else reject(result)
+      await this.db.collection(TableName).findOne(Key, (err, data) => {
+        if (err) {
+          reject(err)
+          return
+        }
+        if (data) resolve(data)
+      })
     })
   }
 
-  put(_TableName: string, _Item: Item): Promise<Item> {
-    throw new Error("Implement Me!")
+  put(TableName: string, Item: Item): Promise<Item> {
+    return new Promise(async (resolve, reject) => {
+      await this.db.collection(TableName).insertOne(Item, (err, data) => {
+        if (err) {
+          reject(err)
+          return
+        }
+        if (data) resolve(data)
+      })
+    })
   }
 
-  update(_TableName: string, _Key: Key, _Item: Item): Promise<Item> {
-    throw new Error("Implement Me!")
+  update(TableName: string, Key: Key, Item: Item): Promise<Item> {
+    return new Promise(async (resolve, _reject) => {
+      const result = await this.db.collection(TableName).updateOne(Key, { $set: Item })
+
+      for (const [key, value] of Object.entries(Item)) {
+        if (value === null) {
+          await this.db.collection(TableName).updateOne(Key, {
+            $unset: { [key]: 1 }
+          })
+        }
+      }
+      if (result) resolve(result)
+    })
   }
 
-  delete(_TableName: string, _Key: Key): Promise<void> {
-    throw new Error("Implement Me!")
+  delete(TableName: string, Key: Key): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      await this.db.collection(TableName).deleteOne(Key, (err, _data) => {
+        if (err) {
+          reject(err)
+          return
+        }
+        resolve()
+      })
+    })
   }
 
-  batchWrite(_TableName: string, _PutItems: Record<string, any>[]): Promise<void> {
-    throw new Error("Implement Me!")
+  batchWrite(TableName: string, PutItems: Record<string, any>[]): Promise<void> {
+    return new Promise(async(resolve, reject) => {
+      this.db.collection(TableName).updateMany({}, PutItems, (err, _res) => {
+        if(err) {
+          reject(err)
+          return
+        }
+        resolve()
+      })
+    })
   }
 }

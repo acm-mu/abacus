@@ -11,11 +11,9 @@ export default class DynamoDB extends Database {
     this.db = new DocumentClient()
   }
 
-  scan(tableName: string, query: ScanOptions): Promise<Item[]> {
+  scan(TableName: string, query: ScanOptions): Promise<Item[]> {
     return new Promise(async (resolve, reject) => {
-      let params: ScanInput = {
-        TableName: tableName
-      }
+      let params: ScanInput = { TableName }
       if (query) {
         if (query.args) {
           const entries = Object.entries(query.args)
@@ -35,13 +33,13 @@ export default class DynamoDB extends Database {
         }
       }
       const scanResults: Item[] = []
-      let items;
+      let Items;
       try {
         do {
-          items = await this.db.scan(params).promise();
-          items.Items?.forEach(item => scanResults.push(item))
-          params.ExclusiveStartKey = items.LastEvaluatedKey
-        } while (typeof items.LastEvaluatedKey != "undefined")
+          Items = await this.db.scan(params).promise();
+          Items.Items?.forEach(Item => scanResults.push(Item))
+          params.ExclusiveStartKey = Items.LastEvaluatedKey
+        } while (typeof Items.LastEvaluatedKey != "undefined")
         resolve(scanResults)
       } catch (err) {
         reject(err)
@@ -49,37 +47,30 @@ export default class DynamoDB extends Database {
     })
   }
 
-  get(tableName: string, key: Key): Promise<Item> {
+  get(TableName: string, Key: Key): Promise<Item> {
     return new Promise((resolve, reject) => {
-      this.db.get({
-        TableName: tableName,
-        Key: key
-      }, (err, data) => {
+      this.db.get({ TableName, Key }, (err, data) => {
         if (err) reject(err)
         else resolve(data.Item as Item)
       })
     })
   }
 
-  put(tableName: string, item: Item): Promise<Item> {
+  put(TableName: string, Item: Item): Promise<Item> {
     return new Promise((resolve, reject) => {
-      this.db.put({
-        TableName: tableName,
-        Item: item
-      }, (err, data) => {
+      this.db.put({ TableName, Item }, (err, data) => {
         if (err) {
           reject(err)
           return
         }
-        // this.logActivity(tableName, 'PUT', item)
         resolve(data)
       })
     })
   }
 
-  update(tableName: string, key: Key, item: Item): Promise<Item> {
+  update(TableName: string, Key: Key, Item: Item): Promise<Item> {
     return new Promise((resolve, reject) => {
-      const entries = Object.entries(item).filter(entry => !Object.keys(key).includes(entry[0]))
+      const entries = Object.entries(Item).filter(entry => !Object.keys(Key).includes(entry[0]))
 
       const setEntries = entries.filter(e => e[1] != null)
       const remEntries = entries.filter(e => e[1] == null)
@@ -97,8 +88,8 @@ export default class DynamoDB extends Database {
 
       this.db.update({
         ...params,
-        TableName: tableName,
-        Key: key,
+        TableName,
+        Key,
         ExpressionAttributeNames: Object.assign({}, ...entries.map((x) => ({ [`#${x[0]}`]: x[0] }))),
         UpdateExpression: updateExpression.join(" | ")
       }, (err, data) => {
@@ -106,23 +97,18 @@ export default class DynamoDB extends Database {
           reject(err)
           return
         }
-        // this.logActivity(tableName, 'UPDATE', { ...key, ...args })
         resolve(data)
       })
     })
   }
 
-  delete(tableName: string, key: Key): Promise<void> {
+  delete(TableName: string, Key: Key): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.db.delete({
-        TableName: tableName,
-        Key: key
-      }, (err, _data) => {
+      this.db.delete({ TableName, Key }, (err, _data) => {
         if (err) {
           reject(err)
           return
         }
-        // this.logActivity(tableName, 'DELETE', { ...key })
         resolve()
       })
     })
@@ -132,7 +118,7 @@ export default class DynamoDB extends Database {
     return new Promise((resolve, reject) => {
       this.db.batchWrite({
         RequestItems: {
-         [TableName]: PutItems.map((Item) => ({ PutRequest: { Item } }))
+          [TableName]: PutItems.map((Item) => ({ PutRequest: { Item } }))
         }
       }, (err, _data) => {
         if (err) reject(err)
