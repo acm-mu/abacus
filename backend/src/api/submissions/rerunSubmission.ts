@@ -19,7 +19,7 @@ export const rerunSubmission = async (req: Request, res: Response) => {
     return
   }
 
-  const submission = await contest.db.scan('submission', { args: matchedData(req) })
+  const submission = await contest.get_submissions({ args: matchedData(req) })
   if (submission) {
     try {
       const data = await contest.invoke('PistonRunner', {
