@@ -1,7 +1,7 @@
 import { Clarification, Problem, Settings, Submission, User } from "abacus";
 import { Lambda } from "aws-sdk";
 import { Database } from "../services";
-import { MongoDB } from "../services/db";
+import { PostgreSQL } from "../services/db";
 
 class ContestService {
   db: Database;
@@ -12,7 +12,7 @@ class ContestService {
   }
 
   init_aws() {
-    this.db = new MongoDB();
+    this.db = new PostgreSQL();
     this.lambda = new Lambda();
   }
 
