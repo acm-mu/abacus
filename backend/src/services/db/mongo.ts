@@ -60,7 +60,7 @@ export default class MongoDB extends Database {
 
   update(TableName: string, Key: Key, Item: Item): Promise<Item> {
     return new Promise(async (resolve, reject) => {
-      const unsetFields = Object.assign({}, ...Object.entries(Item).filter(obj => obj[1]).map(obj => ({[`${obj[0]}`]: 1})))
+      const unsetFields = Object.assign({}, ...Object.entries(Item).filter(obj => !obj[1]).map(obj => ({[`${obj[0]}`]: 1})))
 
       await this.db.collection(TableName).updateOne(Key, {
         $set: Item,
