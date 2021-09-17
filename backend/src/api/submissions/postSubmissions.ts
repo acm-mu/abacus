@@ -1,4 +1,3 @@
-import { Problem, User } from 'abacus';
 import axios from 'axios';
 import { Request, Response } from 'express';
 import { UploadedFile } from 'express-fileupload';
@@ -48,10 +47,15 @@ export const postSubmissions = async (req: Request, res: Response) => {
     return
   }
 
+  if (!req.user) {
+    res.status(401).send({ message: "Your credentials could not be recognized!" })
+    return
+  }
+
   try {
     const item = matchedData(req)
 
-    const user = await contest.getItem('user', { uid: req.user?.uid }) as unknown as User
+    const user = await contest.get_user(req.user?.uid)
     if (!user) {
       res.status(401).send({ message: "Your credentials could not be recognized!" })
       return
@@ -62,7 +66,7 @@ export const postSubmissions = async (req: Request, res: Response) => {
       return
     }
 
-    const problem = await contest.getItem('problem', { pid: item.pid }) as unknown as Problem
+    const problem = await contest.get_problem(item.pid)
     if (!problem) {
       res.status(400).send({ message: "Problem does not exist!" })
       return
@@ -72,27 +76,27 @@ export const postSubmissions = async (req: Request, res: Response) => {
       return
     }
 
-    const settings = await contest.get_settings()
+    const { start_date, end_date, practice_start_date, practice_end_date } = await contest.get_settings()
     const now = Date.now()
     if (problem.practice) {
-      if (now < settings.practice_start_date * 1000) {
+      if (now < practice_start_date * 1000) {
         res.status(403).send({ message: "The practice period has not yet begun!" })
         return
-      } else if (now > settings.practice_end_date * 1000) {
+      } else if (now > practice_end_date * 1000) {
         res.status(403).send({ message: "Cannot submit after the practice period has finished!" })
         return
       }
     } else {
-      if (now < settings.start_date * 1000) {
+      if (now < start_date * 1000) {
         res.status(403).send({ message: "The competition has not yet begun!" })
         return
-      } else if (now > settings.end_date * 1000) {
+      } else if (now > end_date * 1000) {
         res.status(403).send({ message: "Cannot submit after the competition has finished!" })
         return
       }
     }
 
-    const submissions = await contest.scanItems('submission', { args: { tid: req.user?.uid, pid: item.pid } })
+    const submissions = await contest.get_submissions({ tid: req.user?.uid, pid: item.pid })
 
     if (submissions) {
       for (const submission of submissions) {
@@ -164,7 +168,7 @@ export const postSubmissions = async (req: Request, res: Response) => {
       }
     }
 
-    await contest.putItem('submission', submission)
+    await contest.create_submission(submission)
 
     io.emit('new_submission', { sid: submission.sid })
 

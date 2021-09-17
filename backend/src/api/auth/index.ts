@@ -9,5 +9,4 @@ const auth = Router()
 auth.get('/auth', isAuthenticated, getAuth)
 auth.post('/auth', checkSchema(postSchema), postAuth)
 
-
 export default auth

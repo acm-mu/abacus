@@ -1,7 +1,7 @@
-import { createHash } from 'crypto'
+import { createHash } from 'crypto';
 import { Request, Response } from 'express'
 import { matchedData, ParamSchema, validationResult } from 'express-validator'
-import contest from '../../abacus/contest'
+import { contest } from '../../abacus'
 import jwt from 'jsonwebtoken';
 
 export const schema: Record<string, ParamSchema> = {
@@ -31,7 +31,7 @@ export const postAuth = async (req: Request, res: Response) => {
   bodyData.password = createHash('sha256').update(bodyData.password).digest('hex')
 
   try {
-    const users = await contest.scanItems('user', { args: bodyData })
+    const users = await contest.get_users(bodyData)
     if (!users?.length) {
       res.status(400).send({ message: "Hmmm... We can't find a user with that username and password!" })
       return
@@ -43,9 +43,9 @@ export const postAuth = async (req: Request, res: Response) => {
       password: user.password
     }, process.env.ACCESS_TOKEN_SECRET || '')
 
-    delete user.password
+    const {password, ...responseUser} = user
 
-    res.send({ accessToken, ...user })
+    res.send({ accessToken, ...responseUser })
   } catch (err) {
     console.error(err)
     res.sendStatus(500)

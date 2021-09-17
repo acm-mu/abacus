@@ -1,4 +1,3 @@
-import { Problem } from 'abacus';
 import archiver from 'archiver';
 import { Request, Response } from 'express';
 import { matchedData, ParamSchema, validationResult } from "express-validator";
@@ -31,7 +30,7 @@ export const downloadFiles = async (req: Request, res: Response) => {
   const { pid } = matchedData(req)
 
   try {
-    const problem = await contest.getItem('problem', { pid }) as unknown as Problem
+    const problem = await contest.get_problem(pid)
     if (problem.skeletons) {
       const archive = archiver('zip')
       for (const skeleton of problem.skeletons) {

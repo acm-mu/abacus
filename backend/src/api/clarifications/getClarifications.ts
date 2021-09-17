@@ -1,7 +1,8 @@
 import { Clarification, User } from "abacus";
 import { Request, Response } from "express";
 import { matchedData, ParamSchema, validationResult } from "express-validator";
-import contest, { transpose } from "../../abacus/contest";
+import { transpose } from "../../utils";
+import { contest } from "../../abacus";
 
 export const schema: Record<string, ParamSchema> = {
   cid: {
@@ -71,16 +72,16 @@ export const getClarifications = async (req: Request, res: Response) => {
   }
 
   const query = matchedData(req)
-  const users = transpose(await contest.scanItems('user'), 'uid')
+  const users = transpose(await contest.get_users(), 'uid') as Record<string, User>
 
   try {
-    let clarifications: any = await contest.scanItems('clarification')
+    let clarifications = await contest.get_clarifications()
     if (clarifications.length == 0) {
       res.sendStatus(404)
       return
     }
 
-    clarifications = clarifications.map((clarification: any) => {
+    clarifications = clarifications.map(clarification => {
       const user = users[clarification.uid]
       return {
         ...clarification,
@@ -95,14 +96,13 @@ export const getClarifications = async (req: Request, res: Response) => {
       }
     })
 
-    const map = transpose(clarifications.filter((clarification: any) =>
+    const map = transpose(clarifications.filter(clarification =>
       clarification.parent == undefined && hasAccessTo(clarification, req.user) && filterQuery(clarification, query)
-    ), 'cid')
+    ), 'cid') as Record<string, Clarification>
 
     for (const clarification of clarifications)
-      if (clarification.parent != undefined)
-        if (clarification.parent in map) // inherently has access to
-          map[clarification.parent].children.push(clarification)
+      if (clarification.parent !== undefined && clarification.parent in map)
+        map[clarification.parent].children?.push(clarification)
 
     res.send(map)
   } catch (err) {

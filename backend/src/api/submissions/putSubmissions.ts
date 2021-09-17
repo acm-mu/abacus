@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import { matchedData, ParamSchema, validationResult } from "express-validator";
 import { io, sendNotification } from '../../server';
 import contest from '../../abacus/contest';
-import { Submission } from 'abacus';
 
 export const schema: Record<string, ParamSchema> = {
   sid: {
@@ -82,7 +81,7 @@ export const schema: Record<string, ParamSchema> = {
 }
 
 const notifyTeam = async (item: Record<string, any>) => {
-  const res = await contest.scanItems('submission', { args: { sid: item.sid } })
+  const res = await contest.get_submissions({ sid: item.sid })
   if (!res) return
 
   sendNotification({
@@ -105,7 +104,7 @@ export const putSubmissions = async (req: Request, res: Response) => {
   const item = matchedData(req)
 
   try {
-    const submission = await contest.getItem('submission', { sid: item.sid }) as unknown as Submission
+    const submission = await contest.get_submission(item.id)
 
     if (item.claimed !== undefined && submission.claimed !== undefined) { // Trying to change a claimed submission
       if (req.user?.role !== 'admin' && item.claimed !== null) {
@@ -114,7 +113,7 @@ export const putSubmissions = async (req: Request, res: Response) => {
       }
     }
 
-    await contest.updateItem('submission', { sid: item.sid }, item)
+    await contest.update_submission(item.sid , item)
 
     if (item.released == true) notifyTeam(item)
 

@@ -11,7 +11,7 @@ declare module "abacus" {
     practice_start_date: number;
     practice_end_date: number;
   }
-  export interface Submission {
+  export interface Submission extends Record<string, unknown> {
     sid: string;
     date: number;
     filename: string;
@@ -32,7 +32,7 @@ declare module "abacus" {
     viewed?: boolean;
     flagged?: string;
   }
-  export interface Problem {
+  export interface Problem extends Record<string, unknown> {
     pid: string;
     practice?: boolean;
     id: string;
@@ -44,7 +44,7 @@ declare module "abacus" {
     skeletons?: Skeleton[];
     tests: Test[];
   }
-  export interface User {
+  export interface User extends Record<string, unknown> {
     uid: string;
     role: string;
     username: string;
@@ -54,23 +54,37 @@ declare module "abacus" {
     school?: string;
     disabled?: boolean;
   }
-  export interface Test {
+  export interface Test extends Record<string, unknown> {
     in: string;
     out: string;
     result: string;
   }
-  export interface Skeleton {
+  export interface Skeleton extends Record<string, unknown> {
     language: string;
     source: string;
     file_name: string;
   }
+  export interface ProblemScore extends Record<string, unknown> {
+    num_submissions: number;
+    problem_score: number;
+    solved: boolean;
+    submissions: Submission[];
+  }
+  export interface StandingsUser extends Record<string, unknown> {
+    display_name: string;
+    uid: string;
+    username: string;
+    solved: number;
+    time: number;
+    problems: { [key: string]: ProblemScore };
+  }
 
-  export interface Context {
+  export interface Context extends Record<string, unknown> {
     type: 'pid' | 'cid' | 'sid';
     id: string;
   }
 
-  export interface Clarification {
+  export interface Clarification extends Record<string, unknown> {
     cid: string;
     body: string;
     uid: string;
@@ -81,9 +95,10 @@ declare module "abacus" {
     type?: string;
     title?: string;
     context?: Context;
+    children?: Clarification[]
   }
 
-  export interface Notification {
+  export interface Notification extends Record<string, unknown> {
     header?: string;
     to?: string;
     content: string;
@@ -91,6 +106,4 @@ declare module "abacus" {
     context?: Context;
     type?: 'success' | 'warning' | 'error';
   }
-
-  export interface Args { [key: string]: unknown }
 }

@@ -1,9 +1,9 @@
-import { Settings, User } from 'abacus';
-import { AttributeMap } from 'aws-sdk/clients/dynamodb';
+import { Problem, Settings, User } from 'abacus';
 import { Request, Response } from 'express';
 import { matchedData, ParamSchema, validationResult } from "express-validator";
+import { contest } from '../../abacus';
+import { transpose } from '../../utils';
 import { authenticate, userHasRole } from '../../abacus/authlib';
-import contest, { transpose } from '../../abacus/contest';
 
 export const schema: Record<string, ParamSchema> = {
   pid: {
@@ -48,7 +48,7 @@ export const schema: Record<string, ParamSchema> = {
   }
 }
 
-const showToUser = (user: User | undefined, problem: AttributeMap, settings: Settings): boolean => {
+const showToUser = (user: User | undefined, problem: Problem, settings: Settings): boolean => {
   const now = Date.now() / 1000
 
   if (userHasRole(user, 'admin')) return true
@@ -92,7 +92,7 @@ export const getProblems = async (req: Request, res: Response) => {
   try {
     const settings = await contest.get_settings()
 
-    let problems = await contest.scanItems('problem', { args: query, columns })
+    let problems = await contest.get_problems(query, columns)
     problems = problems?.filter(problem => showToUser(user, problem, settings))
     res.send(transpose(problems, 'pid'))
   } catch (err) {

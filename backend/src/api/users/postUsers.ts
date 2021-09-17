@@ -54,7 +54,7 @@ export const postUsers = async (req: Request, res: Response) => {
   item.username = item.username.toLowerCase()
   item.password = createHash('sha256').update(item.password).digest('hex')
 
-  const users = await contest.scanItems('user', { args: { username: item.username } }) || {}
+  const users = await contest.get_users({ username: item.username })
 
   if ((item.role == 'team' || item.role == 'judge') && item.division == undefined) {
     res.status(400).json({ message: 'String division is not provided!' })
@@ -68,7 +68,7 @@ export const postUsers = async (req: Request, res: Response) => {
   item.uid = uuidv4().replace(/-/g, '')
 
   try {
-    await contest.putItem('user', item)
+    await contest.create_user(item)
     res.send(item)
   } catch (err) {
     res.sendStatus(500)
