@@ -9,4 +9,4 @@ RUN yarn --silent
 
 COPY . .
 
-CMD ["yarn", "start"]
+CMD ["yarn", "dev"]

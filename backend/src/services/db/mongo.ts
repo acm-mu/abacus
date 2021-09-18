@@ -12,11 +12,11 @@ export default class MongoDB extends Database {
   constructor() {
     super()
 
-    const {MONGO_HOST, MONGO_USER, MONGO_PASS, MONGO_DBNAME} = process.env
+    const { MONGO_HOST, MONGO_USER, MONGO_PASS, MONGO_DBNAME } = process.env
     const url = `mongodb://${MONGO_USER}:${MONGO_PASS}@${MONGO_HOST}/${MONGO_DBNAME}`
 
     MongoClient.connect(url, (err: any, db) => {
-      if (err) throw err;
+      if (err) throw err
       if (!db) throw new Error("Could not connect to MongoDB database")
       this.db = db.db("abacus")
     })
@@ -60,7 +60,7 @@ export default class MongoDB extends Database {
 
   update(TableName: string, Key: Key, Item: Item): Promise<Item> {
     return new Promise(async (resolve, reject) => {
-      const unsetFields = Object.assign({}, ...Object.entries(Item).filter(obj => !obj[1]).map(obj => ({[`${obj[0]}`]: 1})))
+      const unsetFields = Object.assign({}, ...Object.entries(Item).filter(obj => !obj[1]).map(obj => ({ [`${obj[0]}`]: 1 })))
 
       await this.db.collection(TableName).updateOne(Key, {
         $set: Item,

@@ -2,17 +2,14 @@ version: "3.8"
 services:
   mongo:
     container_name: mongo
-    image: mongo
     restart: unless-stopped
-    environment:
-      - MONGO_INITDB_DATABASE=abacus
-      - MONGO_INITDB_ROOT_USERNAME=username
-      - MONGO_INITDB_ROOT_PASSWORD=password
+    build:
+      context: .docker
+      dockerfile: Dockerfile.mongo
     volumes:
-      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
       - ./mongo-volume:/data/db
     ports:
-      - "27017-27019:27017-27019"
+      - 27017:27017
   piston:
     image: ghcr.io/engineer-man/piston
     container_name: piston
@@ -26,8 +23,8 @@ services:
     tmpfs:
       - /piston/jobs:exec
       - /tmp:exec
-  backend:
-    container_name: backend
+  server:
+    container_name: server
     restart: unless-stopped
     build:
       context: backend
@@ -42,8 +39,8 @@ services:
       - "80:80"
     depends_on:
       - mongo
-  frontend:
-    container_name: frontend
+  app:
+    container_name: app
     restart: unless-stopped
     build:
       context: frontend
@@ -53,4 +50,4 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - backend
+      - server
