@@ -3,6 +3,7 @@ services:
   mongo:
     container_name: mongo
     image: mongo
+    restart: unless-stopped
     environment:
       - MONGO_INITDB_DATABASE=abacus
       - MONGO_INITDB_ROOT_USERNAME=username
@@ -27,26 +28,28 @@ services:
       - /tmp:exec
   backend:
     container_name: backend
+    restart: unless-stopped
     build:
       context: backend
     environment:
-      - MONGO_HOST=localhost
+      - MONGO_HOST=mongo
       - MONGO_USER=username
       - MONGO_PASS=password
       - MONGO_DBNAME=abacus
     volumes:
-      - "./backend:/app"
+      - "./backend/src:/app/src"
     ports:
       - "80:80"
     depends_on:
       - mongo
   frontend:
     container_name: frontend
+    restart: unless-stopped
     build:
       context: frontend
     volumes:
-      - "./frontend/public:/app/public"
-      - "./frontend/src:/app/src"
+      - ./frontend/public:/app/public
+      - ./frontend/src:/app/src
     ports:
       - "3000:3000"
     depends_on:

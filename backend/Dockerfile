@@ -7,6 +7,8 @@ COPY yarn.lock .
 
 RUN yarn --silent
 
+RUN npm i -g nodemon
+
 COPY . .
 
 CMD ["yarn", "dev"]

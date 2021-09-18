@@ -1,0 +1,11 @@
+FROM mongo
+
+COPY ./init-mongo.js /docker-entrypoint-initdb.d/init-mongo.js:ro
+
+ENV MONGO_INITDB_DATABASE=abacus
+ENV MONGO_INITDB_ROOT_USERNAME=admin
+ENV MONGO_INITDB_ROOT_PASSWORD=password
+
+HEALTHCHECK --interval=10s --timeout=10s --start-period=40s --retries=5 CMD [ "echo 'db.runCommand("ping").ok' | mongo mongo:27017/test --quiet" ]
+
+EXPOSE 27017-27019

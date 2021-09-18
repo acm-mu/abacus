@@ -30,7 +30,7 @@ db.setting.insert({
   practice_name: "Local Environment [PRACTICE]",
   practice_start_date: `${(Date.now() / 1000)}`,
   practice_end_date: `${(Date.now() + (24 * 60 * 60 * 1000)) / 1000}`,
-  start_date: `${D(ate.now() + (24 * 60.5 * 60 * 1000)) / 1000}`,
+  start_date: `${(Date.now() + (24 * 60.5 * 60 * 1000)) / 1000}`,
   end_date: `${(Date.now() + (24 * 63.5 * 60 * 1000)) / 1000}`,
   points_per_no: "20",
   points_per_yes: "0",

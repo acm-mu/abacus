@@ -1,0 +1,31 @@
+# pull official base image
+FROM node as build
+
+# set working directory
+WORKDIR /app
+
+# install app dependencies
+COPY package.json ./
+COPY yarn.lock ./
+RUN yarn --silent
+RUN yarn add nodemon -g --silent
+
+# add app
+COPY . ./
+
+# production environment
+FROM build as production
+
+# add `/app/node_modules/.bin` to PATH
+ENV PATH /app/node_modules/.bin:$PATH
+
+# build app
+RUN yarn build
+
+EXPOSE 80
+
+# start app
+CMD ["node", "/app/build/server.js"]
+
+# build container: docker build -f Dockerfile.prod -t abacus-server:prod .
+# run container: docker run -it --rm -p 80:80 abacus-server:prod
