@@ -2,7 +2,6 @@
   "name": "frontend",
   "scripts": {
     "start": "react-scripts start",
-    "prettier": "./node_modules/.bin/prettier --write src",
     "build": "react-scripts build",
     "test": "echo 'Implement Me!'",
     "eject": "react-scripts eject"

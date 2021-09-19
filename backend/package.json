@@ -1,7 +1,6 @@
 {
   "scripts": {
     "dev": "nodemon --exec ts-node --files src/server.ts",
-    "prettier": "./node_modules/.bin/prettier --write src",
     "zip": "cp package.json dist/ && cd dist && zip -r backend .",
     "build": "tsc",
     "start": "node server.js"
