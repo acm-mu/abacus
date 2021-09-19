@@ -1,20 +1,22 @@
 {
-    "name": "abacus",
-    "version": "1.0.0",
-    "scripts": {
-        "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm start\" "
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/acm-mu/abacus.git"
-    },
-    "author": "",
-    "license": "ISC",
-    "bugs": {
-        "url": "https://github.com/acm-mu/abacus/issues"
-    },
-    "homepage": "https://github.com/acm-mu/abacus#readme",
-    "devDependencies": {
-        "concurrently": "^5.3.0"
-    }
+  "name": "abacus",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm start\" ",
+    "prettier": "./node_modules/.bin/prettier --write ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/acm-mu/abacus.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/acm-mu/abacus/issues"
+  },
+  "homepage": "https://github.com/acm-mu/abacus#readme",
+  "devDependencies": {
+    "concurrently": "^5.3.0",
+    "prettier": "^2.4.1"
+  }
 }
