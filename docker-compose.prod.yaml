@@ -9,7 +9,6 @@ services:
       dockerfile: Dockerfile.mongo
     volumes:
       - ./mongo-volume:/data/db
-    command: --bind_ip 0.0.0.0
     ports:
       - 27017:27017
   server:

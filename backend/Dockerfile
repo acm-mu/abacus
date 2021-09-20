@@ -7,7 +7,7 @@ COPY yarn.lock .
 
 RUN yarn --silent
 
-RUN npm i -g nodemon
+RUN yarn global add nodemon
 
 COPY . .
 
