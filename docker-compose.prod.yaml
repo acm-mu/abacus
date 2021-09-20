@@ -1,7 +1,7 @@
 version: "3.7"
 
 services:
-  mongo:
+  mongodb:
     container_name: mongo
     restart: unless-stopped
     build:
@@ -9,6 +9,7 @@ services:
       dockerfile: Dockerfile.mongo
     volumes:
       - ./mongo-volume:/data/db
+    command: --bind_ip 0.0.0.0
     ports:
       - 27017:27017
   server:
@@ -18,20 +19,20 @@ services:
       context: backend
       dockerfile: Dockerfile.prod
     environment:
-      - MONGO_HOST=mongo
+      - MONGO_HOST=mongodb
       - MONGO_USER=username
       - MONGO_PASS=password
       - MONGO_DBNAME=abacus
     ports:
       - "8080:80"
     depends_on:
-      - mongo
+      - mongodb
   app:
     container_name: app
     build:
       context: frontend
       dockerfile: Dockerfile.prod
     ports:
-      - "80:80"
+      - "8081:80"
     depends_on:
       - server
