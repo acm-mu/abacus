@@ -20,6 +20,7 @@ jobs:
           node-version: 12.x
 
       - uses: egordm/gha-yarn-node-cache@v1
+        working-directory: backend
 
       - name: Install dependencies from package.json
         run: yarn install
