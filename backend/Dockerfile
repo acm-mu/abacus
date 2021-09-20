@@ -1,14 +1,21 @@
+# pull official base image
 FROM node
 
+ENV CHOKIDAR_USEPOLLING true
+
+# set working directory
 WORKDIR /app
 
-COPY package.json .
-COPY yarn.lock .
-
+# install app dependencies
+COPY package.json ./
+COPY yarn.lock ./
 RUN yarn --silent
+RUN yarn global add nodemon --silent
 
-RUN yarn global add nodemon
+# add app
+COPY . ./
 
-COPY . .
+EXPOSE 80
 
+# run development server
 CMD ["yarn", "dev"]
