@@ -162,7 +162,7 @@ const Users = (): JSX.Element => {
   if (error) return <StatusMessage message={{ type: 'error', message: error }} />
 
   return <>
-    <Helmet> <title>Abacus | Users</title> </Helmet>
+    <Helmet><title>Abacus | Users</title></Helmet>
     <CreateUser trigger={<Button content="Add User" primary />} callback={createUserCallback} />
     <Button as={Link} to={'/admin/users/upload'} content="Upload Users" />
     <Button loading={isImporting} disabled={isImporting} content="Import Users" onClick={importUsers} />

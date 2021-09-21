@@ -96,7 +96,7 @@ const submission = (): JSX.Element => {
   }
 
   return <>
-    <Helmet> <title>Abacus | Judge Submission</title> </Helmet>
+    <Helmet><title>Abacus | Judge Submission</title></Helmet>
 
     <Button content='Back' icon='arrow left' labelPosition='left' onClick={history.goBack} />
     {submission.viewed ?

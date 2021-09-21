@@ -38,7 +38,7 @@ const Submissions = (): JSX.Element => {
   if (user?.division != 'gold' && user?.role != 'admin') return <Unauthorized />
 
   return <>
-    <Helmet> <title>Abacus | Gold Submissions</title> </Helmet>
+    <Helmet><title>Abacus | Gold Submissions</title></Helmet>
     <Countdown />
     <Block size='xs-12' transparent>
       <Table>

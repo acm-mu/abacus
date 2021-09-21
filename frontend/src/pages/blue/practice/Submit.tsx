@@ -139,7 +139,7 @@ const SubmitPractice = (): JSX.Element => {
   if (!problem) return <NotFound />
 
   return <>
-    <Helmet> <title>Abacus | Submit Practice {problem.id}</title> </Helmet>
+    <Helmet><title>Abacus | Submit Practice {problem.id}</title></Helmet>
     <Countdown />
     <Block transparent size='xs-12'>
       <Breadcrumb>

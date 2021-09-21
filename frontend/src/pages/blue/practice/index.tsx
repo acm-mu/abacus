@@ -25,7 +25,7 @@ const Practice = (): JSX.Element => {
   const submissions: { [key: string]: Submission } = localStorage.submissions ? JSON.parse(localStorage.submissions) : {}
   const [isLoading, setLoading] = useState(true)
 
-  const helmet = <Helmet> <title>Abacus | Practice</title> </Helmet>
+  const helmet = <Helmet><title>Abacus | Practice</title></Helmet>
 
   const loadProblems = async () => {
     const response = await fetch('/problems/index.json')

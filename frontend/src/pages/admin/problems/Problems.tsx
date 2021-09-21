@@ -119,7 +119,7 @@ const Problems = (): JSX.Element => {
   if (isLoading) return <PageLoading />
 
   return <>
-    <Helmet> <title>Abacus | Admin Problems</title> </Helmet>
+    <Helmet><title>Abacus | Admin Problems</title></Helmet>
 
     <Button as={Link} to='/admin/problems/new' primary content="Add Problem" />
     <Link to='/admin/problems/upload'><Button content="Upload Problems" /></Link>

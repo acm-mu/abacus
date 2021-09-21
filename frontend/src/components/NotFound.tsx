@@ -3,7 +3,7 @@ import notfound from "assets/404.png"
 import { Helmet } from "react-helmet";
 
 const NotFound = (): JSX.Element => <>
-  <Helmet> <title>Abacus | Not Found</title> </Helmet>
+  <Helmet><title>Abacus | Not Found</title></Helmet>
   <img
     src={notfound}
     width="100%"

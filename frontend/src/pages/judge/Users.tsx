@@ -60,7 +60,7 @@ const Teams = (): JSX.Element => {
   if (error) return <StatusMessage message={{ type: 'error', message: error }} />
 
   return <>
-    <Helmet> <title>Abacus | Users</title> </Helmet>
+    <Helmet><title>Abacus | Users</title></Helmet>
     <Table sortable>
       <Table.Header>
         <Table.Row>

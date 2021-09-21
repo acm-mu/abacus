@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet';
 
 const About = (): JSX.Element => (
   <>
-    <Helmet> <title>Abacus | About</title> </Helmet>
+    <Helmet><title>Abacus | About</title></Helmet>
 
     <Block size="xs-12">
       <h1>About the Marquette ACM/UPE Programming Competition</h1>

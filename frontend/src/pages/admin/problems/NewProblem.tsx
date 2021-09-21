@@ -29,7 +29,7 @@ const NewProblem = (): JSX.Element => {
   }
 
   return <>
-    <Helmet>  <title>Abacus | Admin New Problem</title> </Helmet>
+    <Helmet> <title>Abacus | Admin New Problem</title></Helmet>
     <h1>New Problem</h1>
     <StatusMessage message={message} onDismiss={() => setMessage(undefined)} />
 

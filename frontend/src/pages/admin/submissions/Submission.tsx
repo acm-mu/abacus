@@ -160,7 +160,7 @@ const submission = (): JSX.Element => {
 
 
   return <>
-    <Helmet> <title>Abacus | Admin Submission</title> </Helmet>
+    <Helmet><title>Abacus | Admin Submission</title></Helmet>
 
     <Button content='Back' icon='arrow left' labelPosition='left' onClick={history.goBack} />
     <Button disabled={isRerunning} loading={isRerunning} content="Rerun" icon="redo" labelPosition="left" onClick={rerun} />

@@ -14,20 +14,20 @@ const Rules = (): JSX.Element => {
     const hasAccessTo = () => user?.role == 'admin' || user?.division == 'gold'
 
     return <>
-        <Helmet> <title>Abacus | Gold Rules</title> </Helmet>
+        <Helmet><title>Abacus | Gold Rules</title></Helmet>
         <Block size='xs-12'>
             <h1>Rules</h1>
             <p><em><b>
                 Please read over these rules, in their entirety, before beginning the competition.
                 We assume that a submission of a problem is an acceptance to adhere to these rules.
-        </b></em></p>
+            </b></em></p>
 
             <Divider />
 
             <h2>Competition Rules</h2>
             <p>
                 The following is a list of rules regarding what you can and cannot do during the competition:
-        </p>
+            </p>
             <ul>
                 <li>You <b>may</b> use outside sources (the internet, image editing tools, etc.) to create sprites, sounds, and other materials for your project.</li>
                 <li>You <b>may <em>not</em></b> take code from public projects on the Scratch website, or projects you have worked on outside of the competition.</li>
@@ -42,7 +42,7 @@ const Rules = (): JSX.Element => {
             <h3><b>
                 Marquette ACM adopts a zero tolerance policy when it comes to cheating.
                 If you are caught violating any of the rules, your team will be removed and disqualified from the competition without a refund.
-        </b></h3>
+            </b></h3>
 
             <Divider />
 

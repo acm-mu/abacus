@@ -11,7 +11,7 @@ const Home = (): JSX.Element => {
   const [isDismissed, setDismissed] = useState<boolean>(localStorage.dismissedRules)
 
   return <>
-    <Helmet> <title>Abacus | Blue</title> </Helmet>
+    <Helmet><title>Abacus | Blue</title></Helmet>
     {!isDismissed ?
       <Message icon color='yellow' onDismiss={() => {
         localStorage.dismissedRules = true
@@ -21,7 +21,7 @@ const Home = (): JSX.Element => {
         <Message.Content>
           <Message.Header>Read the Rules!</Message.Header>
           Please read the rules before beginning the competition. You can find them on the <Link to={'/blue/rules'}>Rules</Link> page.
-          </Message.Content>
+        </Message.Content>
       </Message> :
       <></>}
     <Block size='xs-12'>
@@ -37,7 +37,7 @@ const Home = (): JSX.Element => {
         Teams of three or four students will have three hours and two computers to work collaboratively to solve problems
         similar in scope to Advanced Placement Computer Science exam questions. Points will be awarded based on the number of
         problems correctly solved and the time taken to solve, with appropriate penalties for incorrect submissions.
-    </p>
+      </p>
 
       <p>
         The International Collegiate Programming Contest is an algorithmic programming contest for college students. Teams of
@@ -45,7 +45,7 @@ const Home = (): JSX.Element => {
         innovation, and the ability to perform under pressure. Through training and competition, teams challenge each other to
         raise the bar on the possible. Quite simply, it is the oldest, largest, and most prestigious programming contest in
         the world.
-    </p>
+      </p>
     </Block>
   </>
 }

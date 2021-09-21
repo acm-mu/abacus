@@ -151,7 +151,7 @@ const submission = (): JSX.Element => {
 
 
   return <>
-    <Helmet> <title>Abacus | Judge Submission</title> </Helmet>
+    <Helmet><title>Abacus | Judge Submission</title></Helmet>
 
     {error && <StatusMessage message={{ type: 'error', message: error }} />}
 

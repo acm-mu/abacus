@@ -37,7 +37,7 @@ const PracticeProblem = ({ submissions }: PracticeProblemProps): JSX.Element => 
   if (!problem) return <NotFound />
 
   return <>
-    <Helmet> <title>Abacus | {problem.name}</title> </Helmet>
+    <Helmet><title>Abacus | {problem.name}</title></Helmet>
     <Countdown />
     <Block transparent size='xs-12'>
       <Breadcrumb>

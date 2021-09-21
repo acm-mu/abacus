@@ -36,7 +36,7 @@ const Home = (): JSX.Element => {
         setLoading(false)
     }
 
-    const helmet = <Helmet> <title>Abacus | Eagle Problem</title> </Helmet>
+    const helmet = <Helmet><title>Abacus | Eagle Problem</title></Helmet>
 
     if (isLoading) return <PageLoading />
     if (user?.division != 'eagle' && user?.role != 'admin') return <Unauthorized />

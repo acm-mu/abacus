@@ -135,7 +135,7 @@ const ClarificationPage = (): JSX.Element => {
   if (!clarification) return <NotFound />
 
   return <>
-    <Helmet> <title>Abacus | Admin {clarification.title}</title> </Helmet>
+    <Helmet><title>Abacus | Admin {clarification.title}</title></Helmet>
     <h1 style={{ display: 'inline' }}>{clarification.title} {!clarification.open ? <Label color='red' content="Closed" className='closed' /> : <Label color='green' content='Active' className='active' />}</h1>
     <Block transparent size='xs-12'>
       <Button content='Back' icon='arrow left' labelPosition='left' onClick={goBack} />

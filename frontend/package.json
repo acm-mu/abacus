@@ -6,7 +6,7 @@
     "build": "react-scripts build",
     "test": "echo 'Implement Me!'",
     "eject": "react-scripts eject",
-    "clean": "node_modules/.bin/prettier --write src/**/*.{ts,scss,tsx}",
+    "clean": "node_modules/.bin/prettier --write .",
     "lint": "node_modules/.bin/eslint"
   },
   "eslintConfig": {

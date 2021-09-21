@@ -97,7 +97,7 @@ const EditUser = (): JSX.Element => {
   if (!user) return <NotFound />
 
   return <>
-    <Helmet> <title>Abacus | Edit User</title> </Helmet>
+    <Helmet><title>Abacus | Edit User</title></Helmet>
     <h1 className='justify-center'>
       {user.display_name}
       {user.disabled && <Label color='red'>Disabled</Label>}

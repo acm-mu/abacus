@@ -96,7 +96,7 @@ const Settings = (): JSX.Element => {
   if (isLoading) return <PageLoading />
 
   return <>
-    <Helmet> <title>Abacus | Admin Settings</title> </Helmet>
+    <Helmet><title>Abacus | Admin Settings</title></Helmet>
     <Block center size='xs-6'>
       <StatusMessage message={message} onDismiss={() => setMessage(undefined)} />
       <Form onSubmit={handleSubmit}>

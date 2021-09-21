@@ -92,7 +92,7 @@ const Submit = (): JSX.Element => {
   if (user?.division != 'gold' && user?.role != 'admin') return <Unauthorized />
 
   return <>
-    <Helmet> <title>Abacus | Gold Submit</title> </Helmet>
+    <Helmet><title>Abacus | Gold Submit</title></Helmet>
     <Block transparent size='xs-12'>
       <Breadcrumb>
         <Breadcrumb.Section as={Link} to='/gold/problems' content="Problems" />

@@ -148,7 +148,7 @@ const Submit = (): JSX.Element => {
   }
 
   return <>
-    <Helmet> <title>Abacus | Blue Submit</title> </Helmet>
+    <Helmet><title>Abacus | Blue Submit</title></Helmet>
     <Countdown />
     <Block transparent size='xs-12'>
       <Breadcrumb>

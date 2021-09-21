@@ -81,7 +81,7 @@ const Clarifications = (): JSX.Element => {
   if (isLoading) return <PageLoading />
 
   return <>
-    <Helmet> <title>Abacus | Admin Clarifications</title> </Helmet>
+    <Helmet><title>Abacus | Admin Clarifications</title></Helmet>
 
     <ClarificationModal trigger={<Button content="Create Clarification" />} callback={loadClarifications} />
     {clarifications.filter(clarification => clarification.checked).length ?

@@ -11,7 +11,7 @@ const Help = (): JSX.Element => {
 
   return (
     <>
-      <Helmet> <title>Abacus | Help</title> </Helmet>
+      <Helmet><title>Abacus | Help</title></Helmet>
 
       <Block size="xs-12">
         <h1>Help Page</h1>
@@ -32,7 +32,7 @@ const Help = (): JSX.Element => {
             onClick={handleClick}
           >
             <Icon name='dropdown' />
-          What is Abacus?
+            What is Abacus?
           </Accordion.Title>
           <Accordion.Content active={activeIndex === 0}>
             <p>
@@ -49,7 +49,7 @@ const Help = (): JSX.Element => {
             onClick={handleClick}
           >
             <Icon name='dropdown' />
-          How does Abacus work?
+            How does Abacus work?
           </Accordion.Title>
           <Accordion.Content active={activeIndex === 1}>
             <p>
@@ -68,7 +68,7 @@ const Help = (): JSX.Element => {
             onClick={handleClick}
           >
             <Icon name='dropdown' />
-          What is required to use the platform?
+            What is required to use the platform?
           </Accordion.Title>
           <Accordion.Content active={activeIndex === 2}>
             <p>
@@ -94,7 +94,7 @@ const Help = (): JSX.Element => {
             onClick={handleClick}
           >
             <Icon name='dropdown' />
-          How can I get familiar with Abacus before the day of the competition?
+            How can I get familiar with Abacus before the day of the competition?
           </Accordion.Title>
           <Accordion.Content active={activeIndex === 3}>
             <p>
@@ -113,7 +113,7 @@ const Help = (): JSX.Element => {
             onClick={handleClick}
           >
             <Icon name='dropdown' />
-          What happens if I have technical difficulties on the day of the competition?
+            What happens if I have technical difficulties on the day of the competition?
           </Accordion.Title>
           <Accordion.Content active={activeIndex === 4}>
             <p>
@@ -127,7 +127,7 @@ const Help = (): JSX.Element => {
             onClick={handleClick}
           >
             <Icon name='dropdown' />
-          As a teacher, can I see all of my teams and their progress?
+            As a teacher, can I see all of my teams and their progress?
           </Accordion.Title>
           <Accordion.Content active={activeIndex === 5}>
             <p>

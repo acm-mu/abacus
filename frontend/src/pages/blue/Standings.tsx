@@ -16,7 +16,7 @@ const Standings = (): JSX.Element => {
   const [isLoading, setLoading] = useState(true)
   const [isMounted, setMounted] = useState(true)
 
-  const helmet = <Helmet> <title>Abacus | Blue Standings</title> </Helmet>
+  const helmet = <Helmet><title>Abacus | Blue Standings</title></Helmet>
 
   const loadData = async () => {
     const response = await fetch(`${config.API_URL}/standings?division=blue`)

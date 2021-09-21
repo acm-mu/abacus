@@ -87,7 +87,7 @@ const UploadProblems = (): JSX.Element => {
   }
 
   return <>
-    <Helmet> <title>Abacus | Admin Upload Problems</title>  </Helmet>
+    <Helmet><title>Abacus | Admin Upload Problems</title> </Helmet>
 
     <Block size='xs-12' transparent>
       <h1>Upload Problems</h1>

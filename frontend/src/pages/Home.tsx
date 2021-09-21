@@ -40,13 +40,13 @@ const Home = (): JSX.Element => {
 
   return (
     <>
-      <Helmet> <title>Abacus</title> </Helmet>
+      <Helmet><title>Abacus</title></Helmet>
       <Message icon color='green'>
         <Icon name='trophy' />
         <Message.Content>
           <Message.Header>Final Standings</Message.Header>
           Thank you to everyone who participated and congratulations to the winners! View the full standings for the Blue division <Link to={'/blue/standings'} className='banner-link'>here</Link> and the Gold division <Link to={'/gold/standings'} className='banner-link'>here</Link>.
-          </Message.Content>
+        </Message.Content>
       </Message>
       <Countdown />
       <Block size='xs-12'>

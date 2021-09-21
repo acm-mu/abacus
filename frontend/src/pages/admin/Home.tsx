@@ -37,7 +37,7 @@ const Home = (): JSX.Element => {
 
   const flaggedSubmissions = useMemo(() => submissions?.filter(({ flagged }) => flagged !== undefined), [submissions])
 
- 
+
 
   const categories: string[] = []
   if (settings?.start_date && settings?.end_date) {
@@ -92,7 +92,7 @@ const Home = (): JSX.Element => {
   if (isLoading) return <PageLoading />
 
   return <>
-    <Helmet> <title>Abacus | Admin</title> </Helmet>
+    <Helmet><title>Abacus | Admin</title></Helmet>
     <Block size='xs-12'>
       <h1>Admin Dashboard</h1>
     </Block>
@@ -101,7 +101,7 @@ const Home = (): JSX.Element => {
       <h1>Submission Breakdown</h1>
       {submissions?.length ?
 
-       <p>There are submissions!</p>
+        <p>There are submissions!</p>
         : <p>There are not any submissions yet!</p>}
     </Block>
 

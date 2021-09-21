@@ -58,7 +58,7 @@ const EditProblems = (): JSX.Element => {
   if (isLoading) return <PageLoading />
 
   return <>
-    <Helmet> <title>Abacus | Admin Edit Problem</title> </Helmet>
+    <Helmet><title>Abacus | Admin Edit Problem</title></Helmet>
 
     <h1>{problem?.name}</h1>
     <StatusMessage message={message} onDismiss={() => setMessage(undefined)} />

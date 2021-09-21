@@ -59,7 +59,7 @@ const Problems = (): JSX.Element => {
   if (isLoading) return <PageLoading />
 
   return <>
-    <Helmet> <title>Abacus | Proctor Problems</title> </Helmet>
+    <Helmet><title>Abacus | Proctor Problems</title></Helmet>
     <Block size='xs-12' transparent>
       <Table sortable>
         <Table.Header>

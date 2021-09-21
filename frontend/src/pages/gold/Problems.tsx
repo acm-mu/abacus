@@ -15,7 +15,7 @@ const Problems = (): JSX.Element => {
   const [problems, setProblems] = useState<Problem[]>()
   const [submissions, setSubmissions] = useState<{ [key: string]: Submission[] }>()
 
-  const helmet = <Helmet> <title>Abacus | Gold Problems</title> </Helmet>
+  const helmet = <Helmet><title>Abacus | Gold Problems</title></Helmet>
 
   useEffect(() => {
     loadProblems()

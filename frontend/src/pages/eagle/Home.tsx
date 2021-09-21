@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet';
 
 const Home = (): JSX.Element => {
 
-    const helmet = <Helmet> <title>Abacus | Eagle Division</title> </Helmet>
+    const helmet = <Helmet><title>Abacus | Eagle Division</title></Helmet>
 
     return (
         <>

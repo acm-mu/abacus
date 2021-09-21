@@ -46,7 +46,7 @@ const problem = (): JSX.Element => {
   if (!problem) return <NotFound />
 
   return <>
-    <Helmet> <title>Abacus | Proctor {problem.name}</title> </Helmet>
+    <Helmet><title>Abacus | Proctor {problem.name}</title></Helmet>
     <Countdown />
 
     <Menu attached='top' tabular>

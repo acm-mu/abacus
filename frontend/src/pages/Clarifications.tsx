@@ -18,7 +18,7 @@ const Clarifications = (): JSX.Element => {
   const [activeItem, setActiveItem] = useState<string>(cid || '')
   const [showClosed, setShowClosed] = useState(false)
 
-  const helmet = <Helmet> <title>Abacus | Clarifications</title> </Helmet>
+  const helmet = <Helmet><title>Abacus | Clarifications</title></Helmet>
 
   const loadClarifications = async (): Promise<{ [key: string]: Clarification }> => {
     let clarifications = {}
@@ -68,7 +68,7 @@ const Clarifications = (): JSX.Element => {
                   <Icon name='lock' />
                 }
               </Header>
-              {user?.uid == clarification.user.uid ? "You" : clarification.user.display_name} {' '}
+              {user?.uid == clarification.user.uid ? "You" : clarification.user.display_name}
               <Moment fromNow date={clarification.date * 1000} />
             </Menu.Item>)}
       </Menu>
