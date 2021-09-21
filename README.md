@@ -25,10 +25,10 @@ This Open Source competition judging software is designed for the [Marquette ACM
 #### Prerequisites
 
 - [Node.js](https://nodejs.org/en/)
+- [git](https://git-scm.com/)
 
 #### Installation
-
-- Clone this repo.
+- Clone this repo 
 - Navigate to the `backend` directory
 - Run `npm install` to install backend node dependencies
 - Navigate to `frontend` directory
@@ -39,7 +39,7 @@ This Open Source competition judging software is designed for the [Marquette ACM
 - After running the frontend (either way) the terminal should open a new web browser window to `localhost:3000`
 
 ### Creating a new branch
-- in your terminal, cd to the root of your abacus clone
+- in your terminal/powershell, cd to the root of your abacus clone
 - git checkout master
 - git pull 
 - git checkout -b initials-issue# (example - jd-101) 
