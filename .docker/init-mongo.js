@@ -13,10 +13,10 @@ db.createCollection('user')
 
 db.user.insert({
   uid: "b126d7588b184db7818693c2ab891887",
-  display_name: "Jack",
+  display_name: "Admin",
   password: "65df4b1116b849b2d02063932b1472a2c15545908d2bdb029c14bd710158c1e2",
   role: "admin",
-  username: "jack"
+  username: "admin"
 })
 
 db.createCollection('submission')
@@ -76,12 +76,15 @@ db.problem.insert({
     language: "java",
     source: "// Do NOT include a package statement at the top of your solution.\n\nimport java.util.Scanner;\n\npublic class PracticeProblem {\n\n    /*\n     * It is unnecessary to edit the \"main\" method of each problem's provided code\n     * skeleton. The main method is written for you in order to help you conform to\n     * input and output formatting requirements.\n     */\n    public static void main(String[] args) {\n        Scanner kb = new Scanner(System.in);\n        int numCases = kb.nextInt();\n        for (int iCase = 0; iCase < numCases; iCase++) {\n            int x = kb.nextInt();\n            boolean xIsOdd = isOdd(x);\n            if (xIsOdd) {\n                System.out.println(\"Odd\");\n            } else {\n                System.out.println(\"Even\");\n            }\n        }\n        kb.close();\n    }\n\n    public static boolean isOdd(int x) {\n        boolean result = false;\n\n        result = (x % 2 != 0);\n\n        return result;\n    }\n}"
   }],
-  tests: [{ in: "2\n1\n2",
+  tests: [{
+    in: "2\n1\n2",
     out: "Odd\nEven"
-  }, { in: "4\n0\n1\n2\n3",
+  }, {
+    in: "4\n0\n1\n2\n3",
     include: false,
     out: "Even\nOdd\nEven\nOdd"
-  }, { in: "3\n0\n1000\n555",
+  }, {
+    in: "3\n0\n1000\n555",
     include: false,
     out: "Even\nEven\nOdd"
   }]
