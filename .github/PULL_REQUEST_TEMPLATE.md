@@ -2,7 +2,7 @@
 
 <!-- Please include a summary of the change and which issue is fixed or feature request is implemented. Please also include relevant motivation and context. List any dependencies that are required for this change. -->
 
-Fixes # (issue number)
+Fixes issue #[Github issue number here](https://github.com/acm-mu/abacus/issues/187)
 
 ## Type of change
 
