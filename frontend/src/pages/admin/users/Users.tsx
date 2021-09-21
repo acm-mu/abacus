@@ -73,11 +73,7 @@ const Users = (): JSX.Element => {
   }
 
   const downloadUsers = () => {
-    const sanitized = JSON.stringify(
-      users.map(({ checked, ...user }) => user),
-      null,
-      '\t'
-    )
+    const sanitized = JSON.stringify(users as User[], null, '\t')
     saveAs(new File([sanitized], 'users.json', { type: 'text/json;charset=utf-8' }))
   }
 
