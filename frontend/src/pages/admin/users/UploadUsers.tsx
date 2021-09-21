@@ -56,7 +56,6 @@ const UploadUsers = (): JSX.Element => {
 
   const filterUser = (u1: UserItem, u2: User) => {
     if (!u2) return true
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { checked, ...user1 } = u1
     const { ...user2 } = u2
     if (user1.password) user1.password = createHash('sha256').update(user1.password).digest('hex')

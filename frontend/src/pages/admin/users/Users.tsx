@@ -73,7 +73,6 @@ const Users = (): JSX.Element => {
   }
 
   const downloadUsers = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const sanitized = JSON.stringify(
       users.map(({ checked, ...user }) => user),
       null,
