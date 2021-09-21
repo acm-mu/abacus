@@ -38,6 +38,13 @@ This Open Source competition judging software is designed for the [Marquette ACM
   - Open two terminals (or command prompt). In one terminal run `npm start` from the `frontend` directory and in the other terminal, run `npm run dev` from the `backend` directory.
 - After running the frontend (either way) the terminal should open a new web browser window to `localhost:3000`
 
-## TODO
+### Creating a new branch
+- in your terminal, cd to the root of your abacus clone
+- git checkout master
+- git pull 
+- git checkout -b initials-issue# (example - jd-101) 
+After doing this, you should have your own branch created, and can now start working on changes!
+
+## Project Board
 
 [View project board here](https://github.com/acm-mu/abacus/projects/1)
