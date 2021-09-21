@@ -57,9 +57,8 @@ const UploadProblems = (): JSX.Element => {
     return () => setMounted(false)
   }, [])
 
-  const filterProblem = (p1: ProblemItem, p2: Problem) => {
+  const filterProblem = (problem1: Problem, p2: Problem) => {
     if (!p2) return true
-    const { checked, ...problem1 } = p1
     const { ...problem2 } = p2
 
     return (
