@@ -1,7 +1,8 @@
 {
   "name": "frontend",
+  "license": "ISC",
   "scripts": {
-    "start": "react-scripts start",
+    "dev": "react-scripts start",
     "build": "react-scripts build",
     "test": "echo 'Implement Me!'",
     "eject": "react-scripts eject"

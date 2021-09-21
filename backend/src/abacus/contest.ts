@@ -8,10 +8,6 @@ class ContestService {
   lambda: Lambda;
 
   constructor() {
-    this.init_aws();
-  }
-
-  init_aws() {
     this.db = new MongoDB();
     this.lambda = new Lambda();
   }
