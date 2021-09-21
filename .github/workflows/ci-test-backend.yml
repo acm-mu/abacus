@@ -1,0 +1,21 @@
+name: Test Backend
+on:
+  push:
+    paths:
+      - "backend/**"
+    branches:
+      - "*"
+      - "!master"
+
+jobs:
+  test:
+    name: Test Backend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+      - uses: egordm/gha-yarn-node-cache@v1
+      - run: yarn install
+        working-directory: backend
+      - run: yarn build
+        working-directory: backend

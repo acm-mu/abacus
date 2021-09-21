@@ -1,0 +1,14 @@
+name: Lint Code
+on:
+  push:
+    paths: ["backend/**"]
+
+jobs:
+  eslint:
+    name: Lint Code
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+      - uses: bradennapier/eslint-plus-action@v3.4.2
