@@ -43,6 +43,7 @@ This Open Source competition judging software is designed for the [Marquette ACM
 - git checkout master
 - git pull 
 - git checkout -b initials-issue# (example - jd-101) 
+
 After doing this, you should have your own branch created, and can now start working on changes!
 
 ## Project Board
