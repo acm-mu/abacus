@@ -2,7 +2,7 @@
 
 <!-- Please include a summary of the change and which issue is fixed or feature request is implemented. Please also include relevant motivation and context. List any dependencies that are required for this change. -->
 
-Fixes # (issue number)
+Fixes issue #[enter-github-issue-url-here](Github issue number here)
 
 ## Type of change
 
