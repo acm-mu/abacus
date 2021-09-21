@@ -5,10 +5,12 @@ on:
 
 jobs:
   eslint:
-    name: Lint Code
+    name: Lint Frontend Code
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          ref: ${{ github.head_ref }}
       - uses: bradennapier/eslint-plus-action@v3.4.2
+        with:
+          configFile: frontend/.eslintrc.json
+          includeGlob: frontend/**/*
+          extensions: .ts,.tsx,.scss
