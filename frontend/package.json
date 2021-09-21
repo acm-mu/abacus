@@ -5,9 +5,7 @@
     "dev": "react-scripts start",
     "build": "react-scripts build",
     "test": "echo 'Implement Me!'",
-    "eject": "react-scripts eject",
-    "clean": "node_modules/.bin/prettier --write **/*.{ts,tsx,scss}",
-    "lint": "node_modules/.bin/eslint"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
@@ -68,14 +66,6 @@
     "@types/react-transition-group": "^4.4.1",
     "@types/socket.io-client": "^1.4.35",
     "@types/uuid": "^8.3.0",
-    "@typescript-eslint/eslint-plugin": "^4.14.1",
-    "@typescript-eslint/parser": "^4.14.1",
-    "eslint": "^7.20.0",
-    "eslint-config-prettier": "^7.2.0",
-    "eslint-plugin-prettier": "^3.3.1",
-    "eslint-plugin-react": "^7.22.0",
-    "prettier": "^2.2.1",
-    "prettier-eslint": "^12.0.0",
     "sass": "^1.32.6"
   }
 }

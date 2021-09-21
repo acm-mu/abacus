@@ -5,10 +5,10 @@ on:
 
 jobs:
   prettier:
-    name: Prettify Code
+    name: Prettify Backend Code
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: creyD/prettier_action@v4.0
         with:
-          prettier_options: --write --config backend/.prettierrc.js backend/**/*
+          prettier_options: --write --config backend/.prettierrc.js backend/**/*.ts

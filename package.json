@@ -3,7 +3,11 @@
   "license": "ISC",
   "version": "1.0.0",
   "scripts": {
-    "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\" "
+    "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\" ",
+    "clean-frontend": "prettier --write 'frontend/**/*.{ts,tsx}'",
+    "clean-backend": "prettier --write 'backend/**/*.ts'",
+    "lint-frontend": "eslint --config frontend/.eslintrc.json 'frontend/**/*.{ts,tsx}'",
+    "lint-backend": "eslint --config backend/.eslintrc.json 'backend/**/*.ts'"
   },
   "repository": {
     "type": "git",
@@ -15,7 +19,15 @@
   },
   "homepage": "https://github.com/acm-mu/abacus#readme",
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.31.2",
+    "@typescript-eslint/parser": "^4.31.2",
     "concurrently": "^5.3.0",
-    "eslint": "^7.32.0"
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.24.2",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.4.1",
+    "typescript": "^4.4.3"
   }
 }
