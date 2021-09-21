@@ -7,7 +7,7 @@ import { Footer, Notifications } from 'components'
 import { v4 as uuidv4 } from 'uuid'
 import { AppContext, AppContextType, SocketContext } from 'context'
 import io from 'socket.io-client'
-import "./App.scss"
+import './App.scss'
 
 const App = (): JSX.Element => {
   const [user, setUser] = useState<User>()
