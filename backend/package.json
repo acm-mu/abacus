@@ -6,7 +6,7 @@
     "zip": "cp package.json dist/ && cd dist && zip -r backend .",
     "build": "tsc",
     "start": "node server.js",
-    "clean": "node_modules/.bin/prettier --write .",
+    "clean": "node_modules/.bin/prettier --write **/*.ts",
     "lint": "node_modules/.bin/eslint"
   },
   "dependencies": {
