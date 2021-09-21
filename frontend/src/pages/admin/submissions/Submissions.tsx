@@ -14,7 +14,7 @@ interface SubmissionItem extends Submission {
 }
 type SortKey = 'date' | 'sid' | 'sub_no' | 'language' | 'status' | 'runtime' | 'date' | 'score'
 type SortConfig = {
-  column: SortKey,
+  column: SortKey
   direction: 'ascending' | 'descending'
 }
 
@@ -36,9 +36,12 @@ const Submissions = (): JSX.Element => {
     const newDirection = column === newColumn ? 'descending' : 'ascending'
     setSortConfig({ column: newColumn, direction: newDirection })
 
-    setSubmissions(submission_list.sort((s1: Submission, s2: Submission) =>
-    (compare(s1[newColumn] || 'ZZ', s2[newColumn] || 'ZZ') * (direction == 'ascending' ? 1 : -1)
-    )))
+    setSubmissions(
+      submission_list.sort(
+        (s1: Submission, s2: Submission) =>
+          compare(s1[newColumn] || 'ZZ', s2[newColumn] || 'ZZ') * (direction == 'ascending' ? 1 : -1)
+      )
+    )
   }
 
   useEffect(() => {
@@ -58,7 +61,7 @@ const Submissions = (): JSX.Element => {
 
     if (!isMounted) return
 
-    setSubmissions(submissions.map(submission => ({ ...submission, checked: false })))
+    setSubmissions(submissions.map((submission) => ({ ...submission, checked: false })))
   }
 
   const onReleaseChange = () => setShowReleased(!showReleased)
@@ -67,14 +70,22 @@ const Submissions = (): JSX.Element => {
     saveAs(new File([JSON.stringify(submissions, null, '\t')], 'submissions.json', { type: 'text/json;charset=utf-8' }))
 
   const handleChange = ({ target: { id, checked } }: ChangeEvent<HTMLInputElement>) =>
-    setSubmissions(submissions.map(submission => submission.sid == id ? { ...submission, checked } : submission))
+    setSubmissions(submissions.map((submission) => (submission.sid == id ? { ...submission, checked } : submission)))
 
   const checkAll = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) =>
-    setSubmissions(submissions.map(submission => (!submission.released || showReleased) && (submission.division == activeDivision) ? { ...submission, checked } : submission))
+    setSubmissions(
+      submissions.map((submission) =>
+        (!submission.released || showReleased) && submission.division == activeDivision
+          ? { ...submission, checked }
+          : submission
+      )
+    )
 
   const deleteSelected = async () => {
     setDeleting(true)
-    const submissionsToDelete = submissions.filter(submission => submission.checked && (!submission.released || showReleased)).map(submission => submission.sid)
+    const submissionsToDelete = submissions
+      .filter((submission) => submission.checked && (!submission.released || showReleased))
+      .map((submission) => submission.sid)
     const response = await fetch(`${config.API_URL}/submissions`, {
       method: 'DELETE',
       headers: {
@@ -92,71 +103,121 @@ const Submissions = (): JSX.Element => {
   const handleItemClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, { name }: MenuItemProps) =>
     name && setActiveDivision(name)
 
-  const filteredSubmissions = useMemo(() =>
-    submissions.filter((submission) => (!submission.released || showReleased) && (submission.division == activeDivision))
-    , [submissions, showReleased, activeDivision])
+  const filteredSubmissions = useMemo(
+    () =>
+      submissions.filter(
+        (submission) => (!submission.released || showReleased) && submission.division == activeDivision
+      ),
+    [submissions, showReleased, activeDivision]
+  )
 
   if (isLoading) return <PageLoading />
 
-  return <>
-    <Helmet><title>Abacus | Admin Submissions</title></Helmet>
-    <Button content="Download Submissions" onClick={downloadSubmissions} />
-    {submissions.filter(submission => submission.checked && submission.division == activeDivision).length ?
-      <Button content="Delete Selected" negative onClick={deleteSelected} loading={isDeleting} disabled={isDeleting} /> : <></>}
-    <Checkbox toggle label="Show Released" checked={showReleased} onClick={onReleaseChange} />
+  return (
+    <>
+      <Helmet>
+        <title>Abacus | Admin Submissions</title>
+      </Helmet>
+      <Button content="Download Submissions" onClick={downloadSubmissions} />
+      {submissions.filter((submission) => submission.checked && submission.division == activeDivision).length ? (
+        <Button
+          content="Delete Selected"
+          negative
+          onClick={deleteSelected}
+          loading={isDeleting}
+          disabled={isDeleting}
+        />
+      ) : (
+        <></>
+      )}
+      <Checkbox toggle label="Show Released" checked={showReleased} onClick={onReleaseChange} />
 
-    <Block size='xs-12' transparent>
-      <Menu pointing secondary>
-        <Menu.Item name='blue' active={activeDivision == 'blue'} onClick={handleItemClick}>Blue</Menu.Item>
-        <Menu.Item name='gold' active={activeDivision == 'gold'} onClick={handleItemClick}>Gold</Menu.Item>
-        <Menu.Item name='eagle' active={activeDivision == 'eagle'} onClick={handleItemClick}>Eagle</Menu.Item>
-      </Menu>
+      <Block size="xs-12" transparent>
+        <Menu pointing secondary>
+          <Menu.Item name="blue" active={activeDivision == 'blue'} onClick={handleItemClick}>
+            Blue
+          </Menu.Item>
+          <Menu.Item name="gold" active={activeDivision == 'gold'} onClick={handleItemClick}>
+            Gold
+          </Menu.Item>
+          <Menu.Item name="eagle" active={activeDivision == 'eagle'} onClick={handleItemClick}>
+            Eagle
+          </Menu.Item>
+        </Menu>
 
-      <Table singleLine>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell collapsing><input type='checkbox' onChange={checkAll} /></Table.HeaderCell>
-            <Table.HeaderCell className='sortable' onClick={() => sort('sid')}>Submission ID</Table.HeaderCell>
-            <Table.HeaderCell>Problem</Table.HeaderCell>
-            <Table.HeaderCell>Division</Table.HeaderCell>
-            <Table.HeaderCell>Team</Table.HeaderCell>
-            <Table.HeaderCell className='sortable' onClick={() => sort('status')}>Status</Table.HeaderCell>
-            <Table.HeaderCell>Released</Table.HeaderCell>
-            <Table.HeaderCell>Flagged</Table.HeaderCell>
-            <Table.HeaderCell className='sortable' onClick={() => sort('date')}>Time</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {filteredSubmissions.length == 0 ?
+        <Table singleLine>
+          <Table.Header>
             <Table.Row>
-              <Table.Cell colSpan={'100%'}>No Submissions</Table.Cell>
-            </Table.Row> :
-            filteredSubmissions.map((submission) =>
-              <Table.Row key={submission.sid}>
-                <Table.Cell>
-                  <input
-                    type='checkbox'
-                    checked={submission.checked}
-                    id={submission.sid}
-                    onChange={handleChange} />
-                </Table.Cell>
-                <Table.Cell>
-                  <Link to={`/admin/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link></Table.Cell>
-                <Table.Cell><Link to={`/admin/problems/${submission.pid}`}>{submission.problem?.name} </Link></Table.Cell>
-                <Table.Cell><DivisionLabel division={submission.division} /></Table.Cell>
-                <Table.Cell><Link to={`/admin/users/${submission.team.uid}`}>{submission.team.display_name}</Link></Table.Cell>
-                <Table.Cell><span className={`status icn ${submission.status}`} /></Table.Cell>
-                <Table.Cell>{submission.released ? <Label color='green' icon='check' content="Released" /> : <Label icon='lock' content="Held" />}</Table.Cell>
-                <Table.Cell>
-                  {submission.flagged ? <Label color='orange' icon='flag' content={`Flagged: ${submission.flagged.display_name}`} /> :
-                    <Label icon='cancel' content="Unflagged" />}
-                </Table.Cell>
-                <Table.Cell><Moment fromNow date={submission.date * 1000} /> </Table.Cell>
-              </Table.Row>)}
-        </Table.Body>
-      </Table>
-    </Block>
-  </>
+              <Table.HeaderCell collapsing>
+                <input type="checkbox" onChange={checkAll} />
+              </Table.HeaderCell>
+              <Table.HeaderCell className="sortable" onClick={() => sort('sid')}>
+                Submission ID
+              </Table.HeaderCell>
+              <Table.HeaderCell>Problem</Table.HeaderCell>
+              <Table.HeaderCell>Division</Table.HeaderCell>
+              <Table.HeaderCell>Team</Table.HeaderCell>
+              <Table.HeaderCell className="sortable" onClick={() => sort('status')}>
+                Status
+              </Table.HeaderCell>
+              <Table.HeaderCell>Released</Table.HeaderCell>
+              <Table.HeaderCell>Flagged</Table.HeaderCell>
+              <Table.HeaderCell className="sortable" onClick={() => sort('date')}>
+                Time
+              </Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {filteredSubmissions.length == 0 ? (
+              <Table.Row>
+                <Table.Cell colSpan={'100%'}>No Submissions</Table.Cell>
+              </Table.Row>
+            ) : (
+              filteredSubmissions.map((submission) => (
+                <Table.Row key={submission.sid}>
+                  <Table.Cell>
+                    <input type="checkbox" checked={submission.checked} id={submission.sid} onChange={handleChange} />
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Link to={`/admin/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Link to={`/admin/problems/${submission.pid}`}>{submission.problem?.name} </Link>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <DivisionLabel division={submission.division} />
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Link to={`/admin/users/${submission.team.uid}`}>{submission.team.display_name}</Link>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <span className={`status icn ${submission.status}`} />
+                  </Table.Cell>
+                  <Table.Cell>
+                    {submission.released ? (
+                      <Label color="green" icon="check" content="Released" />
+                    ) : (
+                      <Label icon="lock" content="Held" />
+                    )}
+                  </Table.Cell>
+                  <Table.Cell>
+                    {submission.flagged ? (
+                      <Label color="orange" icon="flag" content={`Flagged: ${submission.flagged.display_name}`} />
+                    ) : (
+                      <Label icon="cancel" content="Unflagged" />
+                    )}
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Moment fromNow date={submission.date * 1000} />{' '}
+                  </Table.Cell>
+                </Table.Row>
+              ))
+            )}
+          </Table.Body>
+        </Table>
+      </Block>
+    </>
+  )
 }
 
 export default Submissions

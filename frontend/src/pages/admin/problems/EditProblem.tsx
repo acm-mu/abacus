@@ -17,15 +17,20 @@ const EditProblems = (): JSX.Element => {
 
   useEffect(() => {
     loadProblem()
-    return () => { setMounted(false) }
+    return () => {
+      setMounted(false)
+    }
   }, [])
 
   const loadProblem = async () => {
-    const response = await fetch(`${config.API_URL}/problems?pid=${pid}&columns=description,solutions,project_id,skeletons,tests,design_document`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.accessToken}`
+    const response = await fetch(
+      `${config.API_URL}/problems?pid=${pid}&columns=description,solutions,project_id,skeletons,tests,design_document`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.accessToken}`
+        }
       }
-    })
+    )
     if (!isMounted) return
     const problem = Object.values(await response.json())[0] as Problem
 
@@ -48,7 +53,7 @@ const EditProblems = (): JSX.Element => {
       body: JSON.stringify(problem)
     })
     if (response.ok) {
-      showMessage('success', "Problem saved successfully!")
+      showMessage('success', 'Problem saved successfully!')
     } else {
       const body = await response.json()
       showMessage('error', body.message)
@@ -57,14 +62,18 @@ const EditProblems = (): JSX.Element => {
 
   if (isLoading) return <PageLoading />
 
-  return <>
-    <Helmet><title>Abacus | Admin Edit Problem</title></Helmet>
+  return (
+    <>
+      <Helmet>
+        <title>Abacus | Admin Edit Problem</title>
+      </Helmet>
 
-    <h1>{problem?.name}</h1>
-    <StatusMessage message={message} onDismiss={() => setMessage(undefined)} />
+      <h1>{problem?.name}</h1>
+      <StatusMessage message={message} onDismiss={() => setMessage(undefined)} />
 
-    <ProblemEditor problem={problem} handleSubmit={handleSubmit} />
-  </>
+      <ProblemEditor problem={problem} handleSubmit={handleSubmit} />
+    </>
+  )
 }
 
 export default EditProblems

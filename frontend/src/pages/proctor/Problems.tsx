@@ -26,14 +26,19 @@ const Problems = (): JSX.Element => {
     const newDirection = column === newColumn && direction == 'ascending' ? 'descending' : 'ascending'
     setSortConfig({ column: newColumn, direction: newDirection })
 
-    setProblems(problem_list.sort((p1: Problem, p2: Problem) =>
-      (p1[newColumn] || 'ZZ').localeCompare(p2[newColumn] || 'ZZ') * (direction == 'ascending' ? 1 : -1
-      )))
+    setProblems(
+      problem_list.sort(
+        (p1: Problem, p2: Problem) =>
+          (p1[newColumn] || 'ZZ').localeCompare(p2[newColumn] || 'ZZ') * (direction == 'ascending' ? 1 : -1)
+      )
+    )
   }
 
   useEffect(() => {
     loadProblems()
-    return () => { setMounted(false) }
+    return () => {
+      setMounted(false)
+    }
   }, [])
 
   const loadProblems = async () => {
@@ -49,7 +54,6 @@ const Problems = (): JSX.Element => {
       if (!isMounted) return
 
       sort('id', problems)
-
     } else {
       setProblems([])
     }
@@ -58,39 +62,53 @@ const Problems = (): JSX.Element => {
 
   if (isLoading) return <PageLoading />
 
-  return <>
-    <Helmet><title>Abacus | Proctor Problems</title></Helmet>
-    <Block size='xs-12' transparent>
-      <Table sortable>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell
-              sorted={column === 'id' ? direction : undefined}
-              onClick={() => sort('id')}
-              content="ID" />
-            <Table.HeaderCell
-              sorted={column === 'name' ? direction : undefined}
-              onClick={() => sort('name')}
-              content="Problem Name" />
-            <Table.HeaderCell># of Tests</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {problems.length == 0 ?
+  return (
+    <>
+      <Helmet>
+        <title>Abacus | Proctor Problems</title>
+      </Helmet>
+      <Block size="xs-12" transparent>
+        <Table sortable>
+          <Table.Header>
             <Table.Row>
-              <Table.Cell colSpan={'100%'} style={{ textAlign: "center" }}>No Problems</Table.Cell>
-            </Table.Row> :
-            (problems.map((problem: Problem, index: number) => (
-              <Table.Row key={index}>
-                <Table.Cell><Link to={`/proctor/problems/${problem.pid}`}>{problem.id}</Link></Table.Cell>
-                <Table.Cell><Link to={`/proctor/problems/${problem.pid}`}>{problem.name}</Link></Table.Cell>
-                <Table.Cell>{problem.tests?.length}</Table.Cell>
+              <Table.HeaderCell
+                sorted={column === 'id' ? direction : undefined}
+                onClick={() => sort('id')}
+                content="ID"
+              />
+              <Table.HeaderCell
+                sorted={column === 'name' ? direction : undefined}
+                onClick={() => sort('name')}
+                content="Problem Name"
+              />
+              <Table.HeaderCell># of Tests</Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {problems.length == 0 ? (
+              <Table.Row>
+                <Table.Cell colSpan={'100%'} style={{ textAlign: 'center' }}>
+                  No Problems
+                </Table.Cell>
               </Table.Row>
-            )))}
-        </Table.Body>
-      </Table>
-    </Block>
-  </>
+            ) : (
+              problems.map((problem: Problem, index: number) => (
+                <Table.Row key={index}>
+                  <Table.Cell>
+                    <Link to={`/proctor/problems/${problem.pid}`}>{problem.id}</Link>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Link to={`/proctor/problems/${problem.pid}`}>{problem.name}</Link>
+                  </Table.Cell>
+                  <Table.Cell>{problem.tests?.length}</Table.Cell>
+                </Table.Row>
+              ))
+            )}
+          </Table.Body>
+        </Table>
+      </Block>
+    </>
+  )
 }
 
 export default Problems

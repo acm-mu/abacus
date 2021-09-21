@@ -1,29 +1,29 @@
 .testRun {
-    margin-left: 2em;
-    width: 100%;
+  margin-left: 2em;
+  width: 100%;
 
-    pre {
-        background: #fafafa;
-        padding: 1em;
-        margin: 1em;
-        border: 1px solid #ddd;
-        border-radius: 3px;
-        white-space: pre-wrap;
-        word-break: keep-all;
-    }
+  pre {
+    background: #fafafa;
+    padding: 1em;
+    margin: 1em;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    white-space: pre-wrap;
+    word-break: keep-all;
+  }
 
-    > div {
-        display: grid;
-        grid-template-columns: 50% 50%;
-    }
+  > div {
+    display: grid;
+    grid-template-columns: 50% 50%;
+  }
 
-    h3 {
-        font-weight: bold;
-        &.accepted {
-            color: #84cd64;
-        }
-        &.rejected {
-            color: #f20707;
-        }
+  h3 {
+    font-weight: bold;
+    &.accepted {
+      color: #84cd64;
     }
+    &.rejected {
+      color: #f20707;
+    }
+  }
 }

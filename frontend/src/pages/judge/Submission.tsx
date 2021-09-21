@@ -38,9 +38,10 @@ const submission = (): JSX.Element => {
   useEffect(() => {
     loadSubmission().then(() => setLoading(false))
     socket?.on('update_submission', loadSubmission)
-    return () => { setMounted(false) }
+    return () => {
+      setMounted(false)
+    }
   }, [])
-
 
   if (isLoading) return <PageLoading />
   if (!submission) return <NotFound />
@@ -65,7 +66,9 @@ const submission = (): JSX.Element => {
       try {
         const { message } = await response.json()
         setError(message)
-      } catch (_err) { return }
+      } catch (_err) {
+        return
+      }
     }
     setRerunning(false)
   }
@@ -85,7 +88,7 @@ const submission = (): JSX.Element => {
         score: submission.score,
         released: true,
         claimed: undefined,
-        status: submission.status,
+        status: submission.status
       })
     })
     if (response.ok) {
@@ -95,7 +98,9 @@ const submission = (): JSX.Element => {
       try {
         const { message } = await response.json()
         setError(message)
-      } catch (_err) { return }
+      } catch (_err) {
+        return
+      }
     }
     setReleasing(false)
   }
@@ -117,7 +122,9 @@ const submission = (): JSX.Element => {
       try {
         const { message } = await response.json()
         setError(message)
-      } catch (_err) { return }
+      } catch (_err) {
+        return
+      }
     }
 
     setClaiming({ ...isClaiming, [sid]: false })
@@ -140,48 +147,90 @@ const submission = (): JSX.Element => {
       try {
         const { message } = await response.json()
         setError(message)
-      } catch (_err) { return }
+      } catch (_err) {
+        return
+      }
     }
 
     setClaiming({ ...isClaiming, [sid]: false })
   }
 
-  const download = () => submission?.source && submission.filename &&
+  const download = () =>
+    submission?.source &&
+    submission.filename &&
     saveAs(new File([submission?.source], submission.filename, { type: 'text/plain;charset=utf-8' }))
 
+  return (
+    <>
+      <Helmet>
+        <title>Abacus | Judge Submission</title>
+      </Helmet>
 
-  return <>
-    <Helmet><title>Abacus | Judge Submission</title></Helmet>
+      {error && <StatusMessage message={{ type: 'error', message: error }} />}
 
-    {error && <StatusMessage message={{ type: 'error', message: error }} />}
+      <Button content="Back" icon="arrow left" labelPosition="left" onClick={history.goBack} />
 
-    <Button content='Back' icon='arrow left' labelPosition='left' onClick={history.goBack} />
+      {!submission.released ? (
+        submission.claimed ? (
+          <>
+            {submission.claimed?.uid === user?.uid ? (
+              <>
+                <Button
+                  content="Unclaim"
+                  icon={'hand paper'}
+                  onClick={() => unclaim(submission.sid)}
+                  loading={isClaiming[submission.sid]}
+                  disabled={isClaiming[submission.sid]}
+                  labelPosition={'left'}
+                />
+                {submission.division == 'blue' && (
+                  <Button
+                    disabled={isRerunning || submission.claimed?.uid != user?.uid}
+                    loading={isRerunning}
+                    content="Rerun"
+                    icon="redo"
+                    labelPosition="left"
+                    onClick={rerun}
+                  />
+                )}
+                <Button
+                  loading={isReleasing}
+                  disabled={isReleasing || submission.claimed?.uid != user?.uid}
+                  icon="right arrow"
+                  content="Release"
+                  labelPosition="left"
+                  onClick={release}
+                />
+              </>
+            ) : (
+              <Button content="Claimed" icon={'lock'} disabled={true} labelPosition={'left'} />
+            )}
+          </>
+        ) : (
+          <Button
+            content="Claim"
+            icon={'hand rock'}
+            onClick={() => claim(submission.sid)}
+            loading={isClaiming[submission.sid]}
+            disabled={isClaiming[submission.sid]}
+            labelPosition={'left'}
+          />
+        )
+      ) : (
+        <Button icon="check" positive content="Released" labelPosition="left" />
+      )}
 
-    {!submission.released ?
-      (submission.claimed ?
-        <>
-          {submission.claimed?.uid === user?.uid ?
-            <>
-              <Button content="Unclaim" icon={'hand paper'} onClick={() => unclaim(submission.sid)} loading={isClaiming[submission.sid]} disabled={isClaiming[submission.sid]} labelPosition={'left'} />
-              {submission.division == 'blue' && <Button disabled={isRerunning || submission.claimed?.uid != user?.uid} loading={isRerunning} content="Rerun" icon="redo" labelPosition="left" onClick={rerun} />}
-              <Button loading={isReleasing} disabled={isReleasing || submission.claimed?.uid != user?.uid} icon="right arrow" content="Release" labelPosition="left" onClick={release} />
-            </> :
-            <Button content="Claimed" icon={'lock'} disabled={true} labelPosition={'left'} />
-          }
-        </> :
-        <Button content="Claim" icon={'hand rock'} onClick={() => claim(submission.sid)} loading={isClaiming[submission.sid]} disabled={isClaiming[submission.sid]} labelPosition={'left'} />
-      ) :
-      <Button icon="check" positive content="Released" labelPosition="left" />
-    }
+      {submission.division == 'blue' && (
+        <Button content="Download" icon="download" labelPosition="left" onClick={download} />
+      )}
 
-    {submission.division == 'blue' && <Button content="Download" icon="download" labelPosition="left" onClick={download} />}
-
-    <SubmissionView
-      submission={submission}
-      rerunning={isRerunning}
-      setSubmission={!submission.released && submission.claimed?.uid == user?.uid ? setSubmission : undefined}
-    />
-  </>
+      <SubmissionView
+        submission={submission}
+        rerunning={isRerunning}
+        setSubmission={!submission.released && submission.claimed?.uid == user?.uid ? setSubmission : undefined}
+      />
+    </>
+  )
 }
 
 export default submission

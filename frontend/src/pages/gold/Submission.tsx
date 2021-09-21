@@ -1,11 +1,11 @@
-import { Submission } from "abacus"
-import React, { useContext, useEffect, useState } from "react"
-import { Link, useParams } from "react-router-dom"
-import { Block, Countdown, NotFound, PageLoading, SubmissionView, Unauthorized } from "components"
-import { Helmet } from "react-helmet"
-import config from 'environment';
-import { Breadcrumb } from "semantic-ui-react"
-import { AppContext } from "context"
+import { Submission } from 'abacus'
+import React, { useContext, useEffect, useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
+import { Block, Countdown, NotFound, PageLoading, SubmissionView, Unauthorized } from 'components'
+import { Helmet } from 'react-helmet'
+import config from 'environment'
+import { Breadcrumb } from 'semantic-ui-react'
+import { AppContext } from 'context'
 
 const submission = (): JSX.Element => {
   const { sid } = useParams<{ sid: string }>()
@@ -16,7 +16,9 @@ const submission = (): JSX.Element => {
 
   useEffect(() => {
     loadSubmission()
-    return () => { setMounted(false) }
+    return () => {
+      setMounted(false)
+    }
   }, [])
 
   const loadSubmission = async () => {
@@ -39,18 +41,22 @@ const submission = (): JSX.Element => {
   if (!submission) return <NotFound />
   if (user?.division != 'gold' && user?.role != 'admin') return <Unauthorized />
 
-  return <>
-    <Helmet><title>Abacus | Gold Submission</title></Helmet>
-    <Countdown />
-    <Block transparent size='xs-12'>
-      <Breadcrumb>
-        <Breadcrumb.Section as={Link} to='/gold/submissions' content="Submissions" />
-        <Breadcrumb.Divider />
-        <Breadcrumb.Section active content={submission.sid.substring(0, 7)} />
-      </Breadcrumb>
-    </Block>
-    <SubmissionView submission={submission} />
-  </>
+  return (
+    <>
+      <Helmet>
+        <title>Abacus | Gold Submission</title>
+      </Helmet>
+      <Countdown />
+      <Block transparent size="xs-12">
+        <Breadcrumb>
+          <Breadcrumb.Section as={Link} to="/gold/submissions" content="Submissions" />
+          <Breadcrumb.Divider />
+          <Breadcrumb.Section active content={submission.sid.substring(0, 7)} />
+        </Breadcrumb>
+      </Block>
+      <SubmissionView submission={submission} />
+    </>
+  )
 }
 
 export default submission

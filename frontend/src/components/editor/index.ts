@@ -1,7 +1,7 @@
-import { Problem } from "abacus";
+import { Problem } from 'abacus'
 
 export interface ProblemStateProps {
-  problem?: Problem;
+  problem?: Problem
   setProblem?: React.Dispatch<React.SetStateAction<Problem>>
 }
 

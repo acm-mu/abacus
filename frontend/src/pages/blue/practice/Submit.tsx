@@ -21,21 +21,20 @@ const SubmitPractice = (): JSX.Element => {
 
   useEffect(() => {
     fetch(`/problems/${id}.json`)
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         setProblem(data)
         setPageLoading(false)
       })
   }, [])
 
-
   const testSubmission = async (submission: Submission): Promise<Submission> => {
-    let runtime = -1;
+    let runtime = -1
     let status = 'accepted'
     if (submission.tests) {
       for (const test of submission.tests) {
         // Await response from piston execution
-        const res = await fetch("https://piston.codeabac.us/execute", {
+        const res = await fetch('https://piston.codeabac.us/execute', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -44,24 +43,24 @@ const SubmitPractice = (): JSX.Element => {
             stdin: test.in,
             timeout: 15
           })
-        });
+        })
 
         const json = await res.json()
 
-        runtime = Math.max(runtime, json.runtime);
-        test.stdout = json.output;
+        runtime = Math.max(runtime, json.runtime)
+        test.stdout = json.output
 
         if (json.output != test.out) {
-          status = "rejected";
-          test['result'] = "rejected";
+          status = 'rejected'
+          test['result'] = 'rejected'
         } else {
-          test['result'] = "accepted";
+          test['result'] = 'accepted'
         }
       }
       submission.status = status
     }
     submission.runtime = runtime
-    submission.score = 0;
+    submission.score = 0
 
     return submission
   }
@@ -72,7 +71,7 @@ const SubmitPractice = (): JSX.Element => {
     setLoading(true)
 
     const { name: filename, size: filesize } = file
-    const fileReader = new FileReader();
+    const fileReader = new FileReader()
 
     let submissions: { [key: string]: Submission } = {}
     if (localStorage.submissions != undefined) {
@@ -83,13 +82,13 @@ const SubmitPractice = (): JSX.Element => {
       const data = fileReader.result
       if (!data) return
 
-      const sid = uuidv4().replace(/-/g, '');
+      const sid = uuidv4().replace(/-/g, '')
 
       submissions[sid] = await testSubmission({
         sid,
         problem,
         pid: problem.id,
-        tid: "LOCAL",
+        tid: 'LOCAL',
         division: 'blue',
         language: language.key,
         filename,
@@ -116,10 +115,10 @@ const SubmitPractice = (): JSX.Element => {
   const uploadChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event?.target?.files?.length) {
       const file = event.target.files[0]
-      const ext = file.name.substring(file.name.lastIndexOf("."), file.name.length)
+      const ext = file.name.substring(file.name.lastIndexOf('.'), file.name.length)
 
       if (file.size > 1024 * 1024) {
-        alert("File is greater than max size (1024 KB)")
+        alert('File is greater than max size (1024 KB)')
         event.preventDefault()
         return
       }
@@ -131,55 +130,84 @@ const SubmitPractice = (): JSX.Element => {
           return
         }
       }
-      alert("File type not supported")
+      alert('File type not supported')
       event.preventDefault()
     }
   }
   if (isPageLoading) return <PageLoading />
   if (!problem) return <NotFound />
 
-  return <>
-    <Helmet><title>Abacus | Submit Practice {problem.id}</title></Helmet>
-    <Countdown />
-    <Block transparent size='xs-12'>
-      <Breadcrumb>
-        <Breadcrumb.Section as={Link} to='/blue/practice'>Practice</Breadcrumb.Section>
-        <Breadcrumb.Divider />
-        <Breadcrumb.Section as={Link} to={`/blue/practice/${problem.id}`}>{problem.name}</Breadcrumb.Section>
-        <Breadcrumb.Divider />
-        <Breadcrumb.Section active>Submit</Breadcrumb.Section>
-      </Breadcrumb>
-    </Block>
-    {!submissions || submissions?.filter((e) => e.status == "accepted").length == 0 ?
-      <Block size='xs-12'>
-        <h1>Submit a solution to {problem.name}</h1>
-
-        <Form onSubmit={handleSubmit}>
-          <FileDialog file={file} onChange={uploadChange} control={(file?: File) => (
-            file ?
-              <>
-                <h3>Your upload will include the following files:</h3>
-                <ul>
-                  <li>{file.name}</li>
-                </ul>
-              </> : <p>
-                <b>Drag & drop</b> a file here to upload <br />
-                <i>(Or click and choose file)</i>
-              </p>
-          )} />
-          <Form.Select inline label='Language' placeholder="Select Language" value={language?.value} options={languages} />
-
-          <Form.Group>
-            <Button as={Link} to={`/blue/practice/${problem.id}`} disabled={isLoading}>Cancel</Button>
-            <Form.Button loading={isLoading} disabled={isLoading} primary>Submit</Form.Button>
-          </Form.Group>
-        </Form>
+  return (
+    <>
+      <Helmet>
+        <title>Abacus | Submit Practice {problem.id}</title>
+      </Helmet>
+      <Countdown />
+      <Block transparent size="xs-12">
+        <Breadcrumb>
+          <Breadcrumb.Section as={Link} to="/blue/practice">
+            Practice
+          </Breadcrumb.Section>
+          <Breadcrumb.Divider />
+          <Breadcrumb.Section as={Link} to={`/blue/practice/${problem.id}`}>
+            {problem.name}
+          </Breadcrumb.Section>
+          <Breadcrumb.Divider />
+          <Breadcrumb.Section active>Submit</Breadcrumb.Section>
+        </Breadcrumb>
       </Block>
-      : <Block size='xs-12' transparent>
-        <h2>You Already Solved This Problem!</h2>
-        <Link to={`/blue/submissions/${submissions.filter((e) => e.status == "accepted")[0].sid}`}>Go to your solved submission</Link>
-      </Block>}
-  </>
+      {!submissions || submissions?.filter((e) => e.status == 'accepted').length == 0 ? (
+        <Block size="xs-12">
+          <h1>Submit a solution to {problem.name}</h1>
+
+          <Form onSubmit={handleSubmit}>
+            <FileDialog
+              file={file}
+              onChange={uploadChange}
+              control={(file?: File) =>
+                file ? (
+                  <>
+                    <h3>Your upload will include the following files:</h3>
+                    <ul>
+                      <li>{file.name}</li>
+                    </ul>
+                  </>
+                ) : (
+                  <p>
+                    <b>Drag & drop</b> a file here to upload <br />
+                    <i>(Or click and choose file)</i>
+                  </p>
+                )
+              }
+            />
+            <Form.Select
+              inline
+              label="Language"
+              placeholder="Select Language"
+              value={language?.value}
+              options={languages}
+            />
+
+            <Form.Group>
+              <Button as={Link} to={`/blue/practice/${problem.id}`} disabled={isLoading}>
+                Cancel
+              </Button>
+              <Form.Button loading={isLoading} disabled={isLoading} primary>
+                Submit
+              </Form.Button>
+            </Form.Group>
+          </Form>
+        </Block>
+      ) : (
+        <Block size="xs-12" transparent>
+          <h2>You Already Solved This Problem!</h2>
+          <Link to={`/blue/submissions/${submissions.filter((e) => e.status == 'accepted')[0].sid}`}>
+            Go to your solved submission
+          </Link>
+        </Block>
+      )}
+    </>
+  )
 }
 
 export default SubmitPractice
