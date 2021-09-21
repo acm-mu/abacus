@@ -1,7 +1,7 @@
 ---
 name: Documentation 📝
 about: Something needs a little more explanation!
-labels: enhancement
+labels: documentation
 ---
 
 <!--
