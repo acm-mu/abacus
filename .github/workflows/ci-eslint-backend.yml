@@ -1,7 +1,5 @@
 name: Lint Backend Code
-on:
-  push:
-    paths: ['backend/**']
+on: [pull_request]
 
 jobs:
   eslint:
