@@ -1,15 +1,15 @@
 {
     "name": "abacus",
+    "license": "ISC",
     "version": "1.0.0",
     "scripts": {
-        "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm start\" "
+        "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\" "
     },
     "repository": {
         "type": "git",
         "url": "git+https://github.com/acm-mu/abacus.git"
     },
     "author": "",
-    "license": "ISC",
     "bugs": {
         "url": "https://github.com/acm-mu/abacus/issues"
     },
