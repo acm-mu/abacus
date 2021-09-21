@@ -1,6 +1,6 @@
 ---
 name: Documentation 📝
-about: Something needs a little more explaniation!
+about: Something needs a little more explanation!
 labels: enhancement
 ---
 
