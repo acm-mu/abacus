@@ -1,7 +1,7 @@
 name: Prettify Backend
 on:
   push:
-    paths: ["backend/**"]
+    paths: ['backend/**']
 
 jobs:
   prettier:
