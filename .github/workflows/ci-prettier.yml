@@ -1,10 +1,9 @@
 name: Prettify Code
 on:
   push:
-    paths: [
-      'backend/**'
-      'frontend/**'
-      ]
+    paths:
+      - 'backend/**'
+      - 'frontend/**'
 
 jobs:
   prettier:
