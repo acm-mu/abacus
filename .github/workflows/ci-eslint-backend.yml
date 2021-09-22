@@ -11,3 +11,4 @@ jobs:
         with:
           configFile: backend/.eslintrc.json
           includeGlob: backend/**/*
+          issueSummaryType: full

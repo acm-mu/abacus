@@ -12,3 +12,4 @@ jobs:
           configFile: frontend/.eslintrc.json
           includeGlob: frontend/**/*
           extensions: .ts,.tsx,.scss
+          issueSummaryType: full
