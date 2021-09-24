@@ -4,6 +4,9 @@ on:
     paths:
       - 'backend/**'
       - 'frontend/**'
+    branches:
+      - '*'
+      - '!master'
 
 jobs:
   prettier:
