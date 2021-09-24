@@ -1,13 +1,13 @@
-import { Problem, Submission } from "abacus";
-import React, { ChangeEvent, SyntheticEvent, useContext, useEffect, useMemo, useState } from "react";
-import { Form, DropdownProps, InputOnChangeData, Breadcrumb } from "semantic-ui-react";
-import { Block, PageLoading, ScratchViewer, StatusMessage, Unauthorized } from "components";
-import config from "environment"
-import { Helmet } from "react-helmet";
-import { useHistory, useParams } from "react-router";
-import MDEditor from "@uiw/react-md-editor";
-import { Link } from "react-router-dom";
-import { AppContext } from "context";
+import { Problem, Submission } from 'abacus'
+import React, { ChangeEvent, SyntheticEvent, useContext, useEffect, useMemo, useState } from 'react'
+import { Form, DropdownProps, InputOnChangeData, Breadcrumb } from 'semantic-ui-react'
+import { Block, PageLoading, ScratchViewer, StatusMessage, Unauthorized } from 'components'
+import config from 'environment'
+import { Helmet } from 'react-helmet'
+import { useHistory, useParams } from 'react-router'
+import MDEditor from '@uiw/react-md-editor'
+import { Link } from 'react-router-dom'
+import { AppContext } from 'context'
 
 const Submit = (): JSX.Element => {
   const { pid: problem_id } = useParams<{ pid: string }>()
@@ -36,7 +36,9 @@ const Submit = (): JSX.Element => {
 
   useEffect(() => {
     loadProblems()
-    return () => { setMounted(false) }
+    return () => {
+      setMounted(false)
+    }
   }, [])
 
   const loadProblems = async () => {
@@ -47,8 +49,7 @@ const Submit = (): JSX.Element => {
     })
     if (response.ok && isMounted) {
       const problems: { [key: string]: Problem } = await response.json()
-      for (const prob of Object.values(problems))
-        if (prob.id == problem_id) setProblem(prob)
+      for (const prob of Object.values(problems)) if (prob.id == problem_id) setProblem(prob)
 
       setProblems(problems)
     }
@@ -61,8 +62,7 @@ const Submit = (): JSX.Element => {
     const formData = new FormData()
     formData.set('pid', problem.pid)
     formData.set('project_id', project_id)
-    if (description)
-      formData.set('design_document', description)
+    if (description) formData.set('design_document', description)
 
     const response = await fetch(`${config.API_URL}/submissions`, {
       method: 'POST',
@@ -85,69 +85,77 @@ const Submit = (): JSX.Element => {
     history.push(`/gold/submissions/${body.sid}`)
   }
 
-  const handleProblemChange = (event: SyntheticEvent<HTMLElement, Event>, { value }: DropdownProps) => value && setProblem(problems[`${value}`])
-  const handleChange = async (event: ChangeEvent<HTMLInputElement>, { value }: InputOnChangeData) => setProjectUrl(value)
+  const handleProblemChange = (event: SyntheticEvent<HTMLElement, Event>, { value }: DropdownProps) =>
+    value && setProblem(problems[`${value}`])
+  const handleChange = async (event: ChangeEvent<HTMLInputElement>, { value }: InputOnChangeData) =>
+    setProjectUrl(value)
 
   if (isLoading) return <PageLoading />
   if (user?.division != 'gold' && user?.role != 'admin') return <Unauthorized />
 
-  return <>
-    <Helmet> <title>Abacus | Gold Submit</title> </Helmet>
-    <Block transparent size='xs-12'>
-      <Breadcrumb>
-        <Breadcrumb.Section as={Link} to='/gold/problems' content="Problems" />
-        <Breadcrumb.Divider />
-        <Breadcrumb.Section as={Link} to={`/gold/problems/${problem?.id}`} content={problem?.name} />
-        <Breadcrumb.Divider />
-        <Breadcrumb.Section active content="Submit" />
-      </Breadcrumb>
-    </Block>
-    {error && <StatusMessage message={{ type: 'error', message: error }} />}
-    <Block size='xs-12'>
-      <Form onSubmit={handleSubmit}>
-        <Form.Group>
-          <Form.Select
-            width={4}
-            label='Problem'
-            placeholder='Problem'
-            name='problem'
-            value={problem?.pid}
-            onChange={handleProblemChange}
-            options={Object.values(problems).map((problem) => ({ key: problem.pid, text: problem.name, value: problem.pid }))}
-          />
-          <Form.Input
-            width={4}
-            label='Project Url'
-            onChange={handleChange}
-            placeholder="https://scratch.mit.edu/projects/<project_id>"
-            value={project_url}
-          />
-          <Form.Button
-            label="&nbsp;"
-            color="orange"
-            content="Submit"
-            loading={isSubmitting}
-            disabled={isSubmitting}
-          />
-        </Form.Group>
-      </Form>
-    </Block>
-
-    <Block transparent size='xs-12'>
-      <ScratchViewer project_id={project_id} />
-    </Block>
-
-
-    {problem?.design_document == true ?
-      <Block transparent size='xs-12'>
-        <h2>Design Document</h2>
-        <MDEditor
-          value={description || ''}
-          onChange={value => setDescription(value || '')}
-          height="500" />
+  return (
+    <>
+      <Helmet>
+        <title>Abacus | Gold Submit</title>
+      </Helmet>
+      <Block transparent size="xs-12">
+        <Breadcrumb>
+          <Breadcrumb.Section as={Link} to="/gold/problems" content="Problems" />
+          <Breadcrumb.Divider />
+          <Breadcrumb.Section as={Link} to={`/gold/problems/${problem?.id}`} content={problem?.name} />
+          <Breadcrumb.Divider />
+          <Breadcrumb.Section active content="Submit" />
+        </Breadcrumb>
       </Block>
-      : <></>}
-  </>
+      {error && <StatusMessage message={{ type: 'error', message: error }} />}
+      <Block size="xs-12">
+        <Form onSubmit={handleSubmit}>
+          <Form.Group>
+            <Form.Select
+              width={4}
+              label="Problem"
+              placeholder="Problem"
+              name="problem"
+              value={problem?.pid}
+              onChange={handleProblemChange}
+              options={Object.values(problems).map((problem) => ({
+                key: problem.pid,
+                text: problem.name,
+                value: problem.pid
+              }))}
+            />
+            <Form.Input
+              width={4}
+              label="Project Url"
+              onChange={handleChange}
+              placeholder="https://scratch.mit.edu/projects/<project_id>"
+              value={project_url}
+            />
+            <Form.Button
+              label="&nbsp;"
+              color="orange"
+              content="Submit"
+              loading={isSubmitting}
+              disabled={isSubmitting}
+            />
+          </Form.Group>
+        </Form>
+      </Block>
+
+      <Block transparent size="xs-12">
+        <ScratchViewer project_id={project_id} />
+      </Block>
+
+      {problem?.design_document == true ? (
+        <Block transparent size="xs-12">
+          <h2>Design Document</h2>
+          <MDEditor value={description || ''} onChange={(value) => setDescription(value || '')} height="500" />
+        </Block>
+      ) : (
+        <></>
+      )}
+    </>
+  )
 }
 
 export default Submit

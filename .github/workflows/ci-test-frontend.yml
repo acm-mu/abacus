@@ -1,0 +1,21 @@
+name: Test Frontend
+on:
+  pull_request:
+  push:
+    paths:
+      - 'frontend/**'
+
+jobs:
+  test:
+    name: Test Frontend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '16'
+      - uses: egordm/gha-yarn-node-cache@v1
+      - run: yarn install
+        working-directory: frontend
+      - run: yarn build
+        working-directory: frontend

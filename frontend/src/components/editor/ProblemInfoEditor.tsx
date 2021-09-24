@@ -1,13 +1,15 @@
-import React, { ChangeEvent, FormEvent } from 'react';
-import { CheckboxProps, Form, Input, Select } from 'semantic-ui-react';
-import { divisions } from 'utils';
-import { ProblemStateProps } from '.';
+import React, { ChangeEvent, FormEvent } from 'react'
+import { CheckboxProps, Form, Input, Select } from 'semantic-ui-react'
+import { divisions } from 'utils'
+import { ProblemStateProps } from '.'
 
 const ProblemInfoEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Element => {
   if (!problem || !setProblem) return <></>
 
-  const handleChange = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>) => setProblem({ ...problem, [name]: value })
-  const handleCheckChange = (_event: FormEvent<HTMLInputElement>, { name, checked }: CheckboxProps) => name && setProblem({ ...problem, [name]: checked })
+  const handleChange = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>) =>
+    setProblem({ ...problem, [name]: value })
+  const handleCheckChange = (_event: FormEvent<HTMLInputElement>, { name, checked }: CheckboxProps) =>
+    name && setProblem({ ...problem, [name]: checked })
 
   const handleSelectChange = (_: never, { value }: HTMLInputElement) => {
     if (value == 'gold') {
@@ -26,7 +28,6 @@ const ProblemInfoEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Elem
         division: 'eagle'
       })
     } else if (value == 'blue') {
-
       const filename = problem.name.replace(/[ !@#$%^&*()-]/g, '')
       setProblem({
         ...problem,
@@ -45,34 +46,68 @@ const ProblemInfoEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Elem
     }
   }
 
-  return <Form>
-    <Form.Group widths='equal'>
-      <Form.Field label='Problem ID' name='id' control={Input} onChange={handleChange} value={problem?.id || ''} />
-      <Form.Field label='Problem Name' name='name' control={Input} onChange={handleChange} value={problem?.name || ''} />
-      <Form.Field
-        control={Select}
-        onChange={handleSelectChange}
-        label='Division'
-        name='division'
-        options={divisions}
-        value={problem?.division || ''}
-        placeholder='Division'
-        required />
-    </Form.Group>
+  return (
+    <Form>
+      <Form.Group widths="equal">
+        <Form.Field label="Problem ID" name="id" control={Input} onChange={handleChange} value={problem?.id || ''} />
+        <Form.Field
+          label="Problem Name"
+          name="name"
+          control={Input}
+          onChange={handleChange}
+          value={problem?.name || ''}
+        />
+        <Form.Field
+          control={Select}
+          onChange={handleSelectChange}
+          label="Division"
+          name="division"
+          options={divisions}
+          value={problem?.division || ''}
+          placeholder="Division"
+          required
+        />
+      </Form.Group>
 
-    {problem.division == 'gold' ? <Form.Group style={{ display: 'flex', alignItems: 'center' }}>
-      <Form.Field label='Max Points' name='max_points' control={Input} onChange={handleChange} value={problem?.max_points} />
-      <Form.Checkbox label='Capped Points' name='capped_points' onChange={handleCheckChange} checked={problem?.capped_points} />
-      <Form.Checkbox label='Design Document' name='design_document' onChange={handleCheckChange} checked={problem.design_document} />
-    </Form.Group> : <></>}
+      {problem.division == 'gold' ? (
+        <Form.Group style={{ display: 'flex', alignItems: 'center' }}>
+          <Form.Field
+            label="Max Points"
+            name="max_points"
+            control={Input}
+            onChange={handleChange}
+            value={problem?.max_points}
+          />
+          <Form.Checkbox
+            label="Capped Points"
+            name="capped_points"
+            onChange={handleCheckChange}
+            checked={problem?.capped_points}
+          />
+          <Form.Checkbox
+            label="Design Document"
+            name="design_document"
+            onChange={handleCheckChange}
+            checked={problem.design_document}
+          />
+        </Form.Group>
+      ) : (
+        <></>
+      )}
 
-    <Form.Checkbox label='Practice Problem' name='practice' onChange={handleCheckChange} checked={problem.practice || false} />
-    {/* {problem?.division == 'blue' ? <Form.Group widths='equal'>
+      <Form.Checkbox
+        label="Practice Problem"
+        name="practice"
+        onChange={handleCheckChange}
+        checked={problem.practice || false}
+      />
+      {/* {problem?.division == 'blue' ? <Form.Group widths='equal'>
       <Form.Field label='Memory Limit' name='memory_limit' control={Input} onChange={handleChange} value={problem?.memory_limit || ''} />
       <Form.Field label='CPU Time Limit' name='cpu_time_limit' control={Input} onChange={handleChange} value={problem?.cpu_time_limit || ''} />
     </Form.Group>
      : <></>} */}
-  </Form>
+    </Form>
+  )
 }
 
 export default ProblemInfoEditor

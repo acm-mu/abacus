@@ -1,0 +1,14 @@
+name: Lint Backend Code
+on: [pull_request]
+
+jobs:
+  eslint:
+    name: Lint Backend Code
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: bradennapier/eslint-plus-action@v3.4.2
+        with:
+          configFile: backend/.eslintrc.json
+          includeGlob: backend/**/*
+          issueSummaryType: full

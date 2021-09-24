@@ -17,7 +17,9 @@ const Submissions = (): JSX.Element => {
 
   useEffect(() => {
     loadSubmissions()
-    return () => { setMounted(false) }
+    return () => {
+      setMounted(false)
+    }
   }, [])
 
   const loadSubmissions = async () => {
@@ -37,43 +39,56 @@ const Submissions = (): JSX.Element => {
   if (isLoading) return <PageLoading />
   if (user?.division != 'gold' && user?.role != 'admin') return <Unauthorized />
 
-  return <>
-    <Helmet> <title>Abacus | Gold Submissions</title> </Helmet>
-    <Countdown />
-    <Block size='xs-12' transparent>
-      <Table>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell>Submission ID</Table.HeaderCell>
-            <Table.HeaderCell>Problem</Table.HeaderCell>
-            <Table.HeaderCell>Submission #</Table.HeaderCell>
-            <Table.HeaderCell>Status</Table.HeaderCell>
-            <Table.HeaderCell>Time</Table.HeaderCell>
-            <Table.HeaderCell>Score</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {submissions?.length != 0 ?
-            (submissions?.sort((s1, s2) => s2.date - s1.date).map((submission: Submission, index: number) => (
-              <Table.Row key={index}>
-                <Table.Cell><Link to={`/gold/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link></Table.Cell>
-                <Table.Cell><Link to={`/gold/problems/${submission.problem.id}`}>{submission.problem?.name} </Link></Table.Cell>
-                <Table.Cell>{submission.sub_no + 1}</Table.Cell>
-                <Table.Cell><span className={`icn status ${submission.status}`} /></Table.Cell>
-                <Table.Cell><Moment fromNow date={submission.date * 1000} /></Table.Cell>
-                <Table.Cell>{submission.score}</Table.Cell>
-              </Table.Row>
-            ))) : (
+  return (
+    <>
+      <Helmet>
+        <title>Abacus | Gold Submissions</title>
+      </Helmet>
+      <Countdown />
+      <Block size="xs-12" transparent>
+        <Table>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell>Submission ID</Table.HeaderCell>
+              <Table.HeaderCell>Problem</Table.HeaderCell>
+              <Table.HeaderCell>Submission #</Table.HeaderCell>
+              <Table.HeaderCell>Status</Table.HeaderCell>
+              <Table.HeaderCell>Time</Table.HeaderCell>
+              <Table.HeaderCell>Score</Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {submissions?.length != 0 ? (
+              submissions
+                ?.sort((s1, s2) => s2.date - s1.date)
+                .map((submission: Submission, index: number) => (
+                  <Table.Row key={index}>
+                    <Table.Cell>
+                      <Link to={`/gold/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Link to={`/gold/problems/${submission.problem.id}`}>{submission.problem?.name} </Link>
+                    </Table.Cell>
+                    <Table.Cell>{submission.sub_no + 1}</Table.Cell>
+                    <Table.Cell>
+                      <span className={`icn status ${submission.status}`} />
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Moment fromNow date={submission.date * 1000} />
+                    </Table.Cell>
+                    <Table.Cell>{submission.score}</Table.Cell>
+                  </Table.Row>
+                ))
+            ) : (
               <Table.Row>
-                <Table.Cell colSpan={'100%'}>
-                  You don&lsquo;t have any submissions yet. Go create a project!
-                </Table.Cell>
+                <Table.Cell colSpan={'100%'}>You don&lsquo;t have any submissions yet. Go create a project!</Table.Cell>
               </Table.Row>
             )}
-        </Table.Body>
-      </Table>
-    </Block>
-  </>
+          </Table.Body>
+        </Table>
+      </Block>
+    </>
+  )
 }
 
 export default Submissions
