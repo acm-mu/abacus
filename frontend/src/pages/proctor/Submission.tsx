@@ -37,7 +37,9 @@ const submission = (): JSX.Element => {
   useEffect(() => {
     loadSubmission().then(() => setLoading(false))
     socket?.on('update_submission', loadSubmission)
-    return () => { setMounted(false) }
+    return () => {
+      setMounted(false)
+    }
   }, [])
 
   if (isLoading) return <PageLoading />
@@ -95,20 +97,49 @@ const submission = (): JSX.Element => {
     setUnFlagging({ ...isUnFlagging, [sid]: false })
   }
 
-  return <>
-    <Helmet> <title>Abacus | Judge Submission</title> </Helmet>
+  return (
+    <>
+      <Helmet>
+        <title>Abacus | Judge Submission</title>
+      </Helmet>
 
-    <Button content='Back' icon='arrow left' labelPosition='left' onClick={history.goBack} />
-    {submission.viewed ?
-      <Button content="Viewed" icon='check' disabled={true} labelPosition={'left'} /> :
-      <Button content="Mark as Viewed" icon='eye' onClick={view} loading={isViewing} disabled={isViewing} labelPosition={'left'} />}
-    {submission.flagged ?
-      <Button loading={isUnFlagging[submission.sid]} disabled={isUnFlagging[submission.sid]} icon="warning" color='orange' content="Flagged" labelPosition="left" onClick={unflag} /> :
-      <Button loading={isFlagging[submission.sid]} disabled={isFlagging[submission.sid]} icon="flag" content="Flag" labelPosition="left" onClick={flag} />
-    }
+      <Button content="Back" icon="arrow left" labelPosition="left" onClick={history.goBack} />
+      {submission.viewed ? (
+        <Button content="Viewed" icon="check" disabled={true} labelPosition={'left'} />
+      ) : (
+        <Button
+          content="Mark as Viewed"
+          icon="eye"
+          onClick={view}
+          loading={isViewing}
+          disabled={isViewing}
+          labelPosition={'left'}
+        />
+      )}
+      {submission.flagged ? (
+        <Button
+          loading={isUnFlagging[submission.sid]}
+          disabled={isUnFlagging[submission.sid]}
+          icon="warning"
+          color="orange"
+          content="Flagged"
+          labelPosition="left"
+          onClick={unflag}
+        />
+      ) : (
+        <Button
+          loading={isFlagging[submission.sid]}
+          disabled={isFlagging[submission.sid]}
+          icon="flag"
+          content="Flag"
+          labelPosition="left"
+          onClick={flag}
+        />
+      )}
 
-    <SubmissionView submission={submission} />
-  </>
+      <SubmissionView submission={submission} />
+    </>
+  )
 }
 
 export default submission

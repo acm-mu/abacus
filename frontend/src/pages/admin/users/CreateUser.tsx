@@ -1,12 +1,12 @@
-import React, { ChangeEvent, useState } from "react"
-import { Modal, Form, Input, Select, Button } from "semantic-ui-react"
+import React, { ChangeEvent, useState } from 'react'
+import { Modal, Form, Input, Select, Button } from 'semantic-ui-react'
 import config from 'environment'
-import { divisions, roles } from "utils"
-import { StatusMessage } from "components"
+import { divisions, roles } from 'utils'
+import { StatusMessage } from 'components'
 
 type CreateUserProps = {
-  trigger: JSX.Element;
-  callback?: (res: Response) => void;
+  trigger: JSX.Element
+  callback?: (res: Response) => void
 }
 
 const CreateUser = ({ trigger, callback }: CreateUserProps): JSX.Element => {
@@ -24,7 +24,8 @@ const CreateUser = ({ trigger, callback }: CreateUserProps): JSX.Element => {
   const [user, setUser] = useState(empty)
   const [isCreating, setCreating] = useState(false)
 
-  const handleChange = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>) => setUser({ ...user, [name]: value })
+  const handleChange = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>) =>
+    setUser({ ...user, [name]: value })
   const handleSelectChange = (_: never, { name, value }: HTMLInputElement) => setUser({ ...user, [name]: value })
 
   const handleSubmit = async () => {
@@ -59,8 +60,7 @@ const CreateUser = ({ trigger, callback }: CreateUserProps): JSX.Element => {
         setOpen(true)
       }}
       open={open}
-      trigger={trigger}
-    >
+      trigger={trigger}>
       <Modal.Header>Create User</Modal.Header>
       <Modal.Content>
         <Modal.Description>
@@ -69,67 +69,77 @@ const CreateUser = ({ trigger, callback }: CreateUserProps): JSX.Element => {
             <Form.Field
               control={Input}
               onChange={handleChange}
-              label='Username'
-              name='username'
+              label="Username"
+              name="username"
               value={user.username}
-              placeholder='User Name'
+              placeholder="User Name"
               required
             />
             <Form.Field
               control={Select}
               onChange={handleSelectChange}
-              label='User Role'
-              name='role'
+              label="User Role"
+              name="role"
               options={roles}
               value={user.role}
-              placeholder='User Role'
+              placeholder="User Role"
               required
             />
-            {user.role == 'team' &&
+            {user.role == 'team' && (
               <Form.Field
                 control={Input}
                 onChange={handleChange}
-                label='School'
-                name='school'
+                label="School"
+                name="school"
                 value={user.school}
-                placeholder='School'
+                placeholder="School"
                 required
-              />}
-            {['team', 'judge'].includes(user.role) &&
+              />
+            )}
+            {['team', 'judge'].includes(user.role) && (
               <Form.Field
                 control={Select}
                 onChange={handleSelectChange}
-                label='Division'
-                name='division'
+                label="Division"
+                name="division"
                 options={divisions}
                 value={user.division}
-                placeholder='Division'
-                required />}
+                placeholder="Division"
+                required
+              />
+            )}
             <Form.Field
               control={Input}
               onChange={handleChange}
-              label='Display Name'
-              name='display_name'
+              label="Display Name"
+              name="display_name"
               value={user.display_name}
-              placeholder='Display Name'
+              placeholder="Display Name"
               required
             />
             <Form.Field
               control={Input}
               onChange={handleChange}
-              name='password'
-              label='Password'
+              name="password"
+              label="Password"
               value={user.password}
-              type='password'
-              placeholder='Password'
+              type="password"
+              placeholder="Password"
               required
             />
           </Form>
         </Modal.Description>
       </Modal.Content>
       <Modal.Actions>
-        <Button primary onClick={handleSubmit} loading={isCreating} disabled={isCreating}>Create</Button>
-        <Button onClick={() => { setOpen(false) }}>Cancel</Button>
+        <Button primary onClick={handleSubmit} loading={isCreating} disabled={isCreating}>
+          Create
+        </Button>
+        <Button
+          onClick={() => {
+            setOpen(false)
+          }}>
+          Cancel
+        </Button>
       </Modal.Actions>
     </Modal>
   )

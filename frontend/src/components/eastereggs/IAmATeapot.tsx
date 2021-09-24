@@ -1,6 +1,6 @@
-import React from "react";
-import Moment from "react-moment";
-import './IAmATeapot.scss';
+import React from 'react'
+import Moment from 'react-moment'
+import './IAmATeapot.scss'
 
 export const IAmATeapot = (): JSX.Element => {
   const wrappedHTML = [
@@ -93,24 +93,30 @@ export const IAmATeapot = (): JSX.Element => {
     `                                                                                                                                                                                                                                                          `,
     `                                                                                                                                                                                                                                                          `,
     `                                                                                                                                                                                                                                                          `,
-    ``,
+    ``
   ].join('\n')
-  return <div id="teapot">
-    <div>
-      <b>REQUEST</b>
-      <p>BREW /coffee HTTP/1.1</p>
-      <p>Host: {location.hostname}</p>
-      <p>User-Agent: {navigator.userAgent}</p>
-      <p>Accept-Language: en-US,en;q=0.5</p>
-      <p>Accept-Encoding: gzip, deflate</p>
-      <br />
-      <b>RESPONSE</b>
-      <p>HTTP/1.1 418 I&apos;m a teapot</p>
-      <p>Content-Type: text/html; charset=UTF-8</p>
-      <p>Date: <Moment /></p>
-      <p>Connection: keep-alive</p>
-      <p>Keep-Alive: timeout=5</p>
+  return (
+    <div id="teapot">
+      <div>
+        <b>REQUEST</b>
+        <p>BREW /coffee HTTP/1.1</p>
+        <p>Host: {location.hostname}</p>
+        <p>User-Agent: {navigator.userAgent}</p>
+        <p>Accept-Language: en-US,en;q=0.5</p>
+        <p>Accept-Encoding: gzip, deflate</p>
+        <br />
+        <b>RESPONSE</b>
+        <p>HTTP/1.1 418 I&apos;m a teapot</p>
+        <p>Content-Type: text/html; charset=UTF-8</p>
+        <p>
+          Date: <Moment />
+        </p>
+        <p>Connection: keep-alive</p>
+        <p>Keep-Alive: timeout=5</p>
+      </div>
+      <pre>
+        <code>{wrappedHTML}</code>
+      </pre>
     </div>
-    <pre><code>{wrappedHTML}</code></pre>
-  </div>
+  )
 }

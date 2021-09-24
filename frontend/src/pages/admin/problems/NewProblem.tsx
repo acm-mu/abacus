@@ -28,14 +28,18 @@ const NewProblem = (): JSX.Element => {
     }
   }
 
-  return <>
-    <Helmet>  <title>Abacus | Admin New Problem</title> </Helmet>
-    <h1>New Problem</h1>
-    <StatusMessage message={message} onDismiss={() => setMessage(undefined)} />
+  return (
+    <>
+      <Helmet>
+        {' '}
+        <title>Abacus | Admin New Problem</title>
+      </Helmet>
+      <h1>New Problem</h1>
+      <StatusMessage message={message} onDismiss={() => setMessage(undefined)} />
 
-    <ProblemEditor handleSubmit={handleSubmit} />
-  </>
+      <ProblemEditor handleSubmit={handleSubmit} />
+    </>
+  )
 }
-
 
 export default NewProblem
