@@ -1,6 +1,5 @@
-declare module "abacus" {
-
-  /** 
+declare module 'abacus' {
+  /**
    * @swagger
    * components:
    *   schemas:
@@ -39,101 +38,101 @@ declare module "abacus" {
    *         - practice_end_date
    */
   export interface Settings extends Record<string, string | number> {
-      competition_name: string;
-      practice_name: string;
-      points_per_yes: number;
-      points_per_no: number;
-      points_per_compilation_error: number;
-      points_per_minute: number;
-      start_date: number;
-      end_date: number;
-      practice_start_date: number;
-      practice_end_date: number;
+    competition_name: string
+    practice_name: string
+    points_per_yes: number
+    points_per_no: number
+    points_per_compilation_error: number
+    points_per_minute: number
+    start_date: number
+    end_date: number
+    practice_start_date: number
+    practice_end_date: number
   }
 
-/**
- * @swagger
- * components:
- *   schemas:
- *     Submission:
- *       properties:
- *         sid:
- *           type: string
- *         date:
- *           type: integer
- *         filename:
- *           type: string
- *         filesize:
- *           type: integer
- *         source:
- *           type: string
- *         project_id:
- *           type: string
- *         language:
- *           type: string
- *         md5:
- *           type: string
- *         pid:
- *           type: string
- *         runtime:
- *           type: integer
- *         released:
- *           type: boolean
- *         score:
- *           type: integer
- *         status:
- *           type: string
- *         sub_no:
- *           type: integer
- *         tid:
- *           type: string
- *         tests:
- *           type: array
- *           items:
- *             $ref: '#/definitions/Test'
- *         claimed:
- *           type: string
- *         viewed:
- *           type: boolean
- *         flagged:
- *           type: string
- *       required:
- *         - sid
- *         - date
- *         - filename
- *         - filesize
- *         - source
- *         - language
- *         - md5
- *         - pid
- *         - runtime
- *         - released
- *         - score
- *         - status
- *         - sub_no
- *         - tid
- *         - tests
- */
+  /**
+   * @swagger
+   * components:
+   *   schemas:
+   *     Submission:
+   *       properties:
+   *         sid:
+   *           type: string
+   *         date:
+   *           type: integer
+   *         filename:
+   *           type: string
+   *         filesize:
+   *           type: integer
+   *         source:
+   *           type: string
+   *         project_id:
+   *           type: string
+   *         language:
+   *           type: string
+   *         md5:
+   *           type: string
+   *         pid:
+   *           type: string
+   *         runtime:
+   *           type: integer
+   *         released:
+   *           type: boolean
+   *         score:
+   *           type: integer
+   *         status:
+   *           type: string
+   *         sub_no:
+   *           type: integer
+   *         tid:
+   *           type: string
+   *         tests:
+   *           type: array
+   *           items:
+   *             $ref: '#/definitions/Test'
+   *         claimed:
+   *           type: string
+   *         viewed:
+   *           type: boolean
+   *         flagged:
+   *           type: string
+   *       required:
+   *         - sid
+   *         - date
+   *         - filename
+   *         - filesize
+   *         - source
+   *         - language
+   *         - md5
+   *         - pid
+   *         - runtime
+   *         - released
+   *         - score
+   *         - status
+   *         - sub_no
+   *         - tid
+   *         - tests
+   */
   export interface Submission extends Record<string, unknown> {
-      sid: string;
-      date: number;
-      filename: string;
-      filesize: number;
-      source: string;
-      project_id?: string;
-      language: string;
-      md5: string;
-      pid: string;
-      runtime: number;
-      released: boolean;
-      score: number;
-      status: string;
-      sub_no: number;
-      tid: string;
-      tests: Test[];
-      claimed?: string;
-      viewed?: boolean;
-      flagged?: string;
+    sid: string
+    date: number
+    filename: string
+    filesize: number
+    source: string
+    project_id?: string
+    language: string
+    md5: string
+    pid: string
+    runtime: number
+    released: boolean
+    score: number
+    status: string
+    sub_no: number
+    tid: string
+    tests: Test[]
+    claimed?: string
+    viewed?: boolean
+    flagged?: string
   }
   /**
    * @swagger
@@ -141,7 +140,7 @@ declare module "abacus" {
    *   Problem:
    *     schemas:
    *       properties:
-   *         pid: 
+   *         pid:
    *           type: string
    *         practice:
    *           type: boolean
@@ -176,16 +175,16 @@ declare module "abacus" {
    *         - tests
    */
   export interface Problem extends Record<string, unknown> {
-      pid: string;
-      practice?: boolean;
-      id: string;
-      division: string;
-      name: string;
-      description: string;
-      cpu_time_limit: number;
-      memory_limit: number;
-      skeletons?: Skeleton[];
-      tests: Test[];
+    pid: string
+    practice?: boolean
+    id: string
+    division: string
+    name: string
+    description: string
+    cpu_time_limit: number
+    memory_limit: number
+    skeletons?: Skeleton[]
+    tests: Test[]
   }
   /**
    * @swagger
@@ -217,16 +216,16 @@ declare module "abacus" {
    *         - display_name
    */
   export interface User extends Record<string, unknown> {
-      uid: string;
-      role: string;
-      username: string;
-      password: string;
-      display_name: string;
-      division?: string;
-      school?: string;
-      disabled?: boolean;
+    uid: string
+    role: string
+    username: string
+    password: string
+    display_name: string
+    division?: string
+    school?: string
+    disabled?: boolean
   }
-  /** 
+  /**
    * @swagger
    * components:
    *   schemas:
@@ -244,11 +243,11 @@ declare module "abacus" {
    *         - result
    */
   export interface Test extends Record<string, unknown> {
-      in: string;
-      out: string;
-      result: string;
+    in: string
+    out: string
+    result: string
   }
-  /** 
+  /**
    * @swagger
    * components:
    *   schemas:
@@ -266,26 +265,26 @@ declare module "abacus" {
    *         - file_name
    */
   export interface Skeleton extends Record<string, unknown> {
-      language: string;
-      source: string;
-      file_name: string;
+    language: string
+    source: string
+    file_name: string
   }
   export interface ProblemScore extends Record<string, unknown> {
-      num_submissions: number;
-      problem_score: number;
-      solved: boolean;
-      submissions: Submission[];
+    num_submissions: number
+    problem_score: number
+    solved: boolean
+    submissions: Submission[]
   }
   export interface StandingsUser extends Record<string, unknown> {
-      display_name: string;
-      uid: string;
-      username: string;
-      solved: number;
-      time: number;
-      problems: { [key: string]: ProblemScore };
+    display_name: string
+    uid: string
+    username: string
+    solved: number
+    time: number
+    problems: { [key: string]: ProblemScore }
   }
 
-  /** 
+  /**
    * @swagger
    * components:
    *   schemas:
@@ -304,11 +303,11 @@ declare module "abacus" {
    *         - id
    */
   export interface Context extends Record<string, unknown> {
-      type: 'pid' | 'cid' | 'sid';
-      id: string;
+    type: 'pid' | 'cid' | 'sid'
+    id: string
   }
 
-  /** 
+  /**
    * @swagger
    * components:
    *   schemas:
@@ -345,25 +344,25 @@ declare module "abacus" {
    *         - date
    */
   export interface Clarification extends Record<string, unknown> {
-      cid: string;
-      body: string;
-      uid: string;
-      date: number;
-      open?: boolean;
-      parent?: string;
-      division?: string;
-      type?: string;
-      title?: string;
-      context?: Context;
-      children?: Clarification[]
+    cid: string
+    body: string
+    uid: string
+    date: number
+    open?: boolean
+    parent?: string
+    division?: string
+    type?: string
+    title?: string
+    context?: Context
+    children?: Clarification[]
   }
 
   export interface Notification extends Record<string, unknown> {
-      header?: string;
-      to?: string;
-      content: string;
-      id?: string;
-      context?: Context;
-      type?: 'success' | 'warning' | 'error';
+    header?: string
+    to?: string
+    content: string
+    id?: string
+    context?: Context
+    type?: 'success' | 'warning' | 'error'
   }
 }

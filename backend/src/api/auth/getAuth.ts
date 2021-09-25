@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response } from 'express'
 
 /**
  * @swagger
@@ -10,7 +10,7 @@ import { Request, Response } from 'express';
  *       - application/json
  *     security:
  *       - bearerAuth:
- *         - 
+ *         -
  *     responses:
  *       200:
  *         description: Authenticated user

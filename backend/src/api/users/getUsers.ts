@@ -1,6 +1,6 @@
-import { Request, Response } from 'express';
-import { matchedData, ParamSchema, validationResult } from "express-validator";
-import { contest } from '../../abacus';
+import { Request, Response } from 'express'
+import { matchedData, ParamSchema, validationResult } from 'express-validator'
+import { contest } from '../../abacus'
 import { transpose } from '../../utils'
 
 export const schema: Record<string, ParamSchema> = {
@@ -26,7 +26,7 @@ export const schema: Record<string, ParamSchema> = {
     in: ['body', 'query'],
     isString: true,
     optional: true,
-    errorMessage: 'String division is not supplied',
+    errorMessage: 'String division is not supplied'
   },
   password: {
     in: ['body', 'query'],
@@ -56,8 +56,7 @@ export const getUsers = async (req: Request, res: Response) => {
   }
   const params = matchedData(req)
 
-  if (req.user?.role == 'team')
-    params.uid = req.user?.uid
+  if (req.user?.role == 'team') params.uid = req.user?.uid
   if (req.user?.role == 'judge') {
     params.role = 'team'
     params.division = req.user.division
@@ -66,8 +65,8 @@ export const getUsers = async (req: Request, res: Response) => {
   try {
     const users = await contest.get_users(params)
     users?.map((user: any) => {
-      const {password, ...returnUser} = user
-      return returnUser 
+      const { password, ...returnUser } = user
+      return returnUser
     })
     res.send(transpose(users, 'uid'))
   } catch (err) {

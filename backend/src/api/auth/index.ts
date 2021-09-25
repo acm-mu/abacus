@@ -25,8 +25,8 @@ import { isAuthenticated } from '../../abacus/authlib'
 /**
  * @swagger
  * security:
- *   - bearerAuth: 
- *     - 
+ *   - bearerAuth:
+ *     -
  */
 
 const auth = Router()

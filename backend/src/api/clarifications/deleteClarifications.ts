@@ -1,6 +1,6 @@
-import { Request, Response } from "express";
-import { ParamSchema, validationResult } from "express-validator";
-import contest from "../../abacus/contest";
+import { Request, Response } from 'express'
+import { ParamSchema, validationResult } from 'express-validator'
+import contest from '../../abacus/contest'
 
 export const schema: Record<string, ParamSchema> = {
   cid: {
@@ -39,9 +39,8 @@ export const deleteClarifications = async (req: Request, res: Response) => {
     try {
       await contest.delete_clarification(req.body.cid)
       for (const clarification of clarifications)
-        if (clarification.parent == req.body.cid)
-          await contest.delete_clarification(clarification.cid)
-      res.json({ message: "Clarification successfully deleted" })
+        if (clarification.parent == req.body.cid) await contest.delete_clarification(clarification.cid)
+      res.json({ message: 'Clarification successfully deleted' })
     } catch (err) {
       console.error(err)
       res.sendStatus(500)
