@@ -18,6 +18,44 @@ export const schema: Record<string, ParamSchema> = {
     errorMessage: 'password is not provided'
   }
 }
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     LoginUser:
+ *       properties:
+ *         username:
+ *           type: string
+ *         password:
+ *           type: string
+ *       required:
+ *         - username
+ *         - password
+ */
+
+
+/**
+ * @swagger
+ * /auth:
+ *  post:
+ *    description: Help me here
+ *    tags: [auth]
+ *    consumers:
+ *      - application/json
+ *    produces:
+ *      - application/json
+ *    requestBody:
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/LoginUser'
+ *    responses:
+ *      200:
+ *        description: login
+ *        schema:
+ *          type: object
+ *          $ref: '#/components/schemas/User'
+ */
 
 export const postAuth = async (req: Request, res: Response) => {
   const errors = validationResult(req).array()
