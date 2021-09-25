@@ -1,42 +1,44 @@
-import { Database } from "."
-import { Item, Key, ScanOptions } from "./database"
-import { Db, MongoClient } from "mongodb"
+import { Database } from '.'
+import { Item, Key, ScanOptions } from './database'
+import { Db, MongoClient } from 'mongodb'
 import * as dotenv from 'dotenv'
 
 dotenv.config()
 
 export default class MongoDB extends Database {
-
   db: Db
 
   constructor() {
     super()
 
-    const {MONGO_HOST, MONGO_USER, MONGO_PASS, MONGO_DBNAME} = process.env
+    const { MONGO_HOST, MONGO_USER, MONGO_PASS, MONGO_DBNAME } = process.env
     const url = `mongodb://${MONGO_USER}:${MONGO_PASS}@${MONGO_HOST}/${MONGO_DBNAME}`
 
     MongoClient.connect(url, (err: any, db) => {
-      if (err) throw err;
-      if (!db) throw new Error("Could not connect to MongoDB database")
-      this.db = db.db("abacus")
+      if (err) throw err
+      if (!db) throw new Error('Could not connect to MongoDB database')
+      this.db = db.db('abacus')
     })
   }
 
   scan(TableName: string, query?: ScanOptions): Promise<Item[]> {
     return new Promise(async (resolve, reject) => {
-      await this.db.collection(TableName).find(query?.args || {}).toArray((err: any, data) => {
-        if (err) {
-          reject(err)
-          return
-        }
-        if (data) resolve(data)
-      })
+      await this.db
+        .collection(TableName)
+        .find(query?.args || {}, { projection: { _id: 0 } })
+        .toArray((err: any, data) => {
+          if (err) {
+            reject(err)
+            return
+          }
+          if (data) resolve(data)
+        })
     })
   }
 
   get(TableName: string, Key: Key): Promise<Item> {
     return new Promise(async (resolve, reject) => {
-      await this.db.collection(TableName).findOne(Key, (err: any, data) => {
+      await this.db.collection(TableName).findOne(Key, { projection: { _id: 0 } }, (err: any, data) => {
         if (err) {
           reject(err)
           return
@@ -60,18 +62,27 @@ export default class MongoDB extends Database {
 
   update(TableName: string, Key: Key, Item: Item): Promise<Item> {
     return new Promise(async (resolve, reject) => {
-      const unsetFields = Object.assign({}, ...Object.entries(Item).filter(obj => !obj[1]).map(obj => ({[`${obj[0]}`]: 1})))
+      const unsetFields = Object.assign(
+        {},
+        ...Object.entries(Item)
+          .filter((obj) => !obj[1])
+          .map((obj) => ({ [`${obj[0]}`]: 1 }))
+      )
 
-      await this.db.collection(TableName).updateOne(Key, {
-        $set: Item,
-        $unset: unsetFields
-      }, (err: any, data) => {
-        if (err) {
-          reject(err)
-          return
+      await this.db.collection(TableName).updateOne(
+        Key,
+        {
+          $set: Item,
+          $unset: unsetFields
+        },
+        (err: any, data) => {
+          if (err) {
+            reject(err)
+            return
+          }
+          if (data) resolve(data)
         }
-        if (data) resolve(data)
-      })
+      )
     })
   }
 
