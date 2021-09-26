@@ -2,10 +2,17 @@
   "name": "backend",
   "license": "ISC",
   "scripts": {
-    "dev": "nodemon --exec ts-node --files src/server.ts",
+    "dev": "nodemon",
     "zip": "cp package.json dist/ && cd dist && zip -r backend .",
     "build": "tsc",
     "start": "node server.js"
+  },
+  "nodemonConfig": {
+    "watch": [
+      "src"
+    ],
+    "ext": "ts",
+    "exec": "ts-node --files src/server.ts"
   },
   "dependencies": {
     "archiver": "^5.2.0",
