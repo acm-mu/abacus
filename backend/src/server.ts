@@ -43,7 +43,7 @@ if (process.env.NODE_ENV == 'development') app.use(morgan('dev'))
 
 app.use(api)
 
-app.get('/', (_, res) => res.status(200).send(' ')) // Sends 200 OK when AWS EBS pings server for health check
+app.get('/', (_, res) => res.redirect('/docs')) // Sends 200 OK when AWS EBS pings server for health check
 
 export const sendNotification = ({ header, to, content, type, context }: Notification) =>
   io.sockets.emit('notification', { id: uuidv4(), to, header, content, type, context })
