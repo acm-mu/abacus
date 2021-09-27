@@ -21,13 +21,6 @@ import { isAuthenticated } from '../../abacus/authlib'
  *       bearerFormat: JWT
  */
 
-/**
- * @swagger
- * security:
- *   - bearerAuth:
- *     -
- */
-
 const auth = Router()
 
 auth.get('/auth', isAuthenticated, getAuth)

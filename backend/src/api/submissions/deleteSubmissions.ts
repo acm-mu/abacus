@@ -31,11 +31,11 @@ export const schema: Record<string, ParamSchema> = {
  *                 items:
  *                   type: string
  *     responses:
- *       '200':
+ *       200:
  *         description: Successfully completed request.
- *       '400':
+ *       400:
  *         description: Bad Request. Request does not match required schema.
- *       '500':
+ *       500:
  *         description: A server error has occurred while trying to complete request.
  */
 export const deleteSubmissions = async (req: Request, res: Response) => {

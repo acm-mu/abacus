@@ -35,16 +35,16 @@ export const schema: Record<string, ParamSchema> = {
  *
  *     tags: [problems]
  *     responses:
- *       '200':
+ *       200:
  *         description: Success. Skeletons included in response.
  *         content:
  *           application/zip:
  *             schema:
  *               type: string
  *               format: binary
- *       '400':
+ *       400:
  *         description: Bad Request. pid was not provided, or is invalid.
- *       '404':
+ *       404:
  *         description: Could not find skeletons for given problem.
  */
 export const downloadFiles = async (req: Request, res: Response) => {

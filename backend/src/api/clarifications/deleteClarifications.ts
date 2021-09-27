@@ -29,9 +29,9 @@ export const schema: Record<string, ParamSchema> = {
  *                 items:
  *                   type: string
  *     responses:
- *       '200':
+ *       200:
  *         description: Successfully completed request
- *       '500':
+ *       500:
  *         description: A server error occurred while trying to delete clarifications.
  */
 

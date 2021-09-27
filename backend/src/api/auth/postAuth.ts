@@ -44,7 +44,7 @@ export const schema: Record<string, ParamSchema> = {
  *           schema:
  *             $ref: '#/components/schemas/LoginUser'
  *     responses:
- *       '200':
+ *       200:
  *         description: >-
  *           Authenticated user
  *         content:

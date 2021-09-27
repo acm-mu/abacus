@@ -75,14 +75,14 @@ export const schema: Record<string, ParamSchema> = {
  *           schema:
  *             $ref: '#/components/schemas/Settings'
  *     responses:
- *       '200':
+ *       200:
  *         description: >-
  *           Contest settings.
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Settings'
- *       '400':
+ *       400:
  *         description: >-
  *           Request body does not match required schema.
  */

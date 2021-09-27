@@ -29,11 +29,11 @@ export const schema: Record<string, ParamSchema> = {
  *                 type: string
  *             required: [sid]
  *     responses:
- *       '200':
+ *       200:
  *         description: Returns payload from piston runner lambda (Subject to change).
- *       '400':
+ *       400:
  *         description: Could not complete request, request does not match schema.
- *       '500':
+ *       500:
  *         description: A server error occurred while trying to complete request.
  */
 export const rerunSubmission = async (req: Request, res: Response) => {

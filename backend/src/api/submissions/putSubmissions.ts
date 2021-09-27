@@ -97,6 +97,7 @@ const notifyTeam = async (item: Record<string, any>) => {
 
 /**
  * @swagger
+ * /submissions:
  *   put:
  *     summary: Updates an existing submission.
  *     description: Updates a submission (identified by sid, provided in body).
@@ -137,13 +138,13 @@ const notifyTeam = async (item: Record<string, any>) => {
  *                 type: string
  *             required: [sid]
  *     responses:
- *       '200':
+ *       200:
  *         description: Returns request body.
- *       '400':
+ *       400:
  *         description: Request body does not match required schema.
- *       '403':
+ *       403:
  *         description: Judges cannot update claimed property if already set.
- *       '500':
+ *       500:
  *         description: A server error occured while trying to complete request.
  */
 export const putSubmissions = async (req: Request, res: Response) => {

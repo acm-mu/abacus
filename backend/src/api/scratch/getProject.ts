@@ -24,9 +24,9 @@ export const schema: Record<string, ParamSchema> = {
  *         schema:
  *           type: string
  *     responses:
- *       '200':
+ *       200:
  *         description: OK. Returns information about the user. (Schema subject to change from scratch api.)
- *       '400':
+ *       400:
  *         description: The request did not match the required schema.
  */
 export const getProject = async (req: Request, res: Response) => {

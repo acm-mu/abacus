@@ -83,13 +83,13 @@ export const schema: Record<string, ParamSchema> = {
  *                 type: boolean
  *             required: [uid]
  *     responses:
- *       '200':
+ *       200:
  *         description: Returns request body.
- *       '400':
+ *       400:
  *         description: Request body does not match required schema.
- *       '403':
+ *       403:
  *         description: User does not have permission to complete request.
- *       '500':
+ *       500:
  *         description: A server error occured while trying to complete request.
  */
 export const putUsers = async (req: Request, res: Response) => {

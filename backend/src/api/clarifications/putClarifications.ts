@@ -69,15 +69,15 @@ export const schema: Record<string, ParamSchema> = {
  *               context:
  *                 type: string
  *     responses:
- *       '200':
+ *       200:
  *         description: Success. Returns updated clarification object.
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Clarification'
- *       '400':
+ *       400:
  *         description: Bad Request. cid or other properties are invalid.
- *       '500':
+ *       500:
  *         description: A server error occurred while trying to complete request.
  */
 export const putClarifications = async (req: Request, res: Response) => {

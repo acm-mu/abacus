@@ -40,7 +40,7 @@ export const schema: Record<string, ParamSchema> = {
  *         schema:
  *           type: string
  *     responses:
- *       '200':
+ *       200:
  *         description: .
  *         content:
  *           application/json:
@@ -60,9 +60,9 @@ export const schema: Record<string, ParamSchema> = {
  *                           type: integer
  *                         time:
  *                           type: integer
- *       '204':
+ *       204:
  *         description: No Content. Before competition.
- *       '400':
+ *       400:
  *         description: Request does not match required schema.
  */
 const getBlueStandings = async (isPractice: boolean): Promise<Record<string, any>> => {

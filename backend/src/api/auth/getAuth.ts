@@ -10,7 +10,7 @@ import { Request, Response } from 'express'
  *     security:
  *       - bearerAuth: [""]
  *     responses:
- *       '200':
+ *       200:
  *         description: >-
  *           The server was able to authenticate the user. Returns the
  *           authenticated user object.
@@ -18,7 +18,7 @@ import { Request, Response } from 'express'
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/User'
- *       '401':
+ *       401:
  *         description: Could not authenticate user. The access token is either not provided, or is invalid
  *
  */

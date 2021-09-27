@@ -98,15 +98,15 @@ const notify = async (clarification: Clarification) => {
  *           schema:
  *             $ref: '#/components/schemas/NewClarification'
  *     responses:
- *       '200':
+ *       200:
  *         description: Success. Returns new clarification.
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Clarification'
- *       '401':
+ *       401:
  *         description: Could not authenticate user.
- *       '404':
+ *       404:
  *         description: Bad Request. Provided clarification does not match schema.
  */
 export const postClarifications = async (req: Request, res: Response) => {

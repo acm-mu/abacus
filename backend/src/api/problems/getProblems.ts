@@ -102,7 +102,7 @@ const showToUser = (user: User | undefined, problem: Problem, settings: Settings
  *         schema:
  *           type: boolean
  *     responses:
- *       '200':
+ *       200:
  *         description: List of problems matching provided query.
  *         content:
  *           application/json:
@@ -110,9 +110,9 @@ const showToUser = (user: User | undefined, problem: Problem, settings: Settings
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Problem'
- *       '400':
+ *       400:
  *         description: Bad Request. Provided query does not match request schema.
- *       '500':
+ *       500:
  *         description: A server error occured while trying to complete request.
  */
 export const getProblems = async (req: Request, res: Response) => {

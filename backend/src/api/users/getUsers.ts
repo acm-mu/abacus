@@ -87,7 +87,7 @@ export const schema: Record<string, ParamSchema> = {
  *         schema:
  *           type: string
  *     responses:
- *       '200':
+ *       200:
  *         description: List of users matching provided queries.
  *         content:
  *           application/json:
@@ -95,11 +95,11 @@ export const schema: Record<string, ParamSchema> = {
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/User'
- *       '400':
+ *       400:
  *         description: Could not complete request because request does not match required schema.
- *       '401':
+ *       401:
  *         description: Could not authenticate user.
- *       '500':
+ *       500:
  *         description: A server error occurred while trying to complete request.
  */
 export const getUsers = async (req: Request, res: Response) => {

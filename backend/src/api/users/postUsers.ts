@@ -73,19 +73,19 @@ export const schema: Record<string, ParamSchema> = {
  *     security:
  *       - bearerAuth: [""]
  *     responses:
- *       '200':
+ *       200:
  *         description: Successfully created new user.
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/User'
- *       '400':
+ *       400:
  *         description: Bad Request. Request body does not match required schema. Judges and teams require division.
- *       '401':
+ *       401:
  *         description: Could not authenticate requested user.
- *       '403':
+ *       403:
  *         description: Requesting user does not have sufficient permission to complete request.
- *       '500':
+ *       500:
  *         description: A server error occured while trying to complete request.
  */
 export const postUsers = async (req: Request, res: Response) => {

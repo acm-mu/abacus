@@ -42,6 +42,7 @@ export const schema: Record<string, ParamSchema> = {
 
 /**
  * @swagger
+ * /submissions:
  *   post:
  *     summary: Create new blue/gold submission.
  *     description: >-
@@ -66,19 +67,19 @@ export const schema: Record<string, ParamSchema> = {
  *     security:
  *       - bearerAuth: [""]
  *     responses:
- *       '200':
+ *       200:
  *         description: Successfully created new submission.
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Submission'
- *       '400':
+ *       400:
  *         description: Bad Request. Request body does not match required schema.
- *       '401':
+ *       401:
  *         description: Could not authenticate user.
- *       '403':
+ *       403:
  *         description: Either account is disabled or outside of competition time period.
- *       '500':
+ *       500:
  *         description: A server error occured while trying to complete request.
  */
 export const postSubmissions = async (req: Request, res: Response) => {

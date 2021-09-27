@@ -45,11 +45,11 @@ const deleteSubmissionsForProblem = async (pid: string) => {
  *     security:
  *       - bearerAuth: [""]
  *     responses:
- *       '200':
+ *       200:
  *         description: Success. Provided problems and associate submissions were deleted.
- *       '400':
+ *       400:
  *         description: Bad Request. Request does not match schema
- *       '500':
+ *       500:
  *         description: A server error occurred while trying to complete request.
  */
 export const deleteProblems = async (req: Request, res: Response) => {

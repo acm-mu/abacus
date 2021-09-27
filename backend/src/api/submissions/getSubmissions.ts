@@ -92,6 +92,7 @@ const showToUser = (user: User | undefined, problem: Problem, settings: Settings
 
 /**
  * @swagger
+ * /submissions
  *   get:
  *     summary: Search for submissions with provided queries.
  *     description: Returns list of submissions that match provided query.
@@ -144,7 +145,7 @@ const showToUser = (user: User | undefined, problem: Problem, settings: Settings
  *         schema:
  *           type: boolean
  *     responses:
- *       '200':
+ *       200:
  *         description: List of submissions matching provided queries.
  *         content:
  *           application/json:
@@ -152,11 +153,11 @@ const showToUser = (user: User | undefined, problem: Problem, settings: Settings
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Submission'
- *       '400':
+ *       400:
  *         description: Could not complete request because request does not match required schema.
- *       '401':
+ *       401:
  *         description: Could not authenticate user.
- *       '500':
+ *       500:
  *         description: A server error occurred while trying to complete request.
  */
 export const getSubmissions = async (req: Request, res: Response) => {

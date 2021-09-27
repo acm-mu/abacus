@@ -98,7 +98,7 @@ const hasAccessTo = ({ type, division, uid }: any, user?: User) => {
  *         schema:
  *           type: boolean
  *     responses:
- *       '200':
+ *       200:
  *         description: List of clarifications matching provided queries.
  *         content:
  *           application/json:
@@ -106,7 +106,7 @@ const hasAccessTo = ({ type, division, uid }: any, user?: User) => {
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Clarification'
- *       '401':
+ *       401:
  *         description: Could not authenticate user.
  */
 export const getClarifications = async (req: Request, res: Response) => {

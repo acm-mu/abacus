@@ -64,11 +64,11 @@ const deleteClarificationsForUser = async (tid: string) => {
  *                 items:
  *                   type: string
  *     responses:
- *       '200':
+ *       200:
  *         description: Successfully completed request
- *       '400':
+ *       400:
  *         description: Bad Request. Request body does not match required schema.
- *       '500':
+ *       500:
  *         description: A server error occurred while trying to delete clarifications.
  */
 export const deleteUsers = async (req: Request, res: Response) => {

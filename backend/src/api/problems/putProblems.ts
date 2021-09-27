@@ -100,17 +100,17 @@ export const schema: Record<string, ParamSchema> = {
  *     security:
  *       - bearerAuth: [""]
  *     responses:
- *       '200':
+ *       200:
  *         description: Success. Returns requested changes.
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/NewProblem'
- *       '401':
+ *       401:
  *         description: Could not authenticate user.
- *       '404':
+ *       404:
  *         description: Bad Request. Provided problem does not match schema.
- *       '500':
+ *       500:
  *         description: A server error occurred while trying to complete request.
  */
 export const putProblems = async (req: Request, res: Response) => {
