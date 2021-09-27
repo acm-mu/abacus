@@ -66,7 +66,7 @@ export const schema: Record<string, ParamSchema> = {
  *   put:
  *     summary: Updates contest settings.
  *     description: Updates contest settings.
- *     tags: [contest]
+ *     tags: [Contest]
  *     security:
  *       - bearerAuth: [""]
  *     requestBody:

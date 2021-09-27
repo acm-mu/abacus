@@ -67,7 +67,7 @@ const showToUser = (user: User | undefined, problem: Problem, settings: Settings
  *     summary: Search for problems with provided queries.
  *     description: >-
  *       Returns list of problems that match provided query. Hides problems before competition starts from users.
- *     tags: [problems]
+ *     tags: [Problems]
  *     parameters:
  *       - name: pid
  *         in: query

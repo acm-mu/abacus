@@ -101,7 +101,7 @@ const notifyTeam = async (item: Record<string, any>) => {
  *   put:
  *     summary: Updates an existing submission.
  *     description: Updates a submission (identified by sid, provided in body).
- *     tags: [submissions]
+ *     tags: [Submissions]
  *     security:
  *       - bearerAuth: [""]
  *     requestBody:

@@ -6,7 +6,7 @@ import { Request, Response } from 'express'
  *   get:
  *     summary: Returns associated user object for provided accessToken
  *     description: Provided a valid access token, returns the authenticated user object.
- *     tags: [auth]
+ *     tags: [Auth]
  *     security:
  *       - bearerAuth: [""]
  *     responses:

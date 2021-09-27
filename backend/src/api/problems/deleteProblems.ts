@@ -31,7 +31,7 @@ const deleteSubmissionsForProblem = async (pid: string) => {
  *   delete:
  *     summary: Deletes provided problems and all submissions for problems.
  *     description: Provided either a list of problem ids (pid) or a single pid, deletes them, and all submissions associated with the problems.
- *     tags: [problems]
+ *     tags: [Problems]
  *     requestBody:
  *       content:
  *         application/json:

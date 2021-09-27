@@ -4,8 +4,7 @@ import { getStandings, schema as getStandingsSchema } from './getStandings'
 /**
  * @swagger
  * tags:
- *   name: standings
- *   description: Some random description
+ *   name: Standings
  */
 
 const standings = Router()

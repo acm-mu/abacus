@@ -50,7 +50,7 @@ export const schema: Record<string, ParamSchema> = {
  *     summary: Create new user.
  *     description: >-
  *       Creates new user.
- *     tags: [users]
+ *     tags: [Users]
  *     requestBody:
  *       content:
  *         application/json:

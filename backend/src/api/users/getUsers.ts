@@ -54,7 +54,7 @@ export const schema: Record<string, ParamSchema> = {
  *   get:
  *     summary: Search for users with provided queries.
  *     description: Returns list of users that match provided query.
- *     tags: [users]
+ *     tags: [Users]
  *     security:
  *       - bearerAuth: [""]
  *     parameters:

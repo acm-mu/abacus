@@ -83,7 +83,7 @@ export const schema: Record<string, ParamSchema> = {
  *     summary: Creates new problem.
  *     security:
  *       - bearerAuth: [""]
- *     tags: [problems]
+ *     tags: [Problems]
  *     requestBody:
  *       content:
  *         application/json:

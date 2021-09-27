@@ -47,7 +47,7 @@ export const schema: Record<string, ParamSchema> = {
  *     summary: Create new blue/gold submission.
  *     description: >-
  *       Creates new blue/gold submissions. Blue submissions required language and source. Gold submissions require project_id and design_document if problem requires it.
- *     tags: [submissions]
+ *     tags: [Submissions]
  *     requestBody:
  *       content:
  *         application/json:

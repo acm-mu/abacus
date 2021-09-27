@@ -96,7 +96,7 @@ const showToUser = (user: User | undefined, problem: Problem, settings: Settings
  *   get:
  *     summary: Search for submissions with provided queries.
  *     description: Returns list of submissions that match provided query.
- *     tags: [submissions]
+ *     tags: [Submissions]
  *     security:
  *       - bearerAuth: [""]
  *     parameters:

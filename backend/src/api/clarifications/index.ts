@@ -8,8 +8,7 @@ import { putClarifications, schema as putSchema } from './putClarifications'
 /**
  * @swagger
  * tags:
- *   name: clarifications
- *   description: Some random description
+ *   name: Clarifications
  */
 
 const clarifications = Router()

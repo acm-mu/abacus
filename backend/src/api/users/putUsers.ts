@@ -56,7 +56,7 @@ export const schema: Record<string, ParamSchema> = {
  *   put:
  *     summary: Update exisiting user.
  *     description: Updates user (identified by uid provided in body).
- *     tags: [users]
+ *     tags: [Users]
  *     security:
  *       - bearerAuth: [""]
  *     requestBody:

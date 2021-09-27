@@ -32,7 +32,7 @@ export const schema: Record<string, ParamSchema> = {
  *   get:
  *     summary: Returns standings for given division.
  *     description: Based on the provided division, returns current standings in ordered list.
- *     tags: [standings]
+ *     tags: [Standings]
  *     parameters:
  *       - name: division
  *         in: query

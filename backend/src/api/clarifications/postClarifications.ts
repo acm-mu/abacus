@@ -91,7 +91,7 @@ const notify = async (clarification: Clarification) => {
  *     summary: Create new clarification.
  *     security:
  *       - bearerAuth: [""]
- *     tags: [clarifications]
+ *     tags: [Clarifications]
  *     requestBody:
  *       content:
  *         application/json:

@@ -6,8 +6,7 @@ import { getUser, schema as getUserSchema } from './getUser'
 /**
  * @swagger
  * tags:
- *   name: scratch
- *   description: Some random description
+ *   name: Scratch
  *   externalDocs:
  *     description: Scratch API
  *     url: https://en.scratch-wiki.info/wiki/Scratch_API

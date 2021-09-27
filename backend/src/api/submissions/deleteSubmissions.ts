@@ -17,7 +17,7 @@ export const schema: Record<string, ParamSchema> = {
  *   delete:
  *     summary: Deletes provided submissions.
  *     description: Provided either a list of submission ids (sid) or a single sid, deletes them.
- *     tags: [submissions]
+ *     tags: [Submissions]
  *     security:
  *       - bearerAuth: [""]
  *     requestBody:

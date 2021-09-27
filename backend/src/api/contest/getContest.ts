@@ -7,7 +7,7 @@ import contest from '../../abacus/contest'
  *   get:
  *     summary: Returns contest settings.
  *     description: Returns competition settings
- *     tags: [contest]
+ *     tags: [Contest]
  *     responses:
  *       200:
  *         description: >-

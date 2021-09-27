@@ -8,8 +8,7 @@ import { deleteUsers, schema as deleteSchema } from './deleteUsers'
 /**
  * @swagger
  * tags:
- *   name: users
- *   description: Some random description
+ *   name: Users
  */
 
 const users = Router()

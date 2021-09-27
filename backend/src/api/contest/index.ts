@@ -7,8 +7,7 @@ import { putContest, schema } from './putContest'
 /**
  * @swagger
  * tags:
- *   name: contest
- *   description: Some random description
+ *   name: Contest
  */
 
 const contest = Router()

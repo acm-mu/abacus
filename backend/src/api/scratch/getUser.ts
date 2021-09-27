@@ -16,7 +16,7 @@ export const schema: Record<string, ParamSchema> = {
  *   get:
  *     summary: Returns information regarding a project and its author.
  *     description: This endpoint is a proxy for the Scratch API.
- *     tags: [scratch]
+ *     tags: [Scratch]
  *     parameters:
  *       - name: project_id
  *         in: query

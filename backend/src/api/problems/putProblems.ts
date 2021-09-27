@@ -91,7 +91,7 @@ export const schema: Record<string, ParamSchema> = {
  * /problems:
  *   put:
  *     summary: Updates an existing problem.
- *     tags: [problems]
+ *     tags: [Problems]
  *     requestBody:
  *       content:
  *         application/json:

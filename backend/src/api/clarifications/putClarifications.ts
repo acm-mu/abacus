@@ -49,7 +49,7 @@ export const schema: Record<string, ParamSchema> = {
  *     description: Updates a clarification (identified by cid, provided in body).
  *     security:
  *       - bearerAuth: [""]
- *     tags: [clarifications]
+ *     tags: [Clarifications]
  *     requestBody:
  *       content:
  *         application/json:

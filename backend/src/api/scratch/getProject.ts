@@ -16,7 +16,7 @@ export const schema: Record<string, ParamSchema> = {
  *   get:
  *     summary: Returns information about the specified user.
  *     description: This endpoint is a proxy for the Scratch API.
- *     tags: [scratch]
+ *     tags: [Scratch]
  *     parameters:
  *       - name: username
  *         in: query

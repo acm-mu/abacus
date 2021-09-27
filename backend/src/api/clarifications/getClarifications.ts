@@ -71,7 +71,7 @@ const hasAccessTo = ({ type, division, uid }: any, user?: User) => {
  *     description: Returns list of clarifications that match provided query.
  *     security:
  *       - bearerAuth: [""]
- *     tags: [clarifications]
+ *     tags: [Clarifications]
  *     parameters:
  *       - name: cid
  *         in: query

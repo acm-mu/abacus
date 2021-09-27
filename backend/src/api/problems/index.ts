@@ -9,8 +9,7 @@ import { putProblems, schema as putSchema } from './putProblems'
 /**
  * @swagger
  * tags:
- *   name: problems
- *   description: Some random description
+ *   name: Problems
  */
 
 const problems = Router()

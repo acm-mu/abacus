@@ -33,7 +33,7 @@ export const schema: Record<string, ParamSchema> = {
  *         schema:
  *           type: string
  *
- *     tags: [problems]
+ *     tags: [Problems]
  *     responses:
  *       200:
  *         description: Success. Skeletons included in response.

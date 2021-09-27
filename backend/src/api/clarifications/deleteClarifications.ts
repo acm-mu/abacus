@@ -17,7 +17,7 @@ export const schema: Record<string, ParamSchema> = {
  *     description: Provided either a list of clarification ids (cid) or a single cid, deletes them, and all their children.
  *     security:
  *       - bearerAuth: [""]
- *     tags: [clarifications]
+ *     tags: [Clarifications]
  *     requestBody:
  *       content:
  *         application/json:

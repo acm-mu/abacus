@@ -9,8 +9,7 @@ import { rerunSubmission, schema as rerunSchema } from './rerunSubmission'
 /**
  * @swagger
  * tags:
- *   name: submissions
- *   description: Some random description
+ *   name: Submissions
  */
 
 const submissions = Router()

@@ -7,7 +7,7 @@ import { isAuthenticated } from '../../abacus/authlib'
 /**
  * @swagger
  * tags:
- *   name: auth
+ *   name: Auth
  */
 
 /**

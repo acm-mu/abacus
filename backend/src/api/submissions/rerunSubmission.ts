@@ -19,7 +19,7 @@ export const schema: Record<string, ParamSchema> = {
  *     summary: Invoke piston runner to rerun submission
  *     security:
  *       - bearerAuth: [""]
- *     tags: [submissions]
+ *     tags: [Submissions]
  *     requestBody:
  *       content:
  *         application/json:

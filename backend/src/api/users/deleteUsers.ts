@@ -52,7 +52,7 @@ const deleteClarificationsForUser = async (tid: string) => {
  *     description: Provided either a list of user ids (uid) or a single uid, deletes them, and all their associated submissions/clarifications.
  *     security:
  *       - bearerAuth: [""]
- *     tags: [users]
+ *     tags: [Users]
  *     requestBody:
  *       content:
  *         application/json:

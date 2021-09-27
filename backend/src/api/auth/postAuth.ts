@@ -37,7 +37,7 @@ export const schema: Record<string, ParamSchema> = {
  *   post:
  *     summary: Authenticates provided user credentials
  *     description: Given valid user credentials, returns generated accessToken to be used for authorization on other endpoints.
- *     tags: [auth]
+ *     tags: [Auth]
  *     requestBody:
  *       content:
  *         application/json:
