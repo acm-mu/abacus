@@ -203,25 +203,25 @@ declare module 'abacus' {
    *       required: [uid, role, username, password, display_name]
    */
 
-   /** 
-  * @swagger
-  * components:
-  *   schemas:
-  *     AuthUser:
-  *       properties:    
-  *         accessToken:
-  *           type: string
-  *         uid:
-  *           type: string
-  *         display_name:
-  *           type: string
-  *         role:
-  *           type: string
-  *           enum: [user, judge, admin]
-  *           example: 'user'
-  *         username:
-  *           type: string
-  */
+  /**
+   * @swagger
+   * components:
+   *   schemas:
+   *     AuthUser:
+   *       properties:
+   *         accessToken:
+   *           type: string
+   *         uid:
+   *           type: string
+   *         display_name:
+   *           type: string
+   *         role:
+   *           type: string
+   *           enum: [user, judge, admin]
+   *           example: 'user'
+   *         username:
+   *           type: string
+   */
   export interface User extends Record<string, unknown> {
     uid: string
     role: string

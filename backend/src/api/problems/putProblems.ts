@@ -89,29 +89,29 @@ export const schema: Record<string, ParamSchema> = {
 /**
  * @swagger
  * /problems:
-*   put:
-*     summary: Updates an existing problem.
-*     tags: [problems]
-*     requestBody:
-*       content:
-*         application/json:
-*           schema:
-*             $ref: '#/components/schemas/Problem'
-*     security:
-*       - bearerAuth: [""]
-*     responses:
-*       '200':
-*         description: Success. Returns requested changes.
-*         content:
-*           application/json:
-*             schema:
-*               $ref: '#/components/schemas/NewProblem'
-*       '401':
-*         description: Could not authenticate user.
-*       '404':
-*         description: Bad Request. Provided problem does not match schema.
-*       '500':
-*         description: A server error occurred while trying to complete request.
+ *   put:
+ *     summary: Updates an existing problem.
+ *     tags: [problems]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Problem'
+ *     security:
+ *       - bearerAuth: [""]
+ *     responses:
+ *       '200':
+ *         description: Success. Returns requested changes.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/NewProblem'
+ *       '401':
+ *         description: Could not authenticate user.
+ *       '404':
+ *         description: Bad Request. Provided problem does not match schema.
+ *       '500':
+ *         description: A server error occurred while trying to complete request.
  */
 export const putProblems = async (req: Request, res: Response) => {
   const errors = validationResult(req).array()

@@ -28,42 +28,42 @@ export const schema: Record<string, ParamSchema> = {
 
 /**
  * @swagger
-* /standings:
-*   get:
-*     summary: Returns standings for given division.
-*     description: Based on the provided division, returns current standings in ordered list.
-*     tags: [standings]
-*     parameters:
-*       - name: division
-*         in: query
-*         required: true
-*         schema:
-*           type: string
-*     responses:
-*       '200':
-*         description: .
-*         content:
-*           application/json:
-*             schema:
-*               type: object
-*               properties:
-*                 problems:
-*                   $ref: '#/components/schemas/Problem'
-*                 standings:
-*                   allOf:
-*                     - $ref: '#/components/schemas/User'
-*                     - type: object
-*                       properties:
-*                         score:
-*                           type: integer
-*                         solved:
-*                           type: integer
-*                         time:
-*                           type: integer
-*       '204':
-*         description: No Content. Before competition.
-*       '400':
-*         description: Request does not match required schema.
+ * /standings:
+ *   get:
+ *     summary: Returns standings for given division.
+ *     description: Based on the provided division, returns current standings in ordered list.
+ *     tags: [standings]
+ *     parameters:
+ *       - name: division
+ *         in: query
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: .
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 problems:
+ *                   $ref: '#/components/schemas/Problem'
+ *                 standings:
+ *                   allOf:
+ *                     - $ref: '#/components/schemas/User'
+ *                     - type: object
+ *                       properties:
+ *                         score:
+ *                           type: integer
+ *                         solved:
+ *                           type: integer
+ *                         time:
+ *                           type: integer
+ *       '204':
+ *         description: No Content. Before competition.
+ *       '400':
+ *         description: Request does not match required schema.
  */
 const getBlueStandings = async (isPractice: boolean): Promise<Record<string, any>> => {
   let standings = Object.values(await contest.get_users({ role: 'team', division: 'blue' }))

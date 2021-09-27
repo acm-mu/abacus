@@ -32,7 +32,7 @@ export const schema: Record<string, ParamSchema> = {
  *       '200':
  *         description: Successfully completed request
  *       '500':
- *         description: A server error occurred while trying to delete clarifications. 
+ *         description: A server error occurred while trying to delete clarifications.
  */
 
 export const deleteClarifications = async (req: Request, res: Response) => {

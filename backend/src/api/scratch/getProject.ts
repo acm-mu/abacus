@@ -13,21 +13,21 @@ export const schema: Record<string, ParamSchema> = {
 /**
  * @swagger
  * /scratch:
-*   get:
-*     summary: Returns information about the specified user.
-*     description: This endpoint is a proxy for the Scratch API.
-*     tags: [scratch]
-*     parameters:
-*       - name: username
-*         in: query
-*         required: true
-*         schema:
-*           type: string
-*     responses:
-*       '200':
-*         description: OK. Returns information about the user. (Schema subject to change from scratch api.)
-*       '400':
-*         description: The request did not match the required schema.
+ *   get:
+ *     summary: Returns information about the specified user.
+ *     description: This endpoint is a proxy for the Scratch API.
+ *     tags: [scratch]
+ *     parameters:
+ *       - name: username
+ *         in: query
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: OK. Returns information about the user. (Schema subject to change from scratch api.)
+ *       '400':
+ *         description: The request did not match the required schema.
  */
 export const getProject = async (req: Request, res: Response) => {
   const errors = validationResult(req).array()

@@ -20,7 +20,7 @@ import { Request, Response } from 'express'
  *               $ref: '#/components/schemas/User'
  *       '401':
  *         description: Could not authenticate user. The access token is either not provided, or is invalid
- *         
+ *
  */
 export const getAuth = async (req: Request, res: Response) => {
   res.send(req.user)

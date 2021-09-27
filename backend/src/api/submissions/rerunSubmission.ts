@@ -14,27 +14,27 @@ export const schema: Record<string, ParamSchema> = {
 
 /**
  * @swagger
-* /submissions/rerun:
-*   post: 
-*     summary: Invoke piston runner to rerun submission
-*     security:
-*       - bearerAuth: [""]
-*     tags: [submissions]
-*     requestBody:
-*       content:
-*         application/json:
-*           schema:
-*             properties:
-*               sid:
-*                 type: string
-*             required: [sid]
-*     responses:
-*       '200':
-*         description: Returns payload from piston runner lambda (Subject to change).
-*       '400':
-*         description: Could not complete request, request does not match schema.
-*       '500':
-*         description: A server error occurred while trying to complete request.
+ * /submissions/rerun:
+ *   post:
+ *     summary: Invoke piston runner to rerun submission
+ *     security:
+ *       - bearerAuth: [""]
+ *     tags: [submissions]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             properties:
+ *               sid:
+ *                 type: string
+ *             required: [sid]
+ *     responses:
+ *       '200':
+ *         description: Returns payload from piston runner lambda (Subject to change).
+ *       '400':
+ *         description: Could not complete request, request does not match schema.
+ *       '500':
+ *         description: A server error occurred while trying to complete request.
  */
 export const rerunSubmission = async (req: Request, res: Response) => {
   const errors = validationResult(req).array()

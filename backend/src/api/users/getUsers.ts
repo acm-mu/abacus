@@ -51,56 +51,56 @@ export const schema: Record<string, ParamSchema> = {
 /**
  * @swagger
  * /users:
-*   get:
-*     summary: Search for users with provided queries.
-*     description: Returns list of users that match provided query.
-*     tags: [users]
-*     security:
-*       - bearerAuth: [""]
-*     parameters:
-*       - name: uid
-*         in: query
-*         schema:
-*           type: string
-*       - name: display_name
-*         in: query
-*         schema:
-*           type: string
-*       - name: school
-*         in: query
-*         schema:
-*           type: string
-*       - name: division
-*         in: query
-*         schema:
-*           type: string
-*       - name: password
-*         in: query
-*         schema:
-*           type: string
-*       - name: role
-*         in: query
-*         schema:
-*           type: string
-*       - name: username
-*         in: query
-*         schema:
-*           type: string
-*     responses:
-*       '200':
-*         description: List of users matching provided queries.
-*         content:
-*           application/json:
-*             schema:
-*               type: array
-*               items:
-*                 $ref: '#/components/schemas/User'
-*       '400':
-*         description: Could not complete request because request does not match required schema.
-*       '401': 
-*         description: Could not authenticate user.
-*       '500':
-*         description: A server error occurred while trying to complete request.
+ *   get:
+ *     summary: Search for users with provided queries.
+ *     description: Returns list of users that match provided query.
+ *     tags: [users]
+ *     security:
+ *       - bearerAuth: [""]
+ *     parameters:
+ *       - name: uid
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: display_name
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: school
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: division
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: password
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: role
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: username
+ *         in: query
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: List of users matching provided queries.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/User'
+ *       '400':
+ *         description: Could not complete request because request does not match required schema.
+ *       '401':
+ *         description: Could not authenticate user.
+ *       '500':
+ *         description: A server error occurred while trying to complete request.
  */
 export const getUsers = async (req: Request, res: Response) => {
   const errors = validationResult(req).array()
