@@ -6,36 +6,36 @@ declare module 'abacus' {
    *     Settings:
    *       properties:
    *         competition_name:
-   *            type: string
+   *           type: string
+   *           example: "Example Competition"
    *         practice_name:
-   *            type: string
+   *           type: string
+   *           example: "Pre-Competition Practice"
    *         points_per_yes:
-   *            type: number
+   *           type: string
+   *           example: "0"
    *         points_per_no:
-   *            type: number
+   *           type: string
+   *           example: "20"
    *         points_per_compilation_error:
-   *            type: number
+   *           type: string
+   *           example: "0"
    *         points_per_minute:
-   *            type: number
+   *           type: string
+   *           example: "1"
    *         start_date:
-   *            type: number
+   *           type: string
+   *           example: "1618496100"
    *         end_date:
-   *            type: number
+   *           type: string
+   *           example: "1618516800"
    *         practice_start_date:
-   *            type: number
+   *           type: string
+   *           example: "1618495200"
    *         practice_end_date:
-   *            type: number
-   *       required:
-   *         - competition_name
-   *         - practice_name
-   *         - points_per_yes
-   *         - points_per_no
-   *         - points_per_compilation_error
-   *         - points_per_minute
-   *         - start_date
-   *         - end_date
-   *         - practice_start_date
-   *         - practice_end_date
+   *           type: string
+   *           example: "1618496100"
+   *       required: [competition_name, practice_name, points_per_yes, points_per_no, points_per_compilation_error, points_per_minute, start_date, end_date, practice_start_date, practice_end_date]
    */
   export interface Settings extends Record<string, string | number> {
     competition_name: string
@@ -89,29 +89,14 @@ declare module 'abacus' {
    *         tests:
    *           type: array
    *           items:
-   *             $ref: '#/definitions/Test'
+   *             $ref: '#/components/schemas/Test'
    *         claimed:
    *           type: string
    *         viewed:
    *           type: boolean
    *         flagged:
    *           type: string
-   *       required:
-   *         - sid
-   *         - date
-   *         - filename
-   *         - filesize
-   *         - source
-   *         - language
-   *         - md5
-   *         - pid
-   *         - runtime
-   *         - released
-   *         - score
-   *         - status
-   *         - sub_no
-   *         - tid
-   *         - tests
+   *       required: [sid, date, filename, filesize, source, language, md5, pid, runtime, released, score, status, sub_no, tid, tests]
    */
   export interface Submission extends Record<string, unknown> {
     sid: string
@@ -134,14 +119,13 @@ declare module 'abacus' {
     viewed?: boolean
     flagged?: string
   }
+
   /**
    * @swagger
    * components:
-   *   Problem:
-   *     schemas:
+   *   schemas:
+   *     NewProblem:
    *       properties:
-   *         pid:
-   *           type: string
    *         practice:
    *           type: boolean
    *         id:
@@ -159,20 +143,26 @@ declare module 'abacus' {
    *         skeletons:
    *           type: array
    *           items:
-   *             $ref: '#/definitions/Skeleton'
+   *             $ref: '#/components/schemas/Skeleton'
    *         tests:
    *           type: array
    *           items:
-   *             $ref: '#/definitions/Test'
-   *       required:
-   *         - pid
-   *         - id
-   *         - division
-   *         - name
-   *         - description
-   *         - cpu_time_limit
-   *         - memory_limit
-   *         - tests
+   *             $ref: '#/components/schemas/Test'
+   *         capped_points:
+   *           type: integer
+   *         max_points:
+   *           type: integer
+   *         project_id:
+   *           type: string
+   *         design_document:
+   *           type: boolean
+   *     Problem:
+   *       allOf:
+   *         - type: object
+   *           properties:
+   *             pid:
+   *               type: string
+   *         - $ref: '#/components/schemas/NewProblem'
    */
   export interface Problem extends Record<string, unknown> {
     pid: string
@@ -186,6 +176,7 @@ declare module 'abacus' {
     skeletons?: Skeleton[]
     tests: Test[]
   }
+
   /**
    * @swagger
    * components:
@@ -196,6 +187,7 @@ declare module 'abacus' {
    *           type: string
    *         role:
    *           type: string
+   *           enum: [admin, judge, user]
    *         username:
    *           type: string
    *         password:
@@ -208,13 +200,28 @@ declare module 'abacus' {
    *           type: string
    *         disabled:
    *           type: boolean
-   *       required:
-   *         - uid
-   *         - role
-   *         - username
-   *         - password
-   *         - display_name
+   *       required: [uid, role, username, password, display_name]
    */
+
+   /** 
+  * @swagger
+  * components:
+  *   schemas:
+  *     AuthUser:
+  *       properties:    
+  *         accessToken:
+  *           type: string
+  *         uid:
+  *           type: string
+  *         display_name:
+  *           type: string
+  *         role:
+  *           type: string
+  *           enum: [user, judge, admin]
+  *           example: 'user'
+  *         username:
+  *           type: string
+  */
   export interface User extends Record<string, unknown> {
     uid: string
     role: string
@@ -225,6 +232,7 @@ declare module 'abacus' {
     school?: string
     disabled?: boolean
   }
+
   /**
    * @swagger
    * components:
@@ -237,16 +245,14 @@ declare module 'abacus' {
    *           type: string
    *         result:
    *           type: string
-   *       required:
-   *         - in
-   *         - out
-   *         - result
+   *       required: [in, out, result]
    */
   export interface Test extends Record<string, unknown> {
     in: string
     out: string
     result: string
   }
+
   /**
    * @swagger
    * components:
@@ -259,10 +265,7 @@ declare module 'abacus' {
    *           type: string
    *         file_name:
    *           type: string
-   *       required:
-   *         - language
-   *         - source
-   *         - file_name
+   *       required: [language, source, file_name]
    */
   export interface Skeleton extends Record<string, unknown> {
     language: string
@@ -292,15 +295,10 @@ declare module 'abacus' {
    *       properties:
    *         type:
    *           type: string
-   *           enum:
-   *             - cid
-   *             - pid
-   *             - sid
+   *           enum: [cid, pid, sid]
    *         id:
    *           type: string
-   *       required:
-   *         - type
-   *         - id
+   *       required: [type, id]
    */
   export interface Context extends Record<string, unknown> {
     type: 'pid' | 'cid' | 'sid'
@@ -311,37 +309,40 @@ declare module 'abacus' {
    * @swagger
    * components:
    *   schemas:
-   *     Clarification:
+   *     NewClarification:
    *       properties:
-   *         cid:
-   *           type: string
    *         body:
    *           type: string
-   *         uid:
-   *           type: string
-   *         date:
-   *           type: integer
-   *         open:
-   *           type: boolean
    *         parent:
    *           type: string
    *         division:
    *           type: string
-   *         type:
-   *           type: string
    *         title:
    *           type: string
+   *         type:
+   *           type: string
    *         context:
-   *           $ref: '#/definition/Context'
-   *         children:
-   *           type: array
-   *           items:
-   *             $ref: '#/definitions/Clarification'
-   *       required:
-   *         - cid
-   *         - body
-   *         - uid
-   *         - date
+   *           $ref: '#/components/schemas/Context'
+   *       required: [body]
+   *     Clarification:
+   *       allOf:
+   *         - type: object
+   *           properties:
+   *             cid:
+   *               type: string
+   *             uid:
+   *               type: string
+   *             date:
+   *               type: string
+   *               format: date
+   *             open:
+   *               type: boolean
+   *             children:
+   *               type: array
+   *               items:
+   *                 $ref: '#/components/schemas/Clarification'
+   *           required: [cid, body, uid, date]
+   *         - $ref: '#/components/schemas/NewClarification'
    */
   export interface Clarification extends Record<string, unknown> {
     cid: string

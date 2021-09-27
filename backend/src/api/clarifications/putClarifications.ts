@@ -41,6 +41,45 @@ export const schema: Record<string, ParamSchema> = {
   }
 }
 
+/**
+ * @swagger
+ * /clarifications:
+ *   put:
+ *     summary: Updates an existing clarification.
+ *     description: Updates a clarification (identified by cid, provided in body).
+ *     security:
+ *       - bearerAuth: [""]
+ *     tags: [clarifications]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               cid:
+ *                 type: string
+ *               body:
+ *                 type: string
+ *               division:
+ *                 type: string
+ *               title:
+ *                 type: string
+ *               open:
+ *                 type: boolean
+ *               context:
+ *                 type: string
+ *     responses:
+ *       '200':
+ *         description: Success. Returns updated clarification object.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Clarification'
+ *       '400':
+ *         description: Bad Request. cid or other properties are invalid.
+ *       '500':
+ *         description: A server error occurred while trying to complete request.
+ */
 export const putClarifications = async (req: Request, res: Response) => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {
@@ -49,7 +88,7 @@ export const putClarifications = async (req: Request, res: Response) => {
   }
 
   try {
-    let item = matchedData(req)
+    const item = matchedData(req)
 
     if (!req.user) {
       res.status(400).json({ message: 'User is not valid!' })

@@ -95,6 +95,57 @@ const notifyTeam = async (item: Record<string, any>) => {
   })
 }
 
+/**
+ * @swagger
+*   put:
+*     summary: Updates an existing submission.
+*     description: Updates a submission (identified by sid, provided in body).
+*     tags: [submissions]
+*     security:
+*       - bearerAuth: [""]
+*     requestBody:
+*       content:
+*         application/json:
+*           schema:
+*             type: object
+*             properties:
+*               sid:
+*                 type: string
+*               division:
+*                 type: string
+*               language:
+*                 type: string
+*               pid:
+*                 type: string
+*               status:
+*                 type: string
+*               sub_no:
+*                 type: integer
+*               tid:
+*                 type: string
+*               released:
+*                 type: boolean
+*               claimed:
+*                 type: boolean
+*               score: 
+*                 type: integer
+*               flagged:
+*                 type: string
+*               viewed:
+*                 type: boolean
+*               feedback:
+*                 type: string
+*             required: [sid]
+*     responses:
+*       '200':
+*         description: Returns request body.
+*       '400':
+*         description: Request body does not match required schema.
+*       '403':
+*         description: Judges cannot update claimed property if already set.
+*       '500':
+*         description: A server error occured while trying to complete request.
+ */
 export const putSubmissions = async (req: Request, res: Response) => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {

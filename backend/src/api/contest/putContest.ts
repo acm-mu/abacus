@@ -60,6 +60,32 @@ export const schema: Record<string, ParamSchema> = {
   }
 }
 
+/**
+ * @swagger
+ * /contest:
+ *   put:
+ *     summary: Updates contest settings.
+ *     description: Updates contest settings.
+ *     tags: [contest]
+ *     security:
+ *       - bearerAuth: [""]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Settings'
+ *     responses:
+ *       '200':
+ *         description: >-
+ *           Contest settings.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Settings'
+ *       '400':
+ *         description: >-
+ *           Request body does not match required schema.
+ */
 export const putContest = async (req: Request, res: Response) => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {

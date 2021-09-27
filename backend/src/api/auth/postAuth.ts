@@ -28,32 +28,29 @@ export const schema: Record<string, ParamSchema> = {
  *           type: string
  *         password:
  *           type: string
- *       required:
- *         - username
- *         - password
+ *       required: [username, password]
  */
 
 /**
  * @swagger
  * /auth:
- *  post:
- *    description: Help me here
- *    tags: [auth]
- *    consumers:
- *      - application/json
- *    produces:
- *      - application/json
- *    requestBody:
- *      content:
- *        application/json:
- *          schema:
- *            $ref: '#/components/schemas/LoginUser'
- *    responses:
- *      200:
- *        description: login
- *        schema:
- *          type: object
- *          $ref: '#/components/schemas/User'
+ *   post:
+ *     summary: Authenticates provided user credentials
+ *     description: Given valid user credentials, returns generated accessToken to be used for authorization on other endpoints.
+ *     tags: [auth]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/LoginUser'
+ *     responses:
+ *       '200':
+ *         description: >-
+ *           Authenticated user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AuthUser'
  */
 
 export const postAuth = async (req: Request, res: Response) => {

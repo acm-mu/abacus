@@ -5,14 +5,17 @@ import contest from '../../abacus/contest'
  * @swagger
  * /contest:
  *   get:
+ *     summary: Returns contest settings.
  *     description: Returns competition settings
- *     tags: ['contest']
+ *     tags: [contest]
  *     responses:
- *       200:
- *         description: response
- *         schema:
- *           type: object
- *           $ref: '#/definitions/Settings'
+ *       '200':
+ *         description: >-
+ *           Returns competition settings.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Settings'
  */
 export default async (_: Request, res: Response) => {
   try {
