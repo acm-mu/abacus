@@ -26,8 +26,8 @@ This Open Source competition judging software is designed for the [Marquette ACM
 
 - [Node.js](https://nodejs.org/en/)
 - [git](https://git-scm.com/)
-- [Docker] (https://docs.docker.com/get-docker/)
-- Docker Compose (https://docs.docker.com/compose/install/) 
+- [Docker](https://docs.docker.com/get-docker/)
+- [Docker Compose](https://docs.docker.com/compose/install/) 
 
 #### Installation
 - Clone this repo 
