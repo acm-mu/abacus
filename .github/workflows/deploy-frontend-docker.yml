@@ -28,7 +28,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: ghcr.io/acmmu/abacus-frontend
+          images: ghcr.io/acm-mu/abacus-frontend
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
