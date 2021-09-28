@@ -13,7 +13,7 @@ import swaggerUi from 'swagger-ui-express'
 const api = Router()
 
 // Only show swagger docs on local environment
-if (process.env.NODE_ENV == 'development') { 
+if (process.env.NODE_ENV == 'development') {
   api.use('/swagger.json', (_req: Request, res: Response) => {
     res.setHeader('Content-Type', 'application/json')
     res.send(
