@@ -1,7 +1,7 @@
-import { Clarification, Problem, Settings, Submission, User } from "abacus";
-import { Lambda } from "aws-sdk";
-import { Database } from "../services";
-import { PostgreSQL } from "../services/db";
+import { Clarification, Problem, Settings, Submission, User } from 'abacus'
+import { Lambda } from 'aws-sdk'
+import { Database } from '../services'
+import { PostgreSQL } from '../services/db'
 
 class ContestService {
   db: Database

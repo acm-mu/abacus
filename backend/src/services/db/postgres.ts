@@ -1,9 +1,8 @@
-import { Database } from "."
-import { ScanOptions, Item, Key } from "./database"
+import { Database } from '.'
+import { ScanOptions, Item, Key } from './database'
 import { Pool } from 'pg'
 
 export default class PostgreSQL extends Database {
-
   pool: Pool
 
   constructor() {
@@ -23,7 +22,7 @@ export default class PostgreSQL extends Database {
       if (query?.args) {
         const entries = Object.entries(query.args)
         if (entries.length > 0) {
-          sql += " WHERE " + (entries.map(e => `${e[0]}=${this.repr(e[1])}`).join(' AND '))
+          sql += ' WHERE ' + entries.map((e) => `${e[0]}=${this.repr(e[1])}`).join(' AND ')
         }
       }
       this.pool.query(sql, (err, res) => {
@@ -32,7 +31,16 @@ export default class PostgreSQL extends Database {
           return
         }
 
-        resolve(res.rows.map(row => (Object.assign({}, ...Object.entries(row).filter(e => e[1]).map(e => ({[e[0]]: e[1]}))))))
+        resolve(
+          res.rows.map((row) =>
+            Object.assign(
+              {},
+              ...Object.entries(row)
+                .filter((e) => e[1])
+                .map((e) => ({ [e[0]]: e[1] }))
+            )
+          )
+        )
       })
     })
   }
@@ -53,11 +61,13 @@ export default class PostgreSQL extends Database {
   put(TableName: string, Item: Item): Promise<Item> {
     return new Promise((resolve, reject) => {
       const columns = Object.keys(Item).join(',')
-      const values = Object.values(Item).map(e => this.repr(e)).join(',')
+      const values = Object.values(Item)
+        .map((e) => this.repr(e))
+        .join(',')
 
       const sql = `INSERT INTO public.${TableName} (${columns}) VALUES (${values})`
       this.pool.query(sql, (err, res) => {
-        if(err) {
+        if (err) {
           reject(err)
           return
         }
@@ -66,7 +76,7 @@ export default class PostgreSQL extends Database {
     })
   }
 
-  repr (o: any) {
+  repr(o: any) {
     if (typeof o == 'string') {
       return `'${o}'`
     }
@@ -79,12 +89,12 @@ export default class PostgreSQL extends Database {
   update(TableName: string, Key: Key, Item: Item): Promise<Item> {
     return new Promise((resolve, reject) => {
       const key = Object.entries(Key)[0]
-      let sql = `UPDATE public.${TableName} SET ${
-        Object.entries(Item).map(e => `${e[0]}=${this.repr(e[1])}`).join(', ')
-      } WHERE ${key[0]}=${this.repr(key[1])}`
+      let sql = `UPDATE public.${TableName} SET ${Object.entries(Item)
+        .map((e) => `${e[0]}=${this.repr(e[1])}`)
+        .join(', ')} WHERE ${key[0]}=${this.repr(key[1])}`
 
       this.pool.query(sql, (err, res) => {
-        if(err) {
+        if (err) {
           reject(err)
           return
         }
@@ -106,5 +116,4 @@ export default class PostgreSQL extends Database {
       })
     })
   }
-
 }
