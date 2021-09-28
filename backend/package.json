@@ -1,5 +1,5 @@
 {
-  "name": "abacus_backend",
+  "name": "backend",
   "license": "ISC",
   "scripts": {
     "dev": "nodemon --exec ts-node --files src/server.ts",
