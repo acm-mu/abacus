@@ -1,6 +1,6 @@
-import { Converter } from 'aws-sdk/clients/dynamodb';
-import { Request, Response } from 'express';
-import { matchedData, ParamSchema, validationResult } from "express-validator"
+import { Converter } from 'aws-sdk/clients/dynamodb'
+import { Request, Response } from 'express'
+import { matchedData, ParamSchema, validationResult } from 'express-validator'
 import { contest } from '../../abacus'
 
 export const schema: Record<string, ParamSchema> = {
@@ -21,19 +21,24 @@ export const rerunSubmission = async (req: Request, res: Response) => {
 
   const submission = await contest.get_submissions({ args: matchedData(req) })
   if (submission) {
-    contest.lambda.invoke({
-      FunctionName: 'PistonRunner',
-      Payload: {
-        Records: [{
-          eventName: "INSERT",
-          dynamodb: {
-            NewImage: Converter.marshall(submission[0])
-          }
-        }]
+    contest.lambda.invoke(
+      {
+        FunctionName: 'PistonRunner',
+        Payload: {
+          Records: [
+            {
+              eventName: 'INSERT',
+              dynamodb: {
+                NewImage: Converter.marshall(submission[0])
+              }
+            }
+          ]
+        }
+      },
+      (err, data) => {
+        if (err) res.sendStatus(500)
+        else if (data.StatusCode == 200) res.send(data.Payload)
       }
-    }, (err, data) => {
-      if (err) res.sendStatus(500)
-      else if (data.StatusCode == 200) res.send(data.Payload)
-    })
+    )
   }
 }

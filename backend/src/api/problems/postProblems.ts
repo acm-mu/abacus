@@ -1,9 +1,9 @@
-import axios from 'axios';
-import { Request, Response } from 'express';
-import { matchedData, ParamSchema, validationResult } from "express-validator";
-import { v4 as uuidv4 } from 'uuid';
+import axios from 'axios'
+import { Request, Response } from 'express'
+import { matchedData, ParamSchema, validationResult } from 'express-validator'
+import { v4 as uuidv4 } from 'uuid'
 
-import contest from '../../abacus/contest';
+import contest from '../../abacus/contest'
 
 export const schema: Record<string, ParamSchema> = {
   id: {
@@ -96,15 +96,14 @@ export const postProblems = async (req: Request, res: Response) => {
 
   const problems = await contest.get_problems({ id: item.id, division: item.division })
   if (Object.values(problems).length > 0) {
-    res.status(400).json({ message: "Problem id is taken!" })
+    res.status(400).json({ message: 'Problem id is taken!' })
     return
   }
 
   try {
     await contest.create_problem(item)
     res.send(item)
-  }
-  catch (err) {
-    res.sendStatus(500);
+  } catch (err) {
+    res.sendStatus(500)
   }
 }

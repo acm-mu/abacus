@@ -1,9 +1,9 @@
-import { Problem, Settings, User } from 'abacus';
-import { Request, Response } from 'express';
-import { matchedData, ParamSchema, validationResult } from "express-validator";
-import { contest } from '../../abacus';
-import { transpose } from '../../utils';
-import { authenticate, userHasRole } from '../../abacus/authlib';
+import { Problem, Settings, User } from 'abacus'
+import { Request, Response } from 'express'
+import { matchedData, ParamSchema, validationResult } from 'express-validator'
+import { contest } from '../../abacus'
+import { transpose } from '../../utils'
+import { authenticate, userHasRole } from '../../abacus/authlib'
 
 export const schema: Record<string, ParamSchema> = {
   pid: {
@@ -71,7 +71,7 @@ export const getProblems = async (req: Request, res: Response) => {
   let user: User | undefined = undefined
   try {
     user = await authenticate(req, res)
-  } catch (err) { }
+  } catch (err) {}
 
   let columns = ['pid', 'division', 'id', 'name', 'practice', 'max_points', 'capped_points'] // Default columns
   /// IF OTHER COLUMNS AUTHENTICATE FOR JUDGE / ADMIN
@@ -80,10 +80,10 @@ export const getProblems = async (req: Request, res: Response) => {
     if (columns.includes('solutions')) {
       try {
         if (!userHasRole(user, 'proctor')) {
-          columns = columns.filter(e => e != 'solutions')
+          columns = columns.filter((e) => e != 'solutions')
         }
       } catch (err) {
-        columns = columns.filter(e => e != 'solutions')
+        columns = columns.filter((e) => e != 'solutions')
       }
     }
     delete query.columns
@@ -93,10 +93,10 @@ export const getProblems = async (req: Request, res: Response) => {
     const settings = await contest.get_settings()
 
     let problems = await contest.get_problems(query, columns)
-    problems = problems?.filter(problem => showToUser(user, problem, settings))
+    problems = problems?.filter((problem) => showToUser(user, problem, settings))
     res.send(transpose(problems, 'pid'))
   } catch (err) {
-    console.error(err);
+    console.error(err)
     res.sendStatus(500)
   }
 }

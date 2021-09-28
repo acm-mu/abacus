@@ -1,7 +1,7 @@
-import { Request, Response } from 'express';
-import { ParamSchema, validationResult } from "express-validator"
-import { io } from '../../server';
-import { contest } from '../../abacus';
+import { Request, Response } from 'express'
+import { ParamSchema, validationResult } from 'express-validator'
+import { io } from '../../server'
+import { contest } from '../../abacus'
 
 export const schema: Record<string, ParamSchema> = {
   sid: {
@@ -37,7 +37,7 @@ export const deleteSubmissions = async (req: Request, res: Response) => {
 
       io.emit('delete_submission', { sid: req.body.sid })
 
-      res.json({ message: "Submission successfully deleted" })
+      res.json({ message: 'Submission successfully deleted' })
     } catch (err) {
       console.error(err)
       res.sendStatus(500)
