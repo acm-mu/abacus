@@ -13,6 +13,7 @@ export default class DynamoDB extends Database {
 
   scan(TableName: string, query: ScanOptions): Promise<Item[]> {
     return new Promise((resolve, reject) => {
+      // eslint-disable-next-line @typescript-eslint/no-extra-semi
       ;(async () => {
         const params: ScanInput = { TableName }
         if (query) {
