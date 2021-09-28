@@ -1,100 +1,100 @@
 /* Icon */
 
 .icn:before {
-    font-family: Icons;
-    font-weight: 900;
-    content: '';
-    margin: 0 2px;
-    width: 23px;
-    height: 23px;
+  font-family: Icons;
+  font-weight: 900;
+  content: '';
+  margin: 0 2px;
+  width: 23px;
+  height: 23px;
 }
 .result.icn:before {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .status.icn:before {
-    margin: 0 5px;
+  margin: 0 5px;
 }
 .icn {
-    display: inline-block;
+  display: inline-block;
 }
 
 /* Icons */
 
 .icn.delete {
-    color: var(--red);
+  color: var(--red);
 }
 
 .icn.pending {
-    color: #555;
-    font-weight: bold;
+  color: #555;
+  font-weight: bold;
 }
 
 .icn.wrong_answer,
 .icn.run_time_error,
 .icn.timeout_error {
-    color: red;
-    font-weight: bold;
+  color: red;
+  font-weight: bold;
 }
 
 .icn.accepted {
-    color: #84cd64;
-    font-weight: bold;
+  color: #84cd64;
+  font-weight: bold;
 }
 
 .icn.rejected {
-    color: var(--red);
-    font-weight: bold;
+  color: var(--red);
+  font-weight: bold;
 }
 
 /* Icons:before */
 
 .icn.delete:before {
-    content: '\f1f8';
+  content: '\f1f8';
 }
 
 .icn.pending:before {
-    content: '\f128';
+  content: '\f128';
 }
 
 .icn.rejected:before {
-    content: '\f00d';
+  content: '\f00d';
 }
 
 .icn.accepted:before {
-    content: '\f00c';
+  content: '\f00c';
 }
 
 .icn.wrong_answer:before,
 .icn.run_time_error:before,
 .icn.timeout_error:before {
-    content: '\f00d';
+  content: '\f00d';
 }
 
 /* Icons:after */
 
 .status.pending:after {
-    content: 'Pending';
+  content: 'Pending';
 }
 
 .status.wrong_answer:after,
 .status.rejected:after {
-    content: 'Wrong Answer';
+  content: 'Wrong Answer';
 }
 
 .status.run_time_error:after {
-    content: 'Run Time Error';
+  content: 'Run Time Error';
 }
 
 .status.timeout_error:after {
-    content: 'Time Limit Expired';
+  content: 'Time Limit Expired';
 }
 
 .status.accepted:after {
-    content: 'Accepted';
+  content: 'Accepted';
 }
 
 section[tabindex] {
-    display: none;
+  display: none;
 }

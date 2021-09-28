@@ -1,9 +1,8 @@
-import { DocumentClient, ScanInput } from "aws-sdk/clients/dynamodb";
-import { Database } from ".";
-import { Item, Key, ScanOptions } from "./database";
+import { DocumentClient, ScanInput } from 'aws-sdk/clients/dynamodb'
+import { Database } from '.'
+import { Item, Key, ScanOptions } from './database'
 
 export default class DynamoDB extends Database {
-
   db: DocumentClient
 
   constructor() {
@@ -18,28 +17,29 @@ export default class DynamoDB extends Database {
         if (query.args) {
           const entries = Object.entries(query.args)
           if (entries.length > 0) {
-            params.FilterExpression = entries.map((e) => (`#${e[0]} = :${e[0]}`)).join(" AND ")
+            params.FilterExpression = entries.map((e) => `#${e[0]} = :${e[0]}`).join(' AND ')
             params.ExpressionAttributeNames = Object.assign({}, ...entries.map((x) => ({ [`#${x[0]}`]: x[0] })))
             params.ExpressionAttributeValues = Object.assign({}, ...entries.map((x) => ({ [`:${x[0]}`]: x[1] })))
-
           }
         }
         if (query.columns) {
-          params.ProjectionExpression = query.columns.map((e) => `#${e}`).join(", ")
+          params.ProjectionExpression = query.columns.map((e) => `#${e}`).join(', ')
           if (params.ExpressionAttributeNames)
-            params.ExpressionAttributeNames = { ...params.ExpressionAttributeNames, ...Object.assign({}, ...query.columns.map((e) => ({ [`#${e}`]: `${e}` }))) }
-          else
-            params.ExpressionAttributeNames = Object.assign({}, ...query.columns.map((e) => ({ [`#${e}`]: `${e}` })))
+            params.ExpressionAttributeNames = {
+              ...params.ExpressionAttributeNames,
+              ...Object.assign({}, ...query.columns.map((e) => ({ [`#${e}`]: `${e}` })))
+            }
+          else params.ExpressionAttributeNames = Object.assign({}, ...query.columns.map((e) => ({ [`#${e}`]: `${e}` })))
         }
       }
       const scanResults: Item[] = []
-      let Items;
+      let Items
       try {
         do {
-          Items = await this.db.scan(params).promise();
-          Items.Items?.forEach(Item => scanResults.push(Item))
+          Items = await this.db.scan(params).promise()
+          Items.Items?.forEach((Item) => scanResults.push(Item))
           params.ExclusiveStartKey = Items.LastEvaluatedKey
-        } while (typeof Items.LastEvaluatedKey != "undefined")
+        } while (typeof Items.LastEvaluatedKey != 'undefined')
         resolve(scanResults)
       } catch (err) {
         reject(err)
@@ -70,35 +70,41 @@ export default class DynamoDB extends Database {
 
   update(TableName: string, Key: Key, Item: Item): Promise<Item> {
     return new Promise((resolve, reject) => {
-      const entries = Object.entries(Item).filter(entry => !Object.keys(Key).includes(entry[0]))
+      const entries = Object.entries(Item).filter((entry) => !Object.keys(Key).includes(entry[0]))
 
-      const setEntries = entries.filter(e => e[1] != null)
-      const remEntries = entries.filter(e => e[1] == null)
+      const setEntries = entries.filter((e) => e[1] != null)
+      const remEntries = entries.filter((e) => e[1] == null)
 
       const params: any = {}
 
       const updateExpression: string[] = []
 
       if (setEntries.length > 0) {
-        updateExpression.push("SET " + (setEntries.map(e => `#${e[0]} = :${e[0]}`).join(", ")))
-        params.ExpressionAttributeValues = Object.assign({}, ...entries.filter(e => e[1] != null).map((x) => ({ [`:${x[0]}`]: x[1] })))
+        updateExpression.push('SET ' + setEntries.map((e) => `#${e[0]} = :${e[0]}`).join(', '))
+        params.ExpressionAttributeValues = Object.assign(
+          {},
+          ...entries.filter((e) => e[1] != null).map((x) => ({ [`:${x[0]}`]: x[1] }))
+        )
       }
 
-      if (remEntries.length > 0) updateExpression.push("REMOVE " + (remEntries.map(e => `#${e[0]}`)))
+      if (remEntries.length > 0) updateExpression.push('REMOVE ' + remEntries.map((e) => `#${e[0]}`))
 
-      this.db.update({
-        ...params,
-        TableName,
-        Key,
-        ExpressionAttributeNames: Object.assign({}, ...entries.map((x) => ({ [`#${x[0]}`]: x[0] }))),
-        UpdateExpression: updateExpression.join(" | ")
-      }, (err, data) => {
-        if (err) {
-          reject(err)
-          return
+      this.db.update(
+        {
+          ...params,
+          TableName,
+          Key,
+          ExpressionAttributeNames: Object.assign({}, ...entries.map((x) => ({ [`#${x[0]}`]: x[0] }))),
+          UpdateExpression: updateExpression.join(' | ')
+        },
+        (err, data) => {
+          if (err) {
+            reject(err)
+            return
+          }
+          resolve(data)
         }
-        resolve(data)
-      })
+      )
     })
   }
 

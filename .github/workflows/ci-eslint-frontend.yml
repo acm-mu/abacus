@@ -1,0 +1,15 @@
+name: Lint Frontend Code
+on: [pull_request]
+
+jobs:
+  eslint:
+    name: Lint Frontend Code
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: bradennapier/eslint-plus-action@v3.4.2
+        with:
+          configFile: frontend/.eslintrc.json
+          includeGlob: frontend/**/*
+          extensions: .ts,.tsx,.scss
+          issueSummaryType: full

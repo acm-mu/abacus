@@ -1,11 +1,11 @@
-import axios from 'axios';
-import { Request, Response } from 'express';
-import { UploadedFile } from 'express-fileupload';
-import { matchedData, ParamSchema, validationResult } from "express-validator";
-import { io } from '../../server';
-import { v4 as uuidv4 } from 'uuid';
+import axios from 'axios'
+import { Request, Response } from 'express'
+import { UploadedFile } from 'express-fileupload'
+import { matchedData, ParamSchema, validationResult } from 'express-validator'
+import { io } from '../../server'
+import { v4 as uuidv4 } from 'uuid'
 
-import contest from '../../abacus/contest';
+import contest from '../../abacus/contest'
 
 export const schema: Record<string, ParamSchema> = {
   pid: {
@@ -48,7 +48,7 @@ export const postSubmissions = async (req: Request, res: Response) => {
   }
 
   if (!req.user) {
-    res.status(401).send({ message: "Your credentials could not be recognized!" })
+    res.status(401).send({ message: 'Your credentials could not be recognized!' })
     return
   }
 
@@ -57,22 +57,22 @@ export const postSubmissions = async (req: Request, res: Response) => {
 
     const user = await contest.get_user(req.user?.uid)
     if (!user) {
-      res.status(401).send({ message: "Your credentials could not be recognized!" })
+      res.status(401).send({ message: 'Your credentials could not be recognized!' })
       return
     }
 
     if (user.disabled) {
-      res.status(403).send({ message: "Your account is disabled!" })
+      res.status(403).send({ message: 'Your account is disabled!' })
       return
     }
 
     const problem = await contest.get_problem(item.pid)
     if (!problem) {
-      res.status(400).send({ message: "Problem does not exist!" })
+      res.status(400).send({ message: 'Problem does not exist!' })
       return
     }
     if (user?.division != problem.division) {
-      res.status(403).send({ message: "You can not submit to problems in this division!" })
+      res.status(403).send({ message: 'You can not submit to problems in this division!' })
       return
     }
 
@@ -80,18 +80,18 @@ export const postSubmissions = async (req: Request, res: Response) => {
     const now = Date.now()
     if (problem.practice) {
       if (now < practice_start_date * 1000) {
-        res.status(403).send({ message: "The practice period has not yet begun!" })
+        res.status(403).send({ message: 'The practice period has not yet begun!' })
         return
       } else if (now > practice_end_date * 1000) {
-        res.status(403).send({ message: "Cannot submit after the practice period has finished!" })
+        res.status(403).send({ message: 'Cannot submit after the practice period has finished!' })
         return
       }
     } else {
       if (now < start_date * 1000) {
-        res.status(403).send({ message: "The competition has not yet begun!" })
+        res.status(403).send({ message: 'The competition has not yet begun!' })
         return
       } else if (now > end_date * 1000) {
-        res.status(403).send({ message: "Cannot submit after the competition has finished!" })
+        res.status(403).send({ message: 'Cannot submit after the competition has finished!' })
         return
       }
     }
@@ -101,16 +101,16 @@ export const postSubmissions = async (req: Request, res: Response) => {
     if (submissions) {
       for (const submission of submissions) {
         if (submission.status === 'accepted' && problem.division != 'gold') {
-          res.status(403).send({ message: "You have already solved this problem!" })
+          res.status(403).send({ message: 'You have already solved this problem!' })
           return
         }
         if (submission.status === 'pending') {
-          res.status(403).send({ message: "Cannot submit while your last submission is pending!" })
+          res.status(403).send({ message: 'Cannot submit while your last submission is pending!' })
           return
         }
 
         if (!submission.released) {
-          res.status(403).send({ message: "Cannot submit until your last submission has been released!" })
+          res.status(403).send({ message: 'Cannot submit until your last submission has been released!' })
           return
         }
       }
@@ -129,14 +129,13 @@ export const postSubmissions = async (req: Request, res: Response) => {
     }
 
     if (req.user?.division == 'blue') {
-
       if (req.files?.source == undefined) {
-        res.status(400).json({ message: "source not provided" })
+        res.status(400).json({ message: 'source not provided' })
         return
       }
 
       if (!item.language) {
-        res.status(400).json({ message: "language not provided" })
+        res.status(400).json({ message: 'language not provided' })
         return
       }
 

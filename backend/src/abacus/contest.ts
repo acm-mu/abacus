@@ -4,16 +4,12 @@ import { Database } from "../services";
 import { PostgreSQL } from "../services/db";
 
 class ContestService {
-  db: Database;
-  lambda: Lambda;
+  db: Database
+  lambda: Lambda
 
   constructor() {
-    this.init_aws();
-  }
-
-  init_aws() {
-    this.db = new PostgreSQL();
-    this.lambda = new Lambda();
+    this.db = new PostgreSQL()
+    this.lambda = new Lambda()
   }
 
   /* Users */
@@ -108,9 +104,10 @@ class ContestService {
 
   async get_settings(): Promise<Settings> {
     return new Promise((resolve, reject) => {
-      this.db.scan('setting')
-        .then(data => resolve(data[0] as Settings))
-        .catch(err => reject(err))
+      this.db
+        .scan('setting')
+        .then((data) => resolve(data[0] as Settings))
+        .catch((err) => reject(err))
     })
   }
 

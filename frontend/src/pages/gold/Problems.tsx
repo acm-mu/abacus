@@ -15,11 +15,17 @@ const Problems = (): JSX.Element => {
   const [problems, setProblems] = useState<Problem[]>()
   const [submissions, setSubmissions] = useState<{ [key: string]: Submission[] }>()
 
-  const helmet = <Helmet> <title>Abacus | Gold Problems</title> </Helmet>
+  const helmet = (
+    <Helmet>
+      <title>Abacus | Gold Problems</title>
+    </Helmet>
+  )
 
   useEffect(() => {
     loadProblems()
-    return () => { setMounted(false) }
+    return () => {
+      setMounted(false)
+    }
   }, [])
 
   const loadProblems = async () => {
@@ -66,52 +72,58 @@ const Problems = (): JSX.Element => {
   }
 
   if (!settings || new Date() < settings.practice_start_date)
-    return <>
-      {helmet}
-      <Countdown />
-      <Block size='xs-12'>
-        <h1>Competition not yet started!</h1>
-        <p>Problem&apos;s will become available as soon as the competition begins.</p>
-      </Block>
-    </>
+    return (
+      <>
+        {helmet}
+        <Countdown />
+        <Block size="xs-12">
+          <h1>Competition not yet started!</h1>
+          <p>Problem&apos;s will become available as soon as the competition begins.</p>
+        </Block>
+      </>
+    )
 
   if (!settings || new Date() < settings.start_date)
     if (user?.division != 'gold' && user?.role != 'admin') return <Unauthorized />
 
   if (isLoading) return <PageLoading />
 
-  return <>
-    {helmet}
-    <Countdown />
-    <Block size='xs-12' transparent>
-      <Table celled>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell />
-            <Table.HeaderCell>Problem Name</Table.HeaderCell>
-            <Table.HeaderCell>Last Submission</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {!(problems?.length) ?
+  return (
+    <>
+      {helmet}
+      <Countdown />
+      <Block size="xs-12" transparent>
+        <Table celled>
+          <Table.Header>
             <Table.Row>
-              <Table.Cell colSpan={'100%'}>We can&apos;t find any problems. If you believe this is an error please contact us.</Table.Cell>
-            </Table.Row> :
-            problems.map((problem: Problem, index: number) => (
-              <Table.Row key={index}>
-                <Table.HeaderCell collapsing>{problem.id}</Table.HeaderCell>
-                <Table.Cell>
-                  <Link to={`/gold/problems/${problem.id}`}>{problem.name}</Link>
-                </Table.Cell>
-                <Table.Cell>
-                  {latestSubmission(problem.pid)}
+              <Table.HeaderCell />
+              <Table.HeaderCell>Problem Name</Table.HeaderCell>
+              <Table.HeaderCell>Last Submission</Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {!problems?.length ? (
+              <Table.Row>
+                <Table.Cell colSpan={'100%'}>
+                  We can&apos;t find any problems. If you believe this is an error please contact us.
                 </Table.Cell>
               </Table.Row>
-            ))}
-        </Table.Body>
-      </Table>
-    </Block>
-  </>
+            ) : (
+              problems.map((problem: Problem, index: number) => (
+                <Table.Row key={index}>
+                  <Table.HeaderCell collapsing>{problem.id}</Table.HeaderCell>
+                  <Table.Cell>
+                    <Link to={`/gold/problems/${problem.id}`}>{problem.name}</Link>
+                  </Table.Cell>
+                  <Table.Cell>{latestSubmission(problem.pid)}</Table.Cell>
+                </Table.Row>
+              ))
+            )}
+          </Table.Body>
+        </Table>
+      </Block>
+    </>
+  )
 }
 
 export default Problems

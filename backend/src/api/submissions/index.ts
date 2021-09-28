@@ -1,11 +1,11 @@
-import { Router } from "express";
-import { checkSchema } from "express-validator";
-import { hasRole, isAuthenticated } from "../../abacus/authlib";
-import { deleteSubmissions, schema as deleteSchema } from "./deleteSubmissions";
-import { getSubmissions, schema as getSchema } from "./getSubmissions";
-import { postSubmissions, schema as postSchema } from "./postSubmissions";
-import { putSubmissions, schema as putSchema } from "./putSubmissions";
-import { rerunSubmission, schema as rerunSchema } from "./rerunSubmission";
+import { Router } from 'express'
+import { checkSchema } from 'express-validator'
+import { hasRole, isAuthenticated } from '../../abacus/authlib'
+import { deleteSubmissions, schema as deleteSchema } from './deleteSubmissions'
+import { getSubmissions, schema as getSchema } from './getSubmissions'
+import { postSubmissions, schema as postSchema } from './postSubmissions'
+import { putSubmissions, schema as putSchema } from './putSubmissions'
+import { rerunSubmission, schema as rerunSchema } from './rerunSubmission'
 
 const submissions = Router()
 

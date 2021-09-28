@@ -1,24 +1,24 @@
-import React, { useState, useContext, useEffect } from "react";
-import { Loader } from "semantic-ui-react";
-import Moment from "react-moment";
-import { Block, FlipClock } from "components";
-import { AppContext } from "context";
+import React, { useState, useContext, useEffect } from 'react'
+import { Loader } from 'semantic-ui-react'
+import Moment from 'react-moment'
+import { Block, FlipClock } from 'components'
+import { AppContext } from 'context'
 
-import "./Countdown.scss";
+import './Countdown.scss'
 
 const Countdown = (): JSX.Element => {
   const { settings } = useContext(AppContext)
   const [time, setTime] = useState<Date>(new Date())
   const [isMounted, setMounted] = useState(true)
 
-  const diff = (date1: Date, date2: Date) => date1.getTime() - date2.getTime();
+  const diff = (date1: Date, date2: Date) => date1.getTime() - date2.getTime()
 
   useEffect(() => {
     const updateInterval = setInterval(() => {
       if (isMounted) {
-        setTime(new Date());
+        setTime(new Date())
       }
-    }, 200);
+    }, 200)
 
     return () => {
       clearInterval(updateInterval)
@@ -26,7 +26,7 @@ const Countdown = (): JSX.Element => {
     }
   }, [])
 
-  if (!settings) return <Loader active inline='centered' content="Loading" />
+  if (!settings) return <Loader active inline="centered" content="Loading" />
 
   const { practice_start_date: pstart, practice_end_date: pend, start_date: start, end_date: end } = settings
 
@@ -47,12 +47,13 @@ const Countdown = (): JSX.Element => {
   }
 
   return (
-    <Block size='xs-12'>
-      {isCountingDown ?
+    <Block size="xs-12">
+      {isCountingDown ? (
         <>
           <h1>{competition_name}</h1>
           <FlipClock count_to={countdownTo} />
-        </> :
+        </>
+      ) : (
         <>
           <div className="upper">
             <p>
@@ -76,21 +77,21 @@ const Countdown = (): JSX.Element => {
           <div className="lower">
             <p>
               <b>Time elapsed </b>
-              {endDate > time ?
+              {endDate > time ? (
                 <Moment format="H:mm:ss" date={startDate} durationFromNow />
-                : <Moment format="H:mm:ss" duration={startDate} date={endDate} />}
+              ) : (
+                <Moment format="H:mm:ss" duration={startDate} date={endDate} />
+              )}
             </p>
             <p>
               <b>Time remaining </b>
-              {endDate > time ?
-                <Moment format="H:mm:ss" duration={time} date={endDate} />
-                : "Finished"}
+              {endDate > time ? <Moment format="H:mm:ss" duration={time} date={endDate} /> : 'Finished'}
             </p>
           </div>
         </>
-      }
+      )}
     </Block>
-  );
-};
+  )
+}
 
-export default Countdown;
+export default Countdown

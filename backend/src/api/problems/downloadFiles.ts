@@ -1,13 +1,13 @@
-import archiver from 'archiver';
-import { Request, Response } from 'express';
-import { matchedData, ParamSchema, validationResult } from "express-validator";
-import contest from '../../abacus/contest';
+import archiver from 'archiver'
+import { Request, Response } from 'express'
+import { matchedData, ParamSchema, validationResult } from 'express-validator'
+import contest from '../../abacus/contest'
 
-const stripFilename = (str: string) => str.replace(/ /g, '_').replace(/[!@#$%^&*\(\)]/g, '');
+const stripFilename = (str: string) => str.replace(/ /g, '_').replace(/[!@#$%^&*\(\)]/g, '')
 const fileExtension = (lang: string) => {
   switch (lang) {
     case 'python':
-      return 'py';
+      return 'py'
     default:
       return lang
   }

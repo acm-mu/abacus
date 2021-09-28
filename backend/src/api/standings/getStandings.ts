@@ -30,10 +30,9 @@ const getBlueStandings = async (isPractice: boolean): Promise<Record<string, any
   let standings = Object.values(await contest.get_users({ role: 'team', division: 'blue' }))
   const submissions = await contest.get_submissions({ division: 'blue' })
 
-  let problemsList = await contest.get_problems({ division: 'blue' },  ['pid', 'division', 'id', 'name', 'practice'])
+  let problemsList = await contest.get_problems({ division: 'blue' }, ['pid', 'division', 'id', 'name', 'practice'])
   problemsList = problemsList.filter(({ practice }) => {
-    if (isPractice)
-      return practice
+    if (isPractice) return practice
     return practice == undefined || practice == false
   })
 
@@ -42,7 +41,7 @@ const getBlueStandings = async (isPractice: boolean): Promise<Record<string, any
   const subs: Record<string, Record<string, Submission[]>> = {}
 
   Object.values(submissions).forEach((submission: any) => {
-    const { tid, pid } = submission;
+    const { tid, pid } = submission
     if (!Object.keys(problems).includes(pid)) return
     if (!(tid in subs)) subs[tid] = {}
     if (!(pid in subs[tid])) subs[tid][pid] = []
@@ -66,7 +65,6 @@ const getBlueStandings = async (isPractice: boolean): Promise<Record<string, any
   standings = standings.filter((user: any) => !user.disabled)
 
   standings.forEach((team: any) => {
-
     delete team.password
     delete team.role
     delete team.division
@@ -78,7 +76,7 @@ const getBlueStandings = async (isPractice: boolean): Promise<Record<string, any
 
     Object.values(problems)
       .sort((p1, p2) => p1.id.localeCompare(p2.id))
-      .forEach(problem => {
+      .forEach((problem) => {
         team.problems[problem.id] = {
           solved: false,
           problem_score: 0,
@@ -90,7 +88,7 @@ const getBlueStandings = async (isPractice: boolean): Promise<Record<string, any
             team.problems[problem.id].num_submissions = subs[team.uid][problem.pid].length
             team.problems[problem.id].submissions = subs[team.uid][problem.pid]
             subs[team.uid][problem.pid].every((sub: any) => {
-              if (sub.status === "accepted") {
+              if (sub.status === 'accepted') {
                 team.problems[problem.id].problem_score = sub.score
                 team.problems[problem.id].solved = true
                 team.solved++
@@ -105,8 +103,8 @@ const getBlueStandings = async (isPractice: boolean): Promise<Record<string, any
   })
 
   interface StandingsItems extends User {
-     solved: number, 
-     time: number 
+    solved: number
+    time: number
   }
 
   const data = (standings as StandingsItems[]).sort((s1, s2) => {
@@ -130,12 +128,19 @@ const getBlueStandings = async (isPractice: boolean): Promise<Record<string, any
 
 const getGoldStandings = async (isPractice: boolean): Promise<Record<string, any>> => {
   let standings = Object.values(await contest.get_users({ role: 'team', division: 'gold' }))
-  const submissions = await contest.get_submissions( { division: 'gold' })
+  const submissions = await contest.get_submissions({ division: 'gold' })
 
-  let problemsList = await contest.get_problems({ division: 'gold' }, ['pid', 'division', 'id', 'name', 'practice', 'max_points', 'capped_points'])
+  let problemsList = await contest.get_problems({ division: 'gold' }, [
+    'pid',
+    'division',
+    'id',
+    'name',
+    'practice',
+    'max_points',
+    'capped_points'
+  ])
   problemsList = problemsList.filter(({ practice }: any) => {
-    if (isPractice)
-      return practice
+    if (isPractice) return practice
     return practice == undefined || practice == false
   })
 
@@ -144,7 +149,7 @@ const getGoldStandings = async (isPractice: boolean): Promise<Record<string, any
   const subs: Record<string, Record<string, Submission[]>> = {}
 
   Object.values(submissions).forEach((submission: any) => {
-    const { tid, pid } = submission;
+    const { tid, pid } = submission
     if (!Object.keys(problems).includes(pid)) return
     if (!(tid in subs)) subs[tid] = {}
     if (!(pid in subs[tid])) subs[tid][pid] = []
@@ -159,7 +164,6 @@ const getGoldStandings = async (isPractice: boolean): Promise<Record<string, any
   standings = standings.filter((user: any) => !user.disabled)
 
   standings.forEach((team: any) => {
-
     delete team.password
     delete team.role
     delete team.division
@@ -167,11 +171,11 @@ const getGoldStandings = async (isPractice: boolean): Promise<Record<string, any
 
     team.problems = {}
     team.score = 0
-    let capped_score = 0;
+    let capped_score = 0
 
     Object.values(problems)
       .sort((p1, p2) => p1.id.localeCompare(p2.id))
-      .forEach(problem => {
+      .forEach((problem) => {
         if (team.uid in subs) {
           if (problem.pid in subs[team.uid]) {
             let problem_score = 0
@@ -193,8 +197,8 @@ const getGoldStandings = async (isPractice: boolean): Promise<Record<string, any
     team.score += Math.min(20, capped_score)
   })
 
-  interface StandingsItems extends User { 
-    score: number 
+  interface StandingsItems extends User {
+    score: number
   }
 
   const data = (standings as StandingsItems[]).sort((s1, s2) => {

@@ -1,6 +1,6 @@
 import { Problem, Settings, Test, User } from 'abacus'
 import { Request, Response } from 'express'
-import { matchedData, ParamSchema, validationResult } from "express-validator"
+import { matchedData, ParamSchema, validationResult } from 'express-validator'
 import { transpose } from '../../utils'
 import contest from '../../abacus/contest'
 import { userHasRole } from '../../abacus/authlib'
@@ -78,7 +78,6 @@ export const schema: Record<string, ParamSchema> = {
   }
 }
 
-
 const showToUser = (user: User | undefined, problem: Problem, settings: Settings): boolean => {
   const now = Date.now() / 1000
 
@@ -97,7 +96,10 @@ export const getSubmissions = async (req: Request, res: Response) => {
     res.status(400).json({ message: errors[0].msg })
     return
   }
-  const problems = transpose(await contest.get_problems({}, ['pid', 'division', 'id', 'name', 'max_points', 'capped_points', 'practice']), 'pid')
+  const problems = transpose(
+    await contest.get_problems({}, ['pid', 'division', 'id', 'name', 'max_points', 'capped_points', 'practice']),
+    'pid'
+  )
   const users = transpose(await contest.get_users(), 'uid') as unknown as User[]
 
   const settings = await contest.get_settings()
@@ -111,7 +113,7 @@ export const getSubmissions = async (req: Request, res: Response) => {
       item.tid = req.user.uid
     }
 
-    let submissions = await contest.get_submissions(item) as any[]
+    let submissions = (await contest.get_submissions(item)) as any[]
 
     submissions = submissions?.map((submission: any) => {
       submission.problem = problems[submission.pid]

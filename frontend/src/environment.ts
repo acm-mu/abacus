@@ -1,7 +1,7 @@
 interface Config {
-  isLocal: boolean;
-  API_URL: string;
-  environmentText: string;
+  isLocal: boolean
+  API_URL: string
+  environmentText: string
 }
 
 const prod: Config = {
@@ -24,4 +24,4 @@ const staging: Config = {
 
 const isStaging = window.location.hostname.startsWith('staging')
 
-export default isStaging ? staging : (process.env.NODE_ENV === 'development' ? dev : prod)
+export default isStaging ? staging : process.env.NODE_ENV === 'development' ? dev : prod

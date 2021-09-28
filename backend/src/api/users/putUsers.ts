@@ -1,7 +1,7 @@
-import { createHash } from 'crypto';
-import { Request, Response } from 'express';
-import { matchedData, ParamSchema, validationResult } from "express-validator";
-import { contest } from "../../abacus"
+import { createHash } from 'crypto'
+import { Request, Response } from 'express'
+import { matchedData, ParamSchema, validationResult } from 'express-validator'
+import { contest } from '../../abacus'
 
 export const schema: Record<string, ParamSchema> = {
   uid: {
@@ -73,9 +73,9 @@ export const putUsers = async (req: Request, res: Response) => {
   try {
     if (item.username) {
       let users = await contest.get_users({ username: item.username })
-      users = users.filter(user => user.uid != item.uid)
+      users = users.filter((user) => user.uid != item.uid)
       if (users.length > 0) {
-        res.status(400).json({ message: "Username is taken!" })
+        res.status(400).json({ message: 'Username is taken!' })
         return
       }
     }

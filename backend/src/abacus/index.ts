@@ -1,1 +1,1 @@
-export { default as contest } from './contest';
+export { default as contest } from './contest'

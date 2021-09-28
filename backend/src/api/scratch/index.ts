@@ -1,6 +1,6 @@
-import { Router } from "express";
-import { checkSchema } from "express-validator";
-import { getProject, schema as getProjectSchema } from "./getProject";
+import { Router } from 'express'
+import { checkSchema } from 'express-validator'
+import { getProject, schema as getProjectSchema } from './getProject'
 import { getUser, schema as getUserSchema } from './getUser'
 
 const scratch = Router()

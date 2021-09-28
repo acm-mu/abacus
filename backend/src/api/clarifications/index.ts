@@ -1,10 +1,10 @@
-import { Router } from "express";
-import { checkSchema } from "express-validator";
-import { hasRole, isAuthenticated } from "../../abacus/authlib";
-import { getClarifications, schema as getSchema } from './getClarifications';
-import { postClarifications, schema as postSchema } from './postClarifications';
-import { deleteClarifications, schema as deleteSchema } from './deleteClarifications';
-import { putClarifications, schema as putSchema } from "./putClarifications";
+import { Router } from 'express'
+import { checkSchema } from 'express-validator'
+import { hasRole, isAuthenticated } from '../../abacus/authlib'
+import { getClarifications, schema as getSchema } from './getClarifications'
+import { postClarifications, schema as postSchema } from './postClarifications'
+import { deleteClarifications, schema as deleteSchema } from './deleteClarifications'
+import { putClarifications, schema as putSchema } from './putClarifications'
 
 const clarifications = Router()
 

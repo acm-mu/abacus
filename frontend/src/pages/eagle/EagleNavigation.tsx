@@ -1,8 +1,8 @@
-import React, { useContext } from "react";
-import { Menu } from "semantic-ui-react";
-import { NavLink } from "react-router-dom";
-import { Navigation } from "components";
-import { AppContext } from "context";
+import React, { useContext } from 'react'
+import { Menu } from 'semantic-ui-react'
+import { NavLink } from 'react-router-dom'
+import { Navigation } from 'components'
+import { AppContext } from 'context'
 
 const EagleNavigation = (): JSX.Element => {
   const { user } = useContext(AppContext)
@@ -17,4 +17,4 @@ const EagleNavigation = (): JSX.Element => {
   )
 }
 
-export default EagleNavigation;
+export default EagleNavigation

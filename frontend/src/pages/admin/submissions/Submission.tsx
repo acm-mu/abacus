@@ -38,9 +38,10 @@ const submission = (): JSX.Element => {
 
   useEffect(() => {
     loadSubmission()
-    return () => { setMounted(false) }
+    return () => {
+      setMounted(false)
+    }
   }, [])
-
 
   if (isLoading) return <PageLoading />
   if (!submission) return <NotFound />
@@ -56,7 +57,7 @@ const submission = (): JSX.Element => {
       body: JSON.stringify({ sid: submission.sid })
     })
     if (response.ok) {
-      history.push("/admin/submissions")
+      history.push('/admin/submissions')
     }
     setDeleting(false)
   }
@@ -155,29 +156,74 @@ const submission = (): JSX.Element => {
     setUnFlagging({ ...isUnFlagging, [sid]: false })
   }
 
-  const download = () => submission?.source && submission.filename &&
+  const download = () =>
+    submission?.source &&
+    submission.filename &&
     saveAs(new File([submission?.source], submission.filename, { type: 'text/plain;charset=utf-8' }))
 
+  return (
+    <>
+      <Helmet>
+        <title>Abacus | Admin Submission</title>
+      </Helmet>
 
-  return <>
-    <Helmet> <title>Abacus | Admin Submission</title> </Helmet>
+      <Button content="Back" icon="arrow left" labelPosition="left" onClick={history.goBack} />
+      <Button
+        disabled={isRerunning}
+        loading={isRerunning}
+        content="Rerun"
+        icon="redo"
+        labelPosition="left"
+        onClick={rerun}
+      />
 
-    <Button content='Back' icon='arrow left' labelPosition='left' onClick={history.goBack} />
-    <Button disabled={isRerunning} loading={isRerunning} content="Rerun" icon="redo" labelPosition="left" onClick={rerun} />
+      {submission.released ? (
+        <Button icon="check" positive content="Released" labelPosition="left" />
+      ) : (
+        <Button
+          loading={isReleasing}
+          disabled={isReleasing}
+          icon="right arrow"
+          content="Release"
+          labelPosition="left"
+          onClick={release}
+        />
+      )}
+      {submission.flagged ? (
+        <Button
+          loading={isUnFlagging[submission.sid]}
+          disabled={isUnFlagging[submission.sid]}
+          icon="warning"
+          color="orange"
+          content="Flagged"
+          labelPosition="left"
+          onClick={unflag}
+        />
+      ) : (
+        <Button
+          loading={isFlagging[submission.sid]}
+          disabled={isFlagging[submission.sid]}
+          icon="flag"
+          content="Flag"
+          labelPosition="left"
+          onClick={flag}
+        />
+      )}
+      <Button content="Download" icon="download" labelPosition="left" onClick={download} />
+      <Button disabled={isSaving} loading={isSaving} content="Save" icon="save" labelPosition="left" onClick={save} />
+      <Button
+        disabled={isDeleting}
+        loading={isDeleting}
+        content="Delete"
+        icon="trash"
+        negative
+        labelPosition="left"
+        onClick={deleteSubmission}
+      />
 
-    {submission.released ?
-      <Button icon="check" positive content="Released" labelPosition="left" /> :
-      <Button loading={isReleasing} disabled={isReleasing} icon="right arrow" content="Release" labelPosition="left" onClick={release} />}
-    {submission.flagged ?
-      <Button loading={isUnFlagging[submission.sid]} disabled={isUnFlagging[submission.sid]} icon="warning" color='orange' content="Flagged" labelPosition="left" onClick={unflag} /> :
-      <Button loading={isFlagging[submission.sid]} disabled={isFlagging[submission.sid]} icon="flag" content="Flag" labelPosition="left" onClick={flag} />
-    }
-    <Button content="Download" icon="download" labelPosition="left" onClick={download} />
-    <Button disabled={isSaving} loading={isSaving} content="Save" icon="save" labelPosition="left" onClick={save} />
-    <Button disabled={isDeleting} loading={isDeleting} content="Delete" icon="trash" negative labelPosition="left" onClick={deleteSubmission} />
-
-    <SubmissionView submission={submission} setSubmission={setSubmission} rerunning={isRerunning} />
-  </>
+      <SubmissionView submission={submission} setSubmission={setSubmission} rerunning={isRerunning} />
+    </>
+  )
 }
 
 export default submission

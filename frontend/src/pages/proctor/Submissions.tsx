@@ -10,7 +10,7 @@ import { AppContext, SocketContext } from 'context'
 
 type SortKey = 'date' | 'sid' | 'sub_no' | 'language'
 type SortConfig = {
-  column: SortKey,
+  column: SortKey
   direction: 'ascending' | 'descending'
 }
 
@@ -32,9 +32,12 @@ const Submissions = (): JSX.Element => {
     const newDirection = column === newColumn && direction == 'ascending' ? 'descending' : 'ascending'
     setSortConfig({ column: newColumn, direction: newDirection })
 
-    setSubmissions(submission_list.sort((s1: Submission, s2: Submission) =>
-    (compare(s1[newColumn] || 'ZZ', s2[newColumn] || 'ZZ') * (direction == 'ascending' ? 1 : -1)
-    )))
+    setSubmissions(
+      submission_list.sort(
+        (s1: Submission, s2: Submission) =>
+          compare(s1[newColumn] || 'ZZ', s2[newColumn] || 'ZZ') * (direction == 'ascending' ? 1 : -1)
+      )
+    )
   }
 
   useEffect(() => {
@@ -54,54 +57,81 @@ const Submissions = (): JSX.Element => {
 
     if (!isMounted) return
 
-    setSubmissions(submissions.map(submission => ({ ...submission, checked: false })))
+    setSubmissions(submissions.map((submission) => ({ ...submission, checked: false })))
   }
 
   const onFilterChange = () => setShowViewed(!showViewed)
 
-  const filteredSubmissions = useMemo(() =>
-    submissions.filter((submission) => showViewed || (!submission.viewed && !submission.flagged))
-    , [submissions, showViewed])
+  const filteredSubmissions = useMemo(
+    () => submissions.filter((submission) => showViewed || (!submission.viewed && !submission.flagged)),
+    [submissions, showViewed]
+  )
 
   if (isLoading) return <PageLoading />
 
-  return <>
-    <Helmet><title>Abacus | Proctor Submissions</title></Helmet>
-    <Checkbox toggle label="Show Viewed" checked={showViewed} onClick={onFilterChange} />
+  return (
+    <>
+      <Helmet>
+        <title>Abacus | Proctor Submissions</title>
+      </Helmet>
+      <Checkbox toggle label="Show Viewed" checked={showViewed} onClick={onFilterChange} />
 
-    <Table singleLine sortable>
-      <Table.Header>
-        <Table.Row>
-          <Table.HeaderCell className='sortable' onClick={() => sort('sid')} sorted={column == 'sid' ? direction : undefined}>Submission ID</Table.HeaderCell>
-          <Table.HeaderCell>Problem</Table.HeaderCell>
-          <Table.HeaderCell className='sortable' onClick={() => sort('language')} sorted={column == 'language' ? direction : undefined}>Language</Table.HeaderCell>
-          <Table.HeaderCell>Status</Table.HeaderCell>
-        </Table.Row>
-      </Table.Header>
-      <Table.Body>
-        {filteredSubmissions.length == 0 ?
+      <Table singleLine sortable>
+        <Table.Header>
           <Table.Row>
-            <Table.Cell colSpan={'100%'}>No Submissions</Table.Cell>
-          </Table.Row> :
-          filteredSubmissions.map((submission) =>
-            <Table.Row key={submission.sid}>
-              <Table.Cell>
-                <Link to={`/${user?.role}/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link>
-              </Table.Cell>
-              <Table.Cell><Link to={`/${user?.role}/problems/${submission.pid}`}>{submission.problem?.name} </Link></Table.Cell>
-              <Table.Cell>{submission.language}</Table.Cell>
-              <Table.Cell>
-                {submission.flagged ? <Label color='orange' icon='flag' content={`Flagged: ${submission.flagged.uid === user?.uid ? 'You' : submission.flagged.display_name}`} /> :
-                  (submission.viewed ?
-                    <Label icon='eye' color='green' content="Viewed" /> :
-                    <Label icon='cloud download' content="Unviewed" />
-                  )
-                }
-              </Table.Cell>
-            </Table.Row>)}
-      </Table.Body>
-    </Table>
-  </>
+            <Table.HeaderCell
+              className="sortable"
+              onClick={() => sort('sid')}
+              sorted={column == 'sid' ? direction : undefined}>
+              Submission ID
+            </Table.HeaderCell>
+            <Table.HeaderCell>Problem</Table.HeaderCell>
+            <Table.HeaderCell
+              className="sortable"
+              onClick={() => sort('language')}
+              sorted={column == 'language' ? direction : undefined}>
+              Language
+            </Table.HeaderCell>
+            <Table.HeaderCell>Status</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {filteredSubmissions.length == 0 ? (
+            <Table.Row>
+              <Table.Cell colSpan={'100%'}>No Submissions</Table.Cell>
+            </Table.Row>
+          ) : (
+            filteredSubmissions.map((submission) => (
+              <Table.Row key={submission.sid}>
+                <Table.Cell>
+                  <Link to={`/${user?.role}/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link>
+                </Table.Cell>
+                <Table.Cell>
+                  <Link to={`/${user?.role}/problems/${submission.pid}`}>{submission.problem?.name} </Link>
+                </Table.Cell>
+                <Table.Cell>{submission.language}</Table.Cell>
+                <Table.Cell>
+                  {submission.flagged ? (
+                    <Label
+                      color="orange"
+                      icon="flag"
+                      content={`Flagged: ${
+                        submission.flagged.uid === user?.uid ? 'You' : submission.flagged.display_name
+                      }`}
+                    />
+                  ) : submission.viewed ? (
+                    <Label icon="eye" color="green" content="Viewed" />
+                  ) : (
+                    <Label icon="cloud download" content="Unviewed" />
+                  )}
+                </Table.Cell>
+              </Table.Row>
+            ))
+          )}
+        </Table.Body>
+      </Table>
+    </>
+  )
 }
 
 export default Submissions

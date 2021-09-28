@@ -1,8 +1,8 @@
-import { createHash } from 'crypto';
+import { createHash } from 'crypto'
 import { Request, Response } from 'express'
 import { matchedData, ParamSchema, validationResult } from 'express-validator'
 import { contest } from '../../abacus'
-import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken'
 
 export const schema: Record<string, ParamSchema> = {
   username: {
@@ -38,12 +38,15 @@ export const postAuth = async (req: Request, res: Response) => {
     }
     const user = users[0]
 
-    const accessToken = jwt.sign({
-      username: user.username,
-      password: user.password
-    }, process.env.ACCESS_TOKEN_SECRET || '')
+    const accessToken = jwt.sign(
+      {
+        username: user.username,
+        password: user.password
+      },
+      process.env.ACCESS_TOKEN_SECRET || ''
+    )
 
-    const {password, ...responseUser} = user
+    const { password, ...responseUser } = user
 
     res.send({ accessToken, ...responseUser })
   } catch (err) {
