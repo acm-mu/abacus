@@ -19,7 +19,9 @@ export const authenticate = (req: Request): Promise<User | undefined> =>
           req.user = users[0]
           return resolve(users[0])
         }
-      } catch (err) {reject()}
+      } catch (err) {
+        reject()
+      }
       reject()
     })
   })

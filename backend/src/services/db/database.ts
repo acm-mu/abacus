@@ -1,4 +1,4 @@
-import { Args, Item } from "abacus"
+import { Args, Item } from 'abacus'
 
 export type Key = Record<string, string>
 export type ScanOptions = {
