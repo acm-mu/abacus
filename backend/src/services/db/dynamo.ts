@@ -13,7 +13,7 @@ export default class DynamoDB extends Database {
 
   scan(TableName: string, query: ScanOptions): Promise<Item[]> {
     return new Promise((resolve, reject) => {
-      (async () => {
+      ;(async () => {
         const params: ScanInput = { TableName }
         if (query) {
           if (query.args) {
@@ -43,7 +43,7 @@ export default class DynamoDB extends Database {
             Items.Items?.forEach((Item) => scanResults.push(Item))
             params.ExclusiveStartKey = Items.LastEvaluatedKey
           } while (typeof Items.LastEvaluatedKey != 'undefined')
-          
+
           resolve(scanResults)
         } catch (err) {
           reject()

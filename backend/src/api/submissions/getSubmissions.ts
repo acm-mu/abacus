@@ -109,9 +109,10 @@ export const getSubmissions = async (req: Request, res: Response): Promise<void>
     }
 
     let submissions = await contest.get_resolved_submissions(item)
-    
+
     // Obfuscate submission details to teams if not yet released.
-    submissions = submissions.map((submission) => {
+    submissions = submissions
+      .map((submission) => {
         if (req.user?.role == 'team' && !submission.released) {
           submission.status = 'pending'
           submission.score = 0
