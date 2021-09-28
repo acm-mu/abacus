@@ -1,15 +1,15 @@
-import { Clarification, Problem, Settings, Submission, User } from "abacus";
-import { Lambda } from "aws-sdk";
-import { Database } from "../services";
-import { MongoDB } from "../services/db";
+import { Clarification, Problem, Settings, Submission, User } from 'abacus'
+import { Lambda } from 'aws-sdk'
+import { Database } from '../services'
+import { MongoDB } from '../services/db'
 
 class ContestService {
-  db: Database;
-  lambda: Lambda;
+  db: Database
+  lambda: Lambda
 
   constructor() {
-    this.db = new MongoDB();
-    this.lambda = new Lambda();
+    this.db = new MongoDB()
+    this.lambda = new Lambda()
   }
 
   /* Users */
@@ -104,9 +104,10 @@ class ContestService {
 
   async get_settings(): Promise<Settings> {
     return new Promise((resolve, reject) => {
-      this.db.scan('setting')
-        .then(data => resolve(data[0] as Settings))
-        .catch(err => reject(err))
+      this.db
+        .scan('setting')
+        .then((data) => resolve(data[0] as Settings))
+        .catch((err) => reject(err))
     })
   }
 
