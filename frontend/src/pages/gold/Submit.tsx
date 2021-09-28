@@ -149,7 +149,7 @@ const Submit = (): JSX.Element => {
       {problem?.design_document == true ? (
         <Block transparent size="xs-12">
           <h2>Design Document</h2>
-          <MDEditor value={description || ''} onChange={(value) => setDescription(value || '')} height="500" />
+          <MDEditor value={description || ''} onChange={(value) => setDescription(value || '')} height={500} />
         </Block>
       ) : (
         <></>
