@@ -9,11 +9,14 @@ export const authenticate = (req: Request): Promise<User | undefined> =>
     const token = authorization && authorization.split(' ')[1]
     if (!token) return reject()
 
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET || '', async (err, data: any) => {
-      if (err || !data) reject()
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET || '', async (err, data) => {
+      if (err || !data) {
+        reject()
+        return
+      }
 
       try {
-        const { username, password } = data
+        const { username, password } = data as Record<string, unknown>
         const users = await contest.get_users({ username, password })
         if (users.length) {
           req.user = users[0]

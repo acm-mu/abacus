@@ -96,11 +96,6 @@ export const getSubmissions = async (req: Request, res: Response): Promise<void>
     res.status(400).json({ message: errors[0].msg })
     return
   }
-  const problems = transpose(
-    await contest.get_problems({}, ['pid', 'division', 'id', 'name', 'max_points', 'capped_points', 'practice']),
-    'pid'
-  )
-  const users = transpose(await contest.get_users(), 'uid')
 
   const settings = await contest.get_settings()
 
@@ -113,44 +108,18 @@ export const getSubmissions = async (req: Request, res: Response): Promise<void>
       item.tid = req.user.uid
     }
 
-    let submissions = await contest.get_submissions(item)
-
+    let submissions = await contest.get_resolved_submissions(item)
+    
+    // Obfuscate submission details to teams if not yet released.
     submissions = submissions.map((submission) => {
-      submission.problem = problems[submission.pid]
-      const team = users[submission.tid]
-      submission.team = {
-        uid: team?.uid,
-        username: team?.username,
-        disabled: team.disabled,
-        display_name: team?.display_name,
-        division: team?.division
-      }
-      if (submission.claimed !== undefined) {
-        const claimee = users[submission.claimed]
-        submission.claimed = {
-          uid: claimee?.uid,
-          username: claimee?.username,
-          display_name: claimee?.display_name,
-          division: claimee?.division
+        if (req.user?.role == 'team' && !submission.released) {
+          submission.status = 'pending'
+          submission.score = 0
+          submission.tests = submission.tests?.map((test: Test) => ({ ...test, result: '' }))
         }
-      }
-      if (submission.flagged !== undefined) {
-        const flagger = users[submission.flagged]
-        submission.flagged = {
-          uid: flagger?.uid,
-          username: flagger?.username,
-          display_name: flagger?.display_name
-        }
-      }
-      if (req.user?.role == 'team' && !submission.released) {
-        submission.status = 'pending'
-        submission.score = 0
-        submission.tests = submission.tests?.map((test: Test) => ({ ...test, result: '' }))
-      }
-      return submission
-    })
-
-    submissions = submissions?.filter((submission) => showToUser(req.user, submission.problem, settings))
+        return submission
+      })
+      .filter((submission) => showToUser(req.user, submission.problem, settings))
 
     res.send(transpose(submissions, 'sid'))
   } catch (err) {

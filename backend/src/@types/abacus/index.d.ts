@@ -11,7 +11,8 @@ declare module 'abacus' {
     practice_start_date: number
     practice_end_date: number
   }
-  export interface Submission extends Record<string, unknown> {
+
+  interface RawSubmission extends Record<string, unknown> {
     sid: string
     date: number
     filename: string
@@ -28,10 +29,23 @@ declare module 'abacus' {
     sub_no: number
     tid: string
     tests: Test[]
-    claimed?: string
+    claimed?: string | User
     viewed?: boolean
+    flagged?: string | User
+  }
+
+  export interface Submission extends RawSubmission {
+    claimed?: string
     flagged?: string
   }
+
+  export interface ResolvedSubmission extends RawSubmission {
+    team: User
+    problem: Problem
+    claimed?: User
+    flagged?: User
+  }
+
   export interface Problem extends Record<string, unknown> {
     pid: string
     practice?: boolean
