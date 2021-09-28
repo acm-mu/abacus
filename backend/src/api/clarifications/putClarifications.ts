@@ -1,8 +1,8 @@
-import { Clarification } from "abacus";
-import { Request, Response } from "express";
-import { matchedData, ParamSchema, validationResult } from "express-validator";
-import { transpose } from "../../utils";
-import contest from "../../abacus/contest";
+import { Clarification } from 'abacus'
+import { Request, Response } from 'express'
+import { matchedData, ParamSchema, validationResult } from 'express-validator'
+import { transpose } from '../../utils'
+import contest from '../../abacus/contest'
 
 export const schema: Record<string, ParamSchema> = {
   cid: {

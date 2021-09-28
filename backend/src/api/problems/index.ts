@@ -1,11 +1,11 @@
-import { Router } from "express";
-import { checkSchema } from "express-validator";
-import { hasRole } from "../../abacus/authlib";
-import { deleteProblems, schema as deleteSchema } from "./deleteProblems";
-import { downloadFiles, schema as downloadSchema } from "./downloadFiles";
-import { getProblems, schema as getSchema } from "./getProblems";
-import { postProblems, schema as postSchema } from "./postProblems";
-import { putProblems, schema as putSchema } from "./putProblems";
+import { Router } from 'express'
+import { checkSchema } from 'express-validator'
+import { hasRole } from '../../abacus/authlib'
+import { deleteProblems, schema as deleteSchema } from './deleteProblems'
+import { downloadFiles, schema as downloadSchema } from './downloadFiles'
+import { getProblems, schema as getSchema } from './getProblems'
+import { postProblems, schema as postSchema } from './postProblems'
+import { putProblems, schema as putSchema } from './putProblems'
 
 const problems = Router()
 
