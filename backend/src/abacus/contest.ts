@@ -78,7 +78,7 @@ class ContestService {
     const prob_columns = ['pid', 'division', 'id', 'name', 'max_points', 'capped_points', 'practice']
     const problems = transpose(await this.get_problems({}, prob_columns), 'pid')
 
-    const submissions = await this.get_submissions({ args })
+    const submissions = await this.get_submissions(args)
 
     return submissions.map((sub) => {
       return {

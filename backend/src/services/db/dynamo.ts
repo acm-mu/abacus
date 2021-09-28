@@ -46,7 +46,7 @@ export default class DynamoDB extends Database {
 
           resolve(scanResults)
         } catch (err) {
-          reject()
+          reject(err)
         }
       })()
     })
