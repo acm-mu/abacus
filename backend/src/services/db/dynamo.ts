@@ -12,39 +12,43 @@ export default class DynamoDB extends Database {
   }
 
   scan(TableName: string, query: ScanOptions): Promise<Item[]> {
-    return new Promise(async (resolve, reject) => {
-      const params: ScanInput = { TableName }
-      if (query) {
-        if (query.args) {
-          const entries = Object.entries(query.args)
-          if (entries.length > 0) {
-            params.FilterExpression = entries.map((e) => `#${e[0]} = :${e[0]}`).join(' AND ')
-            params.ExpressionAttributeNames = Object.assign({}, ...entries.map((x) => ({ [`#${x[0]}`]: x[0] })))
-            params.ExpressionAttributeValues = Object.assign({}, ...entries.map((x) => ({ [`:${x[0]}`]: x[1] })))
+    return new Promise((resolve, reject) => {
+      (async () => {
+        const params: ScanInput = { TableName }
+        if (query) {
+          if (query.args) {
+            const entries = Object.entries(query.args)
+            if (entries.length > 0) {
+              params.FilterExpression = entries.map((e) => `#${e[0]} = :${e[0]}`).join(' AND ')
+              params.ExpressionAttributeNames = Object.assign({}, ...entries.map((x) => ({ [`#${x[0]}`]: x[0] })))
+              params.ExpressionAttributeValues = Object.assign({}, ...entries.map((x) => ({ [`:${x[0]}`]: x[1] })))
+            }
+          }
+          if (query.columns) {
+            params.ProjectionExpression = query.columns.map((e) => `#${e}`).join(', ')
+            if (params.ExpressionAttributeNames)
+              params.ExpressionAttributeNames = {
+                ...params.ExpressionAttributeNames,
+                ...Object.assign({}, ...query.columns.map((e) => ({ [`#${e}`]: `${e}` })))
+              }
+            else
+              params.ExpressionAttributeNames = Object.assign({}, ...query.columns.map((e) => ({ [`#${e}`]: `${e}` })))
           }
         }
-        if (query.columns) {
-          params.ProjectionExpression = query.columns.map((e) => `#${e}`).join(', ')
-          if (params.ExpressionAttributeNames)
-            params.ExpressionAttributeNames = {
-              ...params.ExpressionAttributeNames,
-              ...Object.assign({}, ...query.columns.map((e) => ({ [`#${e}`]: `${e}` })))
-            }
-          else params.ExpressionAttributeNames = Object.assign({}, ...query.columns.map((e) => ({ [`#${e}`]: `${e}` })))
+        const scanResults: Item[] = []
+        let Items
+        try {
+          do {
+            Items = await this.db.scan(params).promise()
+            Items.Items?.forEach((Item) => scanResults.push(Item))
+            params.ExclusiveStartKey = Items.LastEvaluatedKey
+          } while (typeof Items.LastEvaluatedKey != 'undefined')
+          
+          resolve(scanResults)
+        } catch (err) {
+          reject()
         }
-      }
-      const scanResults: Item[] = []
-      let Items
-      try {
-        do {
-          Items = await this.db.scan(params).promise()
-          Items.Items?.forEach((Item) => scanResults.push(Item))
-          params.ExclusiveStartKey = Items.LastEvaluatedKey
-        } while (typeof Items.LastEvaluatedKey != 'undefined')
-        resolve(scanResults)
-      } catch (err) {
-        reject(err)
-      }
+      })()
     })
   }
 
