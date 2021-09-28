@@ -1,4 +1,4 @@
-import { Clarification, Problem, Settings, Submission, User } from 'abacus'
+import { Args, Clarification, Item, Problem, Settings, Submission, User } from 'abacus'
 import { Lambda } from 'aws-sdk'
 import { Database } from '../services'
 import { MongoDB } from '../services/db'
@@ -14,7 +14,7 @@ class ContestService {
 
   /* Users */
 
-  async create_user(item: any): Promise<User> {
+  async create_user(item: Item): Promise<User> {
     return this.db.put('user', item) as Promise<User>
   }
 
@@ -22,11 +22,11 @@ class ContestService {
     return this.db.get('user', { uid }) as Promise<User>
   }
 
-  async get_users(args?: any): Promise<User[]> {
+  async get_users(args?: Args): Promise<User[]> {
     return this.db.scan('user', { args }) as Promise<User[]>
   }
 
-  async update_user(uid: string, item: any): Promise<User> {
+  async update_user(uid: string, item: Item): Promise<User> {
     return this.db.update('user', { uid }, item) as Promise<User>
   }
 
@@ -36,7 +36,7 @@ class ContestService {
 
   /* Clarifications */
 
-  async create_clarification(item: any): Promise<Clarification> {
+  async create_clarification(item: Item): Promise<Clarification> {
     return this.db.put('clarification', item) as Promise<Clarification>
   }
 
@@ -44,11 +44,11 @@ class ContestService {
     return this.db.get('clarification', { cid }) as Promise<Clarification>
   }
 
-  async get_clarifications(args?: any): Promise<Clarification[]> {
+  async get_clarifications(args?: Args): Promise<Clarification[]> {
     return this.db.scan('clarification', { args }) as Promise<Clarification[]>
   }
 
-  async update_clarification(cid: string, item: any): Promise<Clarification> {
+  async update_clarification(cid: string, item: Item): Promise<Clarification> {
     return this.db.update('clarification', { cid }, item) as Promise<Clarification>
   }
 
@@ -58,7 +58,7 @@ class ContestService {
 
   /* Submissions */
 
-  async create_submission(item: any): Promise<Submission> {
+  async create_submission(item: Item): Promise<Submission> {
     return this.db.put('submission', item) as Promise<Submission>
   }
 
@@ -66,11 +66,11 @@ class ContestService {
     return this.db.get('submission', { sid }) as Promise<Submission>
   }
 
-  async get_submissions(args: any): Promise<Submission[]> {
+  async get_submissions(args: Args): Promise<Submission[]> {
     return this.db.scan('submission', { args }) as Promise<Submission[]>
   }
 
-  async update_submission(sid: string, item: any): Promise<Submission> {
+  async update_submission(sid: string, item: Item): Promise<Submission> {
     return this.db.update('submission', { sid }, item) as Promise<Submission>
   }
 
@@ -80,7 +80,7 @@ class ContestService {
 
   /* Problems */
 
-  async create_problem(item: any): Promise<Problem> {
+  async create_problem(item: Item): Promise<Problem> {
     return this.db.put('problem', item) as Promise<Problem>
   }
 
@@ -88,11 +88,11 @@ class ContestService {
     return this.db.get('problem', { pid }) as Promise<Problem>
   }
 
-  async get_problems(args: any, ...columns: any): Promise<Problem[]> {
+  async get_problems(args: Args, columns?: string[]): Promise<Problem[]> {
     return this.db.scan('problem', { args, columns }) as Promise<Problem[]>
   }
 
-  async update_problem(pid: string, item: any): Promise<Problem> {
+  async update_problem(pid: string, item: Item): Promise<Problem> {
     return this.db.update('problem', { pid }, item) as Promise<Problem>
   }
 
@@ -114,22 +114,6 @@ class ContestService {
   save_settings(settings: Record<string, number | string>): Promise<Settings> {
     return this.db.update('setting', {}, settings) as Promise<Settings>
   }
-}
-
-export const transpose = (itemList: any[] | undefined, key: string): { [key: string]: any } => {
-  if (!itemList) return {}
-  return Object.assign({}, ...itemList.map((obj: any) => ({ [obj[key]]: obj })))
-}
-
-export const makeJSON = (itemList: any, columns: string[] = []): string => {
-  itemList.map((e: any) => {
-    Object.keys(e).forEach((key) => {
-      if (!columns.includes(key)) {
-        delete e[key]
-      }
-    })
-  })
-  return JSON.stringify(itemList)
 }
 
 export default new ContestService()

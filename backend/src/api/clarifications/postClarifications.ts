@@ -84,7 +84,7 @@ const notify = async (clarification: Clarification) => {
   }
 }
 
-export const postClarifications = async (req: Request, res: Response) => {
+export const postClarifications = async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })
@@ -92,7 +92,9 @@ export const postClarifications = async (req: Request, res: Response) => {
   }
 
   try {
-    let { body, parent, division, type, title, context } = matchedData(req)
+    const data = matchedData(req)
+    const { body, parent, title, context } = data
+    let { division, type } = data
 
     if (!req.user) {
       res.status(400).json({ message: 'User is not valid!' })

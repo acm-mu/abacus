@@ -1,6 +1,21 @@
+import { Item } from 'abacus'
 import { createHash } from 'crypto'
 
-export const sha256 = (str: string) => createHash('sha256').update(str).digest('hex')
+export function sha256  (str: string): string {
+return createHash('sha256').update(str).digest('hex')
+}
 
-export const transpose = (items: Record<string, unknown>[] | undefined, key: string): Record<string, unknown> =>
-  items ? Object.assign({}, ...items.map((obj) => ({ [`${obj[key]}`]: obj }))) : {}
+export function transpose (items: Item[], key: string): Record<string, Item> {
+  return Object.assign({}, ...items.map((obj) => ({[`${obj[key]}`]: obj})))
+}
+
+export const makeJSON = (itemList: Item[], columns: string[] = []): string => {
+  itemList.map((e) => {
+    Object.keys(e).forEach((key) => {
+      if (!columns.includes(key)) {
+        delete e[key]
+      }
+    })
+  })
+  return JSON.stringify(itemList)
+}

@@ -90,7 +90,7 @@ const showToUser = (user: User | undefined, problem: Problem, settings: Settings
   return false
 }
 
-export const getSubmissions = async (req: Request, res: Response) => {
+export const getSubmissions = async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })
@@ -100,7 +100,7 @@ export const getSubmissions = async (req: Request, res: Response) => {
     await contest.get_problems({}, ['pid', 'division', 'id', 'name', 'max_points', 'capped_points', 'practice']),
     'pid'
   )
-  const users = transpose(await contest.get_users(), 'uid') as unknown as User[]
+  const users = transpose(await contest.get_users(), 'uid')
 
   const settings = await contest.get_settings()
 
@@ -113,9 +113,9 @@ export const getSubmissions = async (req: Request, res: Response) => {
       item.tid = req.user.uid
     }
 
-    let submissions = (await contest.get_submissions(item)) as any[]
+    let submissions = await contest.get_submissions(item)
 
-    submissions = submissions?.map((submission: any) => {
+    submissions = submissions.map((submission) => {
       submission.problem = problems[submission.pid]
       const team = users[submission.tid]
       submission.team = {

@@ -80,7 +80,7 @@ export const schema: Record<string, ParamSchema> = {
   }
 }
 
-const notifyTeam = async (item: Record<string, any>) => {
+const notifyTeam = async (item: Record<string, unknown>) => {
   const res = await contest.get_submissions({ sid: item.sid })
   if (!res) return
 
@@ -90,12 +90,12 @@ const notifyTeam = async (item: Record<string, any>) => {
     content: 'Your submission has been graded!',
     context: {
       type: 'sid',
-      id: item.sid
+      id: item.sid as string
     }
   })
 }
 
-export const putSubmissions = async (req: Request, res: Response) => {
+export const putSubmissions = async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })

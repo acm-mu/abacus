@@ -1,5 +1,6 @@
+import { Item } from 'abacus'
 import { Database } from '.'
-import { Item, Key, ScanOptions } from './database'
+import { Key, ScanOptions } from './database'
 import { Db, MongoClient } from 'mongodb'
 import * as dotenv from 'dotenv'
 
@@ -14,7 +15,7 @@ export default class MongoDB extends Database {
     const { MONGO_HOST, MONGO_USER, MONGO_PASS, MONGO_DBNAME } = process.env
     const url = `mongodb://${MONGO_USER}:${MONGO_PASS}@${MONGO_HOST}/${MONGO_DBNAME}`
 
-    MongoClient.connect(url, (err: any, db) => {
+    MongoClient.connect(url, (err, db) => {
       if (err) throw err
       if (!db) throw new Error('Could not connect to MongoDB database')
       this.db = db.db('abacus')
@@ -22,11 +23,11 @@ export default class MongoDB extends Database {
   }
 
   scan(TableName: string, query?: ScanOptions): Promise<Item[]> {
-    return new Promise(async (resolve, reject) => {
-      await this.db
+    return new Promise((resolve, reject) => {
+      this.db
         .collection(TableName)
         .find(query?.args || {})
-        .toArray((err: any, data) => {
+        .toArray((err, data) => {
           if (err) {
             reject(err)
             return
@@ -37,8 +38,8 @@ export default class MongoDB extends Database {
   }
 
   get(TableName: string, Key: Key): Promise<Item> {
-    return new Promise(async (resolve, reject) => {
-      await this.db.collection(TableName).findOne(Key, (err: any, data) => {
+    return new Promise((resolve, reject) => {
+      this.db.collection(TableName).findOne(Key, (err, data) => {
         if (err) {
           reject(err)
           return
@@ -49,19 +50,19 @@ export default class MongoDB extends Database {
   }
 
   put(TableName: string, Item: Item): Promise<Item> {
-    return new Promise(async (resolve, reject) => {
-      await this.db.collection(TableName).insertOne(Item, (err: any, data) => {
+    return new Promise((resolve, reject) => {
+      this.db.collection(TableName).insertOne(Item, (err, data) => {
         if (err) {
           reject(err)
           return
         }
-        if (data) resolve(data)
+        if (data) resolve(data as unknown as Item)
       })
     })
   }
 
   update(TableName: string, Key: Key, Item: Item): Promise<Item> {
-    return new Promise(async (resolve, reject) => {
+    return new Promise((resolve, reject) => {
       const unsetFields = Object.assign(
         {},
         ...Object.entries(Item)
@@ -69,26 +70,26 @@ export default class MongoDB extends Database {
           .map((obj) => ({ [`${obj[0]}`]: 1 }))
       )
 
-      await this.db.collection(TableName).updateOne(
+      this.db.collection(TableName).updateOne(
         Key,
         {
           $set: Item,
           $unset: unsetFields
         },
-        (err: any, data) => {
+        (err, data) => {
           if (err) {
             reject(err)
             return
           }
-          if (data) resolve(data)
+          if (data) resolve(data as unknown as Item)
         }
       )
     })
   }
 
   delete(TableName: string, Key: Key): Promise<void> {
-    return new Promise(async (resolve, reject) => {
-      await this.db.collection(TableName).deleteOne(Key, (err: any, _data) => {
+    return new Promise((resolve, reject) => {
+      this.db.collection(TableName).deleteOne(Key, (err) => {
         if (err) {
           reject(err)
           return

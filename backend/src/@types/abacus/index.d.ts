@@ -106,4 +106,7 @@ declare module 'abacus' {
     context?: Context
     type?: 'success' | 'warning' | 'error'
   }
+
+  export type Item = Record<string, unknown>
+  export type Args = Record<string, unknown>
 }

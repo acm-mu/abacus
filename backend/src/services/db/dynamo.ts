@@ -1,6 +1,7 @@
+import { Item } from 'abacus'
 import { DocumentClient, ScanInput } from 'aws-sdk/clients/dynamodb'
 import { Database } from '.'
-import { Item, Key, ScanOptions } from './database'
+import { Key, ScanOptions } from './database'
 
 export default class DynamoDB extends Database {
   db: DocumentClient
@@ -12,7 +13,7 @@ export default class DynamoDB extends Database {
 
   scan(TableName: string, query: ScanOptions): Promise<Item[]> {
     return new Promise(async (resolve, reject) => {
-      let params: ScanInput = { TableName }
+      const params: ScanInput = { TableName }
       if (query) {
         if (query.args) {
           const entries = Object.entries(query.args)
@@ -63,7 +64,7 @@ export default class DynamoDB extends Database {
           reject(err)
           return
         }
-        resolve(data)
+        resolve(data as Item)
       })
     })
   }
@@ -75,7 +76,7 @@ export default class DynamoDB extends Database {
       const setEntries = entries.filter((e) => e[1] != null)
       const remEntries = entries.filter((e) => e[1] == null)
 
-      const params: any = {}
+      const params: Record<string, string> = {}
 
       const updateExpression: string[] = []
 
@@ -102,7 +103,7 @@ export default class DynamoDB extends Database {
             reject(err)
             return
           }
-          resolve(data)
+          resolve(data as Item)
         }
       )
     })
@@ -110,7 +111,7 @@ export default class DynamoDB extends Database {
 
   delete(TableName: string, Key: Key): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.db.delete({ TableName, Key }, (err, _data) => {
+      this.db.delete({ TableName, Key }, (err) => {
         if (err) {
           reject(err)
           return
