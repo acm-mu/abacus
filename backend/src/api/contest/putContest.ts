@@ -1,6 +1,6 @@
 import { Settings } from 'abacus'
 import { Request, Response } from 'express'
-import { matchedData, ParamSchema, validationResult } from "express-validator"
+import { matchedData, ParamSchema, validationResult } from 'express-validator'
 import contest from '../../abacus/contest'
 
 export const schema: Record<string, ParamSchema> = {
@@ -75,7 +75,7 @@ export const putContest = async (req: Request, res: Response) => {
   const endDate = new Date(settings.end_date * 1000)
 
   if (endDate <= startDate) {
-    res.status(400).send({ message: "End date cannot be before start date!" })
+    res.status(400).send({ message: 'End date cannot be before start date!' })
     return
   }
 
@@ -83,7 +83,7 @@ export const putContest = async (req: Request, res: Response) => {
   const practiceEndDate = new Date(settings.practice_end_date * 1000)
 
   if (practiceEndDate <= practiceStartDate) {
-    res.status(400).send({ message: "Practice end date cannot be before start date!" })
+    res.status(400).send({ message: 'Practice end date cannot be before start date!' })
     return
   }
 

@@ -1,6 +1,6 @@
-import { Request, Response } from 'express';
-import { ParamSchema, validationResult } from "express-validator";
-import contest from '../../abacus/contest';
+import { Request, Response } from 'express'
+import { ParamSchema, validationResult } from 'express-validator'
+import contest from '../../abacus/contest'
 
 export const schema: Record<string, ParamSchema> = {
   pid: {
@@ -12,11 +12,12 @@ export const schema: Record<string, ParamSchema> = {
 
 const deleteSubmissionsForProblem = async (pid: string) => {
   try {
-    const submissions = await contest.get_submissions({ pid }) || []
+    const submissions = (await contest.get_submissions({ pid })) || []
     for (const { sid } of submissions) {
-      await contest.delete_submission(sid)
-        .then(_ => console.log(`Deleted submission ${sid}`))
-        .catch(_ => console.log(`Error deleting submission ${sid}`))
+      await contest
+        .delete_submission(sid)
+        .then((_) => console.log(`Deleted submission ${sid}`))
+        .catch((_) => console.log(`Error deleting submission ${sid}`))
     }
   } catch (err) {
     console.error(err)
@@ -37,14 +38,18 @@ export const deleteProblems = async (req: Request, res: Response) => {
       try {
         await contest.delete_problem(pid)
         success++
-      } catch (err) { failed++ }
+      } catch (err) {
+        failed++
+      }
     }
     res.json({ message: `Successfully deleted ${success} problem(s) (${failed} failed).` })
   } else {
     deleteSubmissionsForProblem(req.body.pid)
     try {
       await contest.delete_problem(req.body.pid)
-      res.json({ message: "Problem successfully deleted" })
-    } catch (err) { res.sendStatus(500) }
+      res.json({ message: 'Problem successfully deleted' })
+    } catch (err) {
+      res.sendStatus(500)
+    }
   }
 }

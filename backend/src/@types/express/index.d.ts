@@ -1,4 +1,4 @@
-import { User } from "abacus";
+import { User } from 'abacus'
 declare global {
   namespace Express {
     interface Request {
