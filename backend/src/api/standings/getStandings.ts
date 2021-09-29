@@ -26,15 +26,14 @@ export const schema: Record<string, ParamSchema> = {
 //   }>
 // };
 
-const getBlueStandings = async (isPractice: boolean): Promise<Record<string, any>> => {
+const getBlueStandings = async (isPractice: boolean, page?: number): Promise<Record<string, any>> => {
   let standings = Object.values(await contest.get_users({ role: 'team', division: 'blue' }))
   const submissions = await contest.get_submissions({ division: 'blue' })
 
   let problemsList = await contest.get_problems(
     { division: 'blue' },
-    0,
-    ['pid', 'division', 'id', 'name', 'practice'],
-    0
+    page ? page : undefined,
+    ['pid', 'division', 'id', 'name', 'practice']
   )
   problemsList = problemsList.filter(({ practice }) => {
     if (isPractice) return practice

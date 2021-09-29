@@ -96,6 +96,7 @@ export const getSubmissions = async (req: Request, res: Response) => {
     res.status(400).json({ message: errors[0].msg })
     return
   }
+  //if the page number isn't included in the request, make it null
   const page = req.body.page ? req.body.page : null
   const problems = transpose(
     await contest.get_problems({}, page, ['pid', 'division', 'id', 'name', 'max_points', 'capped_points', 'practice']),
