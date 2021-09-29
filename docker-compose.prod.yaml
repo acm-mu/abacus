@@ -1,4 +1,4 @@
-version: "3.8"
+version: '3.8'
 
 services:
   mongodb:
@@ -8,9 +8,20 @@ services:
       context: .docker
       dockerfile: Dockerfile.mongo
     volumes:
-      - ./mongo-volume:/data/db
+      - './mongo-volume:/data/db'
     ports:
-      - 27017:27017
+      - '27017:27017'
+  piston:
+    container_name: piston
+    build:
+      context: .docker
+      dockerfile: Dockerfile.piston
+    volumes:
+      - './piston-volume:/piston'
+    tmpfs:
+      - '/piston/jobs:exec'
+    ports:
+      - '2000:2000'
   server:
     container_name: server
     restart: unless-stopped
@@ -23,7 +34,7 @@ services:
       - MONGO_PASS=password
       - MONGO_DBNAME=abacus
     ports:
-      - "8080:80"
+      - '8080:80'
     depends_on:
       - mongodb
   app:
@@ -32,6 +43,6 @@ services:
       context: frontend
       dockerfile: Dockerfile.prod
     ports:
-      - "8081:80"
+      - '8081:80'
     depends_on:
       - server
