@@ -23,7 +23,7 @@ class ContestService {
   }
 
   async get_users(args?: any, page?: number): Promise<User[]> {
-    return this.db.scan('user',{ args }, page) as Promise<User[]>
+    return this.db.scan('user', { args }, page) as Promise<User[]>
   }
 
   async update_user(uid: string, item: any): Promise<User> {
@@ -45,7 +45,7 @@ class ContestService {
   }
 
   async get_clarifications(args?: any, page?: number): Promise<Clarification[]> {
-    return this.db.scan('clarification',{ args },page) as Promise<Clarification[]>
+    return this.db.scan('clarification', { args }, page) as Promise<Clarification[]>
   }
 
   async update_clarification(cid: string, item: any): Promise<Clarification> {
@@ -66,8 +66,8 @@ class ContestService {
     return this.db.get('submission', { sid }) as Promise<Submission>
   }
 
-  async get_submissions(args: any, page?: number,): Promise<Submission[]> {
-    return this.db.scan('submission', { args },page) as Promise<Submission[]>
+  async get_submissions(args: any, page?: number): Promise<Submission[]> {
+    return this.db.scan('submission', { args }, page) as Promise<Submission[]>
   }
 
   async update_submission(sid: string, item: any): Promise<Submission> {
@@ -88,8 +88,8 @@ class ContestService {
     return this.db.get('problem', { pid }) as Promise<Problem>
   }
 
-  async get_problems(args: any, page?: number,...columns: any): Promise<Problem[]> {
-    return this.db.scan('problem', { args, columns }, page,) as Promise<Problem[]>
+  async get_problems(args: any, page?: number, ...columns: any): Promise<Problem[]> {
+    return this.db.scan('problem', { args, columns }, page) as Promise<Problem[]>
   }
 
   async update_problem(pid: string, item: any): Promise<Problem> {

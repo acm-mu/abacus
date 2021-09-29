@@ -92,7 +92,7 @@ export const getProblems = async (req: Request, res: Response) => {
   try {
     const settings = await contest.get_settings()
     const page = req.body.page ? req.body.page : null
-    let problems = await contest.get_problems(query,page,columns)
+    let problems = await contest.get_problems(query, page, columns)
     problems = problems?.filter((problem) => showToUser(user, problem, settings))
     res.send(transpose(problems, 'pid'))
   } catch (err) {
