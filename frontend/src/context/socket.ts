@@ -20,6 +20,4 @@ const SocketContext = createContext<Socket<ClientToServerEvents, ServerToClientE
 */
 const SocketContext = createContext<typeof Socket | undefined>(undefined)
 
-
-
 export default SocketContext
