@@ -96,8 +96,9 @@ export const getSubmissions = async (req: Request, res: Response) => {
     res.status(400).json({ message: errors[0].msg })
     return
   }
+  const page = req.body.page ? req.body.page : null
   const problems = transpose(
-    await contest.get_problems({}, ['pid', 'division', 'id', 'name', 'max_points', 'capped_points', 'practice']),
+    await contest.get_problems({},page,['pid', 'division', 'id', 'name', 'max_points', 'capped_points', 'practice']),
     'pid'
   )
   const users = transpose(await contest.get_users(), 'uid') as unknown as User[]

@@ -30,7 +30,7 @@ const getBlueStandings = async (isPractice: boolean): Promise<Record<string, any
   let standings = Object.values(await contest.get_users({ role: 'team', division: 'blue' }))
   const submissions = await contest.get_submissions({ division: 'blue' })
 
-  let problemsList = await contest.get_problems({ division: 'blue' }, ['pid', 'division', 'id', 'name', 'practice'])
+  let problemsList = await contest.get_problems({ division: 'blue' },0,['pid', 'division', 'id', 'name', 'practice'],0)
   problemsList = problemsList.filter(({ practice }) => {
     if (isPractice) return practice
     return practice == undefined || practice == false
@@ -126,11 +126,11 @@ const getBlueStandings = async (isPractice: boolean): Promise<Record<string, any
 //   problems: Record<string, Submission>;
 // }
 
-const getGoldStandings = async (isPractice: boolean): Promise<Record<string, any>> => {
+const getGoldStandings = async (isPractice: boolean, page?: number): Promise<Record<string, any>> => {
   let standings = Object.values(await contest.get_users({ role: 'team', division: 'gold' }))
   const submissions = await contest.get_submissions({ division: 'gold' })
-
-  let problemsList = await contest.get_problems({ division: 'gold' }, [
+  //while frontend is being built making page optional
+  let problemsList = await contest.get_problems({ division: 'gold' },page ? page : undefined,[
     'pid',
     'division',
     'id',

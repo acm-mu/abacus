@@ -21,12 +21,16 @@ export default class MongoDB extends Database {
     })
   }
 
-  scan(TableName: string, query?: ScanOptions): Promise<Item[]> {
+  scan(TableName: string, query?: ScanOptions, page?: number): Promise<Item[]> {
+    const pageSize = 25;
+    const skip = page ? (page - 1) * 25 : null;
     return new Promise(async (resolve, reject) => {
       await this.db
         .collection(TableName)
         .find(query?.args || {})
-        .toArray((err: any, data) => {
+        .skip(skip ? skip: 0)
+        .limit(skip ? pageSize : 0)
+        .toArray((err: any, data: any) => {
           if (err) {
             reject(err)
             return
@@ -47,7 +51,7 @@ export default class MongoDB extends Database {
       })
     })
   }
-
+  
   put(TableName: string, Item: Item): Promise<Item> {
     return new Promise(async (resolve, reject) => {
       await this.db.collection(TableName).insertOne(Item, (err: any, data) => {
