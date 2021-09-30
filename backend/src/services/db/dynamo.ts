@@ -10,11 +10,11 @@ export default class DynamoDB extends Database {
     this.db = new DocumentClient()
   }
 
-  scan(TableName: string, query: ScanOptions,page?: number, lastStartKey?: any): Promise<Item[]> {
+  scan(TableName: string, query: ScanOptions, page?: number, lastStartKey?: any): Promise<Item[]> {
     return new Promise(async (resolve, reject) => {
       let params: ScanInput = { TableName }
-      page ? params.Limit = 25 : undefined;
-      lastStartKey ? params.ExclusiveStartKey = lastStartKey : params.ExclusiveStartKey = undefined;
+      page ? (params.Limit = 25) : undefined
+      lastStartKey ? (params.ExclusiveStartKey = lastStartKey) : (params.ExclusiveStartKey = undefined)
       if (query) {
         if (query.args) {
           const entries = Object.entries(query.args)
@@ -38,7 +38,6 @@ export default class DynamoDB extends Database {
       let Items
       try {
         do {
-          
           Items = await this.db.scan(params).promise()
           Items.Items?.forEach((Item) => scanResults.push(Item))
           params.ExclusiveStartKey = Items.LastEvaluatedKey

@@ -30,11 +30,13 @@ const getBlueStandings = async (isPractice: boolean, page?: number): Promise<Rec
   let standings = Object.values(await contest.get_users({ role: 'team', division: 'blue' }))
   const submissions = await contest.get_submissions({ division: 'blue' })
 
-  let problemsList = await contest.get_problems(
-    { division: 'blue' },
-    page ? page : undefined,
-    ['pid', 'division', 'id', 'name', 'practice']
-  )
+  let problemsList = await contest.get_problems({ division: 'blue' }, page ? page : undefined, [
+    'pid',
+    'division',
+    'id',
+    'name',
+    'practice'
+  ])
   problemsList = problemsList.filter(({ practice }) => {
     if (isPractice) return practice
     return practice == undefined || practice == false
