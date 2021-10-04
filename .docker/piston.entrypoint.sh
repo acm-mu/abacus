@@ -1,8 +1,14 @@
 #!/bin/bash
 
 log() {
+  WHITE='\u001b[37;22m'
+  LIGHT_CYAN='\u001b[39;22m'
+  BLUE='\u001b[36;22m'
+  RESET='\e[0m'
+
   date=`date +"%FT%T.%3NZ"`
-  echo "$date [Abacus] $1"
+
+  echo -e "${WHITE}$date ${BLUE}[Abacus] ${LIGHT_CYAN}$1${RESET}"
 }
 
 log "Waiting for API server..."
@@ -36,4 +42,4 @@ for package in "${packages[@]}"; do
   log "Installed ${a[0]}[v${a[1]}]"
 done
 
-log "Finished setting up Piston for Abacus."
+log "Finished setting up Piston for Abacus"
