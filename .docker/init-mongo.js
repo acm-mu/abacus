@@ -658,6 +658,24 @@ db.user.insert({
     role: "judge"
 })
 
+db.user.insert({
+    uid: "516ad8ee16d1c04ea799298ce42d51e2",
+    display_name: "Theodor Holden",
+    username: "proctor1",
+    division: "blue",
+    password: "b2c4607a6e1378c6a2cf4592e870f31642d44ff78ac17a6155bf8854effaa3d2",
+    role: "proctor"
+})
+
+db.user.insert({
+    uid: "0d1fdf539acc1f16b66b3d1e4f15ab85",
+    display_name: "Olly Willis",
+    username: "proctor2",
+    division: "gold",
+    password: "b2b5755430c2ee267b470ec1efd4e18e651b8a145c69a1c43e220780d6d2637a",
+    role: "proctor"
+})
+
 db.createCollection('submission')
 
 db.createCollection('clarification')
