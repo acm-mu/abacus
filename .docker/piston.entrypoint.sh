@@ -24,9 +24,9 @@ install_packages() {
     log "Installing ${language}[v${version}]..."
 
     curl --silent \
-      --method POST \
-      --header "Content-Type: application/json" \
-      --data "{\"language\":\"${language}\", \"version\": \"${version}\"}" \
+      -X POST \
+      -H "Content-Type: application/json" \
+      -d "{\"language\":\"${language}\", \"version\": \"${version}\"}" \
       localhost:2000/api/v2/packages \
       &> /dev/null
 
