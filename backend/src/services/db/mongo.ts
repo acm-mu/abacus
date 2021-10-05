@@ -65,7 +65,7 @@ export default class MongoDB extends Database {
       const unsetFields = Object.assign(
         {},
         ...Object.entries(Item)
-          .filter((obj) => !obj[1])
+          .filter((obj) => obj[1] === undefined)
           .map((obj) => ({ [`${obj[0]}`]: 1 }))
       )
 
