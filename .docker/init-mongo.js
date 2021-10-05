@@ -559,6 +559,105 @@ db.user.insert({
     role: "team"
 })
 
+db.user.insert({
+    uid: "f42b3307c9d54de2a356c22c33d9856f",
+    display_name: "Ben Burton",
+    username: "judge6",
+    division: "blue",
+    password: "583cf7273e79530eec237c8caa9566f42d53f82b264af09c723aea5f75026f3e",
+    role: "judge"
+})
+
+db.user.insert({
+    uid: "294a4c028bcb4b4194e403ad035c795f",
+    display_name: "Lynette Neal",
+    username: "judge5",
+    division: "gold",
+    password: "a63174ae178924c3f8634d6af25b7e902acd86a2d29e367761389b2ae387f3e0",
+    role: "judge"
+})
+
+db.user.insert({
+    uid: "ce248ba888be404889641be092a24d01",
+    display_name: "Madeline Murray",
+    username: "judge12",
+    division: "gold",
+    password: "bc401eaf9bee8546b7d617f35001ad8ee50e9776d8a2e81b8c0a4d23c115876e",
+    role: "judge"
+})
+
+db.user.insert({
+    uid: "fe2a22673e8141718c115422aa2f19a9",
+    display_name: "Randal Burns",
+    username: "judge8",
+    division: "blue",
+    password: "e1c22477a97c28c10396c839dab724ab4914fe4f214d4aa1f97ad94c570bc513",
+    role: "judge"
+})
+
+db.user.insert({
+    uid: "f4aef26eeeef41b1915f5b920426c886",
+    display_name: "Michelle Schwartz",
+    username: "judge1",
+    division: "blue",
+    password: "4ddc9e9f1f871fd34fde9c3e6cbcfb0fef918956181a20849bb8bdf98c07156c",
+    role: "judge"
+})
+
+db.user.insert({
+    uid: "7e148eea4ca94825895d2f4b47df8ef0",
+    display_name: "Louise Holland",
+    username: "judge4",
+    division: "blue",
+    password: "65292d1fafad435628e20099ea7d885f0e2746a148d656f4b2bd6ea6e64240a8",
+    role: "judge"
+})
+
+db.user.insert({
+    uid: "aed316489c4347afb92ea48630a1ec09",
+    display_name: "Earl Jones",
+    username: "judge7",
+    division: "blue",
+    password: "5bcb8a7a6d1a88abe96798557affc0c1deefc27f486d6f3d337afc352ea2c04d",
+    role: "judge"
+})
+
+db.user.insert({
+    uid: "77e3d39769a247449393cf24cc713402",
+    display_name: "Enid Brubaker",
+    username: "judge3",
+    division: "blue",
+    password: "029634e03b37ed5317082af6850ec8d4a43f3cfd07644fef38461120d6c8f946",
+    role: "judge"
+})
+
+db.user.insert({
+    uid: "5e0e2794114c4be39952bacef08c3c8f",
+    display_name: "Wai Mcmaster",
+    username: "judge9",
+    division: "blue",
+    password: "aae4092870626a2a136ee0e07e77779712f5cfcad07a4b51ef795eb13ae80584",
+    role: "judge"
+})
+
+db.user.insert({
+    uid: "f81aadbc95c341179a9324bc8c836430",
+    display_name: "Simon Dunn",
+    username: "judge10",
+    division: "blue",
+    password: "b2ac69501a79ddb8974cfd13b32e0fc379d2096b25a2e4d1964e268bd2ca63ad",
+    role: "judge"
+})
+
+db.user.insert({
+    uid: "86257bafcb1c4ef7912a29bdb85c0306",
+    display_name: "Wayne Russell",
+    username: "judge11",
+    division: "gold",
+    password: "62e4ab5a6c05ad18acb5081735a4ad2a17f8fdf3455cd48582b3b0d556a58ef4",
+    role: "judge"
+})
+
 db.createCollection('submission')
 
 db.createCollection('clarification')
