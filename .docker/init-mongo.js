@@ -19,6 +19,496 @@ db.user.insert({
     username: "admin"
 })
 
+db.user.insert({
+    uid: "5a1c90c048e14cd283d0715717093565",
+    display_name: "Spartans",
+    username: "team26",
+    division: "blue",
+    school: "Brookfield East High School",
+    password: "476c1a4a5ebf2ae1b28cce18ffc5025529f5c1fe553d6efc8a7e7f1410883a7c",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "2596a673ae0f413198f6fec0324ab458",
+    display_name: "Kewaskum Team 2",
+    username: "team19",
+    division: "gold",
+    school: "Kewaskum Middle School",
+    password: "a97a2510bf9d982fbbeb48369f2caad4126bab55ee5c155435ae5d6d93cc7efe",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "985a4507880448c9938691a86eb8230b",
+    display_name: "Hedge Tech",
+    username: "team2",
+    division: "blue",
+    school: "Middleton High School",
+    password: "9be6d834456b28e5cd23ce0ddc3fb7b11947dc3c682d72ba2815f69d4282c396",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "4724e7901d83414199b55687dba04e36",
+    display_name: "Whitefish Bay SCRATCH",
+    username: "team25",
+    division: "gold",
+    school: "Whitefish Bay High School",
+    password: "a48791691db935070187b4effa0477827b2b6b785794f987bc33212c4a3ac485",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "77d7dc1fbbc24256bb79165dac6d77c0",
+    display_name: "Sauk Prairie Eagles",
+    username: "team21",
+    division: "blue",
+    school: "Sauk Prairie High School",
+    password: "af1cdc67de80c1fe5daef31554e4c49a19b16f6e45e335a381d32148f35ffdc2",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "b91d5be273974165b9d7be3b9a4732b6",
+    display_name: "teamname.exe has stopped responding",
+    username: "team18",
+    division: "gold",
+    school: "Kewaskum Middle School",
+    password: "b98d606924553db27ffec075f12c5fb7c7d3b19f88dc9f1ea396cd8fbcf0aec0",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "2ca70b25b0d1432dbacfcdaa79bdcb66",
+    display_name: "GHS Team 1 (Sr.)",
+    username: "team39",
+    division: "blue",
+    school: "Grafton High School",
+    password: "079320a74fbd8e43b338ac8d326d344752fb065022d5a5ac33fbcf4a62c3bcc1",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "fe82fb9788ad4b10bd9f472569437a77",
+    display_name: "VictoriousSpectacularPasswords",
+    username: "team37",
+    division: "blue",
+    school: "Catholic Memorial High School",
+    password: "2408b81dd31e5e1218dc0e0a7b7824556e01386b7d57ff958fc5b7284cf00454",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "f1031614a1cf4184ad65bc1b72c5a0b1",
+    display_name: "barabooCoders++;",
+    username: "team36",
+    division: "blue",
+    school: "Baraboo High School",
+    password: "848fbe2287b70ed9e152dfddf49e08d3becbab1ef1238c865212a3b685691060",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "2befdb26188d444d83f1b8dd519da0fd",
+    display_name: "NullPointerException",
+    username: "team12",
+    division: "blue",
+    school: "University School of Milwaukee",
+    password: "fc05618c1c920f2d71567c8fbc6c9aa5f6cb61ce68dc309aa075a564e68108cf",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "424cdc526c6e4c93a24bcc1276cf5753",
+    display_name: "BA3",
+    username: "team29",
+    division: "blue",
+    school: "Brookfield Academy",
+    password: "d35c9c06c6036dc1c66a78c61521bd68ad3e17dc51b9bfebf732d63f96b24933",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "f91e9229a599483f80026ab294d91002",
+    display_name: "Java Jammers",
+    username: "team7",
+    division: "blue",
+    school: "Menomonee Falls High School",
+    password: "cbd59210473a8f569656deb9176b3464525ef1c4d75b9b71ca46bc094173ba1c",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "b7f6217351b64f0f971f0cf050223374",
+    display_name: "Whitefish Bay JAVA - B",
+    username: "team24",
+    division: "blue",
+    school: "Whitefish Bay High School",
+    password: "5f9adad04bce88d844b1613f33864433c3b2f20f6e734077f5e4e8cd424952e3",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "f0d69f8d5f7a40129bcbd3365caa32f6",
+    display_name: "Screaming Hairy Armadillos",
+    username: "team5",
+    division: "blue",
+    school: "Menomonee Falls High School",
+    password: "a7ecc571ba81c814c0f0e68eb12e141416e5e859e708c146b31ab2c468d06c68",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "f0e77b2c6c0a482fbc70101d7127be93",
+    display_name: "The Flyerz",
+    username: "team9",
+    division: "gold",
+    school: "Menomonee Falls High School",
+    password: "92050f605d973135e2ece407e1fc70f01300880e406afa1e85ea2b337e958086",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "f5e951fc26f7487d986baade806e5201",
+    display_name: "Marquette High",
+    username: "team43",
+    division: "blue",
+    school: "Marquette University High School",
+    password: "6591cc410f2ca68db5ae5a9960e4808d497c9dc6fb4180d967968c594fdd7e89",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "dfe4d84e9d1d48de9c100b3186773bc5",
+    display_name: "Mixed Bag",
+    username: "team16",
+    division: "blue",
+    school: "Brookfield Central High School",
+    password: "57371b5d430910465930a521def1c884aeb621fc68bd3447b7f0173a856d1f4e",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "c2238dc5fb324517801b82a0eccc8d69",
+    display_name: "Arrowhead 1",
+    username: "team41",
+    division: "blue",
+    school: "Arrowhead Union High School",
+    password: "e95a796f95335f2791bff1347758944cebba146429968fc7db61fe0bac1f1052",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "88cff1a561054915b0c6c221825a5a2d",
+    display_name: "King Coderz",
+    username: "team49",
+    division: "blue",
+    school: "Kettle Moraine High School",
+    password: "0250345546a47380f78a3485958ed40247fe076f35690d4c75dc27b70b1c92ca",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "d163815aac8f41dbbbd184984e2a9d7d",
+    display_name: "Whitefish Bay JAVA - A",
+    username: "team23",
+    division: "blue",
+    school: "Whitefish Bay High School",
+    password: "3f7f98153af85840e81a454e78b455972c56b958af3949a50b50411fe161ccf8",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "893628f314f04094901aca388cea3f3b",
+    display_name: "GHS Team 2 (Jr.)",
+    username: "team40",
+    division: "blue",
+    school: "Grafton High School",
+    password: "0949385038bc48d12abfbf39e6d040b52b4ffb517933703e7e51451bf46da1ee",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "ecced0482dfd4e27947b82c85b291d78",
+    display_name: "Binary Beasts",
+    username: "team47",
+    division: "blue",
+    school: "Kettle Moraine High School",
+    password: "043a32ffba8b4796e1d85050d2e4fdaa189773758258f7b0d71e3a2bc9c90a5f",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "45492c40a9a34e0db9af9a6447e886c0",
+    display_name: "Coderz",
+    username: "team45",
+    division: "blue",
+    school: "Whitewater High School",
+    password: "8fad22133c1f0ed5b6d8f9dae6fe741b056bf4f996597f238281593c32a63d63",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "731445c7c6564be1b4929093e362b73b",
+    display_name: "Error: Team name not found",
+    username: "team48",
+    division: "blue",
+    school: "Kettle Moraine High School",
+    password: "8207ab652348d4996dfba132104e2a5ff193d396f60254b85c6d13858df08e95",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "1d8bc55b3a5645b5aaa6a732c63d1775",
+    display_name: "Coding Generals",
+    username: "team17",
+    division: "blue",
+    school: "Rufus King High School",
+    password: "139331becd168b4679763d3b11d9b105b893e2b1261c0ae132ead01687640f98",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "b737d2cf3a60472fa04ae82da09ebc2f",
+    display_name: "Arrowhead 2",
+    username: "team42",
+    division: "blue",
+    school: "Arrowhead Union High School",
+    password: "76e8dbbd9ef3a814861cf82e36422c271054af8e4793cf67bd3cd75827417aa1",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "b9ebf6a33a514574a420eb037fdf37c5",
+    display_name: "The Purple Dolphins",
+    username: "team4",
+    division: "blue",
+    school: "Menomonee Falls High School",
+    password: "d461ca6a024190d8cbc28ba7b96525c5dffc6fe285c03502fe9429db8cf11610",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "cb3c7d7b8b944f67ba57b14c2b161f6e",
+    display_name: "Central",
+    username: "team15",
+    division: "blue",
+    school: "Brookfield Central High School",
+    password: "7340a76cca83bcb99bf056092731aec087e5029bcd9d86c851d4e49630ff6763",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "efa7c59a99d44e288c6ff8712635a4b2",
+    display_name: "Wausau Warriors",
+    username: "team3",
+    division: "blue",
+    school: "Wausau West High School",
+    password: "9ae09bf9c7cd505d94621e3e3caa40c4108d1db2b069d8a11d467766a85d7c4a",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "f59e79b4dfd3495095afaff85ae282e2",
+    display_name: "Javalinos",
+    username: "team22",
+    division: "blue",
+    school: "Mukwonago High School",
+    password: "dea5d829a298b36941c26c8736980ccebaccc4c7f440305eeb5b090791d23b38",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "716dd36be12e437aa7ac8d7400abd635",
+    display_name: "Binary Tempo",
+    username: "team46",
+    division: "blue",
+    school: "Whitewater High School",
+    password: "3d7639b99d8c3c7507275c6f4e13b84786cbdd0919e0d04ff3cb5f0051132d95",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "42e7d00f314b4e469d4ca22e7ea23124",
+    display_name: "The Betanskis",
+    username: "team20",
+    division: "blue",
+    school: "Fort Atkinson High School",
+    password: "4f375720ebbdad5e3d23361b4840d1ce511e2a268373ee8257e4949039553429",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "864483a8105e4050814361a81900b5d4",
+    display_name: "Aw Snap!",
+    username: "team33",
+    division: "gold",
+    school: "New London High School",
+    password: "7bfabe3c06141925c926d1e0ebf5690f4188c5169853a4120fe6d1241ead0d82",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "e831fe7800c2432d8666cfafc68662a3",
+    display_name: "BA1",
+    username: "team27",
+    division: "blue",
+    school: "Brookfield Academy",
+    password: "4070f40f27ee88d9560ab7ea7fa9f01546ae8d81d5f6fcf5faef487ac472a419",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "77b0ebc0e6b74ea99cdbb276d9382a46",
+    display_name: "BA2",
+    username: "team28",
+    division: "blue",
+    school: "Brookfield Academy",
+    password: "50407a624145ba785d28f2ca377b365a96a0c83f669776636bcd9b48678c5b78",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "8adcdd8e5f5c444598edf0ad5712b6bc",
+    display_name: "MHS STEM",
+    username: "team1",
+    division: "blue",
+    school: "Middleton High School",
+    password: "57601e2c28b9a72eb7aa95559c096c5bd9f2cec751d8c7a38e88604f79b5397e",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "b87cd53badea4308acb84fe840b454a4",
+    display_name: "Scratch n Sniff",
+    username: "team10",
+    division: "gold",
+    school: "Menomonee Falls High School",
+    password: "9515573edd39a13ebd0a8b4750c702db9f34e2a965af50fe058b055cff372a44",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "36b0ee72b74941c6ade758b63a38c20a",
+    display_name: "BA4",
+    username: "team30",
+    division: "blue",
+    school: "Brookfield Academy",
+    password: "67ae7bd9e83282f9f864c2464454b1be8fb24362e526fb00d45a009c6e28c247",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "5c7968662542407a9105f25f464d1aee",
+    display_name: "Trinary",
+    username: "team8",
+    division: "gold",
+    school: "Menomonee Falls High School",
+    password: "0f177a2ad4842799ee790f14cae93abf655fe08eec98624d104da9aceb94e62c",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "e6d000bd68784b49be88308336870be7",
+    display_name: "Bay Port Blue",
+    username: "team13",
+    division: "blue",
+    school: "Bay Port High School",
+    password: "90476204e60e363f5eb44ac9c212a9d8005c5689943d586e77a1e79a4e398398",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "43242df57d3545998bb8ab0de20dbe55",
+    display_name: "InfamousSuspiciousProject",
+    username: "team38",
+    division: "blue",
+    school: "Catholic Memorial High School",
+    password: "84b6a07a297d8ed90b747e2243e44de7fbb33a761fe8b660737f3c8538b8717d",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "75187b1a1697465f9511fedf0b35e874",
+    display_name: "Runtime Terror",
+    username: "team6",
+    division: "blue",
+    school: "Menomonee Falls High School",
+    password: "f4c37b01375fe4fe004aab8eda8075c59289adf5ae38bebde046e9046cf6c6d7",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "13da7a8f29624a33b488ce09f853340a",
+    display_name: "End of the Day",
+    username: "team14",
+    division: "blue",
+    school: "Brookfield Central High School",
+    password: "b3ca2dd38c9867c07b12b5084edec0359a30bdafff5378c2d2d452dddb5df0f9",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "930875ddc2f544dbb4c70617982bad4d",
+    display_name: "HYP3RT3XT A55A551N5",
+    username: "team34",
+    division: "gold",
+    school: "New London High School",
+    password: "b894fd2d256cc1a3e76d343d4fbedf074bbdb12858b83bf9c67396ac2459e716",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "05122370ab6c43f480bcbd46a7aabac1",
+    display_name: "Threadrippers",
+    username: "team44",
+    division: "gold",
+    school: "Johnson Creek High School",
+    password: "39db2c6c06bcb23d0eeb687a778d49560dc20bd3265dae6e73a6341508453119",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "4cc5ab702b2343edb4f2c92e0c8d479c",
+    display_name: "Extreme Coding Students (ECS)",
+    username: "team35",
+    division: "gold",
+    school: "New London High School",
+    password: "113f9ff57543087e2970dd43c9bc0b3c70ffe54945e8e61c00dfedf9f317c1b0",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "f2acef2fdfc944dc8f1b1770572f9555",
+    display_name: "Syntax Terror",
+    username: "team31",
+    division: "blue",
+    school: "New London High School",
+    password: "dc227816abbe5e07f9ef51d9dee7220209cf5d86f5a374b8c6014caf9867e128",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "0edc3b606e804da394ebd5b825372b82",
+    display_name: "Scratchinators",
+    username: "team11",
+    division: "gold",
+    school: "Menomonee Falls High School",
+    password: "105250066a7ab2f03cefb7c76173d6e74576aac56ef7fe5f1219c9039dfdde24",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "ef3778dbad774edbb656531a15d2f6a3",
+    display_name: "Cobra Coders",
+    username: "team32",
+    division: "blue",
+    school: "New London High School",
+    password: "923cafed09fc608e2366bee11cb9cf23b5d9baa4831c39af5b66a445e7987114",
+    role: "team"
+})
+
 db.createCollection('submission')
 
 db.createCollection('clarification')
