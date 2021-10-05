@@ -509,6 +509,56 @@ db.user.insert({
     role: "team"
 })
 
+db.user.insert({
+    uid: "8fbeba0788f5d6cecef80bd9c38b771b",
+    display_name: "Wrightstown",
+    username: "team50",
+    division: "eagle",
+    school: "Wrightstown High School",
+    password: "eac24eed5f79c42c30bc4b253b1710c5a0ed7975188890b43dd9b191c384db9b",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "954f0696fef5e714282a6d75e3f6e48e",
+    display_name: "AAR",
+    username: "team51",
+    division: "eagle",
+    school: "Brookfield Central High School",
+    password: "630631072588f9aceca15c1556d39bab0fbec705078d770b26b4e00507e44802",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "e5e5ff0d908f9cc719344e3e11384072",
+    display_name: "Stars++",
+    username: "team52",
+    division: "eagle",
+    school: "Mukwonago High School",
+    password: "024d703a256a08e60973dfac8ad89613672eca2078b7d7bb01d9d1af2539d19a",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "ed207b29e966483c793297139d82d562",
+    display_name: "WFBHS APCSPrinciples",
+    username: "team53",
+    division: "eagle",
+    school: "Whitefish Bay High School",
+    password: "eb3cfa79b868cfecb0758c74cd2b310a73ef418128edb89b1e1920ced01ed963",
+    role: "team"
+})
+
+db.user.insert({
+    uid: "30bb173fba605bf53ac5666cb91cacdd",
+    display_name: "404 ERROR",
+    username: "team54",
+    division: "eagle",
+    school: "Johnson Creek High School",
+    password: "df1358f5b4fafad087e1bd3df947e8b4779e4a0baa83ac1350692d7f90cf3782",
+    role: "team"
+})
+
 db.createCollection('submission')
 
 db.createCollection('clarification')
