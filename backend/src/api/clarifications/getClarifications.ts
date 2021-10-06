@@ -69,12 +69,12 @@ export const getClarifications = async (req: Request, res: Response) => {
     res.status(400).json({ message: errors[0].msg })
     return
   }
-  const page = req.body.page ? req.body.page : null;
+  const page = req.body.page ? req.body.page : null
   const query = matchedData(req)
   const users = transpose(await contest.get_users(), 'uid') as Record<string, User>
 
   try {
-    let clarifications = await contest.get_clarifications({args: {}, page: page})
+    let clarifications = await contest.get_clarifications({ args: {}, page: page })
     if (clarifications.length == 0) {
       res.sendStatus(404)
       return

@@ -56,7 +56,7 @@ export const getUsers = async (req: Request, res: Response) => {
   }
   const params = matchedData(req)
 
-  const page = req.body.page ? req.body.page : null;
+  const page = req.body.page ? req.body.page : null
   if (req.user?.role == 'team') params.uid = req.user?.uid
   if (req.user?.role == 'judge') {
     params.role = 'team'
@@ -64,7 +64,7 @@ export const getUsers = async (req: Request, res: Response) => {
   }
 
   try {
-    const users = await contest.get_users(params,page)
+    const users = await contest.get_users(params, page)
     users?.map((user: any) => {
       const { password, ...returnUser } = user
       return returnUser

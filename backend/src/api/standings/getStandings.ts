@@ -26,11 +26,11 @@ export const schema: Record<string, ParamSchema> = {
 //   }>
 // };
 
-const getBlueStandings = async (isPractice: boolean,): Promise<Record<string, any>> => {
+const getBlueStandings = async (isPractice: boolean): Promise<Record<string, any>> => {
   let standings = Object.values(await contest.get_users({ role: 'team', division: 'blue' }))
   const submissions = await contest.get_submissions({ division: 'blue' })
 
-  let problemsList = await contest.get_problems({ division: 'blue' },undefined, [
+  let problemsList = await contest.get_problems({ division: 'blue' }, undefined, [
     'pid',
     'division',
     'id',
@@ -136,7 +136,7 @@ const getGoldStandings = async (isPractice: boolean): Promise<Record<string, any
   let standings = Object.values(await contest.get_users({ role: 'team', division: 'gold' }))
   const submissions = await contest.get_submissions({ division: 'gold' })
   //not requiring pagination for standings at the moment
-  let problemsList = await contest.get_problems({ division: 'gold' },undefined, [
+  let problemsList = await contest.get_problems({ division: 'gold' }, undefined, [
     'pid',
     'division',
     'id',
