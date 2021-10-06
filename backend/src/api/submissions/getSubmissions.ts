@@ -115,7 +115,7 @@ export const getSubmissions = async (req: Request, res: Response) => {
       item.tid = req.user.uid
     }
 
-    let submissions = (await contest.get_submissions(item)) as any[]
+    let submissions = (await contest.get_submissions({args:item, page: page})) as any[]
 
     submissions = submissions?.map((submission: any) => {
       submission.problem = problems[submission.pid]
