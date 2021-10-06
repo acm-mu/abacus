@@ -10,11 +10,13 @@ export default class DynamoDB extends Database {
     this.db = new DocumentClient()
   }
 
-  scan(TableName: string, query: ScanOptions, page?: number, lastStartKey?: any): Promise<Item[]> {
+  //not using page but required in class!
+  scan(TableName: string, query: ScanOptions, _page?: number ,lastStartKey?: DocumentClient.Key): Promise<Item[]> {
     return new Promise(async (resolve, reject) => {
+       // might change exclusivestartkey below, so i disable prefer const
+      // eslint-disable-next-line prefer-const
       let params: ScanInput = { TableName }
-      page ? (params.Limit = 25) : undefined
-      lastStartKey ? (params.ExclusiveStartKey = lastStartKey) : (params.ExclusiveStartKey = undefined)
+      params.ExclusiveStartKey = lastStartKey ? lastStartKey : undefined
       if (query) {
         if (query.args) {
           const entries = Object.entries(query.args)

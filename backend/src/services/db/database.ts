@@ -1,3 +1,4 @@
+import { DocumentClient } from 'aws-sdk/clients/dynamodb'
 export type Item = Record<string, any>
 export type Key = Record<string, string>
 export type ScanOptions = {
@@ -12,7 +13,7 @@ export default abstract class Database {
     }
   }
 
-  abstract scan(TableName: string, query?: ScanOptions, page?: number): Promise<Item[]>
+  abstract scan(TableName: string, query?: ScanOptions, page?: number, lastStartKey?: DocumentClient.Key): Promise<Item[]>
 
   abstract get(TableName: string, Key: Key): Promise<Item>
 

@@ -63,7 +63,7 @@ export const getUsers = async (req: Request, res: Response) => {
   }
 
   try {
-    const users = await contest.get_users(params)
+    const users = await contest.get_users(params,2)
     users?.map((user: any) => {
       const { password, ...returnUser } = user
       return returnUser

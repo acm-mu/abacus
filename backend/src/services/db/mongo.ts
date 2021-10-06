@@ -22,14 +22,14 @@ export default class MongoDB extends Database {
   }
 
   scan(TableName: string, query?: ScanOptions, page?: number): Promise<Item[]> {
-    const pageSize = 25
+    const pageSize = 10
     const skip = page ? (page - 1) * 25 : null
     return new Promise(async (resolve, reject) => {
       await this.db
         .collection(TableName)
         .find(query?.args || {})
         .skip(skip ? skip : 0)
-        .limit(skip ? pageSize : 0)
+        .limit(page ? pageSize : 0)
         .toArray((err: any, data: any) => {
           if (err) {
             reject(err)
