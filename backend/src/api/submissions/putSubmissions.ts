@@ -74,6 +74,11 @@ export const schema: Record<string, ParamSchema> = {
     isBoolean: true,
     optional: true
   },
+  tests: {
+    in: 'body',
+    isArray: true,
+    optional: true
+  },
   feedback: {
     in: 'body',
     optional: true
