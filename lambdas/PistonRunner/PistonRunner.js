@@ -6,13 +6,18 @@ const API_URL = "http://localhost"
 exports.handler = async(event) => {
 
   // Authenticate to get accessToken
-  const res = await axios.post(`${API_URL}/auth`, {
-    username: 'admin',
-    password: 'goldeneagles'
-  })
+  let accessToken
+  try {
+    const res = await axios.post(`${API_URL}/auth`, {
+      username: 'admin',
+      password: 'goldeneagles'
+    })
 
-  const { accessToken } = res.data
-
+    accessToken = res.data.accessToken
+  } catch (e) {
+    console.log("An error occurred while authenticating!")
+    return
+  }
   const submissions = {}
 
   for (const record of event.Records) {
@@ -63,27 +68,31 @@ exports.handler = async(event) => {
     // Run tests
     for (const test of submission.tests) {
       // Await response from piston execution
-      const res = await axios.post(`${API_URL}:2000/api/v2/execute`, {
-        language,
-        version: "15.0.2",
-        files: [{ content: source }],
-        stdin: test.in
-      }, {
-        headers: {
-          "Content-Type": "application/json"
+      try {
+        const res = await axios.post(`${API_URL}:2000/api/v2/execute`, {
+          language,
+          version: "3.9.4",
+          files: [{ content: source }],
+          stdin: test.in
+        }, {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+
+        // runtime = Math.max(runtime, res.data.runtime)
+        test.stdout = res.data.run.output
+
+        if (res.data.run.output != test.out) {
+          console.log("Result: REJECTED")
+          status = "rejected"
+          test['result'] = "rejected"
+        } else {
+          console.log("Result: ACCEPTED")
+          test['result'] = "accepted"
         }
-      });
-
-      // runtime = Math.max(runtime, res.data.runtime)
-      test.stdout = res.data.run.output
-
-      if (res.data.output != test.out) {
-        console.log("Result: REJECTED")
-        status = "rejected"
-        test['result'] = "rejected"
-      } else {
-        console.log("Result: ACCEPTED")
-        test['result'] = "accepted"
+      } catch (e) {
+        console.log("An error occured while running test ")
       }
     }
 
