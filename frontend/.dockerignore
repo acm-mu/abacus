@@ -4,4 +4,3 @@ build
 .prettierignore
 Dockerfile
 Dockerfile.prod
-.eslintrc.json
