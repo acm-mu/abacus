@@ -59,6 +59,5 @@ export const hasRole = (role: string): ((req: Request, res: Response, next: Next
     } catch (err) {
       res.sendStatus(403)
     }
-
   }
 }
