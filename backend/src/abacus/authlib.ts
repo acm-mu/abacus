@@ -36,10 +36,10 @@ export const isAuthenticated = async (req: Request, res: Response, next: NextFun
       next()
       return
     }
+    res.sendStatus(403)
   } catch (err) {
     res.sendStatus(403)
   }
-  res.sendStatus(403)
 }
 
 export const userHasRole = (user: User | undefined, role: string): boolean => {
@@ -55,10 +55,10 @@ export const hasRole = (role: string): ((req: Request, res: Response, next: Next
         next()
         return
       }
+      res.sendStatus(403)
     } catch (err) {
       res.sendStatus(403)
     }
 
-    res.sendStatus(403)
   }
 }
