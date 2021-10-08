@@ -50,6 +50,7 @@ const submission = (): JSX.Element => {
 
   const deleteSubmission = async () => {
     if(window.confirm("Are you sure you want to delete this submission?")) {
+      //if the window selects ok, then the code below runs, otherwise nothing occurs
     setDeleting(true)
     const response = await fetch(`${config.API_URL}/submissions`, {
       method: 'DELETE',

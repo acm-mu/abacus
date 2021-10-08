@@ -113,7 +113,9 @@ const Problems = (): JSX.Element => {
     setProblems(problems.map((problem) => (problem.division == activeDivision ? { ...problem, checked } : problem)))
 
   const deleteSelected = async () => {
+
      if(window.confirm("Are you sure you want to delete these problems?")) {
+      //if the user selects ok, then the code below runs, otherwise nothing occurs
     setDeleting(true)
     const problemsToDelete = activeProblems.filter((problem) => problem.checked).map((problem) => problem.pid)
     const response = await fetch(`${config.API_URL}/problems`, {
@@ -126,6 +128,7 @@ const Problems = (): JSX.Element => {
     })
     if (response.ok) {
       setProblems(problems.filter((problem) => !problemsToDelete.includes(problem.pid)))
+       //tells the toast container below to display a message saying 'Deleted selected problems'
        toast.success("Deleted selected problems!",{autoClose:5000, position: 'top-left'});
     }
     setDeleting(false)

@@ -85,6 +85,7 @@ const Submissions = (): JSX.Element => {
 
   const deleteSelected = async () => {
     if(window.confirm("are you sure you want to delete these submissions?")) {
+      //if the user selects ok, then the code below runs, otherwise nothing occurs
     setDeleting(true)
     const submissionsToDelete = submissions
       .filter((submission) => submission.checked && (!submission.released || showReleased))
@@ -99,6 +100,7 @@ const Submissions = (): JSX.Element => {
     })
     if (response.ok) {
       loadSubmissions()
+       //tells the toast container below to display a message saying 'Deleted selected submission' 
       toast.success("Deleted selected submission!",{autoClose:5000, position: 'top-left'});
     }
     setDeleting(false)

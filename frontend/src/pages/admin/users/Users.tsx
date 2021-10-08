@@ -147,6 +147,7 @@ const Users = (): JSX.Element => {
 
   const deleteSelected = async () => {
     if(window.confirm("are you sure you want to delete these users?")) {
+      //if the user selects ok, then the code below runs, otherwise nothing occurs
     if (users.filter((u) => u.checked && u.uid == user?.uid).length > 0) {
       alert('Cannot delete currently logged in user!')
       return
@@ -166,6 +167,7 @@ const Users = (): JSX.Element => {
 
     if (response.ok) {
       setUsers(users.filter((user) => !usersToDelete.includes(user.uid)))
+       //tells the toast container below to display a message saying 'Deleted selected users'
         toast.success("Deleted selected users!",{autoClose:5000, position: 'top-left'});
     }
 
