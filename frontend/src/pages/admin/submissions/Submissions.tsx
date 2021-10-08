@@ -1,6 +1,6 @@
 import { Submission } from 'abacus'
 import React, { ChangeEvent, useState, useEffect, useMemo, useContext } from 'react'
-import { Button, Checkbox, Label, Menu, MenuItemProps, Table } from 'semantic-ui-react'
+import { Button, Checkbox, Grid, Label, Menu, MenuItemProps, Table } from 'semantic-ui-react'
 import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
 import config from 'environment'
@@ -8,6 +8,8 @@ import { compare } from 'utils'
 import { Helmet } from 'react-helmet'
 import { Block, DivisionLabel, PageLoading } from 'components'
 import { SocketContext } from 'context'
+import 'react-toastify/dist/ReactToastify.css';
+import { toast, ToastContainer } from 'react-toastify'
 
 interface SubmissionItem extends Submission {
   checked: boolean
@@ -82,6 +84,7 @@ const Submissions = (): JSX.Element => {
     )
 
   const deleteSelected = async () => {
+    if(window.confirm("are you sure you want to delete these submissions?")) {
     setDeleting(true)
     const submissionsToDelete = submissions
       .filter((submission) => submission.checked && (!submission.released || showReleased))
@@ -96,8 +99,10 @@ const Submissions = (): JSX.Element => {
     })
     if (response.ok) {
       loadSubmissions()
+      toast.success("Deleted selected submission!",{autoClose:5000, position: 'top-left'});
     }
     setDeleting(false)
+  }
   }
 
   const handleItemClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, { name }: MenuItemProps) =>
@@ -114,7 +119,8 @@ const Submissions = (): JSX.Element => {
   if (isLoading) return <PageLoading />
 
   return (
-    <>
+    <Grid>
+        <ToastContainer position="top-left"/>
       <Helmet>
         <title>Abacus | Admin Submissions</title>
       </Helmet>
@@ -216,7 +222,7 @@ const Submissions = (): JSX.Element => {
           </Table.Body>
         </Table>
       </Block>
-    </>
+    </Grid>
   )
 }
 

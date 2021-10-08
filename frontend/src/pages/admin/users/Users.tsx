@@ -1,6 +1,6 @@
 import { User } from 'abacus'
 import React, { ChangeEvent, useState, useEffect, useContext } from 'react'
-import { Table, Button, Label } from 'semantic-ui-react'
+import { Table, Button, Label, Grid } from 'semantic-ui-react'
 import { saveAs } from 'file-saver'
 import { Link } from 'react-router-dom'
 import config from 'environment'
@@ -8,6 +8,8 @@ import { AppContext } from 'context'
 import CreateUser from './CreateUser'
 import { Helmet } from 'react-helmet'
 import { DivisionLabel, PageLoading, StatusMessage } from 'components'
+import { toast, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 
 interface UserItem extends User {
   checked: boolean
@@ -144,6 +146,7 @@ const Users = (): JSX.Element => {
   }
 
   const deleteSelected = async () => {
+    if(window.confirm("are you sure you want to delete these users?")) {
     if (users.filter((u) => u.checked && u.uid == user?.uid).length > 0) {
       alert('Cannot delete currently logged in user!')
       return
@@ -163,16 +166,20 @@ const Users = (): JSX.Element => {
 
     if (response.ok) {
       setUsers(users.filter((user) => !usersToDelete.includes(user.uid)))
+        toast.success("Deleted selected users!",{autoClose:5000, position: 'top-left'});
     }
 
     setDeleting(false)
+  }
   }
 
   if (isLoading) return <PageLoading />
   if (error) return <StatusMessage message={{ type: 'error', message: error }} />
 
   return (
-    <>
+    <Grid>
+       <ToastContainer position="top-left"
+       autoClose={5000}/>
       <Helmet>
         <title>Abacus | Users</title>
       </Helmet>
@@ -245,7 +252,8 @@ const Users = (): JSX.Element => {
           ))}
         </Table.Body>
       </Table>
-    </>
+       
+        </Grid>
   )
 }
 

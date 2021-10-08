@@ -4,8 +4,10 @@ import { useHistory, useParams } from 'react-router-dom'
 import { NotFound, PageLoading, SubmissionView } from 'components'
 import config from 'environment'
 import { Helmet } from 'react-helmet'
-import { Button } from 'semantic-ui-react'
+import { Button, Grid } from 'semantic-ui-react'
 import { AppContext } from 'context'
+import { toast, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 
 const submission = (): JSX.Element => {
   const { sid } = useParams<{ sid: string }>()
@@ -47,6 +49,7 @@ const submission = (): JSX.Element => {
   if (!submission) return <NotFound />
 
   const deleteSubmission = async () => {
+    if(window.confirm("Are you sure you want to delete this submission?")) {
     setDeleting(true)
     const response = await fetch(`${config.API_URL}/submissions`, {
       method: 'DELETE',
@@ -58,8 +61,10 @@ const submission = (): JSX.Element => {
     })
     if (response.ok) {
       history.push('/admin/submissions')
+      toast.success("Deleted selected submission!",{autoClose:5000, position: 'top-left'});
     }
     setDeleting(false)
+  }
   }
 
   const rerun = async () => {
@@ -162,7 +167,8 @@ const submission = (): JSX.Element => {
     saveAs(new File([submission?.source], submission.filename, { type: 'text/plain;charset=utf-8' }))
 
   return (
-    <>
+    <Grid>
+      <ToastContainer position="top-left"/>
       <Helmet>
         <title>Abacus | Admin Submission</title>
       </Helmet>
@@ -176,7 +182,6 @@ const submission = (): JSX.Element => {
         labelPosition="left"
         onClick={rerun}
       />
-
       {submission.released ? (
         <Button icon="check" positive content="Released" labelPosition="left" />
       ) : (
@@ -218,11 +223,11 @@ const submission = (): JSX.Element => {
         icon="trash"
         negative
         labelPosition="left"
-        onClick={deleteSubmission}
+        onClick={() => window.confirm("Are you sure you want to delete this submission?") && deleteSubmission}
       />
-
+     
       <SubmissionView submission={submission} setSubmission={setSubmission} rerunning={isRerunning} />
-    </>
+    </Grid>
   )
 }
 
