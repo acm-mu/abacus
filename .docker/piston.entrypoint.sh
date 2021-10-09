@@ -1,45 +1,53 @@
 #!/bin/bash
-
-log() {
-  WHITE='\u001b[37;22m'
-  LIGHT_CYAN='\u001b[39;22m'
-  BLUE='\u001b[36;22m'
-  RESET='\e[0m'
-
-  date=`date +"%FT%T.%3NZ"`
-
-  echo -e "${WHITE}$date ${BLUE}[Abacus] ${LIGHT_CYAN}$1${RESET}"
-}
-
-log "Waiting for API server..."
-
-# This script starts before the api server starts, so spin until api server has started
-while true ; do
-  if lsof -Pi :2000 -sTCP:LISTEN -t > /dev/null; then
-    log "API Server is ready!"
-    break
-  fi
-done
-
-log "Installing package(s)..."
+WHITE='\u001b[37;22m'
+LIGHT_CYAN='\u001b[39;22m'
+BLUE='\u001b[36;22m'
+RESET='\e[0m'
 
 packages=( "python=3.9.4" "java=15.0.2" )
 
-IFS='=' # package delimiter used in read -ra command
+log() {
+  date=`date +"%FT%T.%3NZ"`
+  echo -e "${WHITE}$date ${BLUE}[ABACUS] ${LIGHT_CYAN}$1${RESET}"
+}
 
-for package in "${packages[@]}"; do
-  read -ra a <<< "$package"
+install_packages() {
+  log "Installing package(s)..."
 
-  log "Installing ${a[0]}[v${a[1]}]..."
+  IFS='=' # package delimiter used in read -ra command
 
-  curl --silent \
-    --method POST \
-    --header "Content-Type: application/json" \
-    --data "{\"language\":\"${a[0]}\", \"version\": \"${a[1]}\"}" \
-    localhost:2000/api/v2/packages \
-    &> /dev/null
+  for package in "${packages[@]}"; do
+    read -ra p <<< "$package"
+    language="${p[0]}"
+    version="${p[1]}"
 
-  log "Installed ${a[0]}[v${a[1]}]"
-done
+    log "Installing ${language}[v${version}]..."
 
-log "Finished setting up Piston for Abacus"
+    curl --silent \
+      -X POST \
+      -H "Content-Type: application/json" \
+      -d "{\"language\":\"${language}\", \"version\": \"${version}\"}" \
+      localhost:2000/api/v2/packages \
+      &> /dev/null
+
+    log "Installed ${language}[v${version}]"
+  done
+}
+
+main() {
+  log "Waiting for API server..."
+
+  # This script starts before the api server starts, so spin until api server has started
+  while true ; do
+    if lsof -Pi :2000 -sTCP:LISTEN -t > /dev/null; then
+      log "API Server is ready!"
+      break
+    fi
+  done
+
+  install_packages
+
+  log "Finished setting up Piston for Abacus"
+}
+
+main
