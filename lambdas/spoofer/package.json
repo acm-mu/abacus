@@ -1,0 +1,25 @@
+{
+  "name": "piston",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "nodemon"
+  },
+  "nodemonConfig": {
+    "watch": [
+      "./",
+      "../PistonRunner"
+    ],
+    "ext": "js",
+    "exec": "NODE_ENV=development node service.js"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.1002.0",
+    "axios": "^0.22.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-validator": "^6.12.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.13"
+  }
+}

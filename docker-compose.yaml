@@ -49,3 +49,15 @@ services:
       - '3000:3000'
     depends_on:
       - server
+  lambda-spoofer:
+    container_name: lambda-spoofer
+    restart: unless-stopped
+    build:
+      context: lambdas
+    volumes:
+      - ./lambdas/spoofer:/app
+      - ./lambdas/PistonRunner:/PistonRunner
+    ports:
+      - '6000:6000'
+    depends_on:
+      - server
