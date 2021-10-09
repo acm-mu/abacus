@@ -1,4 +1,9 @@
 #!/bin/bash
+
+# Sometimes Windows line endings can spill in here, 
+# if this happens, run `sed -i -e 's/\r$//' piston.entrypoint.sh`
+#  to get rid of them
+
 WHITE='\u001b[37;22m'
 LIGHT_CYAN='\u001b[39;22m'
 BLUE='\u001b[36;22m'
