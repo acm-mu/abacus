@@ -9,7 +9,6 @@ type Language = {
   installed: boolean
 }
 
-
 const Piston = (): JSX.Element => {
   const [languages, setLanguages] = useState<Language[]>([])
   const [isLoading, setLoading] = useState(true)
@@ -53,44 +52,51 @@ const Piston = (): JSX.Element => {
 
   if (isLoading) return <PageLoading />
 
-  return <>
-    <h3>Available Languages</h3>
-    <Dropdown placeholder='Language'
-      search
-      selection
-      onChange={handleChange}
-      options={languages.filter(p => !p.installed).map((p, index) => (({
-        key: `not-installed-${index}`,
-        value: `${p.language}-${p.language_version}`,
-        text: `${p.language} (${p.language_version})`
-      })))} />
-    <Button primary
-      disabled={toInstall == undefined}
-      onClick={submitInstall}>
-      Install
-    </Button>
+  return (
+    <>
+      <h3>Available Languages</h3>
+      <Dropdown
+        placeholder="Language"
+        search
+        selection
+        onChange={handleChange}
+        options={languages
+          .filter((p) => !p.installed)
+          .map((p, index) => ({
+            key: `not-installed-${index}`,
+            value: `${p.language}-${p.language_version}`,
+            text: `${p.language} (${p.language_version})`
+          }))}
+      />
+      <Button primary disabled={toInstall == undefined} onClick={submitInstall}>
+        Install
+      </Button>
 
-    <h3>Installed Languages</h3>
-    <Table>
-      <Table.Header>
-        <Table.Row>
-          <Table.HeaderCell>Language</Table.HeaderCell>
-          <Table.HeaderCell>Language Version</Table.HeaderCell>
-          <Table.HeaderCell>Action(s)</Table.HeaderCell>
-        </Table.Row>
-      </Table.Header>
-      <Table.Body>
-        {languages.filter(p => p.installed).map((p, index) =>
-          <Table.Row key={`installed-${index}`}>
-            <Table.Cell>{p.language}</Table.Cell>
-            <Table.Cell>{p.language_version}</Table.Cell>
-            <Table.Cell><Button size='mini'>Uninstall</Button></Table.Cell>
+      <h3>Installed Languages</h3>
+      <Table>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell>Language</Table.HeaderCell>
+            <Table.HeaderCell>Language Version</Table.HeaderCell>
+            <Table.HeaderCell>Action(s)</Table.HeaderCell>
           </Table.Row>
-        )}
-      </Table.Body>
-
-    </Table>
-  </>
+        </Table.Header>
+        <Table.Body>
+          {languages
+            .filter((p) => p.installed)
+            .map((p, index) => (
+              <Table.Row key={`installed-${index}`}>
+                <Table.Cell>{p.language}</Table.Cell>
+                <Table.Cell>{p.language_version}</Table.Cell>
+                <Table.Cell>
+                  <Button size="mini">Uninstall</Button>
+                </Table.Cell>
+              </Table.Row>
+            ))}
+        </Table.Body>
+      </Table>
+    </>
+  )
 }
 
 export default Piston

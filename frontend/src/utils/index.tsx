@@ -72,8 +72,6 @@ export const compare = (o1: string | number, o2: string | number): number => {
   return 0
 }
 
-
-
 export const timezoneOffset = (): number => new Date().getTimezoneOffset() * 60 * 1000
 
 export const toLocal = (date: number): Date => new Date(date * 1000 - timezoneOffset())

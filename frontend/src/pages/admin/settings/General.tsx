@@ -2,7 +2,7 @@ import React from 'react'
 import { Form } from 'semantic-ui-react'
 import { SettingsProps } from '.'
 
-const General = ({ settings, handleChange }: SettingsProps): JSX.Element =>
+const General = ({ settings, handleChange }: SettingsProps): JSX.Element => (
   <>
     <h3>Competition Settings</h3>
 
@@ -24,5 +24,6 @@ const General = ({ settings, handleChange }: SettingsProps): JSX.Element =>
       name="practice_name"
     />
   </>
+)
 
 export default General

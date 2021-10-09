@@ -12,7 +12,7 @@ import Scoring from './Scoring'
 import Piston from './Piston'
 
 export type SettingsProps = {
-  settings: { [key: string]: string },
+  settings: { [key: string]: string }
   handleChange: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
@@ -106,7 +106,7 @@ const Settings = (): JSX.Element => {
     }
     setSaving(false)
   }
-  const [activeItem, setActiveItem] = useState("general")
+  const [activeItem, setActiveItem] = useState('general')
   const handleItemClick = (_event: MouseEvent, data: MenuItemProps) => setActiveItem(data.tab)
 
   if (isLoading) return <PageLoading />
@@ -118,28 +118,10 @@ const Settings = (): JSX.Element => {
       </Helmet>
       <h1>Settings</h1>
       <Menu attached="top" tabular>
-        <Menu.Item
-          name="General"
-          tab="general"
-          active={activeItem == 'general'}
-          onClick={handleItemClick}
-        />
-        <Menu.Item
-          name="Schedule"
-          tab="schedule"
-          active={activeItem == "schedule"}
-          onClick={handleItemClick} />
-        <Menu.Item
-          name="Scoring"
-          tab="scoring"
-          active={activeItem == "scoring"}
-          onClick={handleItemClick} />
-        <Menu.Item
-          name="Piston"
-          tab="piston"
-          active={activeItem == "piston"}
-          onClick={handleItemClick} />
-
+        <Menu.Item name="General" tab="general" active={activeItem == 'general'} onClick={handleItemClick} />
+        <Menu.Item name="Schedule" tab="schedule" active={activeItem == 'schedule'} onClick={handleItemClick} />
+        <Menu.Item name="Scoring" tab="scoring" active={activeItem == 'scoring'} onClick={handleItemClick} />
+        <Menu.Item name="Piston" tab="piston" active={activeItem == 'piston'} onClick={handleItemClick} />
       </Menu>
       <Block center size="xs-12" menuAttached="top">
         <StatusMessage message={message} onDismiss={() => setMessage(undefined)} />
