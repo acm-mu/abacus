@@ -1,5 +1,5 @@
 {
-  "name": "backend",
+  "name": "abacus-backend",
   "license": "ISC",
   "scripts": {
     "dev": "nodemon",
