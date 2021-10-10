@@ -1,9 +1,0 @@
-FROM ghcr.io/engineer-man/piston
-
-RUN apt update && apt install lsof curl
-
-COPY ./piston.entrypoint.sh /tmp/entrypoint.sh
-
-CMD /tmp/entrypoint.sh & node src
-
-EXPOSE 2000

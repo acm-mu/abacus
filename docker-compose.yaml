@@ -13,10 +13,10 @@ services:
   piston:
     container_name: piston
     build:
-      context: .docker
-      dockerfile: Dockerfile.piston
+      context: piston/api
     volumes:
       - './piston-volume:/piston'
+      - ./.docker/piston.entrypoint.sh:/tmp/entrypoint.sh
     tmpfs:
       - '/piston/jobs:exec'
     ports:
