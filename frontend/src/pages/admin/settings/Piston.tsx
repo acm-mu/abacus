@@ -21,11 +21,13 @@ const Piston = (): JSX.Element => {
     const data = await response.json()
     if (!isMounted) return
 
-    setLanguages(data.map((e: Record<string, string | boolean>) => ({
-      name: e.language,
-      version: e.language_version,
-      status: e.installed ? "installed" : "not-installed"
-    })))
+    setLanguages(
+      data.map((e: Record<string, string | boolean>) => ({
+        name: e.language,
+        version: e.language_version,
+        status: e.installed ? 'installed' : 'not-installed'
+      }))
+    )
 
     setLoading(false)
   }
@@ -79,7 +81,7 @@ const Piston = (): JSX.Element => {
         selection
         onChange={handleChange}
         options={languages
-          .filter(({ status }) => status === "not-installed")
+          .filter(({ status }) => status === 'not-installed')
           .map(({ name, version }, index) => ({
             key: `not-installed-${index}`,
             value: `${name}-${version}`,
@@ -101,13 +103,15 @@ const Piston = (): JSX.Element => {
         </Table.Header>
         <Table.Body>
           {languages
-            .filter(({ status }) => status === "installed")
+            .filter(({ status }) => status === 'installed')
             .map(({ name, version }, index) => (
               <Table.Row key={`installed-${index}`}>
                 <Table.Cell>{name}</Table.Cell>
                 <Table.Cell>{version}</Table.Cell>
                 <Table.Cell>
-                  <Button loading={true} size="mini" onClick={() => uninstallPackage(name, version)}>Uninstall</Button>
+                  <Button loading={true} size="mini" onClick={() => uninstallPackage(name, version)}>
+                    Uninstall
+                  </Button>
                 </Table.Cell>
               </Table.Row>
             ))}
