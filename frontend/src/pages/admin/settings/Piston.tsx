@@ -4,9 +4,9 @@ import { PageLoading } from 'components'
 import { Button, Dropdown, DropdownProps, Table } from 'semantic-ui-react'
 
 type Language = {
-  language: string
-  language_version: string
-  installed: boolean
+  name: string
+  version: string
+  status: string
 }
 
 const Piston = (): JSX.Element => {
@@ -21,7 +21,12 @@ const Piston = (): JSX.Element => {
     const data = await response.json()
     if (!isMounted) return
 
-    setLanguages(data)
+    setLanguages(data.map((e: Record<string, string | boolean>) => ({
+      name: e.language,
+      version: e.language_version,
+      status: e.installed ? "installed" : "not-installed"
+    })))
+
     setLoading(false)
   }
 
@@ -34,18 +39,31 @@ const Piston = (): JSX.Element => {
     setToInstall(data.value as string)
   }
 
-  const submitInstall = async () => {
+  const installPackage = async () => {
     const language = toInstall?.split('-')
     if (!language) return
 
     console.log(`Submitting request to install ${language[0]} (version ${language[1]})`)
 
-    const res = await fetch(`${config.PISTON_URL}/api/v2/packages`, {
+    await fetch(`${config.PISTON_URL}/api/v2/packages`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         language: language[0],
         version: language[1]
+      })
+    })
+  }
+
+  const uninstallPackage = async (name: string, version: string) => {
+    console.log(`Submitting request to uninstall ${name} (version ${version})`)
+
+    await fetch(`${config.PISTON_URL}/api/v2/packages`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        language: name,
+        version: version
       })
     })
   }
@@ -61,14 +79,14 @@ const Piston = (): JSX.Element => {
         selection
         onChange={handleChange}
         options={languages
-          .filter((p) => !p.installed)
-          .map((p, index) => ({
+          .filter(({ status }) => status === "not-installed")
+          .map(({ name, version }, index) => ({
             key: `not-installed-${index}`,
-            value: `${p.language}-${p.language_version}`,
-            text: `${p.language} (${p.language_version})`
+            value: `${name}-${version}`,
+            text: `${name} (${version})`
           }))}
       />
-      <Button primary disabled={toInstall == undefined} onClick={submitInstall}>
+      <Button primary disabled={toInstall == undefined} onClick={installPackage}>
         Install
       </Button>
 
@@ -83,13 +101,13 @@ const Piston = (): JSX.Element => {
         </Table.Header>
         <Table.Body>
           {languages
-            .filter((p) => p.installed)
-            .map((p, index) => (
+            .filter(({ status }) => status === "installed")
+            .map(({ name, version }, index) => (
               <Table.Row key={`installed-${index}`}>
-                <Table.Cell>{p.language}</Table.Cell>
-                <Table.Cell>{p.language_version}</Table.Cell>
+                <Table.Cell>{name}</Table.Cell>
+                <Table.Cell>{version}</Table.Cell>
                 <Table.Cell>
-                  <Button size="mini">Uninstall</Button>
+                  <Button loading={true} size="mini" onClick={() => uninstallPackage(name, version)}>Uninstall</Button>
                 </Table.Cell>
               </Table.Row>
             ))}
