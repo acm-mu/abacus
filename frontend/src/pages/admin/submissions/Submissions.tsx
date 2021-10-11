@@ -9,7 +9,7 @@ import { Helmet } from 'react-helmet'
 import { Block, DivisionLabel, PageLoading } from 'components'
 import { SocketContext } from 'context'
 import 'react-toastify/dist/ReactToastify.css';
-import { toast, ToastContainer } from 'react-toastify'
+import { toast } from 'react-toastify'
 
 interface SubmissionItem extends Submission {
   checked: boolean
@@ -100,7 +100,7 @@ const Submissions = (): JSX.Element => {
     })
     if (response.ok) {
       loadSubmissions()
-       //tells the toast container below to display a message saying 'Deleted selected submission' 
+       //tells the toast container below to display a message saying 'Deleted selected submissions' 
       toast.success("Deleted selected submission!",{autoClose:5000, position: 'top-left'});
     }
     setDeleting(false)
@@ -122,7 +122,6 @@ const Submissions = (): JSX.Element => {
 
   return (
     <Grid>
-        <ToastContainer position="top-left"/>
       <Helmet>
         <title>Abacus | Admin Submissions</title>
       </Helmet>

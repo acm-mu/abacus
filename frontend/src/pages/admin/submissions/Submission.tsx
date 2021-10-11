@@ -6,7 +6,7 @@ import config from 'environment'
 import { Helmet } from 'react-helmet'
 import { Button, Grid } from 'semantic-ui-react'
 import { AppContext } from 'context'
-import { toast, ToastContainer } from 'react-toastify'
+import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 
 const submission = (): JSX.Element => {
@@ -50,7 +50,7 @@ const submission = (): JSX.Element => {
 
   const deleteSubmission = async () => {
     if(window.confirm("Are you sure you want to delete this submission?")) {
-      //if the window selects ok, then the code below runs, otherwise nothing occurs
+      //if the user selects ok, then the code below runs, otherwise nothing occurs
     setDeleting(true)
     const response = await fetch(`${config.API_URL}/submissions`, {
       method: 'DELETE',
@@ -62,6 +62,7 @@ const submission = (): JSX.Element => {
     })
     if (response.ok) {
       history.push('/admin/submissions')
+      //tells the toast container below to display a message saying 'Deleted selected submission'
       toast.success("Deleted selected submission!",{autoClose:5000, position: 'top-left'});
     }
     setDeleting(false)
@@ -169,7 +170,6 @@ const submission = (): JSX.Element => {
 
   return (
     <Grid>
-      <ToastContainer position="top-left"/>
       <Helmet>
         <title>Abacus | Admin Submission</title>
       </Helmet>
@@ -224,7 +224,7 @@ const submission = (): JSX.Element => {
         icon="trash"
         negative
         labelPosition="left"
-        onClick={() => window.confirm("Are you sure you want to delete this submission?") && deleteSubmission}
+        onClick={deleteSubmission}
       />
      
       <SubmissionView submission={submission} setSubmission={setSubmission} rerunning={isRerunning} />

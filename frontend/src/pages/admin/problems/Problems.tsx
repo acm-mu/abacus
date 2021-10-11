@@ -145,7 +145,6 @@ const Problems = (): JSX.Element => {
       <Helmet>
         <title>Abacus | Admin Problems</title>
       </Helmet>
- <ToastContainer position="top-left"/>
       <Button as={Link} to="/admin/problems/new" primary content="Add Problem" />
       <Link to="/admin/problems/upload">
         <Button content="Upload Problems" />

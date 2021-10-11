@@ -8,7 +8,7 @@ import { AppContext } from 'context'
 import CreateUser from './CreateUser'
 import { Helmet } from 'react-helmet'
 import { DivisionLabel, PageLoading, StatusMessage } from 'components'
-import { toast, ToastContainer } from 'react-toastify'
+import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 
 interface UserItem extends User {
@@ -149,7 +149,7 @@ const Users = (): JSX.Element => {
     if(window.confirm("are you sure you want to delete these users?")) {
       //if the user selects ok, then the code below runs, otherwise nothing occurs
     if (users.filter((u) => u.checked && u.uid == user?.uid).length > 0) {
-      alert('Cannot delete currently logged in user!')
+      toast.error('Cannot delete currently logged in user!')
       return
     }
 
@@ -180,8 +180,7 @@ const Users = (): JSX.Element => {
 
   return (
     <Grid>
-       <ToastContainer position="top-left"
-       autoClose={5000}/>
+    
       <Helmet>
         <title>Abacus | Users</title>
       </Helmet>
