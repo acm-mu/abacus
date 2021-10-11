@@ -53,7 +53,7 @@ const filterQuery = (clarification: Clarification, query: { [key: string]: strin
   return true
 }
 
-const hasAccessTo = ({ type, division, uid }: any, user?: User) => {
+const hasAccessTo = ({ type, division, uid }: Clarification, user?: User) => {
   if (type == 'public') {
     if (user?.role == 'team' || user?.role == 'judge')
       if (division !== 'public' && user?.division !== division) return false
@@ -63,7 +63,7 @@ const hasAccessTo = ({ type, division, uid }: any, user?: User) => {
   return true
 }
 
-export const getClarifications = async (req: Request, res: Response) => {
+export const getClarifications = async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })

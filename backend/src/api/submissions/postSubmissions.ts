@@ -40,7 +40,7 @@ export const schema: Record<string, ParamSchema> = {
   }
 }
 
-export const postSubmissions = async (req: Request, res: Response) => {
+export const postSubmissions = async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })
@@ -116,7 +116,7 @@ export const postSubmissions = async (req: Request, res: Response) => {
       }
     }
 
-    let submission: any = {
+    let submission: Record<string, unknown> = {
       sid: uuidv4().replace(/-/g, ''),
       pid: item.pid,
       tid: req.user?.uid,
@@ -139,7 +139,7 @@ export const postSubmissions = async (req: Request, res: Response) => {
         return
       }
 
-      const { name: filename, size: filesize, md5, data } = req.files!.source as UploadedFile
+      const { name: filename, size: filesize, md5, data } = req.files.source as UploadedFile
 
       submission = {
         ...submission,

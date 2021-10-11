@@ -41,7 +41,7 @@ export const schema: Record<string, ParamSchema> = {
   }
 }
 
-export const putClarifications = async (req: Request, res: Response) => {
+export const putClarifications = async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })
@@ -49,7 +49,7 @@ export const putClarifications = async (req: Request, res: Response) => {
   }
 
   try {
-    let item = matchedData(req)
+    const item = matchedData(req)
 
     if (!req.user) {
       res.status(400).json({ message: 'User is not valid!' })

@@ -45,8 +45,9 @@ app.use(api)
 
 app.get('/', (_, res) => res.status(200).send(' ')) // Sends 200 OK when AWS EBS pings server for health check
 
-export const sendNotification = ({ header, to, content, type, context }: Notification) =>
+export function sendNotification({ header, to, content, type, context }: Notification): void {
   io.sockets.emit('notification', { id: uuidv4(), to, header, content, type, context })
+}
 
 io.on('connection', (socket: Socket) => {
   socket.on('broadcast', ({ ev, args }) => {
