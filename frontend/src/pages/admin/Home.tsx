@@ -111,7 +111,7 @@ const Home = (): JSX.Element => {
 
       <Block size="xs-6">
         <h1>Flagged Submissions</h1>
-        <Table >
+        <Table>
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell content="Submission" />

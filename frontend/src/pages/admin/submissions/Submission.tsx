@@ -7,7 +7,7 @@ import { Helmet } from 'react-helmet'
 import { Button, Grid } from 'semantic-ui-react'
 import { AppContext } from 'context'
 import { toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css';
+import 'react-toastify/dist/ReactToastify.css'
 
 const submission = (): JSX.Element => {
   const { sid } = useParams<{ sid: string }>()
@@ -49,24 +49,24 @@ const submission = (): JSX.Element => {
   if (!submission) return <NotFound />
 
   const deleteSubmission = async () => {
-    if(window.confirm("Are you sure you want to delete this submission?")) {
+    if (window.confirm('Are you sure you want to delete this submission?')) {
       //if the user selects ok, then the code below runs, otherwise nothing occurs
-    setDeleting(true)
-    const response = await fetch(`${config.API_URL}/submissions`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.accessToken}`
-      },
-      body: JSON.stringify({ sid: submission.sid })
-    })
-    if (response.ok) {
-      history.push('/admin/submissions')
-      //tells the toast container below to display a message saying 'Deleted selected submission'
-      toast.success("Deleted selected submission!",{autoClose:5000, position: 'top-left'});
+      setDeleting(true)
+      const response = await fetch(`${config.API_URL}/submissions`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.accessToken}`
+        },
+        body: JSON.stringify({ sid: submission.sid })
+      })
+      if (response.ok) {
+        history.push('/admin/submissions')
+        //tells the toast container below to display a message saying 'Deleted selected submission'
+        toast.success('Deleted selected submission!', { autoClose: 5000, position: 'top-left' })
+      }
+      setDeleting(false)
     }
-    setDeleting(false)
-  }
   }
 
   const rerun = async () => {
@@ -226,7 +226,7 @@ const submission = (): JSX.Element => {
         labelPosition="left"
         onClick={deleteSubmission}
       />
-     
+
       <SubmissionView submission={submission} setSubmission={setSubmission} rerunning={isRerunning} />
     </Grid>
   )

@@ -8,7 +8,7 @@ import { compare } from 'utils'
 import { Helmet } from 'react-helmet'
 import { Block, DivisionLabel, PageLoading } from 'components'
 import { SocketContext } from 'context'
-import 'react-toastify/dist/ReactToastify.css';
+import 'react-toastify/dist/ReactToastify.css'
 import { toast } from 'react-toastify'
 
 interface SubmissionItem extends Submission {
@@ -84,27 +84,27 @@ const Submissions = (): JSX.Element => {
     )
 
   const deleteSelected = async () => {
-    if(window.confirm("are you sure you want to delete these submissions?")) {
+    if (window.confirm('are you sure you want to delete these submissions?')) {
       //if the user selects ok, then the code below runs, otherwise nothing occurs
-    setDeleting(true)
-    const submissionsToDelete = submissions
-      .filter((submission) => submission.checked && (!submission.released || showReleased))
-      .map((submission) => submission.sid)
-    const response = await fetch(`${config.API_URL}/submissions`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.accessToken}`
-      },
-      body: JSON.stringify({ sid: submissionsToDelete })
-    })
-    if (response.ok) {
-      loadSubmissions()
-       //tells the toast container below to display a message saying 'Deleted selected submissions' 
-      toast.success("Deleted selected submission!",{autoClose:5000, position: 'top-left'});
+      setDeleting(true)
+      const submissionsToDelete = submissions
+        .filter((submission) => submission.checked && (!submission.released || showReleased))
+        .map((submission) => submission.sid)
+      const response = await fetch(`${config.API_URL}/submissions`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.accessToken}`
+        },
+        body: JSON.stringify({ sid: submissionsToDelete })
+      })
+      if (response.ok) {
+        loadSubmissions()
+        //tells the toast container below to display a message saying 'Deleted selected submissions'
+        toast.success('Deleted selected submission!', { autoClose: 5000, position: 'top-left' })
+      }
+      setDeleting(false)
     }
-    setDeleting(false)
-  }
   }
 
   const handleItemClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, { name }: MenuItemProps) =>

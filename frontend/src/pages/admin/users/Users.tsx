@@ -9,7 +9,7 @@ import CreateUser from './CreateUser'
 import { Helmet } from 'react-helmet'
 import { DivisionLabel, PageLoading, StatusMessage } from 'components'
 import { toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css';
+import 'react-toastify/dist/ReactToastify.css'
 
 interface UserItem extends User {
   checked: boolean
@@ -146,33 +146,33 @@ const Users = (): JSX.Element => {
   }
 
   const deleteSelected = async () => {
-    if(window.confirm("are you sure you want to delete these users?")) {
+    if (window.confirm('are you sure you want to delete these users?')) {
       //if the user selects ok, then the code below runs, otherwise nothing occurs
-    if (users.filter((u) => u.checked && u.uid == user?.uid).length > 0) {
-      toast.error('Cannot delete currently logged in user!')
-      return
+      if (users.filter((u) => u.checked && u.uid == user?.uid).length > 0) {
+        toast.error('Cannot delete currently logged in user!')
+        return
+      }
+
+      setDeleting(true)
+
+      const usersToDelete = users.filter((user) => user.checked).map((user) => user.uid)
+      const response = await fetch(`${config.API_URL}/users`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.accessToken}`
+        },
+        body: JSON.stringify({ uid: usersToDelete })
+      })
+
+      if (response.ok) {
+        setUsers(users.filter((user) => !usersToDelete.includes(user.uid)))
+        //tells the toast container below to display a message saying 'Deleted selected users'
+        toast.success('Deleted selected users!', { autoClose: 5000, position: 'top-left' })
+      }
+
+      setDeleting(false)
     }
-
-    setDeleting(true)
-
-    const usersToDelete = users.filter((user) => user.checked).map((user) => user.uid)
-    const response = await fetch(`${config.API_URL}/users`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.accessToken}`
-      },
-      body: JSON.stringify({ uid: usersToDelete })
-    })
-
-    if (response.ok) {
-      setUsers(users.filter((user) => !usersToDelete.includes(user.uid)))
-       //tells the toast container below to display a message saying 'Deleted selected users'
-        toast.success("Deleted selected users!",{autoClose:5000, position: 'top-left'});
-    }
-
-    setDeleting(false)
-  }
   }
 
   if (isLoading) return <PageLoading />
@@ -180,7 +180,6 @@ const Users = (): JSX.Element => {
 
   return (
     <Grid>
-    
       <Helmet>
         <title>Abacus | Users</title>
       </Helmet>
@@ -253,8 +252,7 @@ const Users = (): JSX.Element => {
           ))}
         </Table.Body>
       </Table>
-       
-        </Grid>
+    </Grid>
   )
 }
 
