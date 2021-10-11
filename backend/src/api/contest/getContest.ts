@@ -17,7 +17,7 @@ import contest from '../../abacus/contest'
  *             schema:
  *               $ref: '#/components/schemas/Settings'
  */
-export default async (_: Request, res: Response) => {
+export default async (_: Request, res: Response): Promise<void> => {
   try {
     res.send(await contest.get_settings())
   } catch (err) {

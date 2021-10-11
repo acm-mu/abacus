@@ -35,7 +35,7 @@ export const schema: Record<string, ParamSchema> = {
  *         description: A server error occurred while trying to delete clarifications.
  */
 
-export const deleteClarifications = async (req: Request, res: Response) => {
+export const deleteClarifications = async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })

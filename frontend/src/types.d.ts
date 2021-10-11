@@ -68,7 +68,6 @@ declare module 'abacus' {
     display_name: string
     division?: string
     school?: string
-    disabled?: boolean
   }
   export interface Test {
     in: string

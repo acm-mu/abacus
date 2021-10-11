@@ -29,7 +29,7 @@ export const schema: Record<string, ParamSchema> = {
  *       400:
  *         description: The request did not match the required schema.
  */
-export const getProject = async (req: Request, res: Response) => {
+export const getProject = async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })

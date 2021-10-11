@@ -42,8 +42,9 @@ if (process.env.NODE_ENV == 'development') app.use(morgan('dev'))
 
 app.use(api)
 
-export const sendNotification = ({ header, to, content, type, context }: Notification) =>
+export function sendNotification({ header, to, content, type, context }: Notification): void {
   io.sockets.emit('notification', { id: uuidv4(), to, header, content, type, context })
+}
 
 io.on('connection', (socket: Socket) => {
   socket.on('broadcast', ({ ev, args }) => {

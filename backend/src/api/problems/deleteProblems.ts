@@ -16,8 +16,8 @@ const deleteSubmissionsForProblem = async (pid: string) => {
     for (const { sid } of submissions) {
       await contest
         .delete_submission(sid)
-        .then((_) => console.log(`Deleted submission ${sid}`))
-        .catch((_) => console.log(`Error deleting submission ${sid}`))
+        .then(() => console.log(`Deleted submission ${sid}`))
+        .catch(() => console.log(`Error deleting submission ${sid}`))
     }
   } catch (err) {
     console.error(err)
@@ -52,7 +52,7 @@ const deleteSubmissionsForProblem = async (pid: string) => {
  *       500:
  *         description: A server error occurred while trying to complete request.
  */
-export const deleteProblems = async (req: Request, res: Response) => {
+export const deleteProblems = async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })

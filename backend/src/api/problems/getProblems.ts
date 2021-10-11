@@ -115,7 +115,7 @@ const showToUser = (user: User | undefined, problem: Problem, settings: Settings
  *       500:
  *         description: A server error occured while trying to complete request.
  */
-export const getProblems = async (req: Request, res: Response) => {
+export const getProblems = async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })
@@ -125,8 +125,10 @@ export const getProblems = async (req: Request, res: Response) => {
   const query = matchedData(req)
   let user: User | undefined = undefined
   try {
-    user = await authenticate(req, res)
-  } catch (err) {}
+    user = await authenticate(req)
+  } catch (err) {
+    user = undefined
+  }
 
   let columns = ['pid', 'division', 'id', 'name', 'practice', 'max_points', 'capped_points'] // Default columns
   /// IF OTHER COLUMNS AUTHENTICATE FOR JUDGE / ADMIN

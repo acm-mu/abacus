@@ -80,7 +80,7 @@ export const schema: Record<string, ParamSchema> = {
   }
 }
 
-const notifyTeam = async (item: Record<string, any>) => {
+const notifyTeam = async (item: Record<string, unknown>) => {
   const res = await contest.get_submissions({ sid: item.sid })
   if (!res) return
 
@@ -90,7 +90,7 @@ const notifyTeam = async (item: Record<string, any>) => {
     content: 'Your submission has been graded!',
     context: {
       type: 'sid',
-      id: item.sid
+      id: item.sid as string
     }
   })
 }
@@ -147,7 +147,7 @@ const notifyTeam = async (item: Record<string, any>) => {
  *       500:
  *         description: A server error occured while trying to complete request.
  */
-export const putSubmissions = async (req: Request, res: Response) => {
+export const putSubmissions = async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })
@@ -156,7 +156,7 @@ export const putSubmissions = async (req: Request, res: Response) => {
   const item = matchedData(req)
 
   try {
-    const submission = await contest.get_submission(item.id)
+    const submission = await contest.get_submission(item.sid)
 
     if (item.claimed !== undefined && submission.claimed !== undefined) {
       // Trying to change a claimed submission

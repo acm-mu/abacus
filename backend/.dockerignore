@@ -3,3 +3,5 @@ dist
 .dockerignore
 Dockerfile
 Dockerfile.prod
+.prettierignore
+.eslintrc.json

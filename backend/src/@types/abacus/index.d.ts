@@ -50,6 +50,29 @@ declare module 'abacus' {
     practice_end_date: number
   }
 
+  interface RawSubmission extends Record<string, unknown> {
+    sid: string
+    date: number
+    filename: string
+    filesize: number
+    source: string
+    project_id?: string
+    language: string
+    md5: string
+    pid: string
+    runtime: number
+    released: boolean
+    score: number
+    status: string
+    sub_no: number
+    tid: string
+    tests: Test[]
+    claimed?: string | User
+    viewed?: boolean
+    flagged?: string | User
+  }
+
+  
   /**
    * @swagger
    * components:
@@ -98,26 +121,16 @@ declare module 'abacus' {
    *           type: string
    *       required: [sid, date, filename, filesize, source, language, md5, pid, runtime, released, score, status, sub_no, tid, tests]
    */
-  export interface Submission extends Record<string, unknown> {
-    sid: string
-    date: number
-    filename: string
-    filesize: number
-    source: string
-    project_id?: string
-    language: string
-    md5: string
-    pid: string
-    runtime: number
-    released: boolean
-    score: number
-    status: string
-    sub_no: number
-    tid: string
-    tests: Test[]
+  export interface Submission extends RawSubmission {
     claimed?: string
-    viewed?: boolean
     flagged?: string
+  }
+
+  export interface ResolvedSubmission extends RawSubmission {
+    team: User
+    problem: Problem
+    claimed?: User
+    flagged?: User
   }
 
   /**
@@ -366,4 +379,7 @@ declare module 'abacus' {
     context?: Context
     type?: 'success' | 'warning' | 'error'
   }
+
+  export type Item = Record<string, unknown>
+  export type Args = Record<string, unknown>
 }
