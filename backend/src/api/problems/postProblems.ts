@@ -76,6 +76,31 @@ export const schema: Record<string, ParamSchema> = {
   }
 }
 
+/**
+ * @swagger
+ * /problems:
+ *   post:
+ *     summary: Creates new problem.
+ *     security:
+ *       - bearerAuth: [""]
+ *     tags: [Problems]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/NewProblem'
+ *     responses:
+ *       200:
+ *         description: Success. Returns new problem.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Problem'
+ *       401:
+ *         description: Could not authenticate user.
+ *       404:
+ *         description: Bad Request. Provided problem does not match schema.
+ */
 export const postProblems = async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {

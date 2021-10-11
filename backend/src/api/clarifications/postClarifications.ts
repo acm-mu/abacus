@@ -84,6 +84,31 @@ const notify = async (clarification: Clarification) => {
   }
 }
 
+/**
+ * @swagger
+ * /clarifications:
+ *   post:
+ *     summary: Create new clarification.
+ *     security:
+ *       - bearerAuth: [""]
+ *     tags: [Clarifications]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/NewClarification'
+ *     responses:
+ *       200:
+ *         description: Success. Returns new clarification.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Clarification'
+ *       401:
+ *         description: Could not authenticate user.
+ *       404:
+ *         description: Bad Request. Provided clarification does not match schema.
+ */
 export const postClarifications = async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {

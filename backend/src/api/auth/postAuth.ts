@@ -18,6 +18,40 @@ export const schema: Record<string, ParamSchema> = {
     errorMessage: 'password is not provided'
   }
 }
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     LoginUser:
+ *       properties:
+ *         username:
+ *           type: string
+ *         password:
+ *           type: string
+ *       required: [username, password]
+ */
+
+/**
+ * @swagger
+ * /auth:
+ *   post:
+ *     summary: Authenticates provided user credentials
+ *     description: Given valid user credentials, returns generated accessToken to be used for authorization on other endpoints.
+ *     tags: [Auth]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/LoginUser'
+ *     responses:
+ *       200:
+ *         description: >-
+ *           Authenticated user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AuthUser'
+ */
 
 export const postAuth = async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req).array()

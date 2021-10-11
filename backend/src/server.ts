@@ -9,10 +9,9 @@ import { Server, Socket } from 'socket.io'
 import { createAdapter } from 'socket.io-redis'
 import { RedisClient } from 'redis'
 import { v4 as uuidv4 } from 'uuid'
-
 import api from './api'
-
 import * as dotenv from 'dotenv'
+
 dotenv.config()
 
 const PORT = process.env.PORT || 80
@@ -42,8 +41,6 @@ app.use(fileUpload()) // Middleware for uploading files to express (accessible i
 if (process.env.NODE_ENV == 'development') app.use(morgan('dev'))
 
 app.use(api)
-
-app.get('/', (_, res) => res.status(200).send(' ')) // Sends 200 OK when AWS EBS pings server for health check
 
 export function sendNotification({ header, to, content, type, context }: Notification): void {
   io.sockets.emit('notification', { id: uuidv4(), to, header, content, type, context })

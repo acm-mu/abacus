@@ -90,6 +90,76 @@ const showToUser = (user: User | undefined, problem: Problem, settings: Settings
   return false
 }
 
+/**
+ * @swagger
+ * /submissions
+ *   get:
+ *     summary: Search for submissions with provided queries.
+ *     description: Returns list of submissions that match provided query.
+ *     tags: [Submissions]
+ *     security:
+ *       - bearerAuth: [""]
+ *     parameters:
+ *       - name: sid
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: division
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: language
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: pid
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: status
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: sub_no
+ *         in: query
+ *         schema:
+ *           type: integer
+ *       - name: tid
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: released
+ *         in: query
+ *         schema:
+ *           type: boolean
+ *       - name: flagged
+ *         in: query
+ *         schema:
+ *           type: boolean
+ *       - name: claimed
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: viewed
+ *         in: query
+ *         schema:
+ *           type: boolean
+ *     responses:
+ *       200:
+ *         description: List of submissions matching provided queries.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Submission'
+ *       400:
+ *         description: Could not complete request because request does not match required schema.
+ *       401:
+ *         description: Could not authenticate user.
+ *       500:
+ *         description: A server error occurred while trying to complete request.
+ */
 export const getSubmissions = async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {

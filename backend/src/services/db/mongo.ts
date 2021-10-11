@@ -26,7 +26,7 @@ export default class MongoDB extends Database {
     return new Promise((resolve, reject) => {
       this.db
         .collection(TableName)
-        .find(query?.args || {})
+        .find(query?.args || {}, { projection: { _id: 0 } })
         .toArray((err, data) => {
           if (err) {
             reject(err)
@@ -39,7 +39,7 @@ export default class MongoDB extends Database {
 
   get(TableName: string, Key: Key): Promise<Item> {
     return new Promise((resolve, reject) => {
-      this.db.collection(TableName).findOne(Key, (err, data) => {
+      this.db.collection(TableName).findOne(Key, { projection: { _id: 0 } }, (err, data) => {
         if (err) {
           reject(err)
           return

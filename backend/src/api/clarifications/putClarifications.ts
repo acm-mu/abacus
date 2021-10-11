@@ -41,6 +41,45 @@ export const schema: Record<string, ParamSchema> = {
   }
 }
 
+/**
+ * @swagger
+ * /clarifications:
+ *   put:
+ *     summary: Updates an existing clarification.
+ *     description: Updates a clarification (identified by cid, provided in body).
+ *     security:
+ *       - bearerAuth: [""]
+ *     tags: [Clarifications]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               cid:
+ *                 type: string
+ *               body:
+ *                 type: string
+ *               division:
+ *                 type: string
+ *               title:
+ *                 type: string
+ *               open:
+ *                 type: boolean
+ *               context:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Success. Returns updated clarification object.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Clarification'
+ *       400:
+ *         description: Bad Request. cid or other properties are invalid.
+ *       500:
+ *         description: A server error occurred while trying to complete request.
+ */
 export const putClarifications = async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {
