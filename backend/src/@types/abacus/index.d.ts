@@ -72,7 +72,6 @@ declare module 'abacus' {
     flagged?: string | User
   }
 
-  
   /**
    * @swagger
    * components:

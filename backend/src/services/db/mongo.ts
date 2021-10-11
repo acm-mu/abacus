@@ -38,8 +38,8 @@ export default class MongoDB extends Database {
   }
 
   get(TableName: string, Key: Key): Promise<Item> {
-    return new Promise( (resolve, reject) => {
-       this.db.collection(TableName).findOne(Key, { projection: { _id: 0 } }, (err, data) => {
+    return new Promise((resolve, reject) => {
+      this.db.collection(TableName).findOne(Key, { projection: { _id: 0 } }, (err, data) => {
         if (err) {
           reject(err)
           return
