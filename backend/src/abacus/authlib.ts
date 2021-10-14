@@ -38,7 +38,7 @@ export const isAuthenticated = async (req: Request, res: Response, next: NextFun
     }
     res.sendStatus(403)
   } catch (err) {
-    res.sendStatus(403)
+    res.sendStatus(500)
   }
 }
 
@@ -57,7 +57,7 @@ export const hasRole = (role: string): ((req: Request, res: Response, next: Next
       }
       res.sendStatus(403)
     } catch (err) {
-      res.sendStatus(403)
+      res.sendStatus(500)
     }
   }
 }

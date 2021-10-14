@@ -25,6 +25,33 @@ const deleteSubmissionsForProblem = async (pid: string) => {
   }
 }
 
+/**
+ * @swagger
+ * /problems:
+ *   delete:
+ *     summary: Deletes provided problems and all submissions for problems.
+ *     description: Provided either a list of problem ids (pid) or a single pid, deletes them, and all submissions associated with the problems.
+ *     tags: [Problems]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               pid:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *     security:
+ *       - bearerAuth: [""]
+ *     responses:
+ *       200:
+ *         description: Success. Provided problems and associate submissions were deleted.
+ *       400:
+ *         description: Bad Request. Request does not match schema
+ *       500:
+ *         description: A server error occurred while trying to complete request.
+ */
 export const deleteProblems = async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {

@@ -43,6 +43,51 @@ export const schema: Record<string, ParamSchema> = {
   }
 }
 
+/**
+ * @swagger
+ * /users:
+ *   post:
+ *     summary: Create new user.
+ *     description: >-
+ *       Creates new user.
+ *     tags: [Users]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               display_name:
+ *                 type: string
+ *               division:
+ *                 type: string
+ *               school:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               role:
+ *                 type: string
+ *               username:
+ *                 type: string
+ *             required: [display_name, password, role, username]
+ *     security:
+ *       - bearerAuth: [""]
+ *     responses:
+ *       200:
+ *         description: Successfully created new user.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Bad Request. Request body does not match required schema. Judges and teams require division.
+ *       401:
+ *         description: Could not authenticate requested user.
+ *       403:
+ *         description: Requesting user does not have sufficient permission to complete request.
+ *       500:
+ *         description: A server error occured while trying to complete request.
+ */
 export const postUsers = async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {

@@ -12,6 +12,60 @@ export const schema: Record<string, ParamSchema> = {
   }
 }
 
+// interface BlueStandingsUser {
+//   display_name: string;
+//   uid: string;
+//   username: string;
+//   solved: number;
+//   time: number;
+//   problems: Record<string, {
+//     num_submissions: number;
+//     problem_score: number;
+//     solved: boolean;
+//     submissions: Submission[];
+//   }>
+// };
+
+/**
+ * @swagger
+ * /standings:
+ *   get:
+ *     summary: Returns standings for given division.
+ *     description: Based on the provided division, returns current standings in ordered list.
+ *     tags: [Standings]
+ *     parameters:
+ *       - name: division
+ *         in: query
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: .
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 problems:
+ *                   $ref: '#/components/schemas/Problem'
+ *                 standings:
+ *                   allOf:
+ *                     - $ref: '#/components/schemas/User'
+ *                     - type: object
+ *                       properties:
+ *                         score:
+ *                           type: integer
+ *                         solved:
+ *                           type: integer
+ *                         time:
+ *                           type: integer
+ *       204:
+ *         description: No Content. Before competition.
+ *       400:
+ *         description: Request does not match required schema.
+ */
+
 export interface SubmissionObject extends Record<string, unknown> {
   sid: string
   date: number

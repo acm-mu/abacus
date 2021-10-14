@@ -12,6 +12,32 @@ export const schema: Record<string, ParamSchema> = {
   }
 }
 
+/**
+ * @swagger
+ * /sample_files:
+ *   get:
+ *     summary: Download sample files for a problem (zip file).
+ *     description: Download skeletons (both python and java) for provided problem.
+ *     parameters:
+ *       - name: pid
+ *         in: query
+ *         schema:
+ *           type: string
+ *
+ *     tags: [Problems]
+ *     responses:
+ *       200:
+ *         description: Success. Skeletons included in response.
+ *         content:
+ *           application/zip:
+ *             schema:
+ *               type: string
+ *               format: binary
+ *       400:
+ *         description: Bad Request. pid was not provided, or is invalid.
+ *       404:
+ *         description: Could not find skeletons for given problem.
+ */
 export const downloadFiles = async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {

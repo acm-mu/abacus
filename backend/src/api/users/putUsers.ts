@@ -50,6 +50,49 @@ export const schema: Record<string, ParamSchema> = {
   }
 }
 
+/**
+ * @swagger
+ * /users:
+ *   put:
+ *     summary: Update exisiting user.
+ *     description: Updates user (identified by uid provided in body).
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: [""]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               uid:
+ *                 type: string
+ *               display_name:
+ *                 type: string
+ *               division:
+ *                 type: string
+ *               school:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               role:
+ *                 type: string
+ *               username:
+ *                 type: string
+ *               disabled:
+ *                 type: boolean
+ *             required: [uid]
+ *     responses:
+ *       200:
+ *         description: Returns request body.
+ *       400:
+ *         description: Request body does not match required schema.
+ *       403:
+ *         description: User does not have permission to complete request.
+ *       500:
+ *         description: A server error occured while trying to complete request.
+ */
+
 export const putUsers = async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {

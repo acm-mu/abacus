@@ -1,4 +1,4 @@
-import { Problem, Submission } from 'abacus'
+import { Problem as ProblemType, Submission } from 'abacus'
 import React, { useState, useEffect, useContext, useMemo } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Breadcrumb, Button, Message } from 'semantic-ui-react'
@@ -9,10 +9,10 @@ import { AppContext } from 'context'
 import { Helmet } from 'react-helmet'
 import { userHome } from 'utils'
 
-const problem = (): JSX.Element => {
+const Problem = (): JSX.Element => {
   const { user, settings } = useContext(AppContext)
   const [isLoading, setLoading] = useState(true)
-  const [problem, setProblem] = useState<Problem>()
+  const [problem, setProblem] = useState<ProblemType>()
   const { pid } = useParams<{ pid: string }>()
 
   const [submissions, setSubmissions] = useState<Submission[]>()
@@ -50,7 +50,7 @@ const problem = (): JSX.Element => {
     if (!isMounted) return
 
     if (response.ok) {
-      const problem = Object.values(await response.json())[0] as Problem
+      const problem = Object.values(await response.json())[0] as ProblemType
       setProblem(problem)
 
       response = await fetch(`${config.API_URL}/submissions?tid=${user?.uid}&pid=${problem?.pid}`, {
@@ -136,4 +136,4 @@ const problem = (): JSX.Element => {
   )
 }
 
-export default problem
+export default Problem

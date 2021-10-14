@@ -6,6 +6,11 @@ import { getSubmissions, schema as getSchema } from './getSubmissions'
 import { postSubmissions, schema as postSchema } from './postSubmissions'
 import { putSubmissions, schema as putSchema } from './putSubmissions'
 import { rerunSubmission, schema as rerunSchema } from './rerunSubmission'
+/**
+ * @swagger
+ * tags:
+ *   name: Submissions
+ */
 
 const submissions = Router()
 

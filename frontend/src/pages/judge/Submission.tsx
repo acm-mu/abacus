@@ -1,4 +1,4 @@
-import { Submission } from 'abacus'
+import { Submission as SubmissionType } from 'abacus'
 import React, { useState, useEffect, useContext } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { NotFound, PageLoading, StatusMessage, SubmissionView } from 'components'
@@ -7,10 +7,10 @@ import { Helmet } from 'react-helmet'
 import { Button } from 'semantic-ui-react'
 import { AppContext, SocketContext } from 'context'
 
-const submission = (): JSX.Element => {
+const Submission = (): JSX.Element => {
   const socket = useContext(SocketContext)
   const { sid } = useParams<{ sid: string }>()
-  const [submission, setSubmission] = useState<Submission>()
+  const [submission, setSubmission] = useState<SubmissionType>()
   const [isLoading, setLoading] = useState(true)
   const [isMounted, setMounted] = useState(true)
   const [isRerunning, setRerunning] = useState(false)
@@ -30,7 +30,7 @@ const submission = (): JSX.Element => {
     if (!isMounted) return
 
     if (response.ok) {
-      setSubmission(Object.values(await response.json())[0] as Submission)
+      setSubmission(Object.values(await response.json())[0] as SubmissionType)
     }
     setLoading(false)
   }
@@ -233,4 +233,4 @@ const submission = (): JSX.Element => {
   )
 }
 
-export default submission
+export default Submission
