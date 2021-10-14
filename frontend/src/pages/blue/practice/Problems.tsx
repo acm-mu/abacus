@@ -1,21 +1,43 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Block, Countdown } from 'components'
-import { Breadcrumb, Button, Label, Table } from 'semantic-ui-react'
+import { Breadcrumb, Button, Label, Loader, Table } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { Problem } from '.'
 import { Submission } from 'abacus'
 import { Helmet } from 'react-helmet'
 
-interface PracticeProblemsProps {
-  problems: { [key: string]: Problem }
-  submissions: { [key: string]: Submission }
-}
+const PracticeProblems = (): JSX.Element => {
+  const [isMounted, setMounted] = useState(true)
+  const [isLoading, setLoading] = useState(true)
 
-const PracticeProblems = ({ problems, submissions }: PracticeProblemsProps): JSX.Element => {
+  const [problems, setProblems] = useState<Problem[]>([])
+  const submissions: { [key: string]: Submission } = localStorage.submissions ? JSON.parse(localStorage.submissions) : {}
+
   const showClearButton = Object.values(submissions).length > 0
   const clearHistory = () => {
     localStorage.removeItem('submissions')
-    location.reload()
+    window.location.reload()
+  }
+
+  const loadProblems = async () => {
+    const response = await fetch('/problems/index.json')
+    if (!isMounted) return
+    setProblems(await response.json())
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    loadProblems()
+    return () => {
+      setMounted(false)
+    }
+  }, [])
+
+  if (isLoading) {
+    return <>
+      <title>Abacus | Practice</title>
+      <Loader active inline='centered' content="Loading..." />
+    </>
   }
 
   return (
