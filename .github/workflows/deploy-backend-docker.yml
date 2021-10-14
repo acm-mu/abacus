@@ -33,6 +33,4 @@ jobs:
           file: backend/Dockerfile.prod
           push: true
           pull: true
-          tags: |
-            docker.pkg.github.com/acm-mu/abacus/backend
-            ghcr.io/acm-mu/abacus
+          tags: ghcr.io/acm-mu/abacus/backend

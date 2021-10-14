@@ -33,6 +33,4 @@ jobs:
           file: frontend/Dockerfile.prod
           push: true
           pull: true
-          tags: |
-            docker.pkg.github.com/acm-mu/abacus/frontend
-            ghcr.io/acm-mu/abacus
+          tags: ghcr.io/acm-mu/abacus/frontend
