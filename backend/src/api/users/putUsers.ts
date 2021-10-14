@@ -1,7 +1,7 @@
-import { createHash } from 'crypto';
-import { Request, Response } from 'express';
-import { matchedData, ParamSchema, validationResult } from "express-validator";
-import { contest } from "../../abacus"
+import { createHash } from 'crypto'
+import { Request, Response } from 'express'
+import { matchedData, ParamSchema, validationResult } from 'express-validator'
+import { contest } from '../../abacus'
 
 export const schema: Record<string, ParamSchema> = {
   uid: {
@@ -50,7 +50,50 @@ export const schema: Record<string, ParamSchema> = {
   }
 }
 
-export const putUsers = async (req: Request, res: Response) => {
+/**
+ * @swagger
+ * /users:
+ *   put:
+ *     summary: Update exisiting user.
+ *     description: Updates user (identified by uid provided in body).
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: [""]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               uid:
+ *                 type: string
+ *               display_name:
+ *                 type: string
+ *               division:
+ *                 type: string
+ *               school:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               role:
+ *                 type: string
+ *               username:
+ *                 type: string
+ *               disabled:
+ *                 type: boolean
+ *             required: [uid]
+ *     responses:
+ *       200:
+ *         description: Returns request body.
+ *       400:
+ *         description: Request body does not match required schema.
+ *       403:
+ *         description: User does not have permission to complete request.
+ *       500:
+ *         description: A server error occured while trying to complete request.
+ */
+
+export const putUsers = async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })
@@ -73,9 +116,9 @@ export const putUsers = async (req: Request, res: Response) => {
   try {
     if (item.username) {
       let users = await contest.get_users({ username: item.username })
-      users = users.filter(user => user.uid != item.uid)
+      users = users.filter((user) => user.uid != item.uid)
       if (users.length > 0) {
-        res.status(400).json({ message: "Username is taken!" })
+        res.status(400).json({ message: 'Username is taken!' })
         return
       }
     }

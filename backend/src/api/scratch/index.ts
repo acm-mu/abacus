@@ -1,7 +1,16 @@
-import { Router } from "express";
-import { checkSchema } from "express-validator";
-import { getProject, schema as getProjectSchema } from "./getProject";
+import { Router } from 'express'
+import { checkSchema } from 'express-validator'
+import { getProject, schema as getProjectSchema } from './getProject'
 import { getUser, schema as getUserSchema } from './getUser'
+
+/**
+ * @swagger
+ * tags:
+ *   name: Scratch
+ *   externalDocs:
+ *     description: Scratch API
+ *     url: https://en.scratch-wiki.info/wiki/Scratch_API
+ */
 
 const scratch = Router()
 

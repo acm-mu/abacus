@@ -1,4 +1,4 @@
-import { Problem } from 'abacus'
+import { Problem as ProblemType } from 'abacus'
 import React, { useState, useEffect, useContext } from 'react'
 import { useParams } from 'react-router-dom'
 import { Divider } from 'semantic-ui-react'
@@ -9,10 +9,10 @@ import { AppContext } from 'context'
 import './Problem.scss'
 import { Helmet } from 'react-helmet'
 
-const problem = (): JSX.Element => {
+const Problem = (): JSX.Element => {
   const { user } = useContext(AppContext)
   const [isLoading, setLoading] = useState(true)
-  const [problem, setProblem] = useState<Problem>()
+  const [problem, setProblem] = useState<ProblemType>()
   const { pid } = useParams<{ pid: string }>()
 
   const [isMounted, setMounted] = useState(true)
@@ -37,7 +37,7 @@ const problem = (): JSX.Element => {
     if (!isMounted) return
 
     if (response.ok) {
-      const problem = Object.values(await response.json())[0] as Problem
+      const problem = Object.values(await response.json())[0] as ProblemType
       setProblem(problem)
     }
 
@@ -91,4 +91,4 @@ const problem = (): JSX.Element => {
   )
 }
 
-export default problem
+export default Problem

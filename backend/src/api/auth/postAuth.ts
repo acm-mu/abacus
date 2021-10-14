@@ -1,8 +1,8 @@
-import { createHash } from 'crypto';
+import { createHash } from 'crypto'
 import { Request, Response } from 'express'
 import { matchedData, ParamSchema, validationResult } from 'express-validator'
 import { contest } from '../../abacus'
-import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken'
 
 export const schema: Record<string, ParamSchema> = {
   username: {
@@ -18,8 +18,42 @@ export const schema: Record<string, ParamSchema> = {
     errorMessage: 'password is not provided'
   }
 }
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     LoginUser:
+ *       properties:
+ *         username:
+ *           type: string
+ *         password:
+ *           type: string
+ *       required: [username, password]
+ */
 
-export const postAuth = async (req: Request, res: Response) => {
+/**
+ * @swagger
+ * /auth:
+ *   post:
+ *     summary: Authenticates provided user credentials
+ *     description: Given valid user credentials, returns generated accessToken to be used for authorization on other endpoints.
+ *     tags: [Auth]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/LoginUser'
+ *     responses:
+ *       200:
+ *         description: >-
+ *           Authenticated user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AuthUser'
+ */
+
+export const postAuth = async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })
@@ -38,12 +72,16 @@ export const postAuth = async (req: Request, res: Response) => {
     }
     const user = users[0]
 
-    const accessToken = jwt.sign({
-      username: user.username,
-      password: user.password
-    }, process.env.ACCESS_TOKEN_SECRET || '')
+    const accessToken = jwt.sign(
+      {
+        username: user.username,
+        password: user.password
+      },
+      process.env.ACCESS_TOKEN_SECRET || ''
+    )
 
-    const {password, ...responseUser} = user
+    const responseUser: Record<string, unknown> = user
+    delete responseUser.password
 
     res.send({ accessToken, ...responseUser })
   } catch (err) {

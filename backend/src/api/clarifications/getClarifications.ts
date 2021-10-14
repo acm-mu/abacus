@@ -1,8 +1,8 @@
-import { Clarification, User } from "abacus";
-import { Request, Response } from "express";
-import { matchedData, ParamSchema, validationResult } from "express-validator";
-import { transpose } from "../../utils";
-import { contest } from "../../abacus";
+import { Clarification, User } from 'abacus'
+import { Request, Response } from 'express'
+import { matchedData, ParamSchema, validationResult } from 'express-validator'
+import { transpose } from '../../utils'
+import { contest } from '../../abacus'
 
 export const schema: Record<string, ParamSchema> = {
   cid: {
@@ -53,18 +53,63 @@ const filterQuery = (clarification: Clarification, query: { [key: string]: strin
   return true
 }
 
-const hasAccessTo = ({ type, division, uid }: any, user?: User) => {
+const hasAccessTo = ({ type, division, uid }: Clarification, user?: User) => {
   if (type == 'public') {
-    if ((user?.role == 'team' || user?.role == 'judge'))
-      if ((division !== 'public' && user?.division !== division)) return false
+    if (user?.role == 'team' || user?.role == 'judge')
+      if (division !== 'public' && user?.division !== division) return false
   } else if (type == 'private') {
-    if (user?.role == 'team' && user?.uid !== uid)
-      return false
+    if (user?.role == 'team' && user?.uid !== uid) return false
   }
   return true
 }
 
-export const getClarifications = async (req: Request, res: Response) => {
+/**
+ * @swagger
+ * /clarifications:
+ *   get:
+ *     summary: Search for clarifications with provided queries.
+ *     description: Returns list of clarifications that match provided query.
+ *     security:
+ *       - bearerAuth: [""]
+ *     tags: [Clarifications]
+ *     parameters:
+ *       - name: cid
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: uid
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: type
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: parent
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: division
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: open
+ *         in: query
+ *         schema:
+ *           type: boolean
+ *     responses:
+ *       200:
+ *         description: List of clarifications matching provided queries.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Clarification'
+ *       401:
+ *         description: Could not authenticate user.
+ */
+export const getClarifications = async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })
@@ -81,7 +126,7 @@ export const getClarifications = async (req: Request, res: Response) => {
       return
     }
 
-    clarifications = clarifications.map(clarification => {
+    clarifications = clarifications.map((clarification) => {
       const user = users[clarification.uid]
       return {
         ...clarification,
@@ -96,9 +141,13 @@ export const getClarifications = async (req: Request, res: Response) => {
       }
     })
 
-    const map = transpose(clarifications.filter(clarification =>
-      clarification.parent == undefined && hasAccessTo(clarification, req.user) && filterQuery(clarification, query)
-    ), 'cid') as Record<string, Clarification>
+    const map = transpose(
+      clarifications.filter(
+        (clarification) =>
+          clarification.parent == undefined && hasAccessTo(clarification, req.user) && filterQuery(clarification, query)
+      ),
+      'cid'
+    ) as Record<string, Clarification>
 
     for (const clarification of clarifications)
       if (clarification.parent !== undefined && clarification.parent in map)
@@ -106,7 +155,7 @@ export const getClarifications = async (req: Request, res: Response) => {
 
     res.send(map)
   } catch (err) {
-    console.error(err);
+    console.error(err)
     res.sendStatus(500)
   }
 }

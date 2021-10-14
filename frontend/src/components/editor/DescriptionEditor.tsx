@@ -9,7 +9,7 @@ export const DescriptionEditor = ({ problem, setProblem }: ProblemStateProps): J
     <MDEditor
       value={problem?.description || ''}
       onChange={(value) => setProblem({ ...problem, description: value || '' })}
-      height="500"
+      height={500}
     />
   )
 }

@@ -1,7 +1,7 @@
-import { Request, Response } from 'express';
-import { matchedData, ParamSchema, validationResult } from "express-validator";
-import { io, sendNotification } from '../../server';
-import contest from '../../abacus/contest';
+import { Request, Response } from 'express'
+import { matchedData, ParamSchema, validationResult } from 'express-validator'
+import { io, sendNotification } from '../../server'
+import contest from '../../abacus/contest'
 
 export const schema: Record<string, ParamSchema> = {
   sid: {
@@ -80,7 +80,7 @@ export const schema: Record<string, ParamSchema> = {
   }
 }
 
-const notifyTeam = async (item: Record<string, any>) => {
+const notifyTeam = async (item: Record<string, unknown>) => {
   const res = await contest.get_submissions({ sid: item.sid })
   if (!res) return
 
@@ -90,12 +90,64 @@ const notifyTeam = async (item: Record<string, any>) => {
     content: 'Your submission has been graded!',
     context: {
       type: 'sid',
-      id: item.sid
+      id: item.sid as string
     }
   })
 }
 
-export const putSubmissions = async (req: Request, res: Response) => {
+/**
+ * @swagger
+ * /submissions:
+ *   put:
+ *     summary: Updates an existing submission.
+ *     description: Updates a submission (identified by sid, provided in body).
+ *     tags: [Submissions]
+ *     security:
+ *       - bearerAuth: [""]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               sid:
+ *                 type: string
+ *               division:
+ *                 type: string
+ *               language:
+ *                 type: string
+ *               pid:
+ *                 type: string
+ *               status:
+ *                 type: string
+ *               sub_no:
+ *                 type: integer
+ *               tid:
+ *                 type: string
+ *               released:
+ *                 type: boolean
+ *               claimed:
+ *                 type: boolean
+ *               score:
+ *                 type: integer
+ *               flagged:
+ *                 type: string
+ *               viewed:
+ *                 type: boolean
+ *               feedback:
+ *                 type: string
+ *             required: [sid]
+ *     responses:
+ *       200:
+ *         description: Returns request body.
+ *       400:
+ *         description: Request body does not match required schema.
+ *       403:
+ *         description: Judges cannot update claimed property if already set.
+ *       500:
+ *         description: A server error occured while trying to complete request.
+ */
+export const putSubmissions = async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })
@@ -104,16 +156,17 @@ export const putSubmissions = async (req: Request, res: Response) => {
   const item = matchedData(req)
 
   try {
-    const submission = await contest.get_submission(item.id)
+    const submission = await contest.get_submission(item.sid)
 
-    if (item.claimed !== undefined && submission.claimed !== undefined) { // Trying to change a claimed submission
+    if (item.claimed !== undefined && submission.claimed !== undefined) {
+      // Trying to change a claimed submission
       if (req.user?.role !== 'admin' && item.claimed !== null) {
-        res.status(403).send({ message: "This submission is already claimed!" })
+        res.status(403).send({ message: 'This submission is already claimed!' })
         return
       }
     }
 
-    await contest.update_submission(item.sid , item)
+    await contest.update_submission(item.sid, item)
 
     if (item.released == true) notifyTeam(item)
 
@@ -121,7 +174,7 @@ export const putSubmissions = async (req: Request, res: Response) => {
 
     res.send(item)
   } catch (err) {
-    console.error(err);
+    console.error(err)
     res.sendStatus(500)
   }
 }

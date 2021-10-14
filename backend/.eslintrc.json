@@ -1,14 +1,8 @@
 {
   "root": true,
-  "parser": "@typescript-eslint/parser", // converts TypeScript into an ESTree-compatible form so it can be used in ESLint
-  "plugins": [
-    "@typescript-eslint",
-    "prettier"
-  ],
-  "extends": [
-    "eslint:recommended", 
-    "plugin:@typescript-eslint/recommended"
-  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint", "prettier"],
+  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
   "env": {
     "es2021": true,
     "node": true

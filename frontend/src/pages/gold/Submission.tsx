@@ -1,4 +1,4 @@
-import { Submission } from 'abacus'
+import { Submission as SubmissionType } from 'abacus'
 import React, { useContext, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Block, Countdown, NotFound, PageLoading, SubmissionView, Unauthorized } from 'components'
@@ -7,10 +7,10 @@ import config from 'environment'
 import { Breadcrumb } from 'semantic-ui-react'
 import { AppContext } from 'context'
 
-const submission = (): JSX.Element => {
+const Submission = (): JSX.Element => {
   const { sid } = useParams<{ sid: string }>()
   const { user } = useContext(AppContext)
-  const [submission, setSubmission] = useState<Submission>()
+  const [submission, setSubmission] = useState<SubmissionType>()
   const [isMounted, setMounted] = useState(true)
   const [isLoading, setLoading] = useState(true)
 
@@ -31,7 +31,7 @@ const submission = (): JSX.Element => {
     if (!isMounted) return
 
     if (response.ok) {
-      setSubmission(Object.values(await response.json())[0] as Submission)
+      setSubmission(Object.values(await response.json())[0] as SubmissionType)
     }
 
     setLoading(false)
@@ -59,4 +59,4 @@ const submission = (): JSX.Element => {
   )
 }
 
-export default submission
+export default Submission

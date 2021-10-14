@@ -1,24 +1,25 @@
-export type Item = Record<string, any>
+import { Args, Item } from 'abacus'
+
 export type Key = Record<string, string>
 export type ScanOptions = {
-  args?: Record<string, any>,
+  args?: Args
   columns?: string[]
 }
 
 export default abstract class Database {
   constructor() {
     if (this.constructor == Database) {
-      throw new Error("Object of Abstract Class cannot be created")
+      throw new Error('Object of Abstract Class cannot be created')
     }
   }
 
-  abstract scan(TableName: string, query?: ScanOptions): Promise<Item[]>;
+  abstract scan(TableName: string, query?: ScanOptions): Promise<Item[]>
 
-  abstract get(TableName: string, Key: Key): Promise<Item>;
+  abstract get(TableName: string, Key: Key): Promise<Item>
 
-  abstract put(TableName: string, Item: Item): Promise<Item>;
+  abstract put(TableName: string, Item: Item): Promise<Item>
 
-  abstract update(TableName: string, Key: Key, Item: Item): Promise<Item>;
+  abstract update(TableName: string, Key: Key, Item: Item): Promise<Item>
 
-  abstract delete(TableName: string, Key: Key): Promise<void>;
+  abstract delete(TableName: string, Key: Key): Promise<void>
 }

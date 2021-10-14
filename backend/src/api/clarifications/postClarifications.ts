@@ -1,16 +1,16 @@
-import { Request, Response } from "express";
-import { matchedData, ParamSchema, validationResult } from "express-validator";
-import contest from "../../abacus/contest";
+import { Request, Response } from 'express'
+import { matchedData, ParamSchema, validationResult } from 'express-validator'
+import contest from '../../abacus/contest'
 import { v4 as uuidv4 } from 'uuid'
-import { Clarification } from "abacus";
-import { sendNotification } from "../../server";
+import { Clarification } from 'abacus'
+import { sendNotification } from '../../server'
 
 export const schema: Record<string, ParamSchema> = {
   body: {
     in: 'body',
     isString: true,
     custom: {
-      options: value => value.trim() !== ''
+      options: (value) => value.trim() !== ''
     },
     notEmpty: true,
     errorMessage: 'Missing body'
@@ -28,7 +28,7 @@ export const schema: Record<string, ParamSchema> = {
     in: 'body',
     isString: true,
     custom: {
-      options: value => value.trim() !== ''
+      options: (value) => value.trim() !== ''
     },
     notEmpty: true,
     optional: true
@@ -53,7 +53,8 @@ const notify = async (clarification: Clarification) => {
     if (!res) return
     const parent = res[0]
 
-    const to = parent.type == 'public' ? parent.division ? `division:${parent.division}` : 'public' : `uid:${parent.uid}`
+    const to =
+      parent.type == 'public' ? (parent.division ? `division:${parent.division}` : 'public') : `uid:${parent.uid}`
 
     sendNotification({
       to,
@@ -65,7 +66,12 @@ const notify = async (clarification: Clarification) => {
       }
     })
   } else {
-    const to = clarification.type == 'public' ? (clarification.division ? `division:${clarification.division}` : 'public') : `role:judge&division=${clarification.division}`
+    const to =
+      clarification.type == 'public'
+        ? clarification.division
+          ? `division:${clarification.division}`
+          : 'public'
+        : `role:judge&division=${clarification.division}`
     sendNotification({
       to,
       header: clarification.title,
@@ -78,7 +84,32 @@ const notify = async (clarification: Clarification) => {
   }
 }
 
-export const postClarifications = async (req: Request, res: Response) => {
+/**
+ * @swagger
+ * /clarifications:
+ *   post:
+ *     summary: Create new clarification.
+ *     security:
+ *       - bearerAuth: [""]
+ *     tags: [Clarifications]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/NewClarification'
+ *     responses:
+ *       200:
+ *         description: Success. Returns new clarification.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Clarification'
+ *       401:
+ *         description: Could not authenticate user.
+ *       404:
+ *         description: Bad Request. Provided clarification does not match schema.
+ */
+export const postClarifications = async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })
@@ -86,7 +117,9 @@ export const postClarifications = async (req: Request, res: Response) => {
   }
 
   try {
-    let { body, parent, division, type, title, context } = matchedData(req)
+    const data = matchedData(req)
+    const { body, parent, title, context } = data
+    let { division, type } = data
 
     if (!req.user) {
       res.status(400).json({ message: 'User is not valid!' })
@@ -121,13 +154,13 @@ export const postClarifications = async (req: Request, res: Response) => {
       // Team's and Judge's clarifications only apply to themselves
       if (req.user?.role == 'team' || req.user?.role == 'judge') division = req.user.division
 
-      if (!division || !(['blue', 'gold', 'public'].includes(division))) {
+      if (!division || !['blue', 'gold', 'public'].includes(division)) {
         res.status(400).json({ message: `Division ${division} is not allowed!` })
         return
       }
 
       if (!title) {
-        res.status(400).json({ message: "Clarification missing title!" })
+        res.status(400).json({ message: 'Clarification missing title!' })
         return
       }
 

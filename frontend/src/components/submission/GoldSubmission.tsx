@@ -14,6 +14,17 @@ const GoldFeedback = (): JSX.Element => {
   const { user } = useContext(AppContext)
   const { submission, setSubmission } = useContext(SubmissionContext)
 
+  const [submissions, setSubmissions] = useState([])
+  useEffect(() => {
+    fetch(`${config.API_URL}/submissions?tid=${submission?.tid}&pid=${submission?.pid}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.accessToken}`
+      }
+    })
+      .then((res) => res.json())
+      .then((data) => setSubmissions(Object.values(data)))
+  }, [])
+
   const handleScore = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, { rating: score }: RatingProps) => {
     if (!submission || !setSubmission) return
     if (score && typeof score == 'number') setSubmission({ ...submission, score })
@@ -33,17 +44,6 @@ const GoldFeedback = (): JSX.Element => {
       )
     }
   }
-
-  const [submissions, setSubmissions] = useState([])
-  useEffect(() => {
-    fetch(`${config.API_URL}/submissions?tid=${submission?.tid}&pid=${submission?.pid}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.accessToken}`
-      }
-    })
-      .then((res) => res.json())
-      .then((data) => setSubmissions(Object.values(data)))
-  }, [])
 
   return (
     <>

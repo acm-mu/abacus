@@ -1,6 +1,6 @@
 import { Settings } from 'abacus'
 import { Request, Response } from 'express'
-import { matchedData, ParamSchema, validationResult } from "express-validator"
+import { matchedData, ParamSchema, validationResult } from 'express-validator'
 import contest from '../../abacus/contest'
 
 export const schema: Record<string, ParamSchema> = {
@@ -60,7 +60,33 @@ export const schema: Record<string, ParamSchema> = {
   }
 }
 
-export const putContest = async (req: Request, res: Response) => {
+/**
+ * @swagger
+ * /contest:
+ *   put:
+ *     summary: Updates contest settings.
+ *     description: Updates contest settings.
+ *     tags: [Contest]
+ *     security:
+ *       - bearerAuth: [""]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Settings'
+ *     responses:
+ *       200:
+ *         description: >-
+ *           Contest settings.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Settings'
+ *       400:
+ *         description: >-
+ *           Request body does not match required schema.
+ */
+export const putContest = async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({
@@ -75,7 +101,7 @@ export const putContest = async (req: Request, res: Response) => {
   const endDate = new Date(settings.end_date * 1000)
 
   if (endDate <= startDate) {
-    res.status(400).send({ message: "End date cannot be before start date!" })
+    res.status(400).send({ message: 'End date cannot be before start date!' })
     return
   }
 
@@ -83,7 +109,7 @@ export const putContest = async (req: Request, res: Response) => {
   const practiceEndDate = new Date(settings.practice_end_date * 1000)
 
   if (practiceEndDate <= practiceStartDate) {
-    res.status(400).send({ message: "Practice end date cannot be before start date!" })
+    res.status(400).send({ message: 'Practice end date cannot be before start date!' })
     return
   }
 

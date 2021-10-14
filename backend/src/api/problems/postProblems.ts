@@ -1,9 +1,9 @@
-import axios from 'axios';
-import { Request, Response } from 'express';
-import { matchedData, ParamSchema, validationResult } from "express-validator";
-import { v4 as uuidv4 } from 'uuid';
+import axios from 'axios'
+import { Request, Response } from 'express'
+import { matchedData, ParamSchema, validationResult } from 'express-validator'
+import { v4 as uuidv4 } from 'uuid'
 
-import contest from '../../abacus/contest';
+import contest from '../../abacus/contest'
 
 export const schema: Record<string, ParamSchema> = {
   id: {
@@ -76,7 +76,32 @@ export const schema: Record<string, ParamSchema> = {
   }
 }
 
-export const postProblems = async (req: Request, res: Response) => {
+/**
+ * @swagger
+ * /problems:
+ *   post:
+ *     summary: Creates new problem.
+ *     security:
+ *       - bearerAuth: [""]
+ *     tags: [Problems]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/NewProblem'
+ *     responses:
+ *       200:
+ *         description: Success. Returns new problem.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Problem'
+ *       401:
+ *         description: Could not authenticate user.
+ *       404:
+ *         description: Bad Request. Provided problem does not match schema.
+ */
+export const postProblems = async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })
@@ -96,15 +121,14 @@ export const postProblems = async (req: Request, res: Response) => {
 
   const problems = await contest.get_problems({ id: item.id, division: item.division })
   if (Object.values(problems).length > 0) {
-    res.status(400).json({ message: "Problem id is taken!" })
+    res.status(400).json({ message: 'Problem id is taken!' })
     return
   }
 
   try {
     await contest.create_problem(item)
     res.send(item)
-  }
-  catch (err) {
-    res.sendStatus(500);
+  } catch (err) {
+    res.sendStatus(500)
   }
 }

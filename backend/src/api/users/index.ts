@@ -1,10 +1,15 @@
-import { Router } from "express";
-import { checkSchema } from "express-validator";
-import { hasRole, isAuthenticated } from "../../abacus/authlib";
-import { getUsers, schema as getSchema } from "./getUsers";
-import { putUsers, schema as putSchema } from "./putUsers";
-import { postUsers, schema as postSchema } from './postUsers';
-import { deleteUsers, schema as deleteSchema } from "./deleteUsers"
+import { Router } from 'express'
+import { checkSchema } from 'express-validator'
+import { hasRole, isAuthenticated } from '../../abacus/authlib'
+import { getUsers, schema as getSchema } from './getUsers'
+import { putUsers, schema as putSchema } from './putUsers'
+import { postUsers, schema as postSchema } from './postUsers'
+import { deleteUsers, schema as deleteSchema } from './deleteUsers'
+/**
+ * @swagger
+ * tags:
+ *   name: Users
+ */
 
 const users = Router()
 
