@@ -6,7 +6,7 @@
     "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\" ",
     "clean-frontend": "prettier --write frontend/**/*.{ts,tsx}",
     "clean-backend": "prettier --write backend/**/*.ts",
-    "lint-frontend": "eslint --config frontend/.eslintrc.json frontend/**/*.{ts,tsx}",
+    "lint-frontend": "eslint --config frontend/.eslintrc.json frontend/src/**/*.{ts,tsx}",
     "lint-backend": "eslint --config backend/.eslintrc.json backend/**/*.ts"
   },
   "repository": {

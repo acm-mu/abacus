@@ -1,5 +1,5 @@
 import React, { ChangeEvent, MouseEvent, useEffect, useState } from 'react'
-import { Button, Divider, Form, Menu, MenuItemProps } from 'semantic-ui-react'
+import { Button, Form, Menu, MenuItemProps } from 'semantic-ui-react'
 import { Block, PageLoading, StatusMessage } from 'components'
 import config from 'environment'
 import { Helmet } from 'react-helmet'
@@ -9,7 +9,7 @@ import { toLocalDateString, toLocalTimeString } from 'utils'
 import General from './General'
 import Schedule from './Schedule'
 import Scoring from './Scoring'
-import Piston from './Piston'
+import Piston from './piston'
 
 export type SettingsProps = {
   settings: { [key: string]: string }
@@ -139,7 +139,6 @@ const Settings = (): JSX.Element => {
             }
           })()}
 
-          <Divider />
           <Button floated="right" onClick={history.goBack}>
             Cancel
           </Button>
