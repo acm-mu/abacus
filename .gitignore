@@ -20,6 +20,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# kubernetes
+kubeconfig.yaml
+
 .eslintcache
 .mypy_cache
 .pytest_cache
