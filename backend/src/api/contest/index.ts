@@ -4,6 +4,12 @@ import { hasRole } from '../../abacus/authlib'
 import getContest from './getContest'
 import { putContest, schema } from './putContest'
 
+/**
+ * @swagger
+ * tags:
+ *   name: Contest
+ */
+
 const contest = Router()
 
 contest.get('/contest', getContest)

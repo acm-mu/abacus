@@ -15,6 +15,7 @@ This Open Source competition judging software is designed for the [Marquette ACM
 - [Node.js](https://nodejs.org/en/)
   - [Express.js](https://expressjs.com/)
 - [AWS DynamoDB](https://aws.amazon.com/dynamodb/)
+- [MongoDB](https://www.mongodb.com/)
 - [AWS Elastic Beanstalk](https://aws.amazon.com/elasticbeanstalk/)
 - [AWS Lambda](https://aws.amazon.com/lambda/)
 - [AWS S3](https://aws.amazon.com/s3/)

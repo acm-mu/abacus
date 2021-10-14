@@ -1,11 +1,18 @@
 {
-  "name": "backend",
+  "name": "abacus-backend",
   "license": "ISC",
   "scripts": {
-    "dev": "nodemon --exec ts-node --files src/server.ts",
+    "dev": "nodemon",
     "zip": "cp package.json dist/ && cd dist && zip -r backend .",
     "build": "tsc",
     "start": "node server.js"
+  },
+  "nodemonConfig": {
+    "watch": [
+      "src"
+    ],
+    "ext": "ts",
+    "exec": "NODE_ENV=development ts-node --files src/server.ts"
   },
   "dependencies": {
     "archiver": "^5.2.0",
@@ -20,6 +27,8 @@
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.1.2",
     "morgan": "^1.10.0",
+    "swagger-jsdoc": "^6.1.0",
+    "swagger-ui-express": "^4.1.6",
     "redis": "^3.1.2",
     "socket.io": "^4.2.0",
     "socket.io-redis": "^6.1.1",
@@ -34,6 +43,8 @@
     "@types/morgan": "^1.9.2",
     "@types/node": "^16.10.1",
     "@types/redis": "^2.8.28",
+    "@types/swagger-jsdoc": "^6.0.1",
+    "@types/swagger-ui-express": "^4.1.3",
     "@types/uuid": "^8.3.0",
     "nodemon": "^2.0.13",
     "ts-node": "10.2.1",

@@ -4,10 +4,10 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\" ",
-    "clean-frontend": "prettier --write 'frontend/**/*.{ts,tsx}'",
-    "clean-backend": "prettier --write 'backend/**/*.ts'",
-    "lint-frontend": "eslint --config frontend/.eslintrc.json 'frontend/**/*.{ts,tsx}'",
-    "lint-backend": "eslint --config backend/.eslintrc.json 'backend/**/*.ts'"
+    "clean-frontend": "prettier --write frontend/**/*.{ts,tsx}",
+    "clean-backend": "prettier --write backend/**/*.ts",
+    "lint-frontend": "eslint --config frontend/.eslintrc.json frontend/**/*.{ts,tsx}",
+    "lint-backend": "eslint --config backend/.eslintrc.json backend/**/*.ts"
   },
   "repository": {
     "type": "git",
