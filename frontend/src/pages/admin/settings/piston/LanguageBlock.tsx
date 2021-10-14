@@ -11,7 +11,6 @@ const LanguageBlock = ({ language }: LanguageBlockProps): JSX.Element => {
   const { name, version } = language
   const [status, setStatus] = useState(language.status)
   const [showOptions, setShowOptions] = useState(false)
-
   const { languages, setLanguages } = useContext(PistonContext)
 
   const installPackage = async () => {
