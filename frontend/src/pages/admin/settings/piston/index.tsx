@@ -1,8 +1,8 @@
-import React, { Dispatch, createContext, SetStateAction, useEffect, useState, useMemo } from "react"
-import { Checkbox, Input } from "semantic-ui-react"
-import { PageLoading } from "components"
+import React, { Dispatch, createContext, SetStateAction, useEffect, useState, useMemo } from 'react'
+import { Checkbox, Input } from 'semantic-ui-react'
+import { PageLoading } from 'components'
 import config from 'environment'
-import LanguageBlock from "./LanguageBlock"
+import LanguageBlock from './LanguageBlock'
 import './Piston.scss'
 
 export type Language = {
@@ -51,22 +51,41 @@ const Piston = (): JSX.Element => {
     return () => setMounted(false)
   }, [])
 
-  const filteredLanguages = useMemo(() => languages
-    .filter(language => !onlyInstalled || language.status == 'installed')
-    .filter(language => search ? language.name.toLowerCase().includes(search) : true), [languages, search, onlyInstalled])
+  const filteredLanguages = useMemo(
+    () =>
+      languages
+        .filter((language) => !onlyInstalled || language.status == 'installed')
+        .filter((language) => (search ? language.name.toLowerCase().includes(search) : true)),
+    [languages, search, onlyInstalled]
+  )
 
   if (isLoading) return <PageLoading />
 
   return (
     <PistonContext.Provider value={{ languages, setLanguages }}>
-      <div id='control-bar'>
-        <Input icon='search' iconPosition='left' placeholder="Python" value={search} onChange={(_, { value }) => setSearch(value.toLowerCase())} />
-        <Checkbox toggle label="Only Installed" checked={onlyInstalled} onChange={() => setOnlyInstalled(!onlyInstalled)} />
+      <div id="control-bar">
+        <Input
+          icon="search"
+          iconPosition="left"
+          placeholder="Python"
+          value={search}
+          onChange={(_, { value }) => setSearch(value.toLowerCase())}
+        />
+        <Checkbox
+          toggle
+          label="Only Installed"
+          checked={onlyInstalled}
+          onChange={() => setOnlyInstalled(!onlyInstalled)}
+        />
       </div>
-      <div className='grid'>
-        {filteredLanguages.length > 0 ? filteredLanguages.map((language) =>
-          <LanguageBlock key={`${language.name}-${language.version}`} language={language} />
-        ) : <h3>No item(s).</h3>}
+      <div className="grid">
+        {filteredLanguages.length > 0 ? (
+          filteredLanguages.map((language) => (
+            <LanguageBlock key={`${language.name}-${language.version}`} language={language} />
+          ))
+        ) : (
+          <h3>No item(s).</h3>
+        )}
       </div>
     </PistonContext.Provider>
   )

@@ -14,7 +14,7 @@
   height: 24rem;
   overflow-y: scroll;
   margin-bottom: 1em;
-  &>h3 {
+  & > h3 {
     margin: 1em auto;
     font-size: 2em;
     vertical-align: middle;
@@ -26,7 +26,8 @@
       margin: 1rem; // 0 0 2rem 2rem;
       padding: 1.2rem 2rem;
       border-top: 1px solid #eaeded;
-      box-shadow: 0 1px 1px 0 rgba(0, 28, 36, 0.3), 1px 1px 1px 0 rgba(0, 28, 36, 0.15), -1px 1px 1px 0 rgba(0, 28, 36, 0.15);
+      box-shadow: 0 1px 1px 0 rgba(0, 28, 36, 0.3), 1px 1px 1px 0 rgba(0, 28, 36, 0.15),
+        -1px 1px 1px 0 rgba(0, 28, 36, 0.15);
       line-height: 2rem;
       font-size: 1.4rem;
       text-align: left;
@@ -58,7 +59,7 @@
       button {
         line-height: 20px;
         border-radius: 2px;
-        font-family: Helvetica "Courier New", Courier, monospace;
+        font-family: Helvetica 'Courier New', Courier, monospace;
         font-weight: 700;
         font-size: 14px;
         padding: 4px 20px;
