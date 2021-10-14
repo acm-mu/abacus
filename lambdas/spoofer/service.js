@@ -29,6 +29,7 @@ const schema = {
     notEmpty: true,
     errorMessage: 'division is not supplied'
   },
+  // TODO: LANGUAGE
   language: { in: 'body',
     isString: true,
     notEmpty: true,

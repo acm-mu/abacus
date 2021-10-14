@@ -31,6 +31,7 @@ const SubmissionSource = (): JSX.Element => {
 
       <h3>{submission?.filename}</h3>
       <pre>
+        {/* TODO: LANGUAGE */}
         {submission?.source && (
           <SyntaxHighlighter language={syntax_lang(submission.language)}>{submission.source}</SyntaxHighlighter>
         )}

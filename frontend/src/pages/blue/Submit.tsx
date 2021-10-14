@@ -13,6 +13,7 @@ const Submit = (): JSX.Element => {
   const [submissions, setSubmissions] = useState<Submission[]>()
   const [problem, setProblem] = useState<Problem>()
   const [isLoading, setLoading] = useState(true)
+  // TODO: LANGUAGE
   const [language, setLanguage] = useState<Language>()
   const [file, setFile] = useState<File>()
   const [isSubmitting, setSubmitting] = useState(false)
@@ -60,6 +61,7 @@ const Submit = (): JSX.Element => {
   }
 
   const handleSubmit = async () => {
+    // TODO: LANGUAGE
     if (!(language && file && problem && user)) return
     setSubmitting(true)
     const formData = new FormData()
@@ -98,7 +100,7 @@ const Submit = (): JSX.Element => {
         event.preventDefault()
         return
       }
-
+      // TODO: LANGUAGE
       for (const language of languages) {
         if (ext == language.file_extension) {
           setLanguage(language)
@@ -207,6 +209,7 @@ const Submit = (): JSX.Element => {
               )
             }
           />
+          {/* TODO: LANGUAGE */}
           <Form.Select
             inline
             label="Language"

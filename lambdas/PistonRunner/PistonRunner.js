@@ -58,6 +58,7 @@ exports.handler = async(event) => {
     }
 
     // Extract details and set defaults
+    // TODO: LANGUAGE
     const { language, source, date: submission_date } = submission
     let status = "accepted"
     let runtime = -1

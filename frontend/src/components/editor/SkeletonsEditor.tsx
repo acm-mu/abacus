@@ -3,6 +3,7 @@ import React, { useState, MouseEvent, ChangeEvent } from 'react'
 import { Input, InputOnChangeData, Menu, MenuItemProps } from 'semantic-ui-react'
 import { ProblemStateProps } from '.'
 
+// TODO: LANGUAGE
 const SkeletonsEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Element => {
   const [activeSkeleton, setActiveSkeleton] = useState('python')
 
@@ -17,9 +18,9 @@ const SkeletonsEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Elemen
         skeletons: problem.skeletons?.map((skeleton) =>
           language == skeleton.language
             ? {
-                ...skeleton,
-                source: value || ''
-              }
+              ...skeleton,
+              source: value || ''
+            }
             : skeleton
         )
       })
@@ -30,6 +31,7 @@ const SkeletonsEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Elemen
     if (setProblem !== undefined) {
       setProblem({
         ...problem,
+        // TODO: LANGUAGE
         skeletons: problem.skeletons?.map((skeleton) =>
           activeSkeleton == skeleton.language ? { ...skeleton, file_name: value || '' } : skeleton
         )
@@ -45,6 +47,7 @@ const SkeletonsEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Elemen
             key={`skeleton-${index}`}
             name={skeleton.language}
             tab={skeleton.language}
+            // TODO: LANGUAGE
             active={activeSkeleton == skeleton.language}
             onClick={handleSkeletonClick}
           />
@@ -62,6 +65,7 @@ const SkeletonsEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Elemen
       {problem?.skeletons?.map((skeleton, index) => (
         <div key={`skeleton-${index}`}>
           {skeleton.language == activeSkeleton ? (
+            // TODO: LANGUAGE
             <Editor
               language={skeleton.language}
               width="100%"

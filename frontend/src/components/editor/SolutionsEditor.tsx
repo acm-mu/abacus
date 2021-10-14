@@ -5,6 +5,7 @@ import { Input, InputOnChangeData, Menu, MenuItemProps } from 'semantic-ui-react
 import { syntax_lang } from 'utils'
 import { ProblemStateProps } from '.'
 
+// TODO: LANGUAGE
 const SolutionsEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Element => {
   const [activeSolution, setActiveSolution] = useState('python')
 
@@ -12,6 +13,7 @@ const SolutionsEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Elemen
 
   const handleSolutionClick = (_event: MouseEvent, data: MenuItemProps) => setActiveSolution(data.tab)
 
+  // TODO: LANGUAGE
   const handleSolutionChange = (language: string, value?: string) => {
     if (setProblem !== undefined) {
       setProblem({
@@ -19,9 +21,9 @@ const SolutionsEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Elemen
         solutions: problem.solutions?.map((solution) =>
           language == solution.language
             ? {
-                ...solution,
-                source: value || ''
-              }
+              ...solution,
+              source: value || ''
+            }
             : solution
         )
       })
@@ -42,6 +44,7 @@ const SolutionsEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Elemen
   return (
     <>
       <Menu>
+        {/* TODO: LANGUAGE */}
         {problem?.solutions?.map((solution, index) => (
           <Menu.Item
             key={`skeleton-${index}`}
@@ -51,6 +54,7 @@ const SolutionsEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Elemen
             onClick={handleSolutionClick}
           />
         ))}
+        {/* TODO: LANGUAGE */}
         {setProblem && (
           <Menu.Item position="right">
             {problem.solutions?.map((solution) =>
@@ -81,9 +85,11 @@ const SolutionsEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Elemen
                 theme="vs"
                 value={solution.source}
                 options={{ minimap: { enabled: false } }}
+                // TODO: LANGUAGE
                 onChange={(value?: string) => handleSolutionChange(solution.language, value)}
               />
             ) : (
+              // TODO: LANGUAGE
               <SyntaxHighlighter language={syntax_lang(solution.language)}>{solution.source}</SyntaxHighlighter>
             )
           ) : (

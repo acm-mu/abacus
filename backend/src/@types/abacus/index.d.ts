@@ -19,6 +19,7 @@ declare module 'abacus' {
     filesize: number
     source: string
     project_id?: string
+    // TODO: LANGUAGE
     language: string
     md5: string
     pid: string
@@ -74,6 +75,7 @@ declare module 'abacus' {
     result: string
   }
   export interface Skeleton extends Record<string, unknown> {
+    // TODO: LANGUAGE
     language: string
     source: string
     file_name: string

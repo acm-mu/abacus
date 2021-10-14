@@ -67,7 +67,7 @@ const Piston = (): JSX.Element => {
         <Input
           icon="search"
           iconPosition="left"
-          placeholder="Python"
+          placeholder="Language"
           value={search}
           onChange={(_, { value }) => setSearch(value.toLowerCase())}
         />

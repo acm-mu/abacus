@@ -1,6 +1,17 @@
 import { Item } from 'abacus'
 import { createHash } from 'crypto'
 
+export function stripFilename(str: string): string {
+  return str.replace(/ /g, '_').replace(/[!@#$%^&*()]/g, '')
+}
+export function fileExtension(lang: string): string {
+  switch (lang) {
+    case 'python':
+      return 'py'
+    default:
+      return lang
+  }
+}
 export function sha256(str: string): string {
   return createHash('sha256').update(str).digest('hex')
 }

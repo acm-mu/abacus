@@ -14,6 +14,7 @@ export const schema: Record<string, ParamSchema> = {
     notEmpty: true,
     errorMessage: 'pid is not supplied'
   },
+  // TODO: LANGUAGE
   language: {
     in: 'body',
     isString: true,
@@ -134,6 +135,7 @@ export const postSubmissions = async (req: Request, res: Response): Promise<void
         return
       }
 
+      // TODO: LANGUAGE
       if (!item.language) {
         res.status(400).json({ message: 'language not provided' })
         return
@@ -141,6 +143,7 @@ export const postSubmissions = async (req: Request, res: Response): Promise<void
 
       const { name: filename, size: filesize, md5, data } = req.files.source as UploadedFile
 
+      // TODO: LANGUAGE
       submission = {
         ...submission,
         language: item.language,

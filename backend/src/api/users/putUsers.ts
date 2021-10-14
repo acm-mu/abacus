@@ -1,6 +1,6 @@
-import { createHash } from 'crypto'
 import { Request, Response } from 'express'
 import { matchedData, ParamSchema, validationResult } from 'express-validator'
+import { sha256 } from '../../utils'
 import { contest } from '../../abacus'
 
 export const schema: Record<string, ParamSchema> = {
@@ -62,7 +62,7 @@ export const putUsers = async (req: Request, res: Response): Promise<void> => {
     item.username = item.username.toLowerCase()
   }
   if (item.password) {
-    item.password = createHash('sha256').update(item.password).digest('hex')
+    item.password = sha256(item.password)
   }
 
   if (req.user?.role != 'admin' && (item.username || item.display_name || item.division || item.role || item.school)) {

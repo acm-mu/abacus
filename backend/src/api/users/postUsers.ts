@@ -1,6 +1,6 @@
-import { createHash } from 'crypto'
 import { Request, Response } from 'express'
 import { matchedData, ParamSchema, validationResult } from 'express-validator'
+import { sha256 } from '../../utils'
 import { v4 as uuidv4 } from 'uuid'
 
 import contest from '../../abacus/contest'
@@ -52,7 +52,7 @@ export const postUsers = async (req: Request, res: Response): Promise<void> => {
 
   const item = matchedData(req)
   item.username = item.username.toLowerCase()
-  item.password = createHash('sha256').update(item.password).digest('hex')
+  item.password = sha256(item.password)
 
   const users = await contest.get_users({ username: item.username })
 

@@ -20,6 +20,7 @@ export const schema: Record<string, ParamSchema> = {
     optional: true,
     errorMessage: 'division is invalid'
   },
+  // TODO: LANGUAGE
   language: {
     in: ['query', 'body'],
     isString: true,

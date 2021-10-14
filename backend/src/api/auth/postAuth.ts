@@ -1,8 +1,8 @@
-import { createHash } from 'crypto'
 import { Request, Response } from 'express'
 import { matchedData, ParamSchema, validationResult } from 'express-validator'
 import { contest } from '../../abacus'
 import jwt from 'jsonwebtoken'
+import { sha256 } from '../../utils'
 
 export const schema: Record<string, ParamSchema> = {
   username: {
@@ -28,7 +28,7 @@ export const postAuth = async (req: Request, res: Response): Promise<void> => {
 
   const bodyData = matchedData(req)
   bodyData.username = bodyData.username.toLowerCase()
-  bodyData.password = createHash('sha256').update(bodyData.password).digest('hex')
+  bodyData.password = sha256(bodyData.password)
 
   try {
     const users = await contest.get_users(bodyData)

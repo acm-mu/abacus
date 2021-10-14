@@ -1,11 +1,11 @@
 import { User } from 'abacus'
-import { createHash } from 'crypto'
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Button, Label, Message, Table } from 'semantic-ui-react'
 import { Block, FileDialog } from 'components'
 import config from 'environment'
 import { Helmet } from 'react-helmet'
+import { sha256 } from 'utils'
 
 interface UserItem extends User {
   checked: boolean
@@ -57,7 +57,7 @@ const UploadUsers = (): JSX.Element => {
   const filterUser = (user1: User, u2: User) => {
     if (!u2) return true
     const { ...user2 } = u2
-    if (user1.password) user1.password = createHash('sha256').update(user1.password).digest('hex')
+    if (user1.password) user1.password = sha256(user1.password)
 
     return JSON.stringify(user1, Object.keys(user1).sort()) !== JSON.stringify(user2, Object.keys(user2).sort())
   }
