@@ -40,7 +40,49 @@ export const schema: Record<string, ParamSchema> = {
   }
 }
 
-export const postSubmissions = async (req: Request, res: Response) => {
+/**
+ * @swagger
+ * /submissions:
+ *   post:
+ *     summary: Create new blue/gold submission.
+ *     description: >-
+ *       Creates new blue/gold submissions. Blue submissions required language and source. Gold submissions require project_id and design_document if problem requires it.
+ *     tags: [Submissions]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               pid:
+ *                 type: string
+ *               language:
+ *                 type: string
+ *               source:
+ *                 type: string
+ *               project_id:
+ *                 type: string
+ *               design_document:
+ *                 type: string
+ *     security:
+ *       - bearerAuth: [""]
+ *     responses:
+ *       200:
+ *         description: Successfully created new submission.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Submission'
+ *       400:
+ *         description: Bad Request. Request body does not match required schema.
+ *       401:
+ *         description: Could not authenticate user.
+ *       403:
+ *         description: Either account is disabled or outside of competition time period.
+ *       500:
+ *         description: A server error occured while trying to complete request.
+ */
+export const postSubmissions = async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })
@@ -116,7 +158,7 @@ export const postSubmissions = async (req: Request, res: Response) => {
       }
     }
 
-    let submission: any = {
+    let submission: Record<string, unknown> = {
       sid: uuidv4().replace(/-/g, ''),
       pid: item.pid,
       tid: req.user?.uid,
@@ -139,7 +181,7 @@ export const postSubmissions = async (req: Request, res: Response) => {
         return
       }
 
-      const { name: filename, size: filesize, md5, data } = req.files!.source as UploadedFile
+      const { name: filename, size: filesize, md5, data } = req.files.source as UploadedFile
 
       submission = {
         ...submission,

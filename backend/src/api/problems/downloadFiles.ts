@@ -3,7 +3,7 @@ import { Request, Response } from 'express'
 import { matchedData, ParamSchema, validationResult } from 'express-validator'
 import contest from '../../abacus/contest'
 
-const stripFilename = (str: string) => str.replace(/ /g, '_').replace(/[!@#$%^&*\(\)]/g, '')
+const stripFilename = (str: string) => str.replace(/ /g, '_').replace(/[!@#$%^&*()]/g, '')
 const fileExtension = (lang: string) => {
   switch (lang) {
     case 'python':
@@ -21,7 +21,33 @@ export const schema: Record<string, ParamSchema> = {
   }
 }
 
-export const downloadFiles = async (req: Request, res: Response) => {
+/**
+ * @swagger
+ * /sample_files:
+ *   get:
+ *     summary: Download sample files for a problem (zip file).
+ *     description: Download skeletons (both python and java) for provided problem.
+ *     parameters:
+ *       - name: pid
+ *         in: query
+ *         schema:
+ *           type: string
+ *
+ *     tags: [Problems]
+ *     responses:
+ *       200:
+ *         description: Success. Skeletons included in response.
+ *         content:
+ *           application/zip:
+ *             schema:
+ *               type: string
+ *               format: binary
+ *       400:
+ *         description: Bad Request. pid was not provided, or is invalid.
+ *       404:
+ *         description: Could not find skeletons for given problem.
+ */
+export const downloadFiles = async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })

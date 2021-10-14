@@ -1,7 +1,8 @@
-export type Item = Record<string, any>
+import { Args, Item } from 'abacus'
+
 export type Key = Record<string, string>
 export type ScanOptions = {
-  args?: Record<string, any>
+  args?: Args
   columns?: string[]
 }
 

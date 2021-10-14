@@ -100,7 +100,7 @@ export const IAmATeapot = (): JSX.Element => {
       <div>
         <b>REQUEST</b>
         <p>BREW /coffee HTTP/1.1</p>
-        <p>Host: {location.hostname}</p>
+        <p>Host: {window.location.hostname}</p>
         <p>User-Agent: {navigator.userAgent}</p>
         <p>Accept-Language: en-US,en;q=0.5</p>
         <p>Accept-Encoding: gzip, deflate</p>
