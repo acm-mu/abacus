@@ -31,9 +31,16 @@ This Open Source competition judging software is designed for the [Marquette ACM
 - [Docker Compose](https://docs.docker.com/compose/install/) 
 
 #### Installation
-- Clone this repo 
-- Run sudo docker-compose up
-- After docker-compose from the terminal, open a new web browser window to `localhost:3000`
+- Clone this repo
+
+  `git clone https://github.com/acm-mu/abacus`
+- Pull submodules
+  
+  `git submodule update --init`
+- Startup docker containers
+  
+  `docker-compose up -d`
+- Open a new web browser and go to [localhost:3000](http://localhost:3000)
 
 ### Creating a new branch
 - in your terminal/powershell, cd to the root of your abacus clone
