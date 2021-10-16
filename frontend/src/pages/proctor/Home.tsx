@@ -58,7 +58,6 @@ const Home = (): JSX.Element => {
             <Table.Row>
               <Table.HeaderCell content="Submission" />
               <Table.HeaderCell content="Problem" />
-              {/* TODO: LANGUAGE */}
               <Table.HeaderCell content="Language" />
             </Table.Row>
           </Table.Header>

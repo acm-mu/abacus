@@ -1,4 +1,8 @@
 declare module 'abacus' {
+  export interface Language {
+    name: string
+    version: string
+  }
   export interface Settings {
     competition_name: string
     practice_name: string
@@ -16,8 +20,7 @@ declare module 'abacus' {
     sub_no: number
     date: number
     division: string
-    // TODO: LANGUAGE
-    language: string
+    language: Language
     released: boolean
     claimed?: User
     tid: string
@@ -78,14 +81,12 @@ declare module 'abacus' {
     include?: boolean
   }
   export interface Skeleton {
-    // TODO: LANGUAGE
-    language: string
+    language: Language
     source: string
     file_name: string
   }
   export interface Solution {
-    // TODO: LANGUAGE
-    language: string
+    language: Language
     source: string
     file_name: string
   }

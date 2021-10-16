@@ -16,11 +16,11 @@ const SkeletonsEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Elemen
       setProblem({
         ...problem,
         skeletons: problem.skeletons?.map((skeleton) =>
-          language == skeleton.language
+          language == skeleton.language.name
             ? {
-                ...skeleton,
-                source: value || ''
-              }
+              ...skeleton,
+              source: value || ''
+            }
             : skeleton
         )
       })
@@ -33,7 +33,7 @@ const SkeletonsEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Elemen
         ...problem,
         // TODO: LANGUAGE
         skeletons: problem.skeletons?.map((skeleton) =>
-          activeSkeleton == skeleton.language ? { ...skeleton, file_name: value || '' } : skeleton
+          activeSkeleton == skeleton.language.name ? { ...skeleton, file_name: value || '' } : skeleton
         )
       })
     }
@@ -45,16 +45,16 @@ const SkeletonsEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Elemen
         {problem?.skeletons?.map((skeleton, index) => (
           <Menu.Item
             key={`skeleton-${index}`}
-            name={skeleton.language}
+            name={skeleton.language.name}
             tab={skeleton.language}
             // TODO: LANGUAGE
-            active={activeSkeleton == skeleton.language}
+            active={activeSkeleton == skeleton.language.name}
             onClick={handleSkeletonClick}
           />
         ))}
         <Menu.Item position="right">
           {problem.skeletons?.map((skeleton) =>
-            skeleton.language == activeSkeleton ? (
+            skeleton.language.name == activeSkeleton ? (
               <Input label="Filename" size="small" name="filename" value={skeleton.file_name} onChange={handleChange} />
             ) : (
               <></>
@@ -64,16 +64,16 @@ const SkeletonsEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Elemen
       </Menu>
       {problem?.skeletons?.map((skeleton, index) => (
         <div key={`skeleton-${index}`}>
-          {skeleton.language == activeSkeleton ? (
+          {skeleton.language.name == activeSkeleton ? (
             // TODO: LANGUAGE
             <Editor
-              language={skeleton.language}
+              language={skeleton.language.name}
               width="100%"
               height="500px"
               theme="vs"
               value={skeleton.source}
               options={{ minimap: { enabled: false } }}
-              onChange={(value?: string) => handleSkeletonChange(skeleton.language, value)}
+              onChange={(value?: string) => handleSkeletonChange(skeleton.language.name, value)}
             />
           ) : (
             <></>

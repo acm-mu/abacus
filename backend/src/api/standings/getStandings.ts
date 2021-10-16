@@ -130,7 +130,6 @@ const getBlueStandings = async (isPractice: boolean): Promise<Standings<BlueTeam
     delete submission.filesize
     delete submission.md5
     delete submission.division
-    // TODO: LANGUAGE
     delete submission.language
     delete submission.tests
     delete submission.runtime

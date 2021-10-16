@@ -17,7 +17,7 @@ export const schema: Record<string, ParamSchema> = {
   // TODO: LANGUAGE
   language: {
     in: 'body',
-    isString: true,
+    isObject: true,
     notEmpty: true,
     optional: true
   },
@@ -97,6 +97,7 @@ export const postSubmissions = async (req: Request, res: Response): Promise<void
 
   try {
     const item = matchedData(req)
+    console.log(item)
 
     const user = await contest.get_user(req.user?.uid)
     if (!user) {

@@ -19,11 +19,11 @@ const SolutionsEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Elemen
       setProblem({
         ...problem,
         solutions: problem.solutions?.map((solution) =>
-          language == solution.language
+          language == solution.language.name
             ? {
-                ...solution,
-                source: value || ''
-              }
+              ...solution,
+              source: value || ''
+            }
             : solution
         )
       })
@@ -35,7 +35,7 @@ const SolutionsEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Elemen
       setProblem({
         ...problem,
         solutions: problem.solutions?.map((solution) =>
-          activeSolution == solution.language ? { ...solution, file_name: value || '' } : solution
+          activeSolution == solution.language.name ? { ...solution, file_name: value || '' } : solution
         )
       })
     }
@@ -48,9 +48,9 @@ const SolutionsEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Elemen
         {problem?.solutions?.map((solution, index) => (
           <Menu.Item
             key={`skeleton-${index}`}
-            name={solution.language}
+            name={solution.language.name}
             tab={solution.language}
-            active={activeSolution == solution.language}
+            active={activeSolution == solution.language.name}
             onClick={handleSolutionClick}
           />
         ))}
@@ -58,7 +58,7 @@ const SolutionsEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Elemen
         {setProblem && (
           <Menu.Item position="right">
             {problem.solutions?.map((solution) =>
-              solution.language == activeSolution ? (
+              solution.language.name == activeSolution ? (
                 <Input
                   label="Filename"
                   size="small"
@@ -76,21 +76,21 @@ const SolutionsEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Elemen
 
       {problem?.solutions?.map((solution, index) => (
         <div key={`solution-${index}`}>
-          {solution.language == activeSolution ? (
+          {solution.language.name == activeSolution ? (
             setProblem ? (
               <Editor
-                language={solution.language}
+                language={solution.language.name}
                 width="100%"
                 height="500px"
                 theme="vs"
                 value={solution.source}
                 options={{ minimap: { enabled: false } }}
                 // TODO: LANGUAGE
-                onChange={(value?: string) => handleSolutionChange(solution.language, value)}
+                onChange={(value?: string) => handleSolutionChange(solution.language.name, value)}
               />
             ) : (
               // TODO: LANGUAGE
-              <SyntaxHighlighter language={syntax_lang(solution.language)}>{solution.source}</SyntaxHighlighter>
+              <SyntaxHighlighter language={syntax_lang(solution.language.name)}>{solution.source}</SyntaxHighlighter>
             )
           ) : (
             <></>

@@ -8,7 +8,7 @@ import { Helmet } from 'react-helmet'
 import { PageLoading } from 'components'
 import { AppContext, SocketContext } from 'context'
 
-type SortKey = 'date' | 'sid' | 'sub_no' | 'language'
+type SortKey = 'date' | 'sid' | 'sub_no'
 type SortConfig = {
   column: SortKey
   direction: 'ascending' | 'descending'
@@ -87,12 +87,7 @@ const Submissions = (): JSX.Element => {
             </Table.HeaderCell>
             <Table.HeaderCell>Problem</Table.HeaderCell>
             {/* TODO: LANGUAGE */}
-            <Table.HeaderCell
-              className="sortable"
-              onClick={() => sort('language')}
-              sorted={column == 'language' ? direction : undefined}>
-              Language
-            </Table.HeaderCell>
+            <Table.HeaderCell>Language</Table.HeaderCell>
             <Table.HeaderCell>Status</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
@@ -117,9 +112,8 @@ const Submissions = (): JSX.Element => {
                     <Label
                       color="orange"
                       icon="flag"
-                      content={`Flagged: ${
-                        submission.flagged.uid === user?.uid ? 'You' : submission.flagged.display_name
-                      }`}
+                      content={`Flagged: ${submission.flagged.uid === user?.uid ? 'You' : submission.flagged.display_name
+                        }`}
                     />
                   ) : submission.viewed ? (
                     <Label icon="eye" color="green" content="Viewed" />

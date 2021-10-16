@@ -20,14 +20,6 @@ export const schema: Record<string, ParamSchema> = {
     optional: true,
     errorMessage: 'division is invalid'
   },
-  // TODO: LANGUAGE
-  language: {
-    in: ['query', 'body'],
-    isString: true,
-    notEmpty: true,
-    optional: true,
-    errorMessage: 'language is invalid'
-  },
   pid: {
     in: ['query', 'body'],
     isString: true,
@@ -106,10 +98,6 @@ const showToUser = (user: User | undefined, problem: Problem, settings: Settings
  *         schema:
  *           type: string
  *       - name: division
- *         in: query
- *         schema:
- *           type: string
- *       - name: language
  *         in: query
  *         schema:
  *           type: string
