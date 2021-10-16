@@ -52,7 +52,7 @@ export const downloadFiles = async (req: Request, res: Response): Promise<void> 
       const archive = archiver('zip')
       for (const skeleton of problem.skeletons) {
         // TODO: LANGUAGE
-        archive.append(skeleton.source, { name: `${stripFilename(problem.name)}.unknown`}) //${fileExtension(skeleton.language)}` })
+        archive.append(skeleton.source, { name: `${stripFilename(problem.name)}.unknown` }) //${fileExtension(skeleton.language)}` })
       }
       res.attachment(`${stripFilename(problem.name)}.zip`)
       archive.pipe(res)
