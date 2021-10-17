@@ -1,0 +1,16 @@
+{
+  "name": "pistonrunner",
+  "version": "1.0.0",
+  "description": "",
+  "main": "PistonRunner.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.1009.0",
+    "axios": "^0.23.0"
+  }
+}

@@ -4,6 +4,7 @@ const { createServer } = require('http')
 const { matchedData, validationResult, checkSchema } = require('express-validator')
 const { DynamoDB: { Converter: { marshall } } } = require('aws-sdk')
 const { handler } = require('../PistonRunner/PistonRunner')
+const morgan = require('morgan')
 
 const PORT = process.env.PORT || 6000
 
@@ -12,6 +13,7 @@ const server = createServer(app)
 
 app.use(cors())
 app.use(express.json())
+app.use(morgan('dev'))
 
 const schema = {
   sid: { in: 'body',
