@@ -130,9 +130,7 @@ const PracticeSubmission = ({ submission }: PracticeSubmissionProps): JSX.Elemen
             <pre>
               {/* TODO: LANGUAGE */}
               {submission?.source && (
-                <SyntaxHighlighter language={syntax_lang(submission.language)}>
-                  {submission.source}
-                </SyntaxHighlighter>
+                <SyntaxHighlighter language={syntax_lang(submission.language)}>{submission.source}</SyntaxHighlighter>
               )}
             </pre>
           </>

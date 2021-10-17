@@ -21,9 +21,9 @@ const SolutionsEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Elemen
         solutions: problem.solutions?.map((solution) =>
           language == solution.language
             ? {
-              ...solution,
-              source: value || ''
-            }
+                ...solution,
+                source: value || ''
+              }
             : solution
         )
       })

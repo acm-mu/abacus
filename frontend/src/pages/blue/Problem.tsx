@@ -115,7 +115,9 @@ const Problem = (): JSX.Element => {
               <Button labelPosition="left" content="Skeletons" icon="download" />
             </a>
           </>
-        ) : <></>}
+        ) : (
+          <></>
+        )}
         {latestSubmission}
         <Divider />
         <p>
