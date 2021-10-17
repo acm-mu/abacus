@@ -1,8 +1,8 @@
 import { Args, Clarification, Item, Problem, ResolvedSubmission, Settings, Submission, User } from 'abacus'
-import { Lambda } from 'aws-sdk'
 import { transpose } from '../utils'
-import { Database } from '../services'
+import { Database, Lambda } from '../services'
 import { MongoDB } from '../services/db'
+import { LocalLambda } from '../services/lambda'
 
 class ContestService {
   db: Database
@@ -10,7 +10,7 @@ class ContestService {
 
   constructor() {
     this.db = new MongoDB()
-    this.lambda = new Lambda()
+    this.lambda = new LocalLambda()
   }
 
   /* Users */
@@ -97,6 +97,17 @@ class ContestService {
 
   async delete_submission(sid: string): Promise<void> {
     return this.db.delete('submission', { sid })
+  }
+
+  run_submission(sid: string): Promise<Submission> {
+    return new Promise((resolve, reject) => {
+      this.get_submission(sid).then((submission: Submission) => {
+        this.lambda
+          .invoke('PistonRunner', submission)
+          .then((data: unknown) => resolve(data as Submission))
+          .catch((err) => reject(err))
+      })
+    })
   }
 
   /* Problems */
