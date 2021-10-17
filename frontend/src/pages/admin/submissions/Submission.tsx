@@ -75,8 +75,8 @@ const Submission = (): JSX.Element => {
     })
     if (response.ok) {
       const result = await response.json()
-      if (result.submissions && submission.sid in result.submissions) {
-        setSubmission({ team: submission?.team, problem: submission?.problem, ...result.submissions[submission.sid] })
+      if (result.sid === submission.sid) {
+        setSubmission({ team: submission?.team, problem: submission?.problem, ...result })
       }
     }
     setRerunning(false)
