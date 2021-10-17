@@ -94,10 +94,7 @@ const SubmitPractice = (): JSX.Element => {
         tid: 'LOCAL',
         division: 'blue',
         // TODO: LANGUAGE
-        language: {
-          name: '',
-          version: ''
-        },
+        language: language.key,
         // language: language.key,
         filename,
         filesize,

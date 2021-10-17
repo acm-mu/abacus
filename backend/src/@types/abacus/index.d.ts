@@ -50,11 +50,6 @@ declare module 'abacus' {
     practice_end_date: number
   }
 
-  interface Language extends Record<string, string> {
-    name: string
-    version: string
-  }
-
   interface RawSubmission extends Record<string, unknown> {
     sid: string
     date: number
@@ -62,7 +57,7 @@ declare module 'abacus' {
     filesize: number
     source: string
     project_id?: string
-    language: Language
+    language: string
     md5: string
     pid: string
     runtime: number
@@ -285,7 +280,7 @@ declare module 'abacus' {
    *       required: [language, source, file_name]
    */
   export interface Skeleton extends Record<string, unknown> {
-    language: Language
+    language: string
     source: string
     file_name: string
   }

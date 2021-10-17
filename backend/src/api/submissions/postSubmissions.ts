@@ -17,7 +17,7 @@ export const schema: Record<string, ParamSchema> = {
   // TODO: LANGUAGE
   language: {
     in: 'body',
-    isObject: true,
+    isString: true,
     notEmpty: true,
     optional: true
   },
@@ -216,6 +216,8 @@ export const postSubmissions = async (req: Request, res: Response): Promise<void
     await contest.create_submission(submission)
 
     io.emit('new_submission', { sid: submission.sid })
+
+    if (process.env.NODE_ENV == 'development') contest.run_submission(submission.sid as string)
 
     res.send(submission)
   } catch (err) {

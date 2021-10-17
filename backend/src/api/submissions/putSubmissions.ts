@@ -20,7 +20,7 @@ export const schema: Record<string, ParamSchema> = {
   // TODO: LANGUAGE
   language: {
     in: 'body',
-    isObject: true,
+    isString: true,
     notEmpty: true,
     optional: true,
     errorMessage: 'language is invalid'
