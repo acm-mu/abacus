@@ -17,9 +17,9 @@ const SkeletonsEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Elemen
         skeletons: problem.skeletons?.map((skeleton) =>
           language == skeleton.language
             ? {
-              ...skeleton,
-              source: value || ''
-            }
+                ...skeleton,
+                source: value || ''
+              }
             : skeleton
         )
       })

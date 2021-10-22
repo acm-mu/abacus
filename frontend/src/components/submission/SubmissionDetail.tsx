@@ -39,10 +39,11 @@ const SubmissionDetail = (): JSX.Element => {
   const submission_problem = (
     <Table.Cell>
       <Link
-        to={`${user_home}/problems/${user.role == 'admin' || user.role == 'judge' || user.role == 'proctor'
+        to={`${user_home}/problems/${
+          user.role == 'admin' || user.role == 'judge' || user.role == 'proctor'
             ? submission.problem.pid
             : submission.problem.id
-          }`}>
+        }`}>
         {submission.problem.name}
       </Link>
     </Table.Cell>
