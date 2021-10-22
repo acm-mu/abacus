@@ -70,7 +70,6 @@ const Submissions = (): JSX.Element => {
                       <Link to={`/blue/problems/${submission.problem?.id}`}>{submission.problem?.name}</Link>
                     </Table.Cell>
                     <Table.Cell> {submission.sub_no + 1} </Table.Cell>
-                    {/* TODO: LANGUAGE */}
                     <Table.Cell> {submission.language} </Table.Cell>
                     <Table.Cell>
                       <span className={`status icn ${submission.status}`} />

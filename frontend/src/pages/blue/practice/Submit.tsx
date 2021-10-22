@@ -15,7 +15,6 @@ const SubmitPractice = (): JSX.Element => {
   const submissions: Submission[] = []
   const [problem, setProblem] = useState<Problem>()
 
-  // TODO: LANGUAGE
   const [language, setLanguage] = useState<Language>()
   const [file, setFile] = useState<File>()
   const history = useHistory()
@@ -35,7 +34,6 @@ const SubmitPractice = (): JSX.Element => {
     if (submission.tests) {
       for (const test of submission.tests) {
         // Await response from piston execution
-        // TODO: LANGUAGE
         const res = await fetch('https://piston.codeabac.us/execute', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -68,7 +66,6 @@ const SubmitPractice = (): JSX.Element => {
   }
 
   const handleSubmit = async () => {
-    // TODO: LANGUAGE
     if (!(language && file && problem)) return
 
     setLoading(true)
@@ -93,9 +90,7 @@ const SubmitPractice = (): JSX.Element => {
         pid: problem.id,
         tid: 'LOCAL',
         division: 'blue',
-        // TODO: LANGUAGE
         language: language.key,
-        // language: language.key,
         filename,
         filesize,
         md5: '',
@@ -128,7 +123,6 @@ const SubmitPractice = (): JSX.Element => {
         return
       }
 
-      // TODO: LANGUAGE
       for (const language of languages) {
         if (ext == language.file_extension) {
           setLanguage(language)
@@ -186,7 +180,6 @@ const SubmitPractice = (): JSX.Element => {
                 )
               }
             />
-            {/* TODO: LANGUAGE */}
             <Form.Select
               inline
               label="Language"

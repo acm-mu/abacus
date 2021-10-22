@@ -239,7 +239,6 @@ const Submissions = (): JSX.Element => {
                 <Table.Cell>
                   <Link to={`/${user?.role}/teams`}>{submission.team.display_name}</Link>
                 </Table.Cell>
-                {/* TODO: LANGUAGE */}
                 <Table.Cell>{submission.language}</Table.Cell>
                 <Table.Cell>
                   <span className={`status icn ${submission.status}`} />

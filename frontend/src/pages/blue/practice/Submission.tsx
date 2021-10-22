@@ -76,7 +76,6 @@ const PracticeSubmission = ({ submission }: PracticeSubmissionProps): JSX.Elemen
                   }
                 })}
               </Table.Cell>
-              {/* TODO: LANGUAGE */}
               <Table.Cell>{submission.language}</Table.Cell>
             </Table.Row>
           </Table.Body>
@@ -128,7 +127,6 @@ const PracticeSubmission = ({ submission }: PracticeSubmissionProps): JSX.Elemen
 
             <h3>{submission?.filename}</h3>
             <pre>
-              {/* TODO: LANGUAGE */}
               {submission?.source && (
                 <SyntaxHighlighter language={syntax_lang(submission.language)}>{submission.source}</SyntaxHighlighter>
               )}

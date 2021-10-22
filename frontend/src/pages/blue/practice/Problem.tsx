@@ -74,7 +74,6 @@ const PracticeProblem = ({ submissions }: PracticeProblemProps): JSX.Element => 
                     </Table.Cell>
                     <Table.Cell> {submission.problem?.name} </Table.Cell>
                     <Table.Cell> {submission.sub_no + 1} </Table.Cell>
-                    {/* TODO: LANGUAGE */}
                     <Table.Cell> {submission.language} </Table.Cell>
                     <Table.Cell>
                       {' '}

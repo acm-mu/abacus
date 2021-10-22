@@ -86,7 +86,6 @@ const Submissions = (): JSX.Element => {
               Submission ID
             </Table.HeaderCell>
             <Table.HeaderCell>Problem</Table.HeaderCell>
-            {/* TODO: LANGUAGE */}
             <Table.HeaderCell>Language</Table.HeaderCell>
             <Table.HeaderCell>Status</Table.HeaderCell>
           </Table.Row>
@@ -105,16 +104,14 @@ const Submissions = (): JSX.Element => {
                 <Table.Cell>
                   <Link to={`/${user?.role}/problems/${submission.pid}`}>{submission.problem?.name} </Link>
                 </Table.Cell>
-                {/* TODO: LANGUAGE */}
                 <Table.Cell>{submission.language}</Table.Cell>
                 <Table.Cell>
                   {submission.flagged ? (
                     <Label
                       color="orange"
                       icon="flag"
-                      content={`Flagged: ${
-                        submission.flagged.uid === user?.uid ? 'You' : submission.flagged.display_name
-                      }`}
+                      content={`Flagged: ${submission.flagged.uid === user?.uid ? 'You' : submission.flagged.display_name
+                        }`}
                     />
                   ) : submission.viewed ? (
                     <Label icon="eye" color="green" content="Viewed" />

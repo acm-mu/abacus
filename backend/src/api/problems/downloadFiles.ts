@@ -1,7 +1,7 @@
 import archiver from 'archiver'
 import { Request, Response } from 'express'
 import { matchedData, ParamSchema, validationResult } from 'express-validator'
-import { stripFilename } from '../../utils'
+import { fileExtension, stripFilename } from '../../utils'
 import contest from '../../abacus/contest'
 
 export const schema: Record<string, ParamSchema> = {
@@ -51,8 +51,7 @@ export const downloadFiles = async (req: Request, res: Response): Promise<void> 
     if (problem.skeletons) {
       const archive = archiver('zip')
       for (const skeleton of problem.skeletons) {
-        // TODO: LANGUAGE
-        archive.append(skeleton.source, { name: `${stripFilename(problem.name)}.unknown` }) //${fileExtension(skeleton.language)}` })
+        archive.append(skeleton.source, { name: `${stripFilename(problem.name)}.${fileExtension(skeleton.language)}` })
       }
       res.attachment(`${stripFilename(problem.name)}.zip`)
       archive.pipe(res)

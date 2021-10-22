@@ -72,7 +72,6 @@ const Home = (): JSX.Element => {
                   <Table.Cell>
                     <Link to={`/proctor/problems/${submission.pid}`}>{submission.problem.name}</Link>
                   </Table.Cell>
-                  {/* TODO: LANGUAGE */}
                   <Table.Cell>{submission.language}</Table.Cell>
                 </Table.Row>
               ))
@@ -93,7 +92,6 @@ const Home = (): JSX.Element => {
             <Table.Row>
               <Table.HeaderCell content="Submission" />
               <Table.HeaderCell content="Problem" />
-              {/* TODO: LANGUAGE */}
               <Table.HeaderCell content="Language" />
               <Table.HeaderCell content="Status" />
             </Table.Row>
@@ -109,7 +107,6 @@ const Home = (): JSX.Element => {
                   <Table.Cell>
                     <Link to={`/proctor/problems/${submission.pid}`}>{submission.problem.name}</Link>
                   </Table.Cell>
-                  {/* TODO: LANGUAGE */}
                   <Table.Cell>{submission.language}</Table.Cell>
                   <Table.Cell>
                     {submission.flagged ? (

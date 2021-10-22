@@ -3,7 +3,6 @@ import { User } from 'abacus'
 import { createHash } from 'crypto'
 
 // Convert's stored language values in to syntax highlighter friendly values
-// TODO: LANGUAGE
 export const syntax_lang = (language: string): string => {
   switch (language) {
     case 'python3':
@@ -53,7 +52,6 @@ export interface Language {
   file_extension: string
 }
 
-// TODO: LANGUAGE
 export const languages: Language[] = [
   { key: 'python3', value: 'Python 3', text: 'Python 3', file_extension: '.py' },
   { key: 'java', value: 'Java', text: 'Java', file_extension: '.java' }

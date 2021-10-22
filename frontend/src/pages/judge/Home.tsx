@@ -96,7 +96,6 @@ const Home = (): JSX.Element => {
                   <Table.Cell>
                     <Link to={`/judge/problems/${submission.pid}`}>{submission.problem.name}</Link>
                   </Table.Cell>
-                  {/* TODO: LANGUAGE */}
                   <Table.Cell>{submission.language}</Table.Cell>
                 </Table.Row>
               ))
@@ -137,7 +136,6 @@ const Home = (): JSX.Element => {
                   <Table.Cell>
                     <Link to={`/judge/problems/${submission.pid}`}>{submission.problem.name}</Link>
                   </Table.Cell>
-                  {/* TODO: LANGUAGE */}
                   <Table.Cell>{submission.language}</Table.Cell>
                 </Table.Row>
               ))
@@ -178,7 +176,6 @@ const Home = (): JSX.Element => {
                   <Table.Cell>
                     <Link to={`/judge/problems/${submission.pid}`}>{submission.problem.name}</Link>
                   </Table.Cell>
-                  {/* TODO: LANGUAGE */}
                   <Table.Cell>{submission.language}</Table.Cell>
                 </Table.Row>
               ))
@@ -221,7 +218,6 @@ const Home = (): JSX.Element => {
                     <Link to={`/judge/problems/${submission.pid}`}>{submission.problem.name}</Link>
                   </Table.Cell>
                   <Table.Cell>{submission.claimed?.display_name}</Table.Cell>
-                  {/* TODO: LANGUAGE */}
                   <Table.Cell>{submission.language}</Table.Cell>
                 </Table.Row>
               ))

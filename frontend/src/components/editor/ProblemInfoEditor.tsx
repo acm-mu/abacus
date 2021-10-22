@@ -28,7 +28,6 @@ const ProblemInfoEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Elem
         division: 'eagle'
       })
     } else if (value == 'blue') {
-      // TODO: LANGUAGE
       const filename = problem.name.replace(/[ !@#$%^&*()-]/g, '')
       setProblem({
         ...problem,

@@ -4,7 +4,7 @@ const { DynamoDB } = require('aws-sdk')
 const API_URL = "http://server"
 const PISTON_URL = "http://piston"
 
-exports.handler = async(event) => {
+exports.handler = async (event) => {
   if (event.Records.length !== 1) {
     return 400
   }
@@ -64,7 +64,6 @@ exports.handler = async(event) => {
   }
 
   // Extract details and set defaults
-  // TODO: LANGUAGE
   const { language, source, date: submission_date } = submission
   let status = "accepted"
   let runtime = -1

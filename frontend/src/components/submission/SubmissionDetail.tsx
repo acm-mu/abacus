@@ -39,11 +39,10 @@ const SubmissionDetail = (): JSX.Element => {
   const submission_problem = (
     <Table.Cell>
       <Link
-        to={`${user_home}/problems/${
-          user.role == 'admin' || user.role == 'judge' || user.role == 'proctor'
+        to={`${user_home}/problems/${user.role == 'admin' || user.role == 'judge' || user.role == 'proctor'
             ? submission.problem.pid
             : submission.problem.id
-        }`}>
+          }`}>
         {submission.problem.name}
       </Link>
     </Table.Cell>
@@ -98,7 +97,6 @@ const SubmissionDetail = (): JSX.Element => {
                 {rerunning ? <Loader active inline size="small" /> : Math.floor(submission.runtime || 0)}
               </Table.Cell>
               <Table.Cell>{rerunning ? <Loader active inline size="small" /> : submission.score}</Table.Cell>
-              {/* TODO: LANGUAGE */}
               <Table.Cell>{submission.language}</Table.Cell>
             </Table.Row>
             <Table.Row>
