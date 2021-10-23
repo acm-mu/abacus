@@ -1,4 +1,4 @@
-import axios from 'axios'
+import superagent from 'superagent'
 import { Lambda } from '.'
 import { Payload } from './lambda'
 
@@ -13,11 +13,15 @@ export default class LocalLambda extends Lambda {
         reject(`LocalLambda does not support'${FunctionName}'`)
       }
 
+      const lambda_spoofer = process.env.USE_DOCKER ? 'lambda-spoofer:6000' : 'http://localhost:6000'
+      
+      delete payload.tests
+
       try {
-        axios
-          .post(`http://lambda-spoofer:6000/execute`, payload)
-          .then((data) => resolve(data.data))
-          .catch((err) => reject(err))
+        superagent.post(`${lambda_spoofer}/execute`)
+        .send(payload)
+        .then(res => resolve(res.body))
+        .catch(reject)
       } catch (error) {
         console.log(error)
       }

@@ -16,70 +16,64 @@ app.use(express.json())
 app.use(morgan('dev'))
 
 const schema = {
-  sid: {
-    in: 'body',
-    isString: true,
-    notEmpty: true,
-    errorMessage: 'sid is not supplied'
-  },
-  pid: {
-    in: 'body',
-    isString: true,
-    notEmpty: true,
-    errorMessage: 'pid is not supplied'
-  },
-  division: {
-    in: 'body',
-    isString: true,
-    notEmpty: true,
-    errorMessage: 'division is not supplied'
-  },
-  language: {
-    in: 'body',
-    isString: true,
-    notEmpty: true,
-    errorMessage: 'language is not supplied'
-  },
-  source: {
-    in: 'body',
-    isString: true,
-    notEmpty: true,
-    errorMessage: 'source is not supplied'
-  },
-  date: {
-    in: 'body',
-    isNumeric: true,
-    notEmpty: true,
-    errorMessage: 'date is not supplied'
-  },
-  sub_no: {
-    in: 'body',
-    isNumeric: true,
-    notEmpty: true,
-    errorMessage: 'sub_no is not supplied'
-  }
+    sid: { in: 'body',
+        isString: true,
+        notEmpty: true,
+        errorMessage: 'sid is not supplied'
+    },
+    pid: { in: 'body',
+        isString: true,
+        notEmpty: true,
+        errorMessage: 'pid is not supplied'
+    },
+    division: { in: 'body',
+        isString: true,
+        notEmpty: true,
+        errorMessage: 'division is not supplied'
+    },
+    language: { in: 'body',
+        isString: true,
+        notEmpty: true,
+        errorMessage: 'language is not supplied'
+    },
+    source: { in: 'body',
+        isString: true,
+        notEmpty: true,
+        errorMessage: 'source is not supplied'
+    },
+    date: { in: 'body',
+        isNumeric: true,
+        notEmpty: true,
+        errorMessage: 'date is not supplied'
+    },
+    sub_no: { in: 'body',
+        isNumeric: true,
+        notEmpty: true,
+        errorMessage: 'sub_no is not supplied'
+    }
 }
 
-app.post('/execute', checkSchema(schema), async (req, res) => {
-  const errors = validationResult(req).array()
-  if (errors.length > 0) {
-    res.status(400).json({ message: errors[0].msg })
-    return
-  }
+app.post('/execute', checkSchema(schema), async(req, res) => {
+    const errors = validationResult(req).array()
+    if (errors.length > 0) {
+        res.status(400).json({ message: errors[0].msg })
+        return
+    }
 
-  const item = matchedData(req)
+    const item = matchedData(req)
 
-  // Mock AWS DynamoDB PUT -> Lambda Trigger
-  res.send(await handler({
-    Records: [{
-      eventName: 'INSERT',
-      dynamodb: {
-        NewImage: marshall(item)
-      }
-    }]
-  }))
+    // Mock AWS DynamoDB PUT -> Lambda Trigger
+
+    res.send(await handler({
+        Records: [{
+            eventName: 'INSERT',
+            dynamodb: {
+                NewImage: marshall(item)
+            }
+        }]
+    }))
 })
 
 server.listen(PORT, () => {
-  console.log(`🚀 Server is running at :${PORT}`)
+    console.log(`🚀 Server is running at :${PORT}`)
 })

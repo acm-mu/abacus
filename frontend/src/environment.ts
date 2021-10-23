@@ -14,8 +14,8 @@ const prod: Config = {
 
 const dev: Config = {
   isLocal: true,
-  API_URL: 'http://localhost',
-  PISTON_URL: 'http://localhost:2000',
+  API_URL: process.env.USE_DOCKER ? 'server' : 'http://localhost',
+  PISTON_URL: process.env.USE_DOCKER ? 'piston' : 'http://localhost:2000',
   environmentText: 'LOCAL ENV.'
 }
 

@@ -31,6 +31,7 @@ services:
       - MONGO_USER=username
       - MONGO_PASS=password
       - MONGO_DBNAME=abacus
+      - USE_DOCKER=true
     volumes:
       - './backend/src:/app/src'
     ports:
@@ -45,6 +46,8 @@ services:
     volumes:
       - ./frontend/public:/app/public
       - ./frontend/src:/app/src
+    environment:
+      - USE_DOCKER=true
     ports:
       - '3000:3000'
     depends_on:

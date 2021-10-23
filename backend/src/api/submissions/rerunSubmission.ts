@@ -46,10 +46,8 @@ export const rerunSubmission = async (req: Request, res: Response): Promise<void
 
   try {
     const response = await contest.run_submission(sid)
-    console.log(response)
     res.send(response)
   } catch (error) {
-    console.log(error)
     res.sendStatus(500)
   }
 }
