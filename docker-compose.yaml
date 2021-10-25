@@ -58,9 +58,7 @@ services:
     build:
       context: lambdas
     volumes:
-      - ./lambdas/spoofer:/app
-      - ./lambdas/PistonRunner:/PistonRunner
+      - ./lambdas/spoofer/service.js:/app/service.js
+      - ./lambdas/PistonRunner/PistonRunner.js:/PistonRunner/PistonRunner.js
     ports:
       - "6000:6000"
-    depends_on:
-      - server
