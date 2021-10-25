@@ -10,7 +10,9 @@ const ProblemOrSubmission = (): JSX.Element => {
   const [isMounted, setMounted] = useState(true)
   const [isLoading, setLoading] = useState(true)
   const [problems, setProblems] = useState<Problem[]>([])
-  const submissions: { [key: string]: Submission } = localStorage.submissions ? JSON.parse(localStorage.submissions) : {}
+  const submissions: { [key: string]: Submission } = localStorage.submissions
+    ? JSON.parse(localStorage.submissions)
+    : {}
 
   const { id } = useParams<{ id: string }>()
 
