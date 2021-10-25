@@ -86,7 +86,7 @@ exports.handler = async(event) => {
         }
       })
 
-      // runtime = Math.max(runtime, res.data.runtime)
+      runtime = Math.max(runtime, res.data.runtime)
       test.stdout = res.data.run.output
 
       if (res.data.run.output !== test.out) {
