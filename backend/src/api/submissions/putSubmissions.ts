@@ -139,6 +139,10 @@ const notifyTeam = async (item: Record<string, unknown>) => {
  *                 type: string
  *               viewed:
  *                 type: boolean
+ *               tests:
+ *                 type: array
+ *                 items:
+ *                   $ref: '#/components/schemas/Test'
  *               feedback:
  *                 type: string
  *             required: [sid]
