@@ -31,10 +31,10 @@ This Open Source competition judging software is designed for the [Marquette ACM
 - [Docker Compose](https://docs.docker.com/compose/install/) 
 
 #### Installation
-- Clone this repo
+- Clone Abacus repo.
 
   `git clone https://github.com/acm-mu/abacus`
-- Pull submodules
+- Pull submodules ([piston](https://github.com/acm-mu/piston))
   
   `git submodule update --init`
 - Startup docker containers
