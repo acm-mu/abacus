@@ -42,6 +42,11 @@ This Open Source competition judging software is designed for the [Marquette ACM
   `docker-compose up -d`
 - Open a new web browser and go to [localhost:3000](http://localhost:3000)
 
+  Piston will take a couple of minutes to install language dependencies
+  You can watch the logs with `docker logs --follow piston` to wait for setup to complete. (~10 minutes)
+
+  You can use Abacus while this is happening, but Piston will not work
+
 ### Creating a new branch
 - in your terminal/powershell, cd to the root of your abacus clone
 - git checkout master
