@@ -12,7 +12,7 @@ import { AppContext, SocketContext } from 'context'
 interface SubmissionItem extends Submission {
   checked: boolean
 }
-type SortKey = 'date' | 'sid' | 'sub_no' | 'status' | 'runtime' | 'date' | 'score'
+type SortKey = 'date' | 'sid' | 'sub_no' | 'language' | 'status' | 'runtime' | 'date' | 'score'
 type SortConfig = {
   column: SortKey
   direction: 'ascending' | 'descending'
@@ -196,7 +196,12 @@ const Submissions = (): JSX.Element => {
             </Table.HeaderCell>
             <Table.HeaderCell>Problem</Table.HeaderCell>
             <Table.HeaderCell>Team</Table.HeaderCell>
-            <Table.HeaderCell>Language</Table.HeaderCell>
+            <Table.HeaderCell
+              className="sortable"
+              onClick={() => sort('language')}
+              sorted={column == 'language' ? direction : undefined}>
+              Language
+            </Table.HeaderCell>
             <Table.HeaderCell
               className="sortable"
               onClick={() => sort('status')}

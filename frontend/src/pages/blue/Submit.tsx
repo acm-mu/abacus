@@ -98,6 +98,7 @@ const Submit = (): JSX.Element => {
         event.preventDefault()
         return
       }
+
       for (const language of languages) {
         if (ext == language.file_extension) {
           setLanguage(language)

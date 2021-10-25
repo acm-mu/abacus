@@ -29,13 +29,11 @@ const Practice = (): JSX.Element => {
     )
   }
 
-  return (
-    <Switch>
-      <Route path="/blue/practice/:id/submit" component={SubmitPractice} />
-      <Route path="/blue/practice/:id" component={ProblemOrSubmission} />
-      <Route path="/blue/practice" component={PracticeProblems} />
-    </Switch>
-  )
+  return <Switch>
+    <Route path="/blue/practice/:id/submit" component={SubmitPractice} />
+    <Route path="/blue/practice/:id" component={ProblemOrSubmission} />
+    <Route path="/blue/practice" component={PracticeProblems} />
+  </Switch>
 }
 
 export default Practice

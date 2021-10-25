@@ -34,28 +34,12 @@ const ProblemInfoEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Elem
         division: 'blue',
         project_id: undefined,
         skeletons: [
-          {
-            source: '# Python skeleton goes here',
-            file_name: `${filename}.py`,
-            language: 'python 3.5.10'
-          },
-          {
-            source: '// Java skeleton goes here',
-            file_name: `${filename}.java`,
-            language: 'python 3.5.10'
-          }
+          { source: '# Python skeleton goes here', file_name: `${filename}.py`, language: 'python 3.5.10' },
+          { source: '// Java skeleton goes here', file_name: `${filename}.java`, language: 'python 3.5.10' }
         ],
         solutions: [
-          {
-            source: '# Python solution goes here',
-            file_name: `${filename}.py`,
-            language: 'python 3.5.10'
-          },
-          {
-            source: '// Java solution goes here',
-            file_name: `${filename}.java`,
-            language: 'python 3.5.10'
-          }
+          { source: '# Python solution goes here', file_name: `${filename}.py`, language: 'python 3.5.10' },
+          { source: '// Java solution goes here', file_name: `${filename}.java`, language: 'python 3.5.10' }
         ],
         tests: [{ in: '', out: '' }]
       })

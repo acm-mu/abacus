@@ -11,9 +11,7 @@ const PracticeProblems = (): JSX.Element => {
   const [isLoading, setLoading] = useState(true)
 
   const [problems, setProblems] = useState<Problem[]>([])
-  const submissions: { [key: string]: Submission } = localStorage.submissions
-    ? JSON.parse(localStorage.submissions)
-    : {}
+  const submissions: { [key: string]: Submission } = localStorage.submissions ? JSON.parse(localStorage.submissions) : {}
 
   const showClearButton = Object.values(submissions).length > 0
   const clearHistory = () => {
@@ -36,12 +34,10 @@ const PracticeProblems = (): JSX.Element => {
   }, [])
 
   if (isLoading) {
-    return (
-      <>
-        <title>Abacus | Practice</title>
-        <Loader active inline="centered" content="Loading..." />
-      </>
-    )
+    return <>
+      <title>Abacus | Practice</title>
+      <Loader active inline="centered" content="Loading..." />
+    </>
   }
 
   return (
