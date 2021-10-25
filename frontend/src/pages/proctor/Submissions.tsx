@@ -115,8 +115,9 @@ const Submissions = (): JSX.Element => {
                     <Label
                       color="orange"
                       icon="flag"
-                      content={`Flagged: ${submission.flagged.uid === user?.uid ? 'You' : submission.flagged.display_name
-                        }`}
+                      content={`Flagged: ${
+                        submission.flagged.uid === user?.uid ? 'You' : submission.flagged.display_name
+                      }`}
                     />
                   ) : submission.viewed ? (
                     <Label icon="eye" color="green" content="Viewed" />
