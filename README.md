@@ -1,4 +1,4 @@
-# MU ACM Contest Software
+# 🧮 Abacus
 
 ## Overview
 
