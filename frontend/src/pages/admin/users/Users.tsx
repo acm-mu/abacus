@@ -165,8 +165,13 @@ const Users = (): JSX.Element => {
 
       if (response.ok) {
         setUsers(users.filter((user) => !usersToDelete.includes(user.uid)))
-      const id = usersToDelete.join();
-        window.sendNotification({ id, type: 'success', header: 'Success!', content: 'We deleted the users you selected!'})
+        const id = usersToDelete.join()
+        window.sendNotification({
+          id,
+          type: 'success',
+          header: 'Success!',
+          content: 'We deleted the users you selected!'
+        })
       }
 
       setDeleting(false)

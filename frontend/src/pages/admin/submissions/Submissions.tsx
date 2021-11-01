@@ -99,8 +99,13 @@ const Submissions = (): JSX.Element => {
       if (response.ok) {
         loadSubmissions()
         //tells the toast container below to display a message saying 'Deleted selected submissions'
-        const id = submissionsToDelete.join();
-        window.sendNotification({ id, type: 'success', header: 'Success!', content: 'We deleted the submissions you selected!'})
+        const id = submissionsToDelete.join()
+        window.sendNotification({
+          id,
+          type: 'success',
+          header: 'Success!',
+          content: 'We deleted the submissions you selected!'
+        })
       }
       setDeleting(false)
     }

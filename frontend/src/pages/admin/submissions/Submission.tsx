@@ -59,9 +59,13 @@ const submission = (): JSX.Element => {
         body: JSON.stringify({ sid: submission.sid })
       })
       if (response.ok) {
-        window.sendNotification({ id: sid,type: 'success', header: 'Success!', content: 'We deleted the submission you selected!'})
+        window.sendNotification({
+          id: sid,
+          type: 'success',
+          header: 'Success!',
+          content: 'We deleted the submission you selected!'
+        })
         history.push('/admin/submissions')
-        
       }
       setDeleting(false)
     }

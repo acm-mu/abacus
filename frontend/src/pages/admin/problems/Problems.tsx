@@ -125,8 +125,13 @@ const Problems = (): JSX.Element => {
       })
       if (response.ok) {
         setProblems(problems.filter((problem) => !problemsToDelete.includes(problem.pid)))
-        const id = problemsToDelete.join();
-        window.sendNotification({ id,type: 'success', header: 'Success!', content: 'We deleted the problems you selected!'})
+        const id = problemsToDelete.join()
+        window.sendNotification({
+          id,
+          type: 'success',
+          header: 'Success!',
+          content: 'We deleted the problems you selected!'
+        })
       }
       setDeleting(false)
     }

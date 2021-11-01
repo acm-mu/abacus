@@ -65,14 +65,14 @@ const App = (): JSX.Element => {
       try {
         await fetch(config.API_URL)
       } catch (err) {
-            const notification: Notification = {
-        id: error_id,
-        type: 'error',
-        header: 'Uh oh!',
-        content: 'We are having issues communicating with our servers. Trying again in 15 seconds'
-      }
-      if (window.sendNotification) window.sendNotification(notification)
-      else window.notifications = [notification]
+        const notification: Notification = {
+          id: error_id,
+          type: 'error',
+          header: 'Uh oh!',
+          content: 'We are having issues communicating with our servers. Trying again in 15 seconds'
+        }
+        if (window.sendNotification) window.sendNotification(notification)
+        else window.notifications = [notification]
 
         loadApp()
       }
