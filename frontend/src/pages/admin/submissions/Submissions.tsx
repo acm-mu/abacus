@@ -8,8 +8,6 @@ import { compare } from 'utils'
 import { Helmet } from 'react-helmet'
 import { Block, DivisionLabel, PageLoading } from 'components'
 import { SocketContext } from 'context'
-import 'react-toastify/dist/ReactToastify.css'
-import { toast } from 'react-toastify'
 
 interface SubmissionItem extends Submission {
   checked: boolean
@@ -101,7 +99,8 @@ const Submissions = (): JSX.Element => {
       if (response.ok) {
         loadSubmissions()
         //tells the toast container below to display a message saying 'Deleted selected submissions'
-        toast.success('Deleted selected submission!', { autoClose: 5000, position: 'top-left' })
+        const id = submissionsToDelete.join();
+        window.sendNotification({ id, type: 'success', header: 'Success!', content: 'We deleted the submissions you selected!'})
       }
       setDeleting(false)
     }

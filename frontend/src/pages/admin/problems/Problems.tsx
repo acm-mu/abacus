@@ -5,8 +5,6 @@ import { Link } from 'react-router-dom'
 import config from 'environment'
 import { Block, DivisionLabel, PageLoading } from 'components'
 import { Helmet } from 'react-helmet'
-import { toast, ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
 
 interface ProblemItem extends Problem {
   checked: boolean
@@ -127,8 +125,8 @@ const Problems = (): JSX.Element => {
       })
       if (response.ok) {
         setProblems(problems.filter((problem) => !problemsToDelete.includes(problem.pid)))
-        //tells the toast container below to display a message saying 'Deleted selected problems'
-        toast.success('Deleted selected problems!', { autoClose: 5000, position: 'top-left' })
+        const id = problemsToDelete.join();
+        window.sendNotification({ id,type: 'success', header: 'Success!', content: 'We deleted the problems you selected!'})
       }
       setDeleting(false)
     }

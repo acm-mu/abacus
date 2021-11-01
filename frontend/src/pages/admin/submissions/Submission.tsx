@@ -6,8 +6,6 @@ import config from 'environment'
 import { Helmet } from 'react-helmet'
 import { Button, Grid } from 'semantic-ui-react'
 import { AppContext } from 'context'
-import { toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
 
 const submission = (): JSX.Element => {
   const { sid } = useParams<{ sid: string }>()
@@ -61,9 +59,9 @@ const submission = (): JSX.Element => {
         body: JSON.stringify({ sid: submission.sid })
       })
       if (response.ok) {
+        window.sendNotification({ id: sid,type: 'success', header: 'Success!', content: 'We deleted the submission you selected!'})
         history.push('/admin/submissions')
-        //tells the toast container below to display a message saying 'Deleted selected submission'
-        toast.success('Deleted selected submission!', { autoClose: 5000, position: 'top-left' })
+        
       }
       setDeleting(false)
     }

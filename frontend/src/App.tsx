@@ -8,7 +8,6 @@ import { v4 as uuidv4 } from 'uuid'
 import { AppContext, AppContextType, SocketContext } from 'context'
 import io from 'socket.io-client'
 import './App.scss'
-import { toast } from 'react-toastify'
 
 const App = (): JSX.Element => {
   const [user, setUser] = useState<User>()
@@ -66,7 +65,15 @@ const App = (): JSX.Element => {
       try {
         await fetch(config.API_URL)
       } catch (err) {
-        toast.error('We are having issues communicating with our servers. Trying again in 15 seconds')
+            const notification: Notification = {
+        id: error_id,
+        type: 'error',
+        header: 'Uh oh!',
+        content: 'We are having issues communicating with our servers. Trying again in 15 seconds'
+      }
+      if (window.sendNotification) window.sendNotification(notification)
+      else window.notifications = [notification]
+
         loadApp()
       }
     }, 15 * 1000)
