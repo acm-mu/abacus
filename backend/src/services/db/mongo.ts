@@ -35,7 +35,7 @@ export default class MongoDB extends Database {
             reject(err)
             return
           }
-          if (data) resolve(data);
+          if (data) resolve(data)
         })
     })
   }

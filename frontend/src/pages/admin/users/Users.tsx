@@ -26,8 +26,8 @@ const Users = (): JSX.Element => {
   const [isDeleting, setDeleting] = useState(false)
   const [isImporting, setImporting] = useState(false)
   const [error, setError] = useState<string>()
-  const [page, setPage] = useState<number>(1);   
-  const [numberOfPages, setNumberOfPages] = useState<number>(4);
+  const [page, setPage] = useState<number>(1)
+  const [numberOfPages, setNumberOfPages] = useState<number>(4)
   const [isMounted, setMounted] = useState(true)
   const [{ column, direction }, setSortConfig] = useState<SortConfig>({
     column: 'username',
@@ -72,14 +72,14 @@ const Users = (): JSX.Element => {
   }
   */
   const loadUsers = async (page: number) => {
-  const body = new URLSearchParams();
-  body.append('page', page.toString());
+    const body = new URLSearchParams()
+    body.append('page', page.toString())
     try {
       const response = await fetch(`${config.API_URL}/users`, {
         headers: {
           Authorization: `Bearer ${localStorage.accessToken}`
         },
-        body,
+        body
       })
       if (isMounted) {
         const data = Object.values(await response.json()) as UserItem[]
@@ -95,8 +95,8 @@ const Users = (): JSX.Element => {
   }
 
   const handlePageChange = async (page: number) => {
-    setPage(page);
-    loadUsers(page);
+    setPage(page)
+    loadUsers(page)
   }
 
   const downloadUsers = () => {
@@ -272,7 +272,6 @@ const Users = (): JSX.Element => {
           ))}
         </Table.Body>
       </Table>
-    
     </>
   )
 }

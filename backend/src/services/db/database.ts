@@ -13,11 +13,7 @@ export default abstract class Database {
     }
   }
 
-  abstract scan(
-    TableName: string,
-    query?: ScanOptions,
-    page?: number,
-  ): Promise<Item[]>
+  abstract scan(TableName: string, query?: ScanOptions, page?: number): Promise<Item[]>
 
   abstract get(TableName: string, Key: Key): Promise<Item>
 
@@ -26,6 +22,6 @@ export default abstract class Database {
   abstract update(TableName: string, Key: Key, Item: Item): Promise<Item>
 
   abstract delete(TableName: string, Key: Key): Promise<void>
-  
+
   //abstract count(TableName: string, query?: ScanOptions): Promise<Item[]>
 }
