@@ -47,6 +47,32 @@ export const schema: Record<string, ParamSchema> = {
     errorMessage: 'String username is not supplied'
   }
 }
+/*
+export const getUserCount = async (req: Request, res: Response) => {
+  const errors = validationResult(req).array()
+  if (errors.length > 0) {
+    res.status(400).json({ message: errors[0].msg })
+    return
+  }
+
+  const params = matchedData(req)
+  if (req.user?.role == 'team') params.uid = req.user?.uid
+  if (req.user?.role == 'judge') {
+    params.role = 'team'
+    params.division = req.user.division
+  }
+  try {
+    const users = await contest.get_user_page_count(params)
+    users?.map((user: any) => {
+      const { password, ...returnUser } = user
+      return returnUser
+    })
+    res.send(transpose(users, 'uid'))
+  } catch (err) {
+    res.sendStatus(500)
+  }
+}
+*/
 
 export const getUsers = async (req: Request, res: Response) => {
   const errors = validationResult(req).array()
@@ -56,7 +82,7 @@ export const getUsers = async (req: Request, res: Response) => {
   }
   const params = matchedData(req)
 
-  const page = req.body.page ? req.body.page : null
+  const page = req.body.page ? req.body.page.parseInt() : null
   if (req.user?.role == 'team') params.uid = req.user?.uid
   if (req.user?.role == 'judge') {
     params.role = 'team'

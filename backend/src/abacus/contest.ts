@@ -26,6 +26,12 @@ class ContestService {
     return this.db.scan('user', { args }, page) as Promise<User[]>
   }
 
+  /*
+  async get_user_page_count(args?: any): Promise<User[]> {
+    return this.db.count('user', { args }) as Promise<User[]>
+  }
+  */
+
   async update_user(uid: string, item: any): Promise<User> {
     return this.db.update('user', { uid }, item) as Promise<User>
   }

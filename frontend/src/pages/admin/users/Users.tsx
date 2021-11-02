@@ -1,6 +1,6 @@
 import { User } from 'abacus'
 import React, { ChangeEvent, useState, useEffect, useContext } from 'react'
-import { Table, Button, Label } from 'semantic-ui-react'
+import { Table, Button, Label, Pagination } from 'semantic-ui-react'
 import { saveAs } from 'file-saver'
 import { Link } from 'react-router-dom'
 import config from 'environment'
@@ -26,7 +26,8 @@ const Users = (): JSX.Element => {
   const [isDeleting, setDeleting] = useState(false)
   const [isImporting, setImporting] = useState(false)
   const [error, setError] = useState<string>()
-
+  const [page, setPage] = useState<number>(1);   
+  const [numberOfPages, setNumberOfPages] = useState<number>(4);
   const [isMounted, setMounted] = useState(true)
   const [{ column, direction }, setSortConfig] = useState<SortConfig>({
     column: 'username',
@@ -46,18 +47,39 @@ const Users = (): JSX.Element => {
   }
 
   useEffect(() => {
-    loadUsers()
+    loadUsers(page)
     return () => {
       setMounted(false)
     }
   }, [])
 
-  const loadUsers = async () => {
+  /*
+  const findNumberOfUsers = async () => {
+     try {
+      const response = await fetch(`${config.API_URL}/users`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.accessToken}`
+        },
+      })
+      if (isMounted) {
+        const data = Object.values(await response.json())
+        
+        setLoading(false)
+      }
+    } catch (err) {
+      setError(err as string)
+    }
+  }
+  */
+  const loadUsers = async (page: number) => {
+  const body = new URLSearchParams();
+  body.append('page', page.toString());
     try {
       const response = await fetch(`${config.API_URL}/users`, {
         headers: {
           Authorization: `Bearer ${localStorage.accessToken}`
-        }
+        },
+        body,
       })
       if (isMounted) {
         const data = Object.values(await response.json()) as UserItem[]
@@ -70,6 +92,11 @@ const Users = (): JSX.Element => {
     } catch (err) {
       setError(err as string)
     }
+  }
+
+  const handlePageChange = async (page: number) => {
+    setPage(page);
+    loadUsers(page);
   }
 
   const downloadUsers = () => {
@@ -140,7 +167,7 @@ const Users = (): JSX.Element => {
     setUsers(users.map((user) => ({ ...user, checked })))
 
   const createUserCallback = (response: Response) => {
-    if (response.ok) loadUsers()
+    if (response.ok) loadUsers(page)
   }
 
   const deleteSelected = async () => {
@@ -245,6 +272,7 @@ const Users = (): JSX.Element => {
           ))}
         </Table.Body>
       </Table>
+    
     </>
   )
 }

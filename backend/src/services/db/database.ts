@@ -17,7 +17,6 @@ export default abstract class Database {
     TableName: string,
     query?: ScanOptions,
     page?: number,
-    lastStartKey?: DocumentClient.Key
   ): Promise<Item[]>
 
   abstract get(TableName: string, Key: Key): Promise<Item>
@@ -27,4 +26,6 @@ export default abstract class Database {
   abstract update(TableName: string, Key: Key, Item: Item): Promise<Item>
 
   abstract delete(TableName: string, Key: Key): Promise<void>
+  
+  //abstract count(TableName: string, query?: ScanOptions): Promise<Item[]>
 }
