@@ -72,14 +72,13 @@ const Users = (): JSX.Element => {
   }
   */
   const loadUsers = async (page: number) => {
-    const body = new URLSearchParams()
-    body.append('page', page.toString())
+    
     try {
       const response = await fetch(`${config.API_URL}/users`, {
         headers: {
           Authorization: `Bearer ${localStorage.accessToken}`
         },
-        body
+        body: JSON.stringify(page),
       })
       if (isMounted) {
         const data = Object.values(await response.json()) as UserItem[]
@@ -272,6 +271,7 @@ const Users = (): JSX.Element => {
           ))}
         </Table.Body>
       </Table>
+      <Pagination defaultActivePage={page} totalPages={numberOfPages} onPageChange={((_event, data) => handlePageChange(data.activePage as number))} />
     </>
   )
 }
