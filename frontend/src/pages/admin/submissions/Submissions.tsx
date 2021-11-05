@@ -48,8 +48,8 @@ const Submissions = (): JSX.Element => {
 
   useEffect(() => {
     loadSubmissions(page).then(() => setLoading(false))
-    //socket?.on('new_submission', loadSubmissions(page))
-    //socket?.on('update_submission', loadSubmissions(page))
+    socket?.on('new_submission', () => loadSubmissions(page))
+    socket?.on('update_submission', () => loadSubmissions(page))
     return () => setMounted(false)
   }, [])
 
@@ -68,7 +68,6 @@ const Submissions = (): JSX.Element => {
     })
     const submissions = Object.values(await response.json()) as SubmissionItem[]
 setSubmissions(submissions.map((submission) => ({ ...submission, checked: false })))
-   
   }
 
   const onReleaseChange = () => setShowReleased(!showReleased)

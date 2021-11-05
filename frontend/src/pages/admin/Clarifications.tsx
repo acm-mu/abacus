@@ -42,8 +42,6 @@ const Clarifications = (): JSX.Element => {
     if (response.ok) {
       const clarifications = Object.values(await response.json()) as ClarificationItem[]
 
-      if (!isMounted) return
-
       setClarifications(
         clarifications
           .map((clarification) => ({ ...clarification, checked: false }))
