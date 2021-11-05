@@ -47,24 +47,28 @@ const Submissions = (): JSX.Element => {
   }
 
   useEffect(() => {
-    loadSubmissions().then(() => setLoading(false))
-    socket?.on('new_submission', loadSubmissions)
-    socket?.on('update_submission', loadSubmissions)
+    loadSubmissions(page).then(() => setLoading(false))
+    //socket?.on('new_submission', loadSubmissions(page))
+    //socket?.on('update_submission', loadSubmissions(page))
     return () => setMounted(false)
   }, [])
 
-  const loadSubmissions = async () => {
-    const response = await fetch(`${config.API_URL}/submissions`, {
+
+  const handlePageChange = async (page: number) => {
+    setPage(page)
+    loadSubmissions(page)
+  }
+
+  const loadSubmissions = async (page: number) => {
+    const response = await fetch(`${config.API_URL}/submissions?page=${page}`, {
       headers: {
-        Authorization: `Bearer ${localStorage.accessToken}`
+       'Authorization': `Bearer ${localStorage.accessToken}`,
+      'Content-Type': 'application/json'
       },
-      body: JSON.stringify(page),
     })
     const submissions = Object.values(await response.json()) as SubmissionItem[]
-
-    if (!isMounted) return
-
-    setSubmissions(submissions.map((submission) => ({ ...submission, checked: false })))
+setSubmissions(submissions.map((submission) => ({ ...submission, checked: false })))
+   
   }
 
   const onReleaseChange = () => setShowReleased(!showReleased)
@@ -83,6 +87,7 @@ const Submissions = (): JSX.Element => {
           : submission
       )
     )
+    
 
   const deleteSelected = async () => {
     setDeleting(true)
@@ -98,7 +103,7 @@ const Submissions = (): JSX.Element => {
       body: JSON.stringify({ sid: submissionsToDelete })
     })
     if (response.ok) {
-      loadSubmissions()
+      loadSubmissions(page)
     }
     setDeleting(false)
   }

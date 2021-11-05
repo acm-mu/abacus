@@ -64,13 +64,14 @@ const hasAccessTo = ({ type, division, uid }: any, user?: User) => {
 }
 
 export const getClarifications = async (req: Request, res: Response) => {
-  const { page } = JSON.parse(req.body);
+  const page = req.query.page;
+   const newPage = page ? parseInt(page as string) : undefined
+   console.log('page',newPage)
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })
     return
   }
-  const newPage = page ? page  : null;
   const query = matchedData(req)
   const users = transpose(await contest.get_users(), 'uid') as Record<string, User>
 

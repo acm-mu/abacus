@@ -35,10 +35,9 @@ const Clarifications = (): JSX.Element => {
   const onFilterChange = (event: React.FormEvent<HTMLInputElement>, { checked }: CheckboxProps) =>
     setShowClosed(checked || false)
 
-  const loadClarifications = async () => {
-    const response = await fetch(`${config.API_URL}/clarifications`, {
-      headers: { Authorization: `Bearer ${localStorage.accessToken}` },
-       body: JSON.stringify(page),
+  const loadClarifications = async (page: number) => {
+    const response = await fetch(`${config.API_URL}/clarifications?page=${page}`, {
+      headers: { Authorization: `Bearer ${localStorage.accessToken}`, 'Content-Type': 'application/json' },
     })
     if (response.ok) {
       const clarifications = Object.values(await response.json()) as ClarificationItem[]
@@ -75,6 +74,10 @@ const Clarifications = (): JSX.Element => {
   const checkAll = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) =>
     setClarifications(clarifications.map((clarification) => ({ ...clarification, checked })))
 
+    const handlePageChange = async (page: number) => {
+    setPage(page)
+    loadClarifications(page)
+  }
   const deleteSelected = async () => {
     setDeleting(true)
     const clarificationsToDelete = clarifications
@@ -89,16 +92,17 @@ const Clarifications = (): JSX.Element => {
       body: JSON.stringify({ cid: clarificationsToDelete })
     })
     setDeleting(false)
-    loadClarifications()
+    loadClarifications(page)
   }
 
   useEffect(() => {
-    loadClarifications()
+    loadClarifications(page)
     return () => {
       setMounted(false)
     }
   }, [])
 
+  // <ClarificationModal trigger={<Button content="Create Clarification" />} callback={loadClarifications} />
   if (isLoading) return <PageLoading />
 
   return (
@@ -106,8 +110,6 @@ const Clarifications = (): JSX.Element => {
       <Helmet>
         <title>Abacus | Admin Clarifications</title>
       </Helmet>
-
-      <ClarificationModal trigger={<Button content="Create Clarification" />} callback={loadClarifications} />
       {clarifications.filter((clarification) => clarification.checked).length ? (
         <Button
           content="Delete Selected"

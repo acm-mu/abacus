@@ -22,8 +22,8 @@ export default class MongoDB extends Database {
   }
 
   scan(TableName: string, query?: ScanOptions, page?: number): Promise<Item[]> {
-    const pageSize = 25
-    const skip = page ? (page - 1) * 25 : null
+    const pageSize = 5
+    const skip = page ? (page - 1) * 5 : null
     return new Promise(async (resolve, reject) => {
       await this.db
         .collection(TableName)

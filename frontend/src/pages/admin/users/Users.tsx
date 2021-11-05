@@ -51,7 +51,7 @@ const Users = (): JSX.Element => {
     return () => {
       setMounted(false)
     }
-  }, [])
+  }, [page])
 
   /*
   const findNumberOfUsers = async () => {
@@ -74,28 +74,25 @@ const Users = (): JSX.Element => {
   const loadUsers = async (page: number) => {
     
     try {
-      const response = await fetch(`${config.API_URL}/users`, {
+      const response = await fetch(`${config.API_URL}/users?page=${page}`, {
         headers: {
-          Authorization: `Bearer ${localStorage.accessToken}`
+          'Authorization': `Bearer ${localStorage.accessToken}`,
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(page),
       })
-      if (isMounted) {
         const data = Object.values(await response.json()) as UserItem[]
         sort(
           'username',
           data.map((user) => ({ ...user, checked: false }))
         )
         setLoading(false)
-      }
     } catch (err) {
       setError(err as string)
     }
   }
 
-  const handlePageChange = async (page: number) => {
-    setPage(page)
-    loadUsers(page)
+  const handlePageChange = async (newPage: number) => {
+    setPage(newPage)
   }
 
   const downloadUsers = () => {
@@ -271,7 +268,7 @@ const Users = (): JSX.Element => {
           ))}
         </Table.Body>
       </Table>
-      <Pagination defaultActivePage={page} totalPages={numberOfPages} onPageChange={((_event, data) => handlePageChange(data.activePage as number))} />
+      <Pagination defaultActivePage={page} totalPages={numberOfPages} onPageChange={((event, data) => handlePageChange(data.activePage as number))} />
     </>
   )
 }

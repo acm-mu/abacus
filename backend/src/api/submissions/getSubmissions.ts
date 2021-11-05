@@ -91,14 +91,16 @@ const showToUser = (user: User | undefined, problem: Problem, settings: Settings
 }
 
 export const getSubmissions = async (req: Request, res: Response) => {
-   const { page } = JSON.parse(req.body)
+  const page = req.query.page;
+  const newPage = page ? parseInt(page as string) : undefined
+  console.log('page', newPage);
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })
     return
   }
   //if the page number isn't included in the request, make it null
-  const newPage = page ? page  : null;
+  //const newPage = page ? page  : null;
   const problems = transpose(
     await contest.get_problems({}, undefined, ['pid', 'division', 'id', 'name', 'max_points', 'capped_points', 'practice']),
     'pid'

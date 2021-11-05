@@ -75,7 +75,9 @@ export const getUserCount = async (req: Request, res: Response) => {
 */
 
 export const getUsers = async (req: Request, res: Response) => {
-  const { page } = JSON.parse(req.body)
+  
+  const page = req.query.page
+  console.log("page",page)
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })
@@ -83,7 +85,7 @@ export const getUsers = async (req: Request, res: Response) => {
   }
   const params = matchedData(req)
 
-  const newPage = page ? page  : null;
+  //const newPage = page ? page  : null;
   if (req.user?.role == 'team') params.uid = req.user?.uid
   if (req.user?.role == 'judge') {
     params.role = 'team'
@@ -91,6 +93,7 @@ export const getUsers = async (req: Request, res: Response) => {
   }
 
   try {
+    const newPage = page ? parseInt(page as string) : undefined
     const users = await contest.get_users(params, newPage)
     users?.map((user: any) => {
       const { password, ...returnUser } = user

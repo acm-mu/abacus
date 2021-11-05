@@ -1,4 +1,3 @@
-import { DocumentClient } from 'aws-sdk/clients/dynamodb'
 export type Item = Record<string, any>
 export type Key = Record<string, string>
 export type ScanOptions = {
