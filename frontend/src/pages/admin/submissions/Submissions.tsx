@@ -51,12 +51,11 @@ const Submissions = (): JSX.Element => {
     socket?.on('new_submission', () => loadSubmissions(page))
     socket?.on('update_submission', () => loadSubmissions(page))
     return () => setMounted(false)
-  }, [])
+  }, [page])
 
 
   const handlePageChange = async (page: number) => {
     setPage(page)
-    loadSubmissions(page)
   }
 
   const loadSubmissions = async (page: number) => {

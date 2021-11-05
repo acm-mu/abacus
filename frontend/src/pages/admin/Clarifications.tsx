@@ -74,7 +74,6 @@ const Clarifications = (): JSX.Element => {
 
     const handlePageChange = async (page: number) => {
     setPage(page)
-    loadClarifications(page)
   }
   const deleteSelected = async () => {
     setDeleting(true)
@@ -98,7 +97,7 @@ const Clarifications = (): JSX.Element => {
     return () => {
       setMounted(false)
     }
-  }, [])
+  }, [page])
 
   // <ClarificationModal trigger={<Button content="Create Clarification" />} callback={loadClarifications} />
   if (isLoading) return <PageLoading />
