@@ -57,7 +57,7 @@ const Clarifications = (): JSX.Element => {
 
   useEffect(() => {
     loadClarifications()
-  }, [page])
+  }, [])
 
   if (!user || user.role === 'proctor') return <Unauthorized />
 
