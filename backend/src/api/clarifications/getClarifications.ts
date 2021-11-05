@@ -65,6 +65,7 @@ const hasAccessTo = ({ type, division, uid }: any, user?: User) => {
 
 export const getClarifications = async (req: Request, res: Response) => {
   const page = req.query.page;
+  //page comes in as string due to being a query
    const newPage = page ? parseInt(page as string) : undefined
    console.log('page',newPage)
   const errors = validationResult(req).array()

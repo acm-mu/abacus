@@ -93,6 +93,7 @@ export const getUsers = async (req: Request, res: Response) => {
   }
 
   try {
+    //page comes in as string due to being a query
     const newPage = page ? parseInt(page as string) : undefined
     const users = await contest.get_users(params, newPage)
     users?.map((user: any) => {

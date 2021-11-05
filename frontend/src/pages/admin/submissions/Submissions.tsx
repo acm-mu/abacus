@@ -58,14 +58,19 @@ const Submissions = (): JSX.Element => {
     setPage(page)
   }
 
+   /*
+  @param page - page to query when paginating
+  updates the new page of submissions
+  */
   const loadSubmissions = async (page: number) => {
+    //include page as query, so that API can fetch it.
     const response = await fetch(`${config.API_URL}/submissions?page=${page}`, {
       headers: {
        'Authorization': `Bearer ${localStorage.accessToken}`,
       'Content-Type': 'application/json'
       },
     })
-    const submissions = Object.values(await response.json()) as SubmissionItem[]
+  const submissions = Object.values(await response.json()) as SubmissionItem[]
 setSubmissions(submissions.map((submission) => ({ ...submission, checked: false })))
   }
 

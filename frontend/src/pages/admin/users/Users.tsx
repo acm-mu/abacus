@@ -52,7 +52,7 @@ const Users = (): JSX.Element => {
       setMounted(false)
     }
   }, [page])
-
+//TODO: figure out how to find number of pages.
   /*
   const findNumberOfUsers = async () => {
      try {
@@ -71,21 +71,27 @@ const Users = (): JSX.Element => {
     }
   }
   */
+
+   /*
+  @param page - page to query when paginating
+  updates the new page of users.
+  */
   const loadUsers = async (page: number) => {
     
     try {
+      //include page as query, so that API can fetch it.
       const response = await fetch(`${config.API_URL}/users?page=${page}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.accessToken}`,
           'Content-Type': 'application/json'
         },
       })
-        const data = Object.values(await response.json()) as UserItem[]
-        sort(
+      const data = Object.values(await response.json()) as UserItem[]
+      sort(
           'username',
           data.map((user) => ({ ...user, checked: false }))
         )
-        setLoading(false)
+      setLoading(false)
     } catch (err) {
       setError(err as string)
     }

@@ -36,6 +36,7 @@ const Clarifications = (): JSX.Element => {
     setShowClosed(checked || false)
 
   const loadClarifications = async (page: number) => {
+    //include page as query, so that API can fetch it.
     const response = await fetch(`${config.API_URL}/clarifications?page=${page}`, {
       headers: { Authorization: `Bearer ${localStorage.accessToken}`, 'Content-Type': 'application/json' },
     })

@@ -92,6 +92,7 @@ const showToUser = (user: User | undefined, problem: Problem, settings: Settings
 
 export const getSubmissions = async (req: Request, res: Response) => {
   const page = req.query.page;
+  //page comes in as string due to being a query
   const newPage = page ? parseInt(page as string) : undefined
   console.log('page', newPage);
   const errors = validationResult(req).array()
