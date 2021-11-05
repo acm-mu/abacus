@@ -38,7 +38,7 @@ const Clarifications = (): JSX.Element => {
   const loadClarifications = async (page: number) => {
     //include page as query, so that API can fetch it.
     const response = await fetch(`${config.API_URL}/clarifications?page=${page}`, {
-      headers: { Authorization: `Bearer ${localStorage.accessToken}`, 'Content-Type': 'application/json' },
+      headers: { Authorization: `Bearer ${localStorage.accessToken}`, 'Content-Type': 'application/json' }
     })
     if (response.ok) {
       const clarifications = Object.values(await response.json()) as ClarificationItem[]
@@ -73,7 +73,7 @@ const Clarifications = (): JSX.Element => {
   const checkAll = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) =>
     setClarifications(clarifications.map((clarification) => ({ ...clarification, checked })))
 
-    const handlePageChange = async (page: number) => {
+  const handlePageChange = async (page: number) => {
     setPage(page)
   }
   const deleteSelected = async () => {
@@ -201,7 +201,11 @@ const Clarifications = (): JSX.Element => {
             )}
           </Table.Body>
         </Table>
-        <Pagination defaultActivePage={page} totalPages={numberOfPages} onPageChange={((_event, data) => handlePageChange(data.activePage as number))} />
+        <Pagination
+          defaultActivePage={page}
+          totalPages={numberOfPages}
+          onPageChange={(_event, data) => handlePageChange(data.activePage as number)}
+        />
       </Block>
     </>
   )

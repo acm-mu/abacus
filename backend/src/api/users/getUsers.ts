@@ -75,9 +75,8 @@ export const getUserCount = async (req: Request, res: Response) => {
 */
 
 export const getUsers = async (req: Request, res: Response) => {
-  
   const page = req.query.page
-  console.log("page",page)
+  console.log('page', page)
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })

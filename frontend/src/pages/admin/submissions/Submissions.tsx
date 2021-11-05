@@ -53,12 +53,11 @@ const Submissions = (): JSX.Element => {
     return () => setMounted(false)
   }, [page])
 
-
   const handlePageChange = async (page: number) => {
     setPage(page)
   }
 
-   /*
+  /*
   @param page - page to query when paginating
   updates the new page of submissions
   */
@@ -66,12 +65,12 @@ const Submissions = (): JSX.Element => {
     //include page as query, so that API can fetch it.
     const response = await fetch(`${config.API_URL}/submissions?page=${page}`, {
       headers: {
-       'Authorization': `Bearer ${localStorage.accessToken}`,
-      'Content-Type': 'application/json'
-      },
+        Authorization: `Bearer ${localStorage.accessToken}`,
+        'Content-Type': 'application/json'
+      }
     })
-  const submissions = Object.values(await response.json()) as SubmissionItem[]
-setSubmissions(submissions.map((submission) => ({ ...submission, checked: false })))
+    const submissions = Object.values(await response.json()) as SubmissionItem[]
+    setSubmissions(submissions.map((submission) => ({ ...submission, checked: false })))
   }
 
   const onReleaseChange = () => setShowReleased(!showReleased)
@@ -90,7 +89,6 @@ setSubmissions(submissions.map((submission) => ({ ...submission, checked: false 
           : submission
       )
     )
-    
 
   const deleteSelected = async () => {
     setDeleting(true)
@@ -226,7 +224,11 @@ setSubmissions(submissions.map((submission) => ({ ...submission, checked: false 
             )}
           </Table.Body>
         </Table>
-        <Pagination defaultActivePage={page} totalPages={numberOfPages} onPageChange={((_event, data) => handlePageChange(data.activePage as number))} />
+        <Pagination
+          defaultActivePage={page}
+          totalPages={numberOfPages}
+          onPageChange={(_event, data) => handlePageChange(data.activePage as number)}
+        />
       </Block>
     </>
   )

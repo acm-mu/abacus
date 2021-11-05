@@ -91,10 +91,10 @@ const showToUser = (user: User | undefined, problem: Problem, settings: Settings
 }
 
 export const getSubmissions = async (req: Request, res: Response) => {
-  const page = req.query.page;
+  const page = req.query.page
   //page comes in as string due to being a query
   const newPage = page ? parseInt(page as string) : undefined
-  console.log('page', newPage);
+  console.log('page', newPage)
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })
@@ -103,7 +103,15 @@ export const getSubmissions = async (req: Request, res: Response) => {
   //if the page number isn't included in the request, make it null
   //const newPage = page ? page  : null;
   const problems = transpose(
-    await contest.get_problems({}, undefined, ['pid', 'division', 'id', 'name', 'max_points', 'capped_points', 'practice']),
+    await contest.get_problems({}, undefined, [
+      'pid',
+      'division',
+      'id',
+      'name',
+      'max_points',
+      'capped_points',
+      'practice'
+    ]),
     'pid'
   )
   const users = transpose(await contest.get_users(), 'uid') as unknown as User[]
