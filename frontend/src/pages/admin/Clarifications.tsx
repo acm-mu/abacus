@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import { Block, DivisionLabel, PageLoading } from 'components'
-import { Button, Checkbox, CheckboxProps, Label, Table } from 'semantic-ui-react'
+import { Button, Checkbox, CheckboxProps, Label, Pagination, Table } from 'semantic-ui-react'
 import config from 'environment'
 import { Clarification } from 'abacus'
 import { Link } from 'react-router-dom'
@@ -25,6 +25,8 @@ const Clarifications = (): JSX.Element => {
   const [isDeleting, setDeleting] = useState(false)
   const [clarifications, setClarifications] = useState<ClarificationItem[]>([])
   const [showClosed, setShowClosed] = useState(false)
+  const [page, setPage] = useState<number>(1)
+  const [numberOfPages, setNumberOfPages] = useState<number>(4)
   const [{ column, direction }, setSortConfig] = useState<SortConfig>({
     column: 'date',
     direction: 'ascending'
@@ -35,7 +37,8 @@ const Clarifications = (): JSX.Element => {
 
   const loadClarifications = async () => {
     const response = await fetch(`${config.API_URL}/clarifications`, {
-      headers: { Authorization: `Bearer ${localStorage.accessToken}` }
+      headers: { Authorization: `Bearer ${localStorage.accessToken}` },
+       body: JSON.stringify(page),
     })
     if (response.ok) {
       const clarifications = Object.values(await response.json()) as ClarificationItem[]
@@ -198,6 +201,7 @@ const Clarifications = (): JSX.Element => {
             )}
           </Table.Body>
         </Table>
+        <Pagination defaultActivePage={page} totalPages={numberOfPages} onPageChange={((_event, data) => handlePageChange(data.activePage as number))} />
       </Block>
     </>
   )

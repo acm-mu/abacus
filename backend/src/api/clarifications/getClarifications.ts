@@ -64,17 +64,18 @@ const hasAccessTo = ({ type, division, uid }: any, user?: User) => {
 }
 
 export const getClarifications = async (req: Request, res: Response) => {
+  const { page } = JSON.parse(req.body);
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })
     return
   }
-  const page = req.body.page ? req.body.page : null
+  const newPage = page ? page  : null;
   const query = matchedData(req)
   const users = transpose(await contest.get_users(), 'uid') as Record<string, User>
 
   try {
-    let clarifications = await contest.get_clarifications({ args: {}, page: page })
+    let clarifications = await contest.get_clarifications({ args: {}, page: newPage })
     if (clarifications.length == 0) {
       res.sendStatus(404)
       return

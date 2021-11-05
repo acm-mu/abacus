@@ -91,15 +91,16 @@ const showToUser = (user: User | undefined, problem: Problem, settings: Settings
 }
 
 export const getSubmissions = async (req: Request, res: Response) => {
+   const { page } = JSON.parse(req.body)
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })
     return
   }
   //if the page number isn't included in the request, make it null
-  const page = req.body.page ? req.body.page : null
+  const newPage = page ? page  : null;
   const problems = transpose(
-    await contest.get_problems({}, page, ['pid', 'division', 'id', 'name', 'max_points', 'capped_points', 'practice']),
+    await contest.get_problems({}, undefined, ['pid', 'division', 'id', 'name', 'max_points', 'capped_points', 'practice']),
     'pid'
   )
   const users = transpose(await contest.get_users(), 'uid') as unknown as User[]
@@ -115,7 +116,7 @@ export const getSubmissions = async (req: Request, res: Response) => {
       item.tid = req.user.uid
     }
 
-    let submissions = (await contest.get_submissions({ args: item, page: page })) as any[]
+    let submissions = (await contest.get_submissions({ args: item, page: newPage })) as any[]
 
     submissions = submissions?.map((submission: any) => {
       submission.problem = problems[submission.pid]

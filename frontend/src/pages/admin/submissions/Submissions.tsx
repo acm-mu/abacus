@@ -1,6 +1,6 @@
 import { Submission } from 'abacus'
 import React, { ChangeEvent, useState, useEffect, useMemo, useContext } from 'react'
-import { Button, Checkbox, Label, Menu, MenuItemProps, Table } from 'semantic-ui-react'
+import { Button, Checkbox, Label, Menu, MenuItemProps, Pagination, Table } from 'semantic-ui-react'
 import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
 import config from 'environment'
@@ -24,6 +24,8 @@ const Submissions = (): JSX.Element => {
   const [submissions, setSubmissions] = useState<SubmissionItem[]>([])
   const [isMounted, setMounted] = useState(true)
   const [isDeleting, setDeleting] = useState(false)
+  const [page, setPage] = useState<number>(1)
+  const [numberOfPages, setNumberOfPages] = useState<number>(4)
   const [showReleased, setShowReleased] = useState(false)
   const [activeDivision, setActiveDivision] = useState('blue')
 
@@ -55,7 +57,8 @@ const Submissions = (): JSX.Element => {
     const response = await fetch(`${config.API_URL}/submissions`, {
       headers: {
         Authorization: `Bearer ${localStorage.accessToken}`
-      }
+      },
+      body: JSON.stringify(page),
     })
     const submissions = Object.values(await response.json()) as SubmissionItem[]
 
@@ -215,6 +218,7 @@ const Submissions = (): JSX.Element => {
             )}
           </Table.Body>
         </Table>
+        <Pagination defaultActivePage={page} totalPages={numberOfPages} onPageChange={((_event, data) => handlePageChange(data.activePage as number))} />
       </Block>
     </>
   )
