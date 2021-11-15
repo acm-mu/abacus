@@ -39,6 +39,7 @@ const Clarifications = (): JSX.Element => {
   updates the new page of clarifications
   */
   const loadClarifications = async (page: number) => {
+    const getTableSize = async () => {
     const tableSizeRes = await fetch(`${config.API_URL}/tablesize?tablename=clarification`, {
         headers: {
           'Authorization': `Bearer ${localStorage.accessToken}`,
@@ -51,24 +52,33 @@ const Clarifications = (): JSX.Element => {
       
       setNumberOfPages(Math.ceil(tableSize))
       if(tableSize < numberOfPages) {
-        setPage(numberOfPages);
-        
+        setPage(numberOfPages); 
       }
+    }
+     if(clarifications.length !== 0) {
+    getTableSize();
+    }
     //include page as query, so that API can fetch it.
     const response = await fetch(`${config.API_URL}/clarifications?page=${page}`, {
       headers: { Authorization: `Bearer ${localStorage.accessToken}`, 'Content-Type': 'application/json' },
     })
     if (response.ok) {
-      const clarifications = Object.values(await response.json()) as ClarificationItem[]
-
+      const newClarifications = Object.values(await response.json()) as ClarificationItem[]
+if(clarifications.length === 0 && newClarifications.length > 0)  {
+  getTableSize();
+  }
+  else if(clarifications.length === 0 && newClarifications.length === 0) {
+    setNumberOfPages(0);
+  }
       setClarifications(
-        clarifications
+        newClarifications
           .map((clarification) => ({ ...clarification, checked: false }))
           .sort((c1, c2) => c2.date - c1.date)
       )
     } else {
       setClarifications([])
     }
+    
     setLoading(false)
   }
 

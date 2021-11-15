@@ -63,9 +63,8 @@ const Submissions = (): JSX.Element => {
   updates the new page of submissions
   */
   const loadSubmissions = async (page: number) => {
-
-    try {
-     const tableSizeRes = await fetch(`${config.API_URL}/tablesize?tablename=submission`, {
+    const getTableSize = async () => {
+       const tableSizeRes = await fetch(`${config.API_URL}/tablesize?tablename=submission`, {
         headers: {
           'Authorization': `Bearer ${localStorage.accessToken}`,
           'Content-Type': 'application/json'
@@ -79,8 +78,8 @@ const Submissions = (): JSX.Element => {
         setPage(numberOfPages);
       }
     }
-    catch(err) {
-      console.log("error", err);
+    if(submissions.length !== 0) {
+    getTableSize();
     }
     //include page as query, so that API can fetch it.
     const response = await fetch(`${config.API_URL}/submissions?page=${page}`, {
@@ -89,8 +88,14 @@ const Submissions = (): JSX.Element => {
       'Content-Type': 'application/json'
       },
     })
-  const submissions = Object.values(await response.json()) as SubmissionItem[]
-setSubmissions(submissions.map((submission) => ({ ...submission, checked: false })))
+  const newSubmissions = Object.values(await response.json()) as SubmissionItem[]
+  if(submissions.length === 0 && newSubmissions.length > 0)  {
+  getTableSize();
+  }
+  else if(newSubmissions.length === 0 && submissions.length === 0) {
+    setNumberOfPages(0);
+  }
+setSubmissions(newSubmissions.map((submission) => ({ ...submission, checked: false })))
   }
 
   const onReleaseChange = () => setShowReleased(!showReleased)
