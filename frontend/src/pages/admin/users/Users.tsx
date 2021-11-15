@@ -55,51 +55,47 @@ const Users = (): JSX.Element => {
     }
   }, [page])
 
-
-   /*
+  /*
   @param page - page to query when paginating
   updates the new page of users.
   */
   const loadUsers = async (page: number) => {
-    
     try {
-  const getTableSize = async () => {
-      const tableSizeRes = await fetch(`${config.API_URL}/tablesize?tablename=user`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.accessToken}`,
-          'Content-Type': 'application/json'
-        },
-      })
-      const numberOfPages = await tableSizeRes.json();
-      const { tableSize } = numberOfPages
-      
-      setNumberOfPages(Math.ceil(tableSize))
-      if(tableSize < numberOfPages) {
-        setPage(numberOfPages);
-        
+      const getTableSize = async () => {
+        const tableSizeRes = await fetch(`${config.API_URL}/tablesize?tablename=user`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.accessToken}`,
+            'Content-Type': 'application/json'
+          }
+        })
+        const numberOfPages = await tableSizeRes.json()
+        const { tableSize } = numberOfPages
+
+        setNumberOfPages(Math.ceil(tableSize))
+        if (tableSize < numberOfPages) {
+          setPage(numberOfPages)
+        }
       }
-    }
-    if(users.length !== 0) {
-    getTableSize();
-    }
+      if (users.length !== 0) {
+        getTableSize()
+      }
       //include page as query, so that API can fetch it.
       const response = await fetch(`${config.API_URL}/users?page=${page}`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.accessToken}`,
+          Authorization: `Bearer ${localStorage.accessToken}`,
           'Content-Type': 'application/json'
-        },
+        }
       })
       const data = Object.values(await response.json()) as UserItem[]
-      if(users.length === 0 && data.length > 0)  {
-  getTableSize();
-  }
-  else if(users.length === 0 && data.length === 0) {
-    setNumberOfPages(0);
-  }
+      if (users.length === 0 && data.length > 0) {
+        getTableSize()
+      } else if (users.length === 0 && data.length === 0) {
+        setNumberOfPages(0)
+      }
       sort(
-          'username',
-          data.map((user) => ({ ...user, checked: false }))
-        )
+        'username',
+        data.map((user) => ({ ...user, checked: false }))
+      )
       setLoading(false)
     } catch (err) {
       setError(err as string)
@@ -283,7 +279,11 @@ const Users = (): JSX.Element => {
           ))}
         </Table.Body>
       </Table>
-      <Pagination defaultActivePage={page} totalPages={numberOfPages} onPageChange={((event, data) => handlePageChange(data.activePage as number))} />
+      <Pagination
+        defaultActivePage={page}
+        totalPages={numberOfPages}
+        onPageChange={(event, data) => handlePageChange(data.activePage as number)}
+      />
     </>
   )
 }

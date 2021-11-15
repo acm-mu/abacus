@@ -11,8 +11,8 @@ export default class DynamoDB extends Database {
     this.db = new DocumentClient()
   }
 
-  count(TableName: string, query: ScanOptions ): Promise<number> { 
- return new Promise(async (resolve, reject) => {
+  count(TableName: string, query: ScanOptions): Promise<number> {
+    return new Promise(async (resolve, reject) => {
       // might change exclusivestartkey below, so I disable prefer const
       // eslint-disable-next-line prefer-const
       let params: ScanInput = { TableName }
@@ -39,7 +39,7 @@ export default class DynamoDB extends Database {
       let Items
       try {
         do {
-          Items = await (await this.db.scan(params).promise())
+          Items = await await this.db.scan(params).promise()
           Items.Items?.forEach((Item) => scanResults.push(Item))
           params.ExclusiveStartKey = Items.LastEvaluatedKey
         } while (typeof Items.LastEvaluatedKey != 'undefined')

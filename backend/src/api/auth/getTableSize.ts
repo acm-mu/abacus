@@ -48,8 +48,7 @@ export const schema: Record<string, ParamSchema> = {
 }
 
 export const getTableSize = async (req: Request, res: Response) => {
-  
-  const tableName = req.query.tablename as string;
+  const tableName = req.query.tablename as string
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })
@@ -59,12 +58,12 @@ export const getTableSize = async (req: Request, res: Response) => {
 
   try {
     //makes call to db to get table size.
-    const tableSize = await contest.get_table_size(tableName,params);
+    const tableSize = await contest.get_table_size(tableName, params)
     //divides by the number of items per page.
-    
-    const pages = tableSize ? tableSize/5 : 0;
+
+    const pages = tableSize ? tableSize / 5 : 0
     //send response back.
-    res.send({tableSize: pages});
+    res.send({ tableSize: pages })
   } catch (err) {
     res.sendStatus(500)
   }

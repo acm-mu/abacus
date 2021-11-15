@@ -34,8 +34,8 @@ class ContestService {
   async delete_user(uid: string): Promise<void> {
     return this.db.delete('user', { uid })
   }
-/* gets the size of a given table */
-   async get_table_size(table: string, args?: any ): Promise<number> {
+  /* gets the size of a given table */
+  async get_table_size(table: string, args?: any): Promise<number> {
     return this.db.count(table, { args }) as Promise<number>
   }
 
@@ -50,7 +50,7 @@ class ContestService {
   }
 
   async get_clarifications(args?: Args, page?: number): Promise<Clarification[]> {
-    return this.db.scan('clarification', { args },page) as Promise<Clarification[]>
+    return this.db.scan('clarification', { args }, page) as Promise<Clarification[]>
   }
 
   async update_clarification(cid: string, item: Item): Promise<Clarification> {
@@ -84,17 +84,18 @@ class ContestService {
 
     const submissions = await this.get_submissions(args, page)
 
-    console.log("submission!", submissions);
-    return submissions ? submissions.map((sub) => {
-      return {
-        ...sub,
-        problem: problems[sub.pid],
-        team: users[sub.tid],
-        claimed: sub.claimed ? users[sub.claimed] : undefined,
-        flagged: sub.flagged ? users[sub.flagged] : undefined
-      }
-    })
-    : []
+    console.log('submission!', submissions)
+    return submissions
+      ? submissions.map((sub) => {
+          return {
+            ...sub,
+            problem: problems[sub.pid],
+            team: users[sub.tid],
+            claimed: sub.claimed ? users[sub.claimed] : undefined,
+            flagged: sub.flagged ? users[sub.flagged] : undefined
+          }
+        })
+      : []
   }
 
   async update_submission(sid: string, item: Item): Promise<Submission> {
@@ -115,7 +116,7 @@ class ContestService {
     return this.db.get('problem', { pid }) as Promise<Problem>
   }
 
-  async get_problems(args?: Args, columns?: string[],page?: number): Promise<Problem[]> {
+  async get_problems(args?: Args, columns?: string[], page?: number): Promise<Problem[]> {
     return this.db.scan('problem', { args, columns }, page) as Promise<Problem[]>
   }
 

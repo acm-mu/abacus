@@ -26,6 +26,6 @@ const auth = Router()
 
 auth.get('/auth', isAuthenticated, getAuth)
 auth.post('/auth', checkSchema(postSchema), postAuth)
-auth.get('/tablesize',isAuthenticated,getTableSize)
+auth.get('/tablesize', isAuthenticated, getTableSize)
 
 export default auth

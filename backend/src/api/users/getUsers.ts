@@ -103,8 +103,8 @@ export const schema: Record<string, ParamSchema> = {
  *         description: A server error occurred while trying to complete request.
  */
 export const getUsers = async (req: Request, res: Response): Promise<void> => {
-const page = req.query.page  
-const errors = validationResult(req).array()
+  const page = req.query.page
+  const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })
     return
@@ -119,19 +119,14 @@ const errors = validationResult(req).array()
   }
 
   try {
-     const newPage = page ? parseInt(page as string) : undefined
-     const users = await contest.get_users(params, undefined,newPage)
-     users?.map((user: any) => {
+    const newPage = page ? parseInt(page as string) : undefined
+    const users = await contest.get_users(params, undefined, newPage)
+    users?.map((user: any) => {
       const { password, ...returnUser } = user
       return returnUser
     })
-    console.log("users", users);
-    res.send(
-      transpose(
-       users,
-        'uid'
-      )
-    )
+    console.log('users', users)
+    res.send(transpose(users, 'uid'))
   } catch (err) {
     res.sendStatus(500)
   }

@@ -110,10 +110,10 @@ const hasAccessTo = ({ type, division, uid }: Clarification, user?: User) => {
  *         description: Could not authenticate user.
  */
 export const getClarifications = async (req: Request, res: Response): Promise<void> => {
-  const page = req.query.page;
+  const page = req.query.page
   //page comes in as string due to being a query
-   const newPage = page ? parseInt(page as string) : undefined  
-const errors = validationResult(req).array()
+  const newPage = page ? parseInt(page as string) : undefined
+  const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })
     return

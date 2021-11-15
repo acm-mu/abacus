@@ -29,7 +29,7 @@ export default class MongoDB extends Database {
       this.db
         .collection(TableName)
         .find(query?.args || {}, { projection: { _id: 0 } })
-         .skip(skip ? skip : 0)
+        .skip(skip ? skip : 0)
         .limit(page ? pageSize : 0)
         .toArray((err: any, data: any) => {
           if (err) {
@@ -42,19 +42,18 @@ export default class MongoDB extends Database {
   }
 
   count(TableName: string, query?: ScanOptions): Promise<number> {
-
     return new Promise(async (resolve, reject) => {
       await this.db
         .collection(TableName)
         .find(query?.args || {})
         .count((err: any, data: any) => {
-          if(err) {
+          if (err) {
             reject(err)
             return
           }
-          if(data) resolve(data)
+          if (data) resolve(data)
         })
-      })
+    })
   }
 
   /*count(TableName: string, query?: ScanOptions): Promise<Item[]> {

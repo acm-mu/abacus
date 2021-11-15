@@ -40,36 +40,35 @@ const Clarifications = (): JSX.Element => {
   */
   const loadClarifications = async (page: number) => {
     const getTableSize = async () => {
-    const tableSizeRes = await fetch(`${config.API_URL}/tablesize?tablename=clarification`, {
+      const tableSizeRes = await fetch(`${config.API_URL}/tablesize?tablename=clarification`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.accessToken}`,
+          Authorization: `Bearer ${localStorage.accessToken}`,
           'Content-Type': 'application/json'
-        },
+        }
       })
-      
-      const numberOfPages = await tableSizeRes.json();
+
+      const numberOfPages = await tableSizeRes.json()
       const { tableSize } = numberOfPages
-      
+
       setNumberOfPages(Math.ceil(tableSize))
-      if(tableSize < numberOfPages) {
-        setPage(numberOfPages); 
+      if (tableSize < numberOfPages) {
+        setPage(numberOfPages)
       }
     }
-     if(clarifications.length !== 0) {
-    getTableSize();
+    if (clarifications.length !== 0) {
+      getTableSize()
     }
     //include page as query, so that API can fetch it.
     const response = await fetch(`${config.API_URL}/clarifications?page=${page}`, {
-      headers: { Authorization: `Bearer ${localStorage.accessToken}`, 'Content-Type': 'application/json' },
+      headers: { Authorization: `Bearer ${localStorage.accessToken}`, 'Content-Type': 'application/json' }
     })
     if (response.ok) {
       const newClarifications = Object.values(await response.json()) as ClarificationItem[]
-if(clarifications.length === 0 && newClarifications.length > 0)  {
-  getTableSize();
-  }
-  else if(clarifications.length === 0 && newClarifications.length === 0) {
-    setNumberOfPages(0);
-  }
+      if (clarifications.length === 0 && newClarifications.length > 0) {
+        getTableSize()
+      } else if (clarifications.length === 0 && newClarifications.length === 0) {
+        setNumberOfPages(0)
+      }
       setClarifications(
         newClarifications
           .map((clarification) => ({ ...clarification, checked: false }))
@@ -78,7 +77,7 @@ if(clarifications.length === 0 && newClarifications.length > 0)  {
     } else {
       setClarifications([])
     }
-    
+
     setLoading(false)
   }
 
@@ -101,7 +100,7 @@ if(clarifications.length === 0 && newClarifications.length > 0)  {
   const checkAll = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) =>
     setClarifications(clarifications.map((clarification) => ({ ...clarification, checked })))
 
-    const handlePageChange = async (page: number) => {
+  const handlePageChange = async (page: number) => {
     setPage(page)
   }
   const deleteSelected = async () => {
@@ -229,7 +228,11 @@ if(clarifications.length === 0 && newClarifications.length > 0)  {
             )}
           </Table.Body>
         </Table>
-        <Pagination defaultActivePage={page} totalPages={numberOfPages} onPageChange={((_event, data) => handlePageChange(data.activePage as number))} />
+        <Pagination
+          defaultActivePage={page}
+          totalPages={numberOfPages}
+          onPageChange={(_event, data) => handlePageChange(data.activePage as number)}
+        />
       </Block>
     </>
   )

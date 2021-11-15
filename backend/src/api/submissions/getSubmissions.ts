@@ -161,10 +161,10 @@ const showToUser = (user: User | undefined, problem: Problem, settings: Settings
  *         description: A server error occurred while trying to complete request.
  */
 export const getSubmissions = async (req: Request, res: Response): Promise<void> => {
-const page = req.query.page;
+  const page = req.query.page
   //page comes in as string due to being a query
-  const newPage = page ? parseInt(page as string) : undefined 
-const errors = validationResult(req).array()
+  const newPage = page ? parseInt(page as string) : undefined
+  const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })
     return
@@ -182,23 +182,21 @@ const errors = validationResult(req).array()
     }
 
     let submissions = await contest.get_resolved_submissions(item, newPage)
-    console.log("got subs", submissions);
+    console.log('got subs', submissions)
     // Obfuscate submission details to teams if not yet released.
-    if(submissions !== []) {
-    submissions = submissions
-      .map((submission) => {
-        if (req.user?.role == 'team' && !submission.released) {
-          submission.status = 'pending'
-          submission.score = 0
-          submission.tests = submission.tests?.map((test: Test) => ({ ...test, result: '' }))
-        }
-        return submission
-      })
-      .filter((submission) => showToUser(req.user, submission.problem, settings))
+    if (submissions !== []) {
+      submissions = submissions
+        .map((submission) => {
+          if (req.user?.role == 'team' && !submission.released) {
+            submission.status = 'pending'
+            submission.score = 0
+            submission.tests = submission.tests?.map((test: Test) => ({ ...test, result: '' }))
+          }
+          return submission
+        })
+        .filter((submission) => showToUser(req.user, submission.problem, settings))
     }
-    submissions !== [] ?
-    res.send(transpose(submissions, 'sid'))
-    : res.send([])
+    submissions !== [] ? res.send(transpose(submissions, 'sid')) : res.send([])
   } catch (err) {
     console.error(err)
     res.sendStatus(500)
