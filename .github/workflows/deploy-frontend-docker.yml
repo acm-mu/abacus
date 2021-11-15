@@ -7,35 +7,30 @@ on:
       - 'frontend/**'
 
 jobs:
-  build-and-push-image:
+  push_to_registry:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-
+    name: Build and Push Docker image to Github Packages
     steps:
-      - name: Checkout repository
+      - name: Check out repo
         uses: actions/checkout@v2
-
-      - name: Log in to the Container registry
-        uses: docker/login-action@v1.10.0
+      - name: Login to GitHub registry
+        uses: docker/login-action@v1
         with:
-          registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v3.5.0
+          registry: ghcr.io
+      - name: Login to ghcr.io
+        uses: docker/login-action@v1
         with:
-          images: ghcr.io/acm-mu/abacus-frontend
-          tags: latest ${{ github.sha }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: ghcr.io
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v2.7.0
+      - name: Build and push image
+        uses: docker/build-push-action@v2
         with:
           context: frontend
           file: frontend/Dockerfile.prod
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          pull: true
+          tags: ghcr.io/acm-mu/abacus/frontend

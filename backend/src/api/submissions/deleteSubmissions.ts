@@ -11,7 +11,34 @@ export const schema: Record<string, ParamSchema> = {
   }
 }
 
-export const deleteSubmissions = async (req: Request, res: Response) => {
+/**
+ * @swagger
+ * /submissions:
+ *   delete:
+ *     summary: Deletes provided submissions.
+ *     description: Provided either a list of submission ids (sid) or a single sid, deletes them.
+ *     tags: [Submissions]
+ *     security:
+ *       - bearerAuth: [""]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               sid:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *     responses:
+ *       200:
+ *         description: Successfully completed request.
+ *       400:
+ *         description: Bad Request. Request does not match required schema.
+ *       500:
+ *         description: A server error has occurred while trying to complete request.
+ */
+export const deleteSubmissions = async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })

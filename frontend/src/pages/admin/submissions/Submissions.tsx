@@ -64,7 +64,8 @@ const Submissions = (): JSX.Element => {
   */
   const loadSubmissions = async (page: number) => {
 
-     const tableSizeRes = await fetch(`${config.API_URL}/tablesize?tablename=clarification`, {
+    try {
+     const tableSizeRes = await fetch(`${config.API_URL}/tablesize?tablename=submission`, {
         headers: {
           'Authorization': `Bearer ${localStorage.accessToken}`,
           'Content-Type': 'application/json'
@@ -72,13 +73,15 @@ const Submissions = (): JSX.Element => {
       })
       //table call response
       const numberOfPages = await tableSizeRes.json();
-      const { tableSize } = numberOfPages
-      
+      const { tableSize } = numberOfPages;
       setNumberOfPages(Math.ceil(tableSize))
       if(tableSize < numberOfPages) {
         setPage(numberOfPages);
-        
       }
+    }
+    catch(err) {
+      console.log("error", err);
+    }
     //include page as query, so that API can fetch it.
     const response = await fetch(`${config.API_URL}/submissions?page=${page}`, {
       headers: {

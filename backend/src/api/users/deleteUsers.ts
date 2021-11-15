@@ -44,7 +44,34 @@ const deleteClarificationsForUser = async (tid: string) => {
   }
 }
 
-export const deleteUsers = async (req: Request, res: Response) => {
+/**
+ * @swagger
+ * /users:
+ *   delete:
+ *     summary: Deletes provided users and all clarifications, submissions associated with users.
+ *     description: Provided either a list of user ids (uid) or a single uid, deletes them, and all their associated submissions/clarifications.
+ *     security:
+ *       - bearerAuth: [""]
+ *     tags: [Users]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               uid:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *     responses:
+ *       200:
+ *         description: Successfully completed request
+ *       400:
+ *         description: Bad Request. Request body does not match required schema.
+ *       500:
+ *         description: A server error occurred while trying to delete clarifications.
+ */
+export const deleteUsers = async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })

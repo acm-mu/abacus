@@ -6,6 +6,11 @@ import { downloadFiles, schema as downloadSchema } from './downloadFiles'
 import { getProblems, schema as getSchema } from './getProblems'
 import { postProblems, schema as postSchema } from './postProblems'
 import { putProblems, schema as putSchema } from './putProblems'
+/**
+ * @swagger
+ * tags:
+ *   name: Problems
+ */
 
 const problems = Router()
 

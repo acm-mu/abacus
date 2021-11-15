@@ -9,8 +9,33 @@ export const schema: Record<string, ParamSchema> = {
     errorMessage: 'cid is not supplied'
   }
 }
+/**
+ * @swagger
+ * /clarifications:
+ *   delete:
+ *     summary: Deletes provided clarifications and all child clarifications.
+ *     description: Provided either a list of clarification ids (cid) or a single cid, deletes them, and all their children.
+ *     security:
+ *       - bearerAuth: [""]
+ *     tags: [Clarifications]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               cid:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *     responses:
+ *       200:
+ *         description: Successfully completed request
+ *       500:
+ *         description: A server error occurred while trying to delete clarifications.
+ */
 
-export const deleteClarifications = async (req: Request, res: Response) => {
+export const deleteClarifications = async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })

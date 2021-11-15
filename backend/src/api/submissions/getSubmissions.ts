@@ -90,23 +90,85 @@ const showToUser = (user: User | undefined, problem: Problem, settings: Settings
   return false
 }
 
-export const getSubmissions = async (req: Request, res: Response) => {
-  const page = req.query.page;
+/**
+ * @swagger
+ * /submissions
+ *   get:
+ *     summary: Search for submissions with provided queries.
+ *     description: Returns list of submissions that match provided query.
+ *     tags: [Submissions]
+ *     security:
+ *       - bearerAuth: [""]
+ *     parameters:
+ *       - name: sid
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: division
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: language
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: pid
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: status
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: sub_no
+ *         in: query
+ *         schema:
+ *           type: integer
+ *       - name: tid
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: released
+ *         in: query
+ *         schema:
+ *           type: boolean
+ *       - name: flagged
+ *         in: query
+ *         schema:
+ *           type: boolean
+ *       - name: claimed
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: viewed
+ *         in: query
+ *         schema:
+ *           type: boolean
+ *     responses:
+ *       200:
+ *         description: List of submissions matching provided queries.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Submission'
+ *       400:
+ *         description: Could not complete request because request does not match required schema.
+ *       401:
+ *         description: Could not authenticate user.
+ *       500:
+ *         description: A server error occurred while trying to complete request.
+ */
+export const getSubmissions = async (req: Request, res: Response): Promise<void> => {
+const page = req.query.page;
   //page comes in as string due to being a query
-  const newPage = page ? parseInt(page as string) : undefined
-  console.log('page', newPage);
-  const errors = validationResult(req).array()
+  const newPage = page ? parseInt(page as string) : undefined 
+const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })
     return
   }
-  //if the page number isn't included in the request, make it null
-  //const newPage = page ? page  : null;
-  const problems = transpose(
-    await contest.get_problems({}, undefined, ['pid', 'division', 'id', 'name', 'max_points', 'capped_points', 'practice']),
-    'pid'
-  )
-  const users = transpose(await contest.get_users(), 'uid') as unknown as User[]
 
   const settings = await contest.get_settings()
 
@@ -119,46 +181,24 @@ export const getSubmissions = async (req: Request, res: Response) => {
       item.tid = req.user.uid
     }
 
-    let submissions = (await contest.get_submissions({ args: item, page: newPage })) as any[]
-
-    submissions = submissions?.map((submission: any) => {
-      submission.problem = problems[submission.pid]
-      const team = users[submission.tid]
-      submission.team = {
-        uid: team?.uid,
-        username: team?.username,
-        disabled: team.disabled,
-        display_name: team?.display_name,
-        division: team?.division
-      }
-      if (submission.claimed !== undefined) {
-        const claimee = users[submission.claimed]
-        submission.claimed = {
-          uid: claimee?.uid,
-          username: claimee?.username,
-          display_name: claimee?.display_name,
-          division: claimee?.division
+    let submissions = await contest.get_resolved_submissions(item, newPage)
+    console.log("got subs", submissions);
+    // Obfuscate submission details to teams if not yet released.
+    if(submissions !== []) {
+    submissions = submissions
+      .map((submission) => {
+        if (req.user?.role == 'team' && !submission.released) {
+          submission.status = 'pending'
+          submission.score = 0
+          submission.tests = submission.tests?.map((test: Test) => ({ ...test, result: '' }))
         }
-      }
-      if (submission.flagged !== undefined) {
-        const flagger = users[submission.flagged]
-        submission.flagged = {
-          uid: flagger?.uid,
-          username: flagger?.username,
-          display_name: flagger?.display_name
-        }
-      }
-      if (req.user?.role == 'team' && !submission.released) {
-        submission.status = 'pending'
-        submission.score = 0
-        submission.tests = submission.tests?.map((test: Test) => ({ ...test, result: '' }))
-      }
-      return submission
-    })
-
-    submissions = submissions?.filter((submission) => showToUser(req.user, submission.problem, settings))
-
+        return submission
+      })
+      .filter((submission) => showToUser(req.user, submission.problem, settings))
+    }
+    submissions !== [] ?
     res.send(transpose(submissions, 'sid'))
+    : res.send([])
   } catch (err) {
     console.error(err)
     res.sendStatus(500)

@@ -47,38 +47,64 @@ export const schema: Record<string, ParamSchema> = {
     errorMessage: 'String username is not supplied'
   }
 }
-/*
-export const getUserCount = async (req: Request, res: Response) => {
-  const errors = validationResult(req).array()
-  if (errors.length > 0) {
-    res.status(400).json({ message: errors[0].msg })
-    return
-  }
 
-  const params = matchedData(req)
-  if (req.user?.role == 'team') params.uid = req.user?.uid
-  if (req.user?.role == 'judge') {
-    params.role = 'team'
-    params.division = req.user.division
-  }
-  try {
-    const users = await contest.get_user_page_count(params)
-    users?.map((user: any) => {
-      const { password, ...returnUser } = user
-      return returnUser
-    })
-    res.send(transpose(users, 'uid'))
-  } catch (err) {
-    res.sendStatus(500)
-  }
-}
-*/
-
-export const getUsers = async (req: Request, res: Response) => {
-  
-  const page = req.query.page
-  console.log("page",page)
-  const errors = validationResult(req).array()
+/**
+ * @swagger
+ * /users:
+ *   get:
+ *     summary: Search for users with provided queries.
+ *     description: Returns list of users that match provided query.
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: [""]
+ *     parameters:
+ *       - name: uid
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: display_name
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: school
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: division
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: password
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: role
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: username
+ *         in: query
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: List of users matching provided queries.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Could not complete request because request does not match required schema.
+ *       401:
+ *         description: Could not authenticate user.
+ *       500:
+ *         description: A server error occurred while trying to complete request.
+ */
+export const getUsers = async (req: Request, res: Response): Promise<void> => {
+const page = req.query.page  
+const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })
     return
@@ -93,14 +119,19 @@ export const getUsers = async (req: Request, res: Response) => {
   }
 
   try {
-    //page comes in as string due to being a query
-    const newPage = page ? parseInt(page as string) : undefined
-    const users = await contest.get_users(params, newPage)
-    users?.map((user: any) => {
+     const newPage = page ? parseInt(page as string) : undefined
+     const users = await contest.get_users(params, undefined,newPage)
+     users?.map((user: any) => {
       const { password, ...returnUser } = user
       return returnUser
     })
-    res.send(transpose(users, 'uid'))
+    console.log("users", users);
+    res.send(
+      transpose(
+       users,
+        'uid'
+      )
+    )
   } catch (err) {
     res.sendStatus(500)
   }
