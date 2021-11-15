@@ -8,6 +8,8 @@ import { AppContext } from 'context'
 import CreateUser from './CreateUser'
 import { Helmet } from 'react-helmet'
 import { DivisionLabel, PageLoading, StatusMessage } from 'components'
+import { table } from 'console'
+import { number } from 'prop-types'
 
 interface UserItem extends User {
   checked: boolean
@@ -79,6 +81,21 @@ const Users = (): JSX.Element => {
   const loadUsers = async (page: number) => {
     
     try {
+
+      const tableSizeRes = await fetch(`${config.API_URL}/tablesize?tablename=user`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.accessToken}`,
+          'Content-Type': 'application/json'
+        },
+      })
+      const numberOfPages = await tableSizeRes.json();
+      const { tableSize } = numberOfPages
+      
+      setNumberOfPages(Math.ceil(tableSize))
+      if(tableSize < numberOfPages) {
+        setPage(numberOfPages);
+        
+      }
       //include page as query, so that API can fetch it.
       const response = await fetch(`${config.API_URL}/users?page=${page}`, {
         headers: {

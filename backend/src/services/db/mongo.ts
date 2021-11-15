@@ -40,6 +40,22 @@ export default class MongoDB extends Database {
     })
   }
 
+  count(TableName: string, query?: ScanOptions): Promise<number> {
+
+    return new Promise(async (resolve, reject) => {
+      await this.db
+        .collection(TableName)
+        .find(query?.args || {})
+        .count((err: any, data: any) => {
+          if(err) {
+            reject(err)
+            return
+          }
+          if(data) resolve(data)
+        })
+      })
+  }
+
   /*count(TableName: string, query?: ScanOptions): Promise<Item[]> {
     return new Promise(async (resolve, reject) => {
       await this.db

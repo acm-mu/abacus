@@ -3,10 +3,12 @@ import { checkSchema } from 'express-validator'
 import { postAuth, schema as postSchema } from './postAuth'
 import { getAuth } from './getAuth'
 import { isAuthenticated } from '../../abacus/authlib'
+import { getTableSize } from './getTableSize'
 
 const auth = Router()
 
 auth.get('/auth', isAuthenticated, getAuth)
 auth.post('/auth', checkSchema(postSchema), postAuth)
+auth.get('/tablesize',isAuthenticated,getTableSize)
 
 export default auth

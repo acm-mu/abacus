@@ -34,8 +34,26 @@ const Clarifications = (): JSX.Element => {
 
   const onFilterChange = (event: React.FormEvent<HTMLInputElement>, { checked }: CheckboxProps) =>
     setShowClosed(checked || false)
-
+  /*
+  @param page - page to query when paginating
+  updates the new page of clarifications
+  */
   const loadClarifications = async (page: number) => {
+    const tableSizeRes = await fetch(`${config.API_URL}/tablesize?tablename=clarification`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.accessToken}`,
+          'Content-Type': 'application/json'
+        },
+      })
+      
+      const numberOfPages = await tableSizeRes.json();
+      const { tableSize } = numberOfPages
+      
+      setNumberOfPages(Math.ceil(tableSize))
+      if(tableSize < numberOfPages) {
+        setPage(numberOfPages);
+        
+      }
     //include page as query, so that API can fetch it.
     const response = await fetch(`${config.API_URL}/clarifications?page=${page}`, {
       headers: { Authorization: `Bearer ${localStorage.accessToken}`, 'Content-Type': 'application/json' },
