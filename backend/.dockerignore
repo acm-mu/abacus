@@ -1,7 +1,7 @@
 node_modules
 dist
-.dockerignore
+.eslintrc.json
 Dockerfile
 Dockerfile.prod
 .prettierignore
-.eslintrc.json
+.dockerignore

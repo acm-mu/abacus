@@ -48,7 +48,61 @@ export const schema: Record<string, ParamSchema> = {
   }
 }
 
-export const getUsers = async (req: Request, res: Response) => {
+/**
+ * @swagger
+ * /users:
+ *   get:
+ *     summary: Search for users with provided queries.
+ *     description: Returns list of users that match provided query.
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: [""]
+ *     parameters:
+ *       - name: uid
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: display_name
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: school
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: division
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: password
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: role
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: username
+ *         in: query
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: List of users matching provided queries.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Could not complete request because request does not match required schema.
+ *       401:
+ *         description: Could not authenticate user.
+ *       500:
+ *         description: A server error occurred while trying to complete request.
+ */
+export const getUsers = async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })
@@ -64,11 +118,16 @@ export const getUsers = async (req: Request, res: Response) => {
 
   try {
     const users = await contest.get_users(params)
-    users?.map((user: any) => {
-      const { password, ...returnUser } = user
-      return returnUser
-    })
-    res.send(transpose(users, 'uid'))
+    res.send(
+      transpose(
+        users?.map((user) => {
+          const responseUser: Record<string, unknown> = user
+          delete responseUser.password
+          return responseUser
+        }),
+        'uid'
+      )
+    )
   } catch (err) {
     res.sendStatus(500)
   }

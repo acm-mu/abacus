@@ -60,7 +60,62 @@ const showToUser = (user: User | undefined, problem: Problem, settings: Settings
   return false
 }
 
-export const getProblems = async (req: Request, res: Response) => {
+/**
+ * @swagger
+ * /problems:
+ *   get:
+ *     summary: Search for problems with provided queries.
+ *     description: >-
+ *       Returns list of problems that match provided query. Hides problems before competition starts from users.
+ *     tags: [Problems]
+ *     parameters:
+ *       - name: pid
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: cpu_time_limit
+ *         in: query
+ *         schema:
+ *           type: integer
+ *       - name: division
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: id
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: memory_limit
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: name
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: columns
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: practice
+ *         in: query
+ *         schema:
+ *           type: boolean
+ *     responses:
+ *       200:
+ *         description: List of problems matching provided query.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Problem'
+ *       400:
+ *         description: Bad Request. Provided query does not match request schema.
+ *       500:
+ *         description: A server error occured while trying to complete request.
+ */
+export const getProblems = async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })
@@ -70,8 +125,10 @@ export const getProblems = async (req: Request, res: Response) => {
   const query = matchedData(req)
   let user: User | undefined = undefined
   try {
-    user = await authenticate(req, res)
-  } catch (err) {}
+    user = await authenticate(req)
+  } catch (err) {
+    user = undefined
+  }
 
   let columns = ['pid', 'division', 'id', 'name', 'practice', 'max_points', 'capped_points'] // Default columns
   /// IF OTHER COLUMNS AUTHENTICATE FOR JUDGE / ADMIN
