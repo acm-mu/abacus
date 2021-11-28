@@ -10,7 +10,9 @@ const ProblemOrSubmission = (): JSX.Element => {
   const [isMounted, setMounted] = useState(true)
   const [isLoading, setLoading] = useState(true)
   const [problems, setProblems] = useState<Problem[]>([])
-  const submissions: { [key: string]: Submission } = localStorage.submissions ? JSON.parse(localStorage.submissions) : {}
+  const submissions: { [key: string]: Submission } = localStorage.submissions
+    ? JSON.parse(localStorage.submissions)
+    : {}
 
   const { id } = useParams<{ id: string }>()
 
@@ -28,13 +30,15 @@ const ProblemOrSubmission = (): JSX.Element => {
     }
   }, [])
 
-  const subsForId = (id: string) => Object.values(submissions).filter(submission => submission.pid == id)
+  const subsForId = (id: string) => Object.values(submissions).filter((submission) => submission.pid == id)
 
   if (isLoading) {
-    return <>
-      <title>Abacus | Practice</title>
-      <Loader active inline='centered' content="Loading..." />
-    </>
+    return (
+      <>
+        <title>Abacus | Practice</title>
+        <Loader active inline="centered" content="Loading..." />
+      </>
+    )
   }
 
   if (id in submissions) return <PracticeSubmission submission={submissions[id]} />
