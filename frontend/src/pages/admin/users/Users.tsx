@@ -28,7 +28,6 @@ const Users = (): JSX.Element => {
   const [error, setError] = useState<string>()
   const [page, setPage] = useState<number>(1)
   const [numberOfPages, setNumberOfPages] = useState<number>(4)
-  const [isMounted, setMounted] = useState(true)
   const [{ column, direction }, setSortConfig] = useState<SortConfig>({
     column: 'username',
     direction: 'ascending'
@@ -48,9 +47,6 @@ const Users = (): JSX.Element => {
 
   useEffect(() => {
     loadUsers(page)
-    return () => {
-      setMounted(false)
-    }
   }, [page])
 
   /*
@@ -196,7 +192,7 @@ const Users = (): JSX.Element => {
       })
 
       if (response.ok) {
-        setUsers(users.filter((user) => !usersToDelete.includes(user.uid)))
+        loadUsers(page)
         const id = usersToDelete.join()
         window.sendNotification({
           id,

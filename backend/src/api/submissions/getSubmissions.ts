@@ -1,9 +1,9 @@
 import { Problem, Settings, Test, User } from 'abacus'
 import { Request, Response } from 'express'
 import { matchedData, ParamSchema, validationResult } from 'express-validator'
-import { transpose } from '../../utils'
-import contest from '../../abacus/contest'
 import { userHasRole } from '../../abacus/authlib'
+import contest from '../../abacus/contest'
+import { transpose } from '../../utils'
 
 export const schema: Record<string, ParamSchema> = {
   sid: {
@@ -182,7 +182,7 @@ export const getSubmissions = async (req: Request, res: Response): Promise<void>
     }
 
     let submissions = await contest.get_resolved_submissions(item, newPage)
-    console.log('got subs', submissions)
+
     // Obfuscate submission details to teams if not yet released.
     if (submissions !== []) {
       submissions = submissions

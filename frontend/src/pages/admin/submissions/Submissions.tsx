@@ -22,7 +22,6 @@ const Submissions = (): JSX.Element => {
   const socket = useContext(SocketContext)
   const [isLoading, setLoading] = useState(true)
   const [submissions, setSubmissions] = useState<SubmissionItem[]>([])
-  const [isMounted, setMounted] = useState(true)
   const [isDeleting, setDeleting] = useState(false)
   const [page, setPage] = useState<number>(1)
   const [numberOfPages, setNumberOfPages] = useState<number>(4)
@@ -50,7 +49,6 @@ const Submissions = (): JSX.Element => {
     loadSubmissions(page).then(() => setLoading(false))
     socket?.on('new_submission', () => loadSubmissions(page))
     socket?.on('update_submission', () => loadSubmissions(page))
-    return () => setMounted(false)
   }, [page])
 
   const handlePageChange = async (page: number) => {
@@ -129,7 +127,6 @@ const Submissions = (): JSX.Element => {
         body: JSON.stringify({ sid: submissionsToDelete })
       })
       if (response.ok) {
-        loadSubmissions(page)
         //tells the toast container below to display a message saying 'Deleted selected submissions'
         const id = submissionsToDelete.join()
         window.sendNotification({
@@ -139,6 +136,7 @@ const Submissions = (): JSX.Element => {
           content: 'We deleted the submissions you selected!'
         })
       }
+      loadSubmissions(page)
       setDeleting(false)
     }
   }

@@ -1,8 +1,8 @@
 import { Item } from 'abacus'
+import * as dotenv from 'dotenv'
+import { Db, MongoClient } from 'mongodb'
 import { Database } from '.'
 import { Key, ScanOptions } from './database'
-import { Db, MongoClient } from 'mongodb'
-import * as dotenv from 'dotenv'
 
 dotenv.config()
 

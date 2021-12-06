@@ -1,8 +1,8 @@
 import { Args, Clarification, Item, Problem, ResolvedSubmission, Settings, Submission, User } from 'abacus'
 import { Lambda } from 'aws-sdk'
-import { transpose } from '../utils'
 import { Database } from '../services'
 import { MongoDB } from '../services/db'
+import { transpose } from '../utils'
 
 class ContestService {
   db: Database
@@ -80,11 +80,11 @@ class ContestService {
     const users = transpose(await this.get_users({}, user_columns, undefined), 'uid')
 
     const prob_columns = ['pid', 'division', 'id', 'name', 'max_points', 'capped_points', 'practice']
+
     const problems = transpose(await this.get_problems({}, prob_columns, undefined), 'pid')
 
     const submissions = await this.get_submissions(args, page)
 
-    console.log('submission!', submissions)
     return submissions
       ? submissions.map((sub) => {
           return {

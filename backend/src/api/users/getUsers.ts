@@ -125,7 +125,6 @@ export const getUsers = async (req: Request, res: Response): Promise<void> => {
       const { password, ...returnUser } = user
       return returnUser
     })
-    console.log('users', users)
     res.send(transpose(users, 'uid'))
   } catch (err) {
     res.sendStatus(500)

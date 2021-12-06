@@ -57,13 +57,17 @@ export const getTableSize = async (req: Request, res: Response) => {
   const params = matchedData(req)
 
   try {
-    //makes call to db to get table size.
-    const tableSize = await contest.get_table_size(tableName, params)
-    //divides by the number of items per page.
+    if (tableName === 'submission' || tableName === 'user' || tableName === 'clarification') {
+      const tableSize = await contest.get_table_size(tableName, params)
+      //divides by the number of items per page.
 
-    const pages = tableSize ? tableSize / 5 : 0
-    //send response back.
-    res.send({ tableSize: pages })
+      const pages = tableSize ? tableSize / 25 : 0
+      //send response back.
+      res.send({ tableSize: pages })
+    } else {
+      res.send({ tableSize: 0 })
+    }
+    //makes call to db to get table size.
   } catch (err) {
     res.sendStatus(500)
   }

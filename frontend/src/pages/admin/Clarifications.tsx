@@ -1,13 +1,12 @@
-import React, { ChangeEvent, useEffect, useState } from 'react'
-import { Block, DivisionLabel, PageLoading } from 'components'
-import { Button, Checkbox, CheckboxProps, Label, Pagination, Table } from 'semantic-ui-react'
-import config from 'environment'
 import { Clarification } from 'abacus'
-import { Link } from 'react-router-dom'
-import { compare } from 'utils'
-import Moment from 'react-moment'
+import { Block, ClarificationModal, DivisionLabel, PageLoading } from 'components'
+import config from 'environment'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet'
-import ClarificationModal from 'components/ClarificationModal'
+import Moment from 'react-moment'
+import { Link } from 'react-router-dom'
+import { Button, Checkbox, CheckboxProps, Label, Pagination, Table } from 'semantic-ui-react'
+import { compare } from 'utils'
 
 interface ClarificationItem extends Clarification {
   checked: boolean
@@ -21,7 +20,6 @@ type SortConfig = {
 
 const Clarifications = (): JSX.Element => {
   const [isLoading, setLoading] = useState(true)
-  const [isMounted, setMounted] = useState(true)
   const [isDeleting, setDeleting] = useState(false)
   const [clarifications, setClarifications] = useState<ClarificationItem[]>([])
   const [showClosed, setShowClosed] = useState(false)
@@ -122,12 +120,8 @@ const Clarifications = (): JSX.Element => {
 
   useEffect(() => {
     loadClarifications(page)
-    return () => {
-      setMounted(false)
-    }
   }, [page])
 
-  // <ClarificationModal trigger={<Button content="Create Clarification" />} callback={loadClarifications} />
   if (isLoading) return <PageLoading />
 
   return (
@@ -135,6 +129,7 @@ const Clarifications = (): JSX.Element => {
       <Helmet>
         <title>Abacus | Admin Clarifications</title>
       </Helmet>
+      <ClarificationModal trigger={<Button content="Create Clarification" />} />
       {clarifications.filter((clarification) => clarification.checked).length ? (
         <Button
           content="Delete Selected"
