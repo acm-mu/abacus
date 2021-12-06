@@ -123,6 +123,7 @@ export const getUsers = async (req: Request, res: Response): Promise<void> => {
     const users = await contest.get_users(params, undefined, newPage)
     users?.map((user: any) => {
       const { password, ...returnUser } = user
+
       return returnUser
     })
     res.send(transpose(users, 'uid'))
