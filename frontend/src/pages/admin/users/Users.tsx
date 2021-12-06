@@ -1,15 +1,13 @@
 import { User } from 'abacus'
-import React, { ChangeEvent, useState, useEffect, useContext } from 'react'
-import { Table, Button, Label, Pagination } from 'semantic-ui-react'
-import { saveAs } from 'file-saver'
-import { Link } from 'react-router-dom'
-import config from 'environment'
-import { AppContext } from 'context'
-import CreateUser from './CreateUser'
-import { Helmet } from 'react-helmet'
 import { DivisionLabel, PageLoading, StatusMessage } from 'components'
-import { table } from 'console'
-import { number } from 'prop-types'
+import { AppContext } from 'context'
+import config from 'environment'
+import { saveAs } from 'file-saver'
+import React, { ChangeEvent, useContext, useEffect, useState } from 'react'
+import { Helmet } from 'react-helmet'
+import { Link } from 'react-router-dom'
+import { Button, Grid, Label, Pagination, Table } from 'semantic-ui-react'
+import CreateUser from './CreateUser'
 
 interface UserItem extends User {
   checked: boolean
@@ -178,35 +176,45 @@ const Users = (): JSX.Element => {
   }
 
   const deleteSelected = async () => {
-    if (users.filter((u) => u.checked && u.uid == user?.uid).length > 0) {
-      alert('Cannot delete currently logged in user!')
-      return
+    if (window.confirm('are you sure you want to delete these users?')) {
+      //if the user selects ok, then the code below runs, otherwise nothing occurs
+      if (users.filter((u) => u.checked && u.uid == user?.uid).length > 0) {
+        alert('Cannot delete currently logged in user!')
+        return
+      }
+
+      setDeleting(true)
+
+      const usersToDelete = users.filter((user) => user.checked).map((user) => user.uid)
+      const response = await fetch(`${config.API_URL}/users`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.accessToken}`
+        },
+        body: JSON.stringify({ uid: usersToDelete })
+      })
+
+      if (response.ok) {
+        setUsers(users.filter((user) => !usersToDelete.includes(user.uid)))
+        const id = usersToDelete.join()
+        window.sendNotification({
+          id,
+          type: 'success',
+          header: 'Success!',
+          content: 'We deleted the users you selected!'
+        })
+      }
+
+      setDeleting(false)
     }
-
-    setDeleting(true)
-
-    const usersToDelete = users.filter((user) => user.checked).map((user) => user.uid)
-    const response = await fetch(`${config.API_URL}/users`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.accessToken}`
-      },
-      body: JSON.stringify({ uid: usersToDelete })
-    })
-
-    if (response.ok) {
-      setUsers(users.filter((user) => !usersToDelete.includes(user.uid)))
-    }
-
-    setDeleting(false)
   }
 
   if (isLoading) return <PageLoading />
   if (error) return <StatusMessage message={{ type: 'error', message: error }} />
 
   return (
-    <>
+    <Grid>
       <Helmet>
         <title>Abacus | Users</title>
       </Helmet>
@@ -284,7 +292,7 @@ const Users = (): JSX.Element => {
         totalPages={numberOfPages}
         onPageChange={(event, data) => handlePageChange(data.activePage as number)}
       />
-    </>
+    </Grid>
   )
 }
 
