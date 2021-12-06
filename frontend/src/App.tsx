@@ -55,15 +55,6 @@ const App = (): JSX.Element => {
       await checkAuth()
     } catch (err) {
       setTimeout(() => loadApp(), 15 * 1000)
-      // Store notification in cache before notification component loads.
-      const notification: Notification = {
-        id: error_id,
-        type: 'error',
-        header: 'Uh oh!',
-        content: 'We are having issues communicating with our servers. Trying again in 15 seconds'
-      }
-      if (window.sendNotification) window.sendNotification(notification)
-      else window.notifications = [notification]
     }
   }
 
@@ -74,12 +65,15 @@ const App = (): JSX.Element => {
       try {
         await fetch(config.API_URL)
       } catch (err) {
-        window.sendNotification({
+        const notification: Notification = {
           id: error_id,
           type: 'error',
           header: 'Uh oh!',
           content: 'We are having issues communicating with our servers. Trying again in 15 seconds'
-        })
+        }
+        if (window.sendNotification) window.sendNotification(notification)
+        else window.notifications = [notification]
+
         loadApp()
       }
     }, 15 * 1000)

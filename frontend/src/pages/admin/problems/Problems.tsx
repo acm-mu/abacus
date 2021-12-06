@@ -1,6 +1,6 @@
 import { Problem, Submission } from 'abacus'
 import React, { ChangeEvent, useState, useEffect, useMemo } from 'react'
-import { Table, Button, Menu, MenuItemProps } from 'semantic-ui-react'
+import { Table, Button, Menu, MenuItemProps, Grid } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import config from 'environment'
 import { Block, DivisionLabel, PageLoading } from 'components'
@@ -111,20 +111,30 @@ const Problems = (): JSX.Element => {
     setProblems(problems.map((problem) => (problem.division == activeDivision ? { ...problem, checked } : problem)))
 
   const deleteSelected = async () => {
-    setDeleting(true)
-    const problemsToDelete = activeProblems.filter((problem) => problem.checked).map((problem) => problem.pid)
-    const response = await fetch(`${config.API_URL}/problems`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.accessToken}`
-      },
-      body: JSON.stringify({ pid: problemsToDelete })
-    })
-    if (response.ok) {
-      setProblems(problems.filter((problem) => !problemsToDelete.includes(problem.pid)))
+    if (window.confirm('Are you sure you want to delete these problems?')) {
+      //if the user selects ok, then the code below runs, otherwise nothing occurs
+      setDeleting(true)
+      const problemsToDelete = activeProblems.filter((problem) => problem.checked).map((problem) => problem.pid)
+      const response = await fetch(`${config.API_URL}/problems`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.accessToken}`
+        },
+        body: JSON.stringify({ pid: problemsToDelete })
+      })
+      if (response.ok) {
+        setProblems(problems.filter((problem) => !problemsToDelete.includes(problem.pid)))
+        const id = problemsToDelete.join()
+        window.sendNotification({
+          id,
+          type: 'success',
+          header: 'Success!',
+          content: 'We deleted the problems you selected!'
+        })
+      }
+      setDeleting(false)
     }
-    setDeleting(false)
   }
 
   const handleItemClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, { name }: MenuItemProps) =>
@@ -133,15 +143,15 @@ const Problems = (): JSX.Element => {
   if (isLoading) return <PageLoading />
 
   return (
-    <>
+    <Grid>
       <Helmet>
         <title>Abacus | Admin Problems</title>
       </Helmet>
-
       <Button as={Link} to="/admin/problems/new" primary content="Add Problem" />
       <Link to="/admin/problems/upload">
         <Button content="Upload Problems" />
       </Link>
+
       <Button content="Download Problems" onClick={downloadProblems} />
       {problems.filter((problem) => problem.division == activeDivision && problem.checked).length ? (
         <Button
@@ -154,7 +164,6 @@ const Problems = (): JSX.Element => {
       ) : (
         <></>
       )}
-
       <Block size="xs-12" transparent>
         <Menu pointing secondary>
           <Menu.Item name="blue" active={activeDivision == 'blue'} onClick={handleItemClick}>
@@ -232,7 +241,7 @@ const Problems = (): JSX.Element => {
           </Table.Body>
         </Table>
       </Block>
-    </>
+    </Grid>
   )
 }
 
