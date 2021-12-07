@@ -75,7 +75,7 @@ class ContestService {
     return this.db.scan('submission', { args }, page) as Promise<Submission[]>
   }
 
-  async get_resolved_submissions(args: Args, page?: number | undefined): Promise<ResolvedSubmission[]> {
+  async get_resolved_submissions(args: Args, page?: number): Promise<ResolvedSubmission[]> {
     const user_columns = ['uid', 'username', 'disabled', 'display_name', 'division']
     const users = transpose(await this.get_users({}, user_columns, undefined), 'uid')
 
