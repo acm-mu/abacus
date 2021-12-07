@@ -148,8 +148,8 @@ export const getProblems = async (req: Request, res: Response): Promise<void> =>
 
   try {
     const settings = await contest.get_settings()
-
-    let problems = await contest.get_problems(query, columns)
+    const page = req.body.page ? req.body.page : null
+    let problems = await contest.get_problems(query, columns, page)
     problems = problems?.filter((problem) => showToUser(user, problem, settings))
     res.send(transpose(problems, 'pid'))
   } catch (err) {

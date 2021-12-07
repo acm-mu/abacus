@@ -32,7 +32,7 @@ const ClarificationPage = (): JSX.Element => {
         Authorization: `Bearer ${localStorage.accessToken}`
       }
     })
-    if (response.ok && isMounted) {
+    if (response.ok) {
       const clarifications: Clarification[] = Object.values(await response.json())
       if (clarifications.length > 0) setClarification(clarifications[0])
     }

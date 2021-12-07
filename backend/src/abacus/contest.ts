@@ -1,8 +1,8 @@
 import { Args, Clarification, Item, Problem, ResolvedSubmission, Settings, Submission, User } from 'abacus'
 import { Lambda } from 'aws-sdk'
-import { transpose } from '../utils'
 import { Database } from '../services'
 import { MongoDB } from '../services/db'
+import { transpose } from '../utils'
 
 class ContestService {
   db: Database
@@ -23,8 +23,8 @@ class ContestService {
     return this.db.get('user', { uid }) as Promise<User>
   }
 
-  async get_users(args?: Args, columns?: string[]): Promise<User[]> {
-    return this.db.scan('user', { args, columns }) as Promise<User[]>
+  async get_users(args?: Args, columns?: string[], page?: number): Promise<User[]> {
+    return this.db.scan('user', { args, columns }, page) as Promise<User[]>
   }
 
   async update_user(uid: string, item: Item): Promise<User> {
@@ -33,6 +33,10 @@ class ContestService {
 
   async delete_user(uid: string): Promise<void> {
     return this.db.delete('user', { uid })
+  }
+  /* gets the size of a given table */
+  async get_table_size(table: string, args?: any): Promise<number> {
+    return this.db.count(table, { args }) as Promise<number>
   }
 
   /* Clarifications */
@@ -45,8 +49,8 @@ class ContestService {
     return this.db.get('clarification', { cid }) as Promise<Clarification>
   }
 
-  async get_clarifications(args?: Args): Promise<Clarification[]> {
-    return this.db.scan('clarification', { args }) as Promise<Clarification[]>
+  async get_clarifications(args?: Args, page?: number): Promise<Clarification[]> {
+    return this.db.scan('clarification', { args }, page) as Promise<Clarification[]>
   }
 
   async update_clarification(cid: string, item: Item): Promise<Clarification> {
@@ -67,28 +71,31 @@ class ContestService {
     return this.db.get('submission', { sid }) as Promise<Submission>
   }
 
-  async get_submissions(args: Args): Promise<Submission[]> {
-    return this.db.scan('submission', { args }) as Promise<Submission[]>
+  async get_submissions(args: Args, page?: number): Promise<Submission[]> {
+    return this.db.scan('submission', { args }, page) as Promise<Submission[]>
   }
 
-  async get_resolved_submissions(args: Args): Promise<ResolvedSubmission[]> {
+  async get_resolved_submissions(args: Args, page?: number): Promise<ResolvedSubmission[]> {
     const user_columns = ['uid', 'username', 'disabled', 'display_name', 'division']
-    const users = transpose(await this.get_users({}, user_columns), 'uid')
+    const users = transpose(await this.get_users({}, user_columns, undefined), 'uid')
 
     const prob_columns = ['pid', 'division', 'id', 'name', 'max_points', 'capped_points', 'practice']
-    const problems = transpose(await this.get_problems({}, prob_columns), 'pid')
 
-    const submissions = await this.get_submissions(args)
+    const problems = transpose(await this.get_problems({}, prob_columns, undefined), 'pid')
 
-    return submissions.map((sub) => {
-      return {
-        ...sub,
-        problem: problems[sub.pid],
-        team: users[sub.tid],
-        claimed: sub.claimed ? users[sub.claimed] : undefined,
-        flagged: sub.flagged ? users[sub.flagged] : undefined
-      }
-    })
+    const submissions = await this.get_submissions(args, page)
+
+    return submissions
+      ? submissions.map((sub) => {
+          return {
+            ...sub,
+            problem: problems[sub.pid],
+            team: users[sub.tid],
+            claimed: sub.claimed ? users[sub.claimed] : undefined,
+            flagged: sub.flagged ? users[sub.flagged] : undefined
+          }
+        })
+      : []
   }
 
   async update_submission(sid: string, item: Item): Promise<Submission> {
@@ -109,8 +116,8 @@ class ContestService {
     return this.db.get('problem', { pid }) as Promise<Problem>
   }
 
-  async get_problems(args?: Args, columns?: string[]): Promise<Problem[]> {
-    return this.db.scan('problem', { args, columns }) as Promise<Problem[]>
+  async get_problems(args?: Args, columns?: string[], page?: number): Promise<Problem[]> {
+    return this.db.scan('problem', { args, columns }, page) as Promise<Problem[]>
   }
 
   async update_problem(pid: string, item: Item): Promise<Problem> {

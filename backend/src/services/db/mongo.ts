@@ -1,8 +1,8 @@
 import { Item } from 'abacus'
+import * as dotenv from 'dotenv'
+import { Db, MongoClient } from 'mongodb'
 import { Database } from '.'
 import { Key, ScanOptions } from './database'
-import { Db, MongoClient } from 'mongodb'
-import * as dotenv from 'dotenv'
 
 dotenv.config()
 
@@ -22,12 +22,31 @@ export default class MongoDB extends Database {
     })
   }
 
-  scan(TableName: string, query?: ScanOptions): Promise<Item[]> {
+  scan(TableName: string, query?: ScanOptions, page?: number): Promise<Item[]> {
+    const pageSize = 25
+    const skip = page ? (page - 1) * 25 : null
     return new Promise((resolve, reject) => {
       this.db
         .collection(TableName)
         .find(query?.args || {}, { projection: { _id: 0 } })
-        .toArray((err, data) => {
+        .skip(skip ? skip : 0)
+        .limit(page ? pageSize : 0)
+        .toArray((err: any, data: any) => {
+          if (err) {
+            reject(err)
+            return
+          }
+          if (data) resolve(data)
+        })
+    })
+  }
+
+  count(TableName: string, query?: ScanOptions): Promise<number> {
+    return new Promise((resolve, reject) => {
+      this.db
+        .collection(TableName)
+        .find(query?.args || {})
+        .count((err: any, data: any) => {
           if (err) {
             reject(err)
             return
@@ -51,7 +70,7 @@ export default class MongoDB extends Database {
 
   put(TableName: string, Item: Item): Promise<Item> {
     return new Promise((resolve, reject) => {
-      this.db.collection(TableName).insertOne(Item, (err, data) => {
+      this.db.collection(TableName).insertOne(Item, (err: any, data: any) => {
         if (err) {
           reject(err)
           return

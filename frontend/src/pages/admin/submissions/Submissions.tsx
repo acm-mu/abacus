@@ -1,13 +1,13 @@
 import { Submission } from 'abacus'
-import React, { ChangeEvent, useState, useEffect, useMemo, useContext } from 'react'
-import { Button, Checkbox, Grid, Label, Menu, MenuItemProps, Table } from 'semantic-ui-react'
-import Moment from 'react-moment'
-import { Link } from 'react-router-dom'
-import config from 'environment'
-import { compare } from 'utils'
-import { Helmet } from 'react-helmet'
 import { Block, DivisionLabel, PageLoading } from 'components'
 import { SocketContext } from 'context'
+import config from 'environment'
+import React, { ChangeEvent, useContext, useEffect, useMemo, useState } from 'react'
+import { Helmet } from 'react-helmet'
+import Moment from 'react-moment'
+import { Link } from 'react-router-dom'
+import { Button, Checkbox, Grid, Label, Menu, MenuItemProps, Pagination, Table } from 'semantic-ui-react'
+import { compare } from 'utils'
 
 interface SubmissionItem extends Submission {
   checked: boolean
@@ -22,8 +22,9 @@ const Submissions = (): JSX.Element => {
   const socket = useContext(SocketContext)
   const [isLoading, setLoading] = useState(true)
   const [submissions, setSubmissions] = useState<SubmissionItem[]>([])
-  const [isMounted, setMounted] = useState(true)
   const [isDeleting, setDeleting] = useState(false)
+  const [page, setPage] = useState<number>(1)
+  const [numberOfPages, setNumberOfPages] = useState<number>(4)
   const [showReleased, setShowReleased] = useState(false)
   const [activeDivision, setActiveDivision] = useState('blue')
 
@@ -45,23 +46,52 @@ const Submissions = (): JSX.Element => {
   }
 
   useEffect(() => {
-    loadSubmissions().then(() => setLoading(false))
-    socket?.on('new_submission', loadSubmissions)
-    socket?.on('update_submission', loadSubmissions)
-    return () => setMounted(false)
-  }, [])
+    loadSubmissions(page).then(() => setLoading(false))
+    socket?.on('new_submission', () => loadSubmissions(page))
+    socket?.on('update_submission', () => loadSubmissions(page))
+  }, [page])
 
-  const loadSubmissions = async () => {
-    const response = await fetch(`${config.API_URL}/submissions`, {
+  const handlePageChange = async (page: number) => {
+    setPage(page)
+  }
+
+  /*
+  @param page - page to query when paginating
+  updates the new page of submissions
+  */
+  const loadSubmissions = async (page: number) => {
+    const getTableSize = async () => {
+      const tableSizeRes = await fetch(`${config.API_URL}/tablesize?tablename=submission`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.accessToken}`,
+          'Content-Type': 'application/json'
+        }
+      })
+      //table call response
+      const numberOfPages = await tableSizeRes.json()
+      const { tableSize } = numberOfPages
+      setNumberOfPages(Math.ceil(tableSize))
+      if (tableSize < numberOfPages) {
+        setPage(numberOfPages)
+      }
+    }
+    if (submissions.length !== 0) {
+      getTableSize()
+    }
+    //include page as query, so that API can fetch it.
+    const response = await fetch(`${config.API_URL}/submissions?page=${page}`, {
       headers: {
-        Authorization: `Bearer ${localStorage.accessToken}`
+        Authorization: `Bearer ${localStorage.accessToken}`,
+        'Content-Type': 'application/json'
       }
     })
-    const submissions = Object.values(await response.json()) as SubmissionItem[]
-
-    if (!isMounted) return
-
-    setSubmissions(submissions.map((submission) => ({ ...submission, checked: false })))
+    const newSubmissions = Object.values(await response.json()) as SubmissionItem[]
+    if (submissions.length === 0 && newSubmissions.length > 0) {
+      getTableSize()
+    } else if (newSubmissions.length === 0 && submissions.length === 0) {
+      setNumberOfPages(0)
+    }
+    setSubmissions(newSubmissions.map((submission) => ({ ...submission, checked: false })))
   }
 
   const onReleaseChange = () => setShowReleased(!showReleased)
@@ -97,7 +127,6 @@ const Submissions = (): JSX.Element => {
         body: JSON.stringify({ sid: submissionsToDelete })
       })
       if (response.ok) {
-        loadSubmissions()
         //tells the toast container below to display a message saying 'Deleted selected submissions'
         const id = submissionsToDelete.join()
         window.sendNotification({
@@ -107,6 +136,7 @@ const Submissions = (): JSX.Element => {
           content: 'We deleted the submissions you selected!'
         })
       }
+      loadSubmissions(page)
       setDeleting(false)
     }
   }
@@ -226,6 +256,11 @@ const Submissions = (): JSX.Element => {
             )}
           </Table.Body>
         </Table>
+        <Pagination
+          defaultActivePage={page}
+          totalPages={numberOfPages}
+          onPageChange={(_event, data) => handlePageChange(data.activePage as number)}
+        />
       </Block>
     </Grid>
   )

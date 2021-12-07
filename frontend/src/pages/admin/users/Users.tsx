@@ -1,13 +1,13 @@
 import { User } from 'abacus'
-import React, { ChangeEvent, useState, useEffect, useContext } from 'react'
-import { Table, Button, Label, Grid } from 'semantic-ui-react'
-import { saveAs } from 'file-saver'
-import { Link } from 'react-router-dom'
-import config from 'environment'
-import { AppContext } from 'context'
-import CreateUser from './CreateUser'
-import { Helmet } from 'react-helmet'
 import { DivisionLabel, PageLoading, StatusMessage } from 'components'
+import { AppContext } from 'context'
+import config from 'environment'
+import { saveAs } from 'file-saver'
+import React, { ChangeEvent, useContext, useEffect, useState } from 'react'
+import { Helmet } from 'react-helmet'
+import { Link } from 'react-router-dom'
+import { Button, Grid, Label, Pagination, Table } from 'semantic-ui-react'
+import CreateUser from './CreateUser'
 
 interface UserItem extends User {
   checked: boolean
@@ -26,8 +26,8 @@ const Users = (): JSX.Element => {
   const [isDeleting, setDeleting] = useState(false)
   const [isImporting, setImporting] = useState(false)
   const [error, setError] = useState<string>()
-
-  const [isMounted, setMounted] = useState(true)
+  const [page, setPage] = useState<number>(1)
+  const [numberOfPages, setNumberOfPages] = useState<number>(4)
   const [{ column, direction }, setSortConfig] = useState<SortConfig>({
     column: 'username',
     direction: 'ascending'
@@ -46,30 +46,58 @@ const Users = (): JSX.Element => {
   }
 
   useEffect(() => {
-    loadUsers()
-    return () => {
-      setMounted(false)
-    }
-  }, [])
+    loadUsers(page)
+  }, [page])
 
-  const loadUsers = async () => {
+  /*
+  @param page - page to query when paginating
+  updates the new page of users.
+  */
+  const loadUsers = async (page: number) => {
     try {
-      const response = await fetch(`${config.API_URL}/users`, {
+      const getTableSize = async () => {
+        const tableSizeRes = await fetch(`${config.API_URL}/tablesize?tablename=user`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.accessToken}`,
+            'Content-Type': 'application/json'
+          }
+        })
+        const numberOfPages = await tableSizeRes.json()
+        const { tableSize } = numberOfPages
+
+        setNumberOfPages(Math.ceil(tableSize))
+        if (tableSize < numberOfPages) {
+          setPage(numberOfPages)
+        }
+      }
+      if (users.length !== 0) {
+        getTableSize()
+      }
+      //include page as query, so that API can fetch it.
+      const response = await fetch(`${config.API_URL}/users?page=${page}`, {
         headers: {
-          Authorization: `Bearer ${localStorage.accessToken}`
+          Authorization: `Bearer ${localStorage.accessToken}`,
+          'Content-Type': 'application/json'
         }
       })
-      if (isMounted) {
-        const data = Object.values(await response.json()) as UserItem[]
-        sort(
-          'username',
-          data.map((user) => ({ ...user, checked: false }))
-        )
-        setLoading(false)
+      const data = Object.values(await response.json()) as UserItem[]
+      if (users.length === 0 && data.length > 0) {
+        getTableSize()
+      } else if (users.length === 0 && data.length === 0) {
+        setNumberOfPages(0)
       }
+      sort(
+        'username',
+        data.map((user) => ({ ...user, checked: false }))
+      )
+      setLoading(false)
     } catch (err) {
       setError(err as string)
     }
+  }
+
+  const handlePageChange = async (newPage: number) => {
+    setPage(newPage)
   }
 
   const downloadUsers = () => {
@@ -140,7 +168,7 @@ const Users = (): JSX.Element => {
     setUsers(users.map((user) => ({ ...user, checked })))
 
   const createUserCallback = (response: Response) => {
-    if (response.ok) loadUsers()
+    if (response.ok) loadUsers(page)
   }
 
   const deleteSelected = async () => {
@@ -164,7 +192,7 @@ const Users = (): JSX.Element => {
       })
 
       if (response.ok) {
-        setUsers(users.filter((user) => !usersToDelete.includes(user.uid)))
+        loadUsers(page)
         const id = usersToDelete.join()
         window.sendNotification({
           id,
@@ -255,6 +283,11 @@ const Users = (): JSX.Element => {
           ))}
         </Table.Body>
       </Table>
+      <Pagination
+        defaultActivePage={page}
+        totalPages={numberOfPages}
+        onPageChange={(event, data) => handlePageChange(data.activePage as number)}
+      />
     </Grid>
   )
 }

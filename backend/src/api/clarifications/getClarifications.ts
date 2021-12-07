@@ -110,17 +110,19 @@ const hasAccessTo = ({ type, division, uid }: Clarification, user?: User) => {
  *         description: Could not authenticate user.
  */
 export const getClarifications = async (req: Request, res: Response): Promise<void> => {
+  const page = req.query.page
+  //page comes in as string due to being a query
+  const newPage = page ? parseInt(page as string) : undefined
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })
     return
   }
-
   const query = matchedData(req)
   const users = transpose(await contest.get_users(), 'uid') as Record<string, User>
 
   try {
-    let clarifications = await contest.get_clarifications()
+    let clarifications = await contest.get_clarifications({ args: {}, page: newPage })
     if (clarifications.length == 0) {
       res.sendStatus(404)
       return

@@ -210,7 +210,7 @@ const getGoldStandings = async (isPractice: boolean): Promise<Standings<GoldTeam
   teams = teams.filter((user) => !user.disabled)
 
   const submissions = await contest.get_submissions({ division: 'gold' })
-
+  //not requiring pagination for standings at the moment
   let problemsList = await contest.get_problems({ division: 'gold' }, [
     'pid',
     'division',
