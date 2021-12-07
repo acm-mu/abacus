@@ -1,4 +1,11 @@
+import { Clarification } from 'abacus'
+import { Block, PageLoading, Unauthorized } from 'components'
+import ClarificationModal from 'components/ClarificationModal'
+import { AppContext } from 'context'
 import React, { FormEvent, useContext, useEffect, useState } from 'react'
+import { Helmet } from 'react-helmet'
+import Moment from 'react-moment'
+import { useParams } from 'react-router-dom'
 import {
   Button,
   ButtonProps,
@@ -15,15 +22,8 @@ import {
   Popup,
   Segment
 } from 'semantic-ui-react'
-import { Clarification } from 'abacus'
 import config from '../environment'
-import Moment from 'react-moment'
 import './Clarifications.scss'
-import { Block, PageLoading, Unauthorized } from 'components'
-import { AppContext } from 'context'
-import { useParams } from 'react-router-dom'
-import { Helmet } from 'react-helmet'
-import ClarificationModal from 'components/ClarificationModal'
 
 const Clarifications = (): JSX.Element => {
   const { user } = useContext(AppContext)
@@ -41,8 +41,9 @@ const Clarifications = (): JSX.Element => {
 
   const loadClarifications = async (): Promise<{ [key: string]: Clarification }> => {
     let clarifications = {}
-    const response = await fetch(`${config.API_URL}/clarifications`, {
-      headers: { Authorization: `Bearer ${localStorage.accessToken}` }
+
+    const response = await fetch(`${config.API_URL}/clarifications?page=1`, {
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.accessToken}` }
     })
 
     if (response.ok) {
