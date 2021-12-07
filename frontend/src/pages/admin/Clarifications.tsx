@@ -58,12 +58,10 @@ const Clarifications = (): JSX.Element => {
       getTableSize()
     }
     //include page as query, so that API can fetch it.
-
-    const response = await fetch(`${config.API_URL}/clarifications`, {
+    const response = await fetch(`${config.API_URL}/clarifications?page=${page}`, {
       method: 'GET',
       headers: { Authorization: `Bearer ${localStorage.accessToken}` }
     })
-    console.log('response', response)
     if (response.ok) {
       const newClarifications = Object.values(await response.json()) as ClarificationItem[]
       if (clarifications.length === 0 && newClarifications.length > 0) {
