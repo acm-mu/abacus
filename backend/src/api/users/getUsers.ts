@@ -119,7 +119,7 @@ export const getUsers = async (req: Request, res: Response): Promise<void> => {
   }
 
   try {
-    const newPage = page ? parseInt(page as string) : undefined
+    const newPage = page ? parseInt(page as string) : 0
     const users = await contest.get_users(params, undefined, newPage)
     users?.map((user: any) => {
       const { password, ...returnUser } = user

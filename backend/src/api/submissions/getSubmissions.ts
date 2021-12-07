@@ -163,7 +163,7 @@ const showToUser = (user: User | undefined, problem: Problem, settings: Settings
 export const getSubmissions = async (req: Request, res: Response): Promise<void> => {
   const page = req.query.page
   //page comes in as string due to being a query
-  const newPage = page ? parseInt(page as string) : undefined
+  const newPage = page ? parseInt(page as string) : 0
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })

@@ -36,6 +36,7 @@ const Clarifications = (): JSX.Element => {
   @param page - page to query when paginating
   updates the new page of clarifications
   */
+
   const loadClarifications = async (page: number) => {
     const getTableSize = async () => {
       const tableSizeRes = await fetch(`${config.API_URL}/tablesize?tablename=clarification`, {
@@ -58,7 +59,8 @@ const Clarifications = (): JSX.Element => {
     }
     //include page as query, so that API can fetch it.
     const response = await fetch(`${config.API_URL}/clarifications?page=${page}`, {
-      headers: { Authorization: `Bearer ${localStorage.accessToken}`, 'Content-Type': 'application/json' }
+      method: 'GET',
+      headers: { Authorization: `Bearer ${localStorage.accessToken}` }
     })
     if (response.ok) {
       const newClarifications = Object.values(await response.json()) as ClarificationItem[]
