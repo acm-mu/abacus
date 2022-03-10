@@ -260,7 +260,6 @@ const Users = (): JSX.Element => {
         <></>
       )}
 
-
       <Table sortable>
         <Table.Header>
           <Table.Row>

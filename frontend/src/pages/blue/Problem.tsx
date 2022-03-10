@@ -111,9 +111,9 @@ const Problem = (): JSX.Element => {
               context={{ type: 'pid', id: problem.pid }}
               trigger={<Button content="Ask" icon="question" labelPosition="left" />}
             />
-             <a target="_blank" rel="noreferrer" href={`${config.API_URL}/sample_files?pid=${problem.pid}`}>
-            <Button labelPosition="left" content="Skeletons" icon="download" />
-          </a>
+            <a target="_blank" rel="noreferrer" href={`${config.API_URL}/sample_files?pid=${problem.pid}`}>
+              <Button labelPosition="left" content="Skeletons" icon="download" />
+            </a>
           </>
         ) : (
           <a target="_blank" rel="noreferrer" href={`${config.API_URL}/sample_files?pid=${problem.pid}`}>
