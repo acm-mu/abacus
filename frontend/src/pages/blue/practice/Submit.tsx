@@ -31,6 +31,8 @@ const SubmitPractice = (): JSX.Element => {
   const testSubmission = async (submission: Submission): Promise<Submission> => {
     let runtime = -1
     let status = 'accepted'
+    //GET  https://emkc.org/api/v2/piston/runtimes
+    //POST https://emkc.org/api/v2/piston/execute
     if (submission.tests) {
       for (const test of submission.tests) {
         // Await response from piston execution
@@ -104,7 +106,7 @@ const SubmitPractice = (): JSX.Element => {
         source: data.toString()
       })
 
-      localStorage.setItem('submissions', JSON.stringify(submissions))
+      await fetch
 
       history.push(`/blue/practice/${sid}`)
     }

@@ -17,6 +17,36 @@ type SortConfig = {
   column: SortKey
   direction: 'ascending' | 'descending'
 }
+/*
+ <Table sortable>
+        <Table.Header>
+        map shit here -> 
+         {users.map((user: UserItem) => (
+          <Table.Row>
+         {content}
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+         map each row here -> {users.map((user: UserItem) => (
+            <Table.Row key={user.uid} uuid={`${user.uid}`}>
+              <Table.Cell>
+                <input type="checkbox" checked={user.checked} id={user.uid} onChange={handleChange} />
+              </Table.Cell>
+              <Table.Cell className="space-between">
+                <Link to={`/admin/users/${user.uid}`}>{user.username}</Link>
+                {user.disabled && <Label color="red" content="Disabled" />}
+              </Table.Cell>
+              <Table.Cell>{user.role}</Table.Cell>
+              <Table.Cell>
+                <DivisionLabel division={user.division} />
+              </Table.Cell>
+              <Table.Cell>{user.school}</Table.Cell>
+              <Table.Cell>{user.display_name}</Table.Cell>
+            </Table.Row>
+          ))}
+        </Table.Body>
+      </Table>
+*/
 
 const Users = (): JSX.Element => {
   const { user } = useContext(AppContext)
@@ -229,6 +259,7 @@ const Users = (): JSX.Element => {
       ) : (
         <></>
       )}
+
 
       <Table sortable>
         <Table.Header>
