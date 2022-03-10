@@ -1,5 +1,6 @@
 import { User } from 'abacus'
 import { DivisionLabel, PageLoading, StatusMessage } from 'components'
+import CustomTable from 'components/CustomTable'
 import { AppContext } from 'context'
 import config from 'environment'
 import { saveAs } from 'file-saver'
@@ -229,60 +230,7 @@ const Users = (): JSX.Element => {
       ) : (
         <></>
       )}
-
-      <Table sortable>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell collapsing>
-              <input type="checkbox" onChange={checkAll} />
-            </Table.HeaderCell>
-            <Table.HeaderCell
-              sorted={column === 'username' ? direction : undefined}
-              onClick={() => sort('username')}
-              content="Username"
-            />
-            <Table.HeaderCell
-              sorted={column === 'role' ? direction : undefined}
-              onClick={() => sort('role')}
-              content="Role"
-            />
-            <Table.HeaderCell
-              sorted={column === 'division' ? direction : undefined}
-              onClick={() => sort('division')}
-              content="Division"
-            />
-            <Table.HeaderCell
-              sorted={column === 'school' ? direction : undefined}
-              onClick={() => sort('school')}
-              content="School"
-            />
-            <Table.HeaderCell
-              sorted={column === 'display_name' ? direction : undefined}
-              onClick={() => sort('display_name')}
-              content="Display Name"
-            />
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {users.map((user: UserItem) => (
-            <Table.Row key={user.uid} uuid={`${user.uid}`}>
-              <Table.Cell>
-                <input type="checkbox" checked={user.checked} id={user.uid} onChange={handleChange} />
-              </Table.Cell>
-              <Table.Cell className="space-between">
-                <Link to={`/admin/users/${user.uid}`}>{user.username}</Link>
-                {user.disabled && <Label color="red" content="Disabled" />}
-              </Table.Cell>
-              <Table.Cell>{user.role}</Table.Cell>
-              <Table.Cell>
-                <DivisionLabel division={user.division} />
-              </Table.Cell>
-              <Table.Cell>{user.school}</Table.Cell>
-              <Table.Cell>{user.display_name}</Table.Cell>
-            </Table.Row>
-          ))}
-        </Table.Body>
-      </Table>
+  <CustomTable id={'uid'} header={['username','role','division','school','display_name']} body={users} onCheckItem={({ target: { id, checked } }) => handleChange} sort={{column, direction}} onClickHeaderItem={(item: any) => sort(item)} onCheckAll={checkAll} />
       <Pagination
         defaultActivePage={page}
         totalPages={numberOfPages}
