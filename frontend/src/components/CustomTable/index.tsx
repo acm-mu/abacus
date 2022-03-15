@@ -8,7 +8,7 @@ body: any;
 id: string;
 sort: any;
 onClickHeaderItem: (item: string) => void;
-onCheckAll: (ChangeEvent<HTMLInputElement>) => void;
+onCheckAll: (item: ChangeEvent<HTMLInputElement>) => void
 onCheckItem: (item: any) => void
 }
 

@@ -234,7 +234,7 @@ const Users = (): JSX.Element => {
       <Pagination
         defaultActivePage={page}
         totalPages={numberOfPages}
-        onPageChange={(_event: any, data: { activePage: number }) => handlePageChange(data.activePage as number)}
+        onPageChange={(_event: any, data: any) => handlePageChange(data.activePage as number)}
       />
     </Grid>
   )
