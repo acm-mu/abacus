@@ -30,7 +30,7 @@ body ->
 
 
 const CustomTable: FC<CustomTableProps> = ({header, body,id,sort, onClickHeaderItem, onCheckAll, onCheckItem}): JSX.Element => {
-  const renderRow = (cellid: any, property: any,items: any) => {
+  const renderRow = (cellid: string, property: string,items: any) => {
     if(property === 'division') {
       return <Table.Cell ><DivisionLabel division={items[property]} />   </Table.Cell>
     }
@@ -70,7 +70,7 @@ const CustomTable: FC<CustomTableProps> = ({header, body,id,sort, onClickHeaderI
                <Table.Cell>
                 <input type="checkbox" checked={bodyItem['checked']} id={bodyItem[`${id}`]} onChange={(item) => onCheckItem(item)} />
               </Table.Cell>
-              {bodyItem && header.filter((a: string) => a !== 'checked' && a !== id).map((item: any) => {
+              {bodyItem && header.filter((a: string) => a !== 'checked' && a !== id).map((item: string) => {
                 return (
               renderRow(bodyItem[id],item,bodyItem)
                 )

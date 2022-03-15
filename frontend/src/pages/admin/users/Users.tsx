@@ -1,5 +1,5 @@
 import { User } from 'abacus'
-import { DivisionLabel, PageLoading, StatusMessage } from 'components'
+import { PageLoading, StatusMessage } from 'components'
 import CustomTable from 'components/CustomTable'
 import { AppContext } from 'context'
 import config from 'environment'
@@ -7,7 +7,7 @@ import { saveAs } from 'file-saver'
 import React, { ChangeEvent, useContext, useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet'
 import { Link } from 'react-router-dom'
-import { Button, Grid, Label, Pagination, Table } from 'semantic-ui-react'
+import { Button, Grid, Pagination } from 'semantic-ui-react'
 import CreateUser from './CreateUser'
 
 interface UserItem extends User {
