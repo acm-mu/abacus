@@ -212,8 +212,8 @@ const Problems = (): JSX.Element => {
                 </Table.Cell>
               </Table.Row>
             ) : (
-              activeProblems.map((problem: ProblemItem, index: number) => (
-                <Table.Row key={index}>
+              activeProblems.map((problem: ProblemItem, index: number) => {
+                ;<Table.Row key={index}>
                   <Table.Cell>
                     <input type="checkbox" checked={problem.checked} id={problem.pid} onChange={handleChange} />
                   </Table.Cell>
@@ -236,7 +236,7 @@ const Problems = (): JSX.Element => {
                     </>
                   )}
                 </Table.Row>
-              ))
+              })
             )}
           </Table.Body>
         </Table>
