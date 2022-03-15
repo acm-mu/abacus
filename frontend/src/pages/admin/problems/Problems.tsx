@@ -12,8 +12,8 @@ interface ProblemItem extends Problem {
 type SortKey = 'id' | 'name'
 type SortConfig = {
   column: SortKey
-  direction: 'ascending' | 'descending';
-};
+  direction: 'ascending' | 'descending'
+}
 
 const Problems = (): JSX.Element => {
   const [isLoading, setLoading] = useState(true)
@@ -213,8 +213,7 @@ const Problems = (): JSX.Element => {
               </Table.Row>
             ) : (
               activeProblems.map((problem: ProblemItem, index: number) => {
-              
-                <Table.Row key={index}>
+                ;<Table.Row key={index}>
                   <Table.Cell>
                     <input type="checkbox" checked={problem.checked} id={problem.pid} onChange={handleChange} />
                   </Table.Cell>
@@ -231,13 +230,13 @@ const Problems = (): JSX.Element => {
                   {submissions && (
                     <>
                       <Table.Cell>
-                      {problem.pid in submissions ? submissions[problem.pid].filter((p) => p.score > 0).length : 0}
+                        {problem.pid in submissions ? submissions[problem.pid].filter((p) => p.score > 0).length : 0}
                       </Table.Cell>
                       <Table.Cell>{problem.pid in submissions ? submissions[problem.pid].length : 0}</Table.Cell>
                     </>
                   )}
                 </Table.Row>
-})
+              })
             )}
           </Table.Body>
         </Table>
