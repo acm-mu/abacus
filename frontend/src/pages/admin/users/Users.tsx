@@ -230,11 +230,11 @@ const Users = (): JSX.Element => {
       ) : (
         <></>
       )}
-  <CustomTable id={'uid'} header={['username','role','division','school','display_name']} body={users} onCheckItem={({ target: { id, checked } }) => handleChange} sort={{column, direction}} onClickHeaderItem={(item: any) => sort(item)} onCheckAll={checkAll} />
+  <CustomTable id={'uid'} header={['username','role','division','school','display_name']} body={users} onCheckItem={handleChange} sort={{column, direction}} onClickHeaderItem={(item: any) => sort(item)} onCheckAll={checkAll} />
       <Pagination
         defaultActivePage={page}
         totalPages={numberOfPages}
-        onPageChange={(event, data) => handlePageChange(data.activePage as number)}
+        onPageChange={(_event: any, data: { activePage: number }) => handlePageChange(data.activePage as number)}
       />
     </Grid>
   )
