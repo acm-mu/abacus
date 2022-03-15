@@ -213,7 +213,6 @@ const Problems = (): JSX.Element => {
               </Table.Row>
             ) : (
               activeProblems.map((problem: ProblemItem, index: number) => {
-                console.log('problem',problem) 
                 <Table.Row key={index}>
                   <Table.Cell>
                     <input type="checkbox" checked={problem.checked} id={problem.pid} onChange={handleChange} />
@@ -231,7 +230,7 @@ const Problems = (): JSX.Element => {
                   {submissions && (
                     <>
                       <Table.Cell>
-                        {problem.pid in submissions ? submissions[problem.pid].filter((p) => p.score > 0).length : 0}
+                      {problem.pid in submissions ? submissions[problem.pid].filter((p) => p.score > 0).length : 0}
                       </Table.Cell>
                       <Table.Cell>{problem.pid in submissions ? submissions[problem.pid].length : 0}</Table.Cell>
                     </>

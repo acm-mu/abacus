@@ -18,11 +18,7 @@ body ->
 
 
 const CustomTable: FC<CustomTableProps> = ({header, body,id,sort, onClickHeaderItem, onCheckAll, onCheckItem}): JSX.Element => {
-  const bodyProp = Object.keys(body)
-  console.log('body', body)
-  console.log('header', header)
   const renderRow = (cellid: any, property: any,items: any) => {
-    console.log('prop', property)
     if(property === 'division') {
       return <Table.Cell ><DivisionLabel division={items[property]} />   </Table.Cell>
     }
@@ -44,7 +40,8 @@ const CustomTable: FC<CustomTableProps> = ({header, body,id,sort, onClickHeaderI
         <Table.HeaderCell collapsing>
           <input type="checkbox" onChange={onCheckAll} />
           </Table.HeaderCell>
-          {header.map((item: any) => (<Table.HeaderCell
+          {header.map((item: any, i: number) => (<Table.HeaderCell
+              key={i}
               sorted={sort.column === item ? sort.direction : undefined}
               onClick={() => onClickHeaderItem(item) }
               content={(item[0].toUpperCase() + item.slice(1)).replace('_',' ')}
