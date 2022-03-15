@@ -2,14 +2,26 @@ import React, {ChangeEvent, FC} from 'react'
 import { Table } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import DivisionLabel from 'components/DivisionLabel';
+import { User } from 'abacus';
+
+type SortKey = 'uid' | 'display_name' | 'username' | 'role' | 'division' | 'school'
+type SortConfig = {
+  column: SortKey
+  direction: 'ascending' | 'descending'
+}
+
+interface UserItem extends User {
+  checked: boolean
+}
+
 interface CustomTableProps {
-header: any;
-body: any;
+header: string[];
+body: UserItem[];
 id: string;
-sort: any;
+sort: SortConfig;
 onClickHeaderItem: (item: string) => void;
 onCheckAll: (item: ChangeEvent<HTMLInputElement>) => void
-onCheckItem: (item: any) => void
+onCheckItem: (item: ChangeEvent<HTMLInputElement>) => void
 }
 
 /*
@@ -40,7 +52,7 @@ const CustomTable: FC<CustomTableProps> = ({header, body,id,sort, onClickHeaderI
         <Table.HeaderCell collapsing>
           <input type="checkbox" onChange={onCheckAll} />
           </Table.HeaderCell>
-          {header.map((item: any, i: number) => (<Table.HeaderCell
+          {header.map((item: string, i: number) => (<Table.HeaderCell
               key={i}
               sorted={sort.column === item ? sort.direction : undefined}
               onClick={() => onClickHeaderItem(item) }
