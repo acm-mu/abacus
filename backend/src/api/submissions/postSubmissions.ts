@@ -291,26 +291,25 @@ export const postSubmissions = async (req: Request, res: Response): Promise<void
           filesize,
           md5,
           tests: problem.tests,
-          runtime: 0,
           source: data.toString('utf-8')
         }
         let status = 'accepted'
-        let runtime = -1
         for (let test of problem.tests) {
           // Copy tests from problem
           submission.tests = problem.tests
 
           // Run tests
           const file = { name: submission.filename as string, content: submission['source'] as string }
+          
           // Await response from piston execution
-          setTimeout(async function () {
+ 
             try {
               const res = await axios.post(
-                'https://emkc.org/api/v2/piston/execute',
+                'https://piston.tabot.sh/api/v2/execute',
                 {
                   language: 'python',
                   files: [file],
-                  version: '3.10.0',
+                  version: '3.9.4',
                   stdin: test.in
                 },
                 {
@@ -320,11 +319,11 @@ export const postSubmissions = async (req: Request, res: Response): Promise<void
                 }
               )
               console.log('res data', res.data)
-              runtime = Math.max(runtime, res.data.run.runtime)
+         
               test.stdout = res.data.run.output
               console.log('output', res.data.run.output)
               console.log('test out', test.out)
-              if (res.data.run.stdout == test.out) {
+              if (res.data.output != test.out) {
                 console.log('Result: ACCEPTED')
                 test['result'] = 'accepted'
               } else {
@@ -336,17 +335,20 @@ export const postSubmissions = async (req: Request, res: Response): Promise<void
             } catch (e) {
               console.log(e)
             }
-          }, 500)
         }
 
         submission.status = status
-        submission.runtime = runtime
         // Calculate Score
         if (status == 'accepted') {
-          const minutes = ((submission.date as any) - start_date) / 60
-
+          let minutes = 0
+          if (problem.practice) {
+            minutes = (submission.date as any - practice_start_date)/60
+        }
+        else {
+          minutes = (submission.date as any - start_date)/60
+        }
           submission.score = Math.floor(
-            minutes * points_per_minute + points_per_no * submissions.length + points_per_yes
+           (minutes * points_per_minute) + (points_per_no * (submission.sub_no as any)) + points_per_yes
           )
         } else {
           submission.score = 0
