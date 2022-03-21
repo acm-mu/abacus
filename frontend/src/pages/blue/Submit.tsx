@@ -67,9 +67,6 @@ const Submit = (): JSX.Element => {
     formData.set('source', file, file.name)
     formData.set('language', language.key)
     user.division && formData.set('division', user.division)
-    for (var value of formData.values()) {
-      console.log(value)
-    }
     const res = await fetch(`${config.API_URL}/submissions`, {
       method: 'POST',
       headers: {
