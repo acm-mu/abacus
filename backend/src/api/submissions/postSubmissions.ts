@@ -85,11 +85,10 @@ export const schema: Record<string, ParamSchema> = {
  *         description: Either account is disabled or outside of competition time period.
  *       500:
  *         description: A server error occured while trying to complete request.
- * 
  *
- * 
- */ 
-     
+ *
+ *
+ */
 
 export const postSubmissions = async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req).array()
@@ -224,37 +223,37 @@ export const postSubmissions = async (req: Request, res: Response): Promise<void
 
           // Run tests
           const file = { name: submission.filename as string, content: submission['source'] as string }
-          
+
           // Await response from piston execution
- 
-            try {
-              const res = await axios.post(
-                'https://piston.tabot.sh/api/v2/execute',
-                {
-                  language: 'python',
-                  files: [file],
-                  version: '3.9.4',
-                  stdin: test.in
-                },
-                {
-                  headers: {
-                    'Content-Type': 'application/json'
-                  }
+
+          try {
+            const res = await axios.post(
+              'https://piston.tabot.sh/api/v2/execute',
+              {
+                language: 'python',
+                files: [file],
+                version: '3.9.4',
+                stdin: test.in
+              },
+              {
+                headers: {
+                  'Content-Type': 'application/json'
                 }
-              )
-              test.stdout = res.data.run.output
-              if (res.data.output != test.out && res.data.run.code == 0) {
-                console.log('Result: ACCEPTED')
-                test['result'] = 'accepted'
-              } else {
-                console.log('Result: REJECTED')
-                status = 'rejected'
-                test['result'] = 'rejected'
               }
-              test['stdout'] = res.data.run.code == 0 ? res.data.run.stdout : res.data.run.stderr
-            } catch (e) {
-              console.log(e)
+            )
+            test.stdout = res.data.run.output
+            if (res.data.output != test.out && res.data.run.code == 0) {
+              console.log('Result: ACCEPTED')
+              test['result'] = 'accepted'
+            } else {
+              console.log('Result: REJECTED')
+              status = 'rejected'
+              test['result'] = 'rejected'
             }
+            test['stdout'] = res.data.run.code == 0 ? res.data.run.stdout : res.data.run.stderr
+          } catch (e) {
+            console.log(e)
+          }
         }
 
         submission.status = status
@@ -262,13 +261,12 @@ export const postSubmissions = async (req: Request, res: Response): Promise<void
         if (status == 'accepted') {
           let minutes = 0
           if (problem.practice) {
-            minutes = (submission.date as any - practice_start_date)/60
-        }
-        else {
-          minutes = (submission.date as any - start_date)/60
-        }
+            minutes = ((submission.date as any) - practice_start_date) / 60
+          } else {
+            minutes = ((submission.date as any) - start_date) / 60
+          }
           submission.score = Math.floor(
-           (minutes * points_per_minute) + (points_per_no * (submission.sub_no as any)) + points_per_yes
+            minutes * points_per_minute + points_per_no * (submission.sub_no as any) + points_per_yes
           )
         } else {
           submission.score = 0

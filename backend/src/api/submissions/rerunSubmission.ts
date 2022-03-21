@@ -42,29 +42,24 @@ export const rerunSubmission = async (req: Request, res: Response): Promise<void
     res.status(400).json({ message: errors[0].msg })
     return
   }
-  const item = matchedData(req);
+  const item = matchedData(req)
   try {
-  const submission = await contest.get_submission(item.sid)
-  const problem = await contest.get_problem(submission.pid)
+    const submission = await contest.get_submission(item.sid)
+    const problem = await contest.get_problem(submission.pid)
 
-  const {
-    start_date,
-    practice_start_date,
-    points_per_yes,
-    points_per_minute,
-    points_per_no
-  } = await contest.get_settings()
-  if (submission) {
-    let newSubmission = {...submission}
-    // Update status to 'pending'
-    // await updateItem('', { submission.sid }, { status: 'pending' });
-    // Extract details and set defaults
-    let status = 'accepted'
-    for (let test of newSubmission.tests) {
-      // Copy tests from problem
-      // Run tests
-      const file = { name: newSubmission.filename as string, content: newSubmission['source'] as string }
-      // Await response from piston execution
+    const { start_date, practice_start_date, points_per_yes, points_per_minute, points_per_no } =
+      await contest.get_settings()
+    if (submission) {
+      let newSubmission = { ...submission }
+      // Update status to 'pending'
+      // await updateItem('', { submission.sid }, { status: 'pending' });
+      // Extract details and set defaults
+      let status = 'accepted'
+      for (let test of newSubmission.tests) {
+        // Copy tests from problem
+        // Run tests
+        const file = { name: newSubmission.filename as string, content: newSubmission['source'] as string }
+        // Await response from piston execution
         try {
           const res = await axios.post(
             'https://piston.tabot.sh/api/v2/execute',
@@ -79,7 +74,7 @@ export const rerunSubmission = async (req: Request, res: Response): Promise<void
                 'Content-Type': 'application/json'
               }
             }
-          )     
+          )
           test.stdout = res.data.run.output
           if (res.data.output != test.out) {
             console.log('Result: ACCEPTED')
@@ -93,31 +88,29 @@ export const rerunSubmission = async (req: Request, res: Response): Promise<void
         } catch (e) {
           console.log(e)
         }
-    }
+      }
 
-    newSubmission.status = status
-    // Calculate Score
-    if (status == 'accepted') {
-      let minutes = 0
-      if (problem.practice) {
-        minutes = (newSubmission.date as any - practice_start_date)/60
+      newSubmission.status = status
+      // Calculate Score
+      if (status == 'accepted') {
+        let minutes = 0
+        if (problem.practice) {
+          minutes = ((newSubmission.date as any) - practice_start_date) / 60
+        } else {
+          minutes = ((newSubmission.date as any) - start_date) / 60
+        }
+        newSubmission.score = Math.floor(
+          minutes * points_per_minute + points_per_no * (newSubmission.sub_no as any) + points_per_yes
+        )
+      } else {
+        newSubmission.score = 0
+      }
+      // update submission
+      await contest.update_submission(newSubmission.sid as string, { ...newSubmission, sid: newSubmission.sid })
+      res.send(newSubmission)
     }
-    else {
-      minutes = (newSubmission.date as any - start_date)/60
-    }
-      newSubmission.score = Math.floor(
-       (minutes * points_per_minute) + (points_per_no * (newSubmission.sub_no as any)) + points_per_yes
-      )
-    } else {
-      newSubmission.score = 0
-    }
-    // update submission
-    await contest.update_submission(newSubmission.sid as string, { ...newSubmission, sid: newSubmission.sid })
-    res.send(newSubmission)
-}
-}
-catch (err) {
-  console.error(err)
-  res.sendStatus(500)
-}
+  } catch (err) {
+    console.error(err)
+    res.sendStatus(500)
+  }
 }
