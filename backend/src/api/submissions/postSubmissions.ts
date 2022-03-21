@@ -243,7 +243,7 @@ export const postSubmissions = async (req: Request, res: Response): Promise<void
                 }
               )
               test.stdout = res.data.run.output
-              if (res.data.output != test.out) {
+              if (res.data.output != test.out && res.data.run.code == 0) {
                 console.log('Result: ACCEPTED')
                 test['result'] = 'accepted'
               } else {
@@ -251,7 +251,7 @@ export const postSubmissions = async (req: Request, res: Response): Promise<void
                 status = 'rejected'
                 test['result'] = 'rejected'
               }
-              test['stdout'] = res.data.run.stdout
+              test['stdout'] = res.data.run.code == 0 ? res.data.run.stdout : res.data.run.stderr
             } catch (e) {
               console.log(e)
             }
