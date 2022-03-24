@@ -184,12 +184,6 @@ export const postSubmissions = async (req: Request, res: Response): Promise<void
       score: 0,
       date: Date.now() / 1000
     }
-    if (item.division === 'blue') {
-      if (req.files?.source == undefined) {
-        res.status(400).json({ message: 'source not provided' })
-        return
-      }
-
       if (!item.language) {
         res.status(400).json({ message: 'language not provided' })
         return
@@ -200,6 +194,10 @@ export const postSubmissions = async (req: Request, res: Response): Promise<void
 
       // Get problem and competition details
       if (item.division === 'blue') {
+        if (req.files?.source == undefined) {
+          res.status(400).json({ message: 'source not provided' })
+          return
+        }
         const problem = await contest.get_problem(item.pid)
 
         // Update status to 'pending'
@@ -225,7 +223,6 @@ export const postSubmissions = async (req: Request, res: Response): Promise<void
           const file = { name: submission.filename as string, content: submission['source'] as string }
 
           // Await response from piston execution
-
           try {
             const res = await axios.post(
               'https://piston.tabot.sh/api/v2/execute',
@@ -275,6 +272,7 @@ export const postSubmissions = async (req: Request, res: Response): Promise<void
         // Save submission to database
         await contest.update_submission(submission.sid as string, { ...submission, sid: submission.sid })
       } else if (req.user?.division == 'gold') {
+        
         const scratchResponse = await axios.get(`https://api.scratch.mit.edu/projects/${item.project_id}`)
         if (scratchResponse.status !== 200) {
           res.status(400).send({ message: 'Server cannot access project with that id!' })
@@ -288,12 +286,13 @@ export const postSubmissions = async (req: Request, res: Response): Promise<void
           design_document: item.design_document,
           project_id: item.project_id
         }
+        console.log("BEFORE SUBMISSION")
         await contest.create_submission(submission)
+        console.log("AFTER SUBMISSION")
       }
       io.emit('new_submission', { sid: submission.sid })
 
       res.send(submission)
-    }
   } catch (err) {
     console.error(err)
     res.sendStatus(500)
