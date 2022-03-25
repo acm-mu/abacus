@@ -14,8 +14,9 @@ const About = (): JSX.Element => (
     <Block size="xs-12">
       <h2>Overview</h2>
       <p>
-        Marquette University chapters of ACM, ACM-W, and UPE welcomes high school students with Java, Python, or Scratch programming experience to participate in a
-        morning of computer science problem solving and/or storytelling. This Competition features three divisions:
+        Marquette University chapters of ACM, ACM-W, and UPE welcomes high school students with Java, Python, or Scratch
+        programming experience to participate in a morning of computer science problem solving and/or storytelling. This
+        Competition features three divisions:
       </p>
 
       <h2>Java/Python Division (Blue)</h2>
