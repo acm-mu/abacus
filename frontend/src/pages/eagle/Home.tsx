@@ -22,8 +22,8 @@ const Home = (): JSX.Element => {
           working prototype. We are not expecting a flushed out UI, but a program of some sort that accomplishes their
           implementation/solution to the problem is what we are aiming for. At the end of the three hours, each team
           will present (5 – 10 minutes) their solution to a small board of faculty and/or student members. The board
-          will ask a few questions and ultimately vote on a winner. We will have a Google Meet call where students will
-          present and gain the feedback mentioned earlier.
+          will ask a few questions and ultimately vote on a winner. For in-person teams, we will have a room for teams
+          to present in. For virtual teams, we will have a Teams meeting where students will present.
         </p>
       </Block>
     </>
