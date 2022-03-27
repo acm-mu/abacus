@@ -72,7 +72,7 @@ const Standings = (): JSX.Element => {
     }
   }, [])
 
-  if ((!settings || new Date() < settings.start_date) && ( settings && new Date() > settings?.practice_end_date))
+  if ((!settings || new Date() < settings.start_date) && settings && new Date() > settings?.practice_end_date)
     return (
       <>
         {helmet}

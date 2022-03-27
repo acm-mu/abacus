@@ -61,7 +61,7 @@ const Submit = (): JSX.Element => {
     setSubmitting(true)
     const formData = new FormData()
     formData.set('pid', problem.pid)
-    console.log('project_id',project_id)
+    console.log('project_id', project_id)
     formData.set('project_id', project_id)
     formData.set('language', 'scratch')
     formData.set('division', 'gold')
