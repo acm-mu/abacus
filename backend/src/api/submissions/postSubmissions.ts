@@ -221,8 +221,6 @@ export const postSubmissions = async (req: Request, res: Response): Promise<void
 
           // Run tests
           const file = { name: submission.filename as string, content: submission['source'] as string }
-
-          console.log("language ", item.language)
           // Await response from piston execution
           try {
             const res = await axios.post(
@@ -239,12 +237,8 @@ export const postSubmissions = async (req: Request, res: Response): Promise<void
                 }
               }
             )
-            console.log('res', res.data)
-            console.log('test out', test.out)
-            console.log('date output', res.data.run.output)
-            console.log('is same',res.data.run.output as string == test.out as string)
             test['stdout'] = res.data.run.code == 0 ? res.data.run.stdout : res.data.run.stderr
-            if (res.data.run.output.trim() as string == test.out.trim() as string || res.data.run.code !== 0) {
+            if (res.data.run.output.trim() as string == test.out.trim() as string && res.data.run.code === 0) {
               console.log("Result: ACCEPTED");
               test['result'] = "accepted";
           } else {
@@ -289,9 +283,7 @@ export const postSubmissions = async (req: Request, res: Response): Promise<void
           design_document: item.design_document,
           project_id: item.project_id
         }
-        console.log("BEFORE SUBMISSION")
         await contest.create_submission(submission)
-        console.log("AFTER SUBMISSION")
       }
       io.emit('new_submission', { sid: submission.sid })
 

@@ -51,8 +51,8 @@ export interface Language {
   file_extension: string
 }
 export const languages: Language[] = [
-  { key: 'python', value: 'python', text: 'Python 3', file_extension: '.py' },
-  { key: 'java', value: 'java', text: 'Java', file_extension: '.java' }
+  { key: 'python', value: 'Python 3', text: 'Python 3', file_extension: '.py' },
+  { key: 'java', value: 'Java', text: 'Java', file_extension: '.java' }
 ]
 
 export const format_text = (str: string): string => str.replace(/(^.*$)/gm, (c: string) => (isNaN(+c) ? `"${c}"` : c))
