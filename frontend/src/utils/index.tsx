@@ -51,7 +51,7 @@ export interface Language {
   file_extension: string
 }
 export const languages: Language[] = [
-  { key: 'python3', value: 'Python 3', text: 'Python 3', file_extension: '.py' },
+  { key: 'python', value: 'Python 3', text: 'Python 3', file_extension: '.py' },
   { key: 'java', value: 'Java', text: 'Java', file_extension: '.java' }
 ]
 

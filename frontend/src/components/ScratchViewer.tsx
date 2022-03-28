@@ -32,8 +32,9 @@ const ScratchViewer = ({ project_id, content = <></> }: ScratchViewerProps): JSX
     fetch(`${config.API_URL}/scratch/project?project_id=${project_id}`)
       .then((res) => res.json())
       .then((data) => {
-        console.log("data", data);
-        setProject(data)})
+        console.log('data', data)
+        setProject(data)
+      })
       .catch(() => setProject(undefined))
   }, [project_id])
 
