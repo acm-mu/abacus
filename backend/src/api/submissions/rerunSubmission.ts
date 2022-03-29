@@ -64,9 +64,9 @@ export const rerunSubmission = async (req: Request, res: Response): Promise<void
           const res = await axios.post(
             'https://piston.tabot.sh/api/v2/execute',
             {
-              language: 'python',
+              language: item.language,
               files: [file],
-              version: '3.9.4',
+              version: item.language === 'python' ? '3.9.4' : '15.0.2',
               stdin: test.in
             },
             {
@@ -75,8 +75,8 @@ export const rerunSubmission = async (req: Request, res: Response): Promise<void
               }
             }
           )
-          test.stdout = res.data.run.output
-          if (res.data.output != test.out) {
+          test['stdout'] = res.data.run.code == 0 ? res.data.run.stdout : res.data.run.stderr
+          if ((res.data.run.output.trim() as string) == (test.out.trim() as string) && res.data.run.code === 0) {
             console.log('Result: ACCEPTED')
             test['result'] = 'accepted'
           } else {
@@ -84,7 +84,6 @@ export const rerunSubmission = async (req: Request, res: Response): Promise<void
             status = 'rejected'
             test['result'] = 'rejected'
           }
-          test['stdout'] = res.data.run.stdout
         } catch (e) {
           console.log(e)
         }
