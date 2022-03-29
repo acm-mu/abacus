@@ -75,7 +75,7 @@ const UploadProblems = (): JSX.Element => {
     if (newProblems) {
       for (const problem of newProblems.filter((p) => p.checked)) {
         const response = await fetch(`${config.API_URL}/problems`, {
-          method: 'PUT',
+          method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${localStorage.accessToken}`

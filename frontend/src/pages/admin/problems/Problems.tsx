@@ -213,29 +213,30 @@ const Problems = (): JSX.Element => {
               </Table.Row>
             ) : (
               activeProblems.map((problem: ProblemItem, index: number) => {
-                return (<Table.Row key={index}>
-                  <Table.Cell>
-                    <input type="checkbox" checked={problem.checked} id={problem.pid} onChange={handleChange} />
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Link to={`/admin/problems/${problem.pid}`}>{problem.id}</Link>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <DivisionLabel division={problem.division} />
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Link to={`/admin/problems/${problem.pid}`}>{problem.name}</Link>
-                  </Table.Cell>
-                  <Table.Cell>{activeDivision == 'blue' ? problem.tests?.length : problem.max_points}</Table.Cell>
-                  {submissions && (
-                    <>
-                      <Table.Cell>
-                        {problem.pid in submissions ? submissions[problem.pid].filter((p) => p.score > 0).length : 0}
-                      </Table.Cell>
-                      <Table.Cell>{problem.pid in submissions ? submissions[problem.pid].length : 0}</Table.Cell>
-                    </>
-                  )}
-                </Table.Row>
+                return (
+                  <Table.Row key={index}>
+                    <Table.Cell>
+                      <input type="checkbox" checked={problem.checked} id={problem.pid} onChange={handleChange} />
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Link to={`/admin/problems/${problem.pid}`}>{problem.id}</Link>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <DivisionLabel division={problem.division} />
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Link to={`/admin/problems/${problem.pid}`}>{problem.name}</Link>
+                    </Table.Cell>
+                    <Table.Cell>{activeDivision == 'blue' ? problem.tests?.length : problem.max_points}</Table.Cell>
+                    {submissions && (
+                      <>
+                        <Table.Cell>
+                          {problem.pid in submissions ? submissions[problem.pid].filter((p) => p.score > 0).length : 0}
+                        </Table.Cell>
+                        <Table.Cell>{problem.pid in submissions ? submissions[problem.pid].length : 0}</Table.Cell>
+                      </>
+                    )}
+                  </Table.Row>
                 )
               })
             )}
