@@ -143,14 +143,16 @@ const Users = (): JSX.Element => {
     try {
       const response = await fetch('https://mu.acm.org/api/registered_teams')
       const teams = await response.json()
+      const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-+";
 
       let i = 1
 
       for (const team of teams) {
         if (team.division === 'eagle') continue
-        const password = await (
-          await fetch('https://www.passwordrandom.com/query?command=password&scheme=rrVNvNRRNN')
-        ).text()
+        let password = ""
+      
+        for (var j = 0; j < 9; j++)
+          password += possible.charAt(Math.floor(Math.random() * possible.length)); 
 
         const username = 'team' + i
 
@@ -172,8 +174,10 @@ const Users = (): JSX.Element => {
 
         if (res.ok) {
           passwords.push({
-            display_name: team.team_name,
             username,
+            display_name: team.team_name,
+            school: team.school_name,
+            division: team.division,
             password
           })
           const new_user = await res.json()
