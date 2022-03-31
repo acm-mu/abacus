@@ -90,13 +90,15 @@ const Teams = (): JSX.Element => {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {users.map((team: User) => { return (
-            <Table.Row key={team.uid} uuid={`${team.uid}`}>
-              <Table.Cell>{team.username}</Table.Cell>
-              <Table.Cell>{team.display_name}</Table.Cell>
-              <Table.Cell>{team.school}</Table.Cell>
-            </Table.Row>
-          )})}
+          {users.map((team: User) => {
+            return (
+              <Table.Row key={team.uid} uuid={`${team.uid}`}>
+                <Table.Cell>{team.username}</Table.Cell>
+                <Table.Cell>{team.display_name}</Table.Cell>
+                <Table.Cell>{team.school}</Table.Cell>
+              </Table.Row>
+            )
+          })}
         </Table.Body>
       </Table>
     </>
