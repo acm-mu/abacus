@@ -230,62 +230,64 @@ const Submissions = (): JSX.Element => {
               <Table.Cell colSpan={'100%'}>No Submissions</Table.Cell>
             </Table.Row>
           ) : (
-            filteredSubmissions.map((submission) => {return (
-              <Table.Row key={submission.sid}>
-                <Table.Cell>
-                  <input type="checkbox" checked={submission.checked} id={submission.sid} onChange={handleChange} />
-                </Table.Cell>
-                <Table.Cell>
-                  <Link to={`/${user?.role}/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link>
-                </Table.Cell>
-                <Table.Cell>
-                  <Link to={`/${user?.role}/problems/${submission.pid}`}>{submission.problem?.name} </Link>
-                </Table.Cell>
-                <Table.Cell>
-                  <Link to={`/${user?.role}/teams`}>{submission.team.display_name}</Link>
-                </Table.Cell>
-                <Table.Cell>{submission.language}</Table.Cell>
-                <Table.Cell>
-                  <span className={`status icn ${submission.status}`} />
-                </Table.Cell>
-                <Table.Cell>
-                  {submission.claimed ? (
-                    submission.claimed?.uid === user?.uid ? (
+            filteredSubmissions.map((submission) => {
+              return (
+                <Table.Row key={submission.sid}>
+                  <Table.Cell>
+                    <input type="checkbox" checked={submission.checked} id={submission.sid} onChange={handleChange} />
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Link to={`/${user?.role}/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Link to={`/${user?.role}/problems/${submission.pid}`}>{submission.problem?.name} </Link>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Link to={`/${user?.role}/teams`}>{submission.team.display_name}</Link>
+                  </Table.Cell>
+                  <Table.Cell>{submission.language}</Table.Cell>
+                  <Table.Cell>
+                    <span className={`status icn ${submission.status}`} />
+                  </Table.Cell>
+                  <Table.Cell>
+                    {submission.claimed ? (
+                      submission.claimed?.uid === user?.uid ? (
+                        <Button
+                          content="Unclaim"
+                          icon={'hand paper'}
+                          onClick={() => unclaim(submission.sid)}
+                          loading={isClaiming[submission.sid]}
+                          disabled={isClaiming[submission.sid]}
+                          labelPosition={'left'}
+                        />
+                      ) : (
+                        <Button content="Claimed" icon={'lock'} disabled={true} labelPosition={'left'} />
+                      )
+                    ) : (
                       <Button
-                        content="Unclaim"
-                        icon={'hand paper'}
-                        onClick={() => unclaim(submission.sid)}
+                        content="Claim"
+                        icon={'hand rock'}
+                        onClick={() => claim(submission.sid)}
                         loading={isClaiming[submission.sid]}
                         disabled={isClaiming[submission.sid]}
                         labelPosition={'left'}
                       />
+                    )}
+                  </Table.Cell>
+                  <Table.Cell>
+                    {submission.released ? (
+                      <Label color="green" icon="check" content="Released" />
                     ) : (
-                      <Button content="Claimed" icon={'lock'} disabled={true} labelPosition={'left'} />
-                    )
-                  ) : (
-                    <Button
-                      content="Claim"
-                      icon={'hand rock'}
-                      onClick={() => claim(submission.sid)}
-                      loading={isClaiming[submission.sid]}
-                      disabled={isClaiming[submission.sid]}
-                      labelPosition={'left'}
-                    />
-                  )}
-                </Table.Cell>
-                <Table.Cell>
-                  {submission.released ? (
-                    <Label color="green" icon="check" content="Released" />
-                  ) : (
-                    <Label icon="lock" content="Held" />
-                  )}
-                </Table.Cell>
-                <Table.Cell>
-                  <Moment fromNow date={submission.date * 1000} />{' '}
-                </Table.Cell>
-                <Table.Cell>{submission.score}</Table.Cell>
-              </Table.Row>
-            )})
+                      <Label icon="lock" content="Held" />
+                    )}
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Moment fromNow date={submission.date * 1000} />{' '}
+                  </Table.Cell>
+                  <Table.Cell>{submission.score}</Table.Cell>
+                </Table.Row>
+              )
+            })
           )}
         </Table.Body>
       </Table>
