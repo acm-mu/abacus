@@ -74,7 +74,6 @@ const CustomTable: FC<CustomTableProps> = ({
         {/* basing this off of the users table, every header value is a property, we go off the header values so that the cells are in order */}
         {body &&
           body.map((bodyItem: any) => {
-            console.log('item', bodyItem)
             return (
               <Table.Row key={bodyItem[`${id}`]} uuid={bodyItem[`${id}`]}>
                 <Table.Cell>

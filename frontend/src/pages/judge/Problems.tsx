@@ -115,25 +115,27 @@ const Problems = (): JSX.Element => {
                 </Table.Cell>
               </Table.Row>
             ) : (
-              problems.map((problem: Problem, index: number) => (
-                <Table.Row key={index}>
-                  <Table.Cell>
-                    <Link to={`/judge/problems/${problem.pid}`}>{problem.id}</Link>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Link to={`/judge/problems/${problem.pid}`}>{problem.name}</Link>
-                  </Table.Cell>
-                  <Table.Cell>{problem.tests?.length}</Table.Cell>
-                  {submissions && (
-                    <>
-                      <Table.Cell>
-                        {problem.pid in submissions ? submissions[problem.pid].filter((p) => p.score > 0).length : 0}
-                      </Table.Cell>
-                      <Table.Cell>{problem.pid in submissions ? submissions[problem.pid].length : 0}</Table.Cell>
-                    </>
-                  )}
-                </Table.Row>
-              ))
+              problems.map((problem: Problem, index: number) => {
+                return (
+                  <Table.Row key={index}>
+                    <Table.Cell>
+                      <Link to={`/judge/problems/${problem.pid}`}>{problem.id}</Link>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Link to={`/judge/problems/${problem.pid}`}>{problem.name}</Link>
+                    </Table.Cell>
+                    <Table.Cell>{problem.tests?.length}</Table.Cell>
+                    {submissions && (
+                      <>
+                        <Table.Cell>
+                          {problem.pid in submissions ? submissions[problem.pid].filter((p) => p.score > 0).length : 0}
+                        </Table.Cell>
+                        <Table.Cell>{problem.pid in submissions ? submissions[problem.pid].length : 0}</Table.Cell>
+                      </>
+                    )}
+                  </Table.Row>
+                )
+              })
             )}
           </Table.Body>
         </Table>

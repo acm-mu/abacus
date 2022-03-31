@@ -22,7 +22,6 @@ const PracticeProblem = ({ submissions }: PracticeProblemProps): JSX.Element => 
     fetch(`/problems/${id}.json`)
       .then((res) => res.json())
       .then((data) => {
-        console.log('data', data)
         setProblem(data)
         setLoading(false)
       })
