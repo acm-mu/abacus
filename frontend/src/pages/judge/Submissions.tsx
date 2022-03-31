@@ -230,7 +230,7 @@ const Submissions = (): JSX.Element => {
               <Table.Cell colSpan={'100%'}>No Submissions</Table.Cell>
             </Table.Row>
           ) : (
-            filteredSubmissions.map((submission) => (
+            filteredSubmissions.map((submission) => {return (
               <Table.Row key={submission.sid}>
                 <Table.Cell>
                   <input type="checkbox" checked={submission.checked} id={submission.sid} onChange={handleChange} />
@@ -285,7 +285,7 @@ const Submissions = (): JSX.Element => {
                 </Table.Cell>
                 <Table.Cell>{submission.score}</Table.Cell>
               </Table.Row>
-            ))
+            )})
           )}
         </Table.Body>
       </Table>

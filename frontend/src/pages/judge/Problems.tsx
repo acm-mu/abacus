@@ -115,7 +115,7 @@ const Problems = (): JSX.Element => {
                 </Table.Cell>
               </Table.Row>
             ) : (
-              problems.map((problem: Problem, index: number) => (
+              problems.map((problem: Problem, index: number) => {return (
                 <Table.Row key={index}>
                   <Table.Cell>
                     <Link to={`/judge/problems/${problem.pid}`}>{problem.id}</Link>
@@ -133,7 +133,7 @@ const Problems = (): JSX.Element => {
                     </>
                   )}
                 </Table.Row>
-              ))
+              )})
             )}
           </Table.Body>
         </Table>
