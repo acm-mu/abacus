@@ -87,6 +87,12 @@ export const schema: Record<string, ParamSchema> = {
  *           Request body does not match required schema.
  */
 export const putContest = async (req: Request, res: Response): Promise<void> => {
+
+  if (req?.user?.role !== 'admin') {
+    res.status(403).send({ message: 'Unauthroized' })
+    return
+  }
+
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({

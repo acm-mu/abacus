@@ -85,20 +85,22 @@ const Home = (): JSX.Element => {
 
           <Table.Body>
             {myClaimedSubmissions && myClaimedSubmissions.length > 0 ? (
-              myClaimedSubmissions.slice(0, 5).map((submission) => (
-                <Table.Row key={`my-claimed-${submission.sid}`}>
-                  <Table.Cell>
-                    <Link to={`/judge/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Link to={`/judge/teams/${submission.tid}`}>{submission.team.display_name}</Link>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Link to={`/judge/problems/${submission.pid}`}>{submission.problem.name}</Link>
-                  </Table.Cell>
-                  <Table.Cell>{submission.language}</Table.Cell>
-                </Table.Row>
-              ))
+              myClaimedSubmissions.slice(0, 5).map((submission) => {
+                return (
+                  <Table.Row key={`my-claimed-${submission.sid}`}>
+                    <Table.Cell>
+                      <Link to={`/judge/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Link to={`/judge/teams/${submission.tid}`}>{submission.team.display_name}</Link>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Link to={`/judge/problems/${submission.pid}`}>{submission.problem.name}</Link>
+                    </Table.Cell>
+                    <Table.Cell>{submission.language}</Table.Cell>
+                  </Table.Row>
+                )
+              })
             ) : (
               <Table.Row>
                 <Table.Cell colSpan={'100%'}>There are no submissions that match this description.</Table.Cell>
@@ -125,20 +127,22 @@ const Home = (): JSX.Element => {
 
           <Table.Body>
             {recentSubmissions && recentSubmissions.length > 0 ? (
-              recentSubmissions.slice(0, 5).map((submission) => (
-                <Table.Row key={`recent-${submission.sid}`}>
-                  <Table.Cell>
-                    <Link to={`/judge/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Link to={`/judge/teams/${submission.tid}`}>{submission.team.display_name}</Link>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Link to={`/judge/problems/${submission.pid}`}>{submission.problem.name}</Link>
-                  </Table.Cell>
-                  <Table.Cell>{submission.language}</Table.Cell>
-                </Table.Row>
-              ))
+              recentSubmissions.slice(0, 5).map((submission) => {
+                return (
+                  <Table.Row key={`recent-${submission.sid}`}>
+                    <Table.Cell>
+                      <Link to={`/judge/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Link to={`/judge/teams/${submission.tid}`}>{submission.team.display_name}</Link>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Link to={`/judge/problems/${submission.pid}`}>{submission.problem.name}</Link>
+                    </Table.Cell>
+                    <Table.Cell>{submission.language}</Table.Cell>
+                  </Table.Row>
+                )
+              })
             ) : (
               <Table.Row>
                 <Table.Cell colSpan={'100%'}>There are no submissions that match this description.</Table.Cell>
@@ -165,20 +169,22 @@ const Home = (): JSX.Element => {
 
           <Table.Body>
             {pendingSubmissions && pendingSubmissions.length > 0 ? (
-              pendingSubmissions.slice(0, 5).map((submission) => (
-                <Table.Row key={`pending-${submission.sid}`}>
-                  <Table.Cell>
-                    <Link to={`/judge/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Link to={`/judge/teams/${submission.tid}`}>{submission.team.display_name}</Link>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Link to={`/judge/problems/${submission.pid}`}>{submission.problem.name}</Link>
-                  </Table.Cell>
-                  <Table.Cell>{submission.language}</Table.Cell>
-                </Table.Row>
-              ))
+              pendingSubmissions.slice(0, 5).map((submission) => {
+                return (
+                  <Table.Row key={`pending-${submission.sid}`}>
+                    <Table.Cell>
+                      <Link to={`/judge/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Link to={`/judge/teams/${submission.tid}`}>{submission.team.display_name}</Link>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Link to={`/judge/problems/${submission.pid}`}>{submission.problem.name}</Link>
+                    </Table.Cell>
+                    <Table.Cell>{submission.language}</Table.Cell>
+                  </Table.Row>
+                )
+              })
             ) : (
               <Table.Row>
                 <Table.Cell colSpan={'100%'}>There are no submissions that match this description.</Table.Cell>
@@ -206,21 +212,23 @@ const Home = (): JSX.Element => {
 
           <Table.Body>
             {claimedSubmissions && claimedSubmissions.length > 0 ? (
-              claimedSubmissions.slice(0, 5).map((submission) => (
-                <Table.Row key={`claimed-${submission.sid}`}>
-                  <Table.Cell>
-                    <Link to={`/judge/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Link to={`/judge/teams/${submission.tid}`}>{submission.team.display_name}</Link>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Link to={`/judge/problems/${submission.pid}`}>{submission.problem.name}</Link>
-                  </Table.Cell>
-                  <Table.Cell>{submission.claimed?.display_name}</Table.Cell>
-                  <Table.Cell>{submission.language}</Table.Cell>
-                </Table.Row>
-              ))
+              claimedSubmissions.slice(0, 5).map((submission) => {
+                return (
+                  <Table.Row key={`claimed-${submission.sid}`}>
+                    <Table.Cell>
+                      <Link to={`/judge/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Link to={`/judge/teams/${submission.tid}`}>{submission.team.display_name}</Link>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Link to={`/judge/problems/${submission.pid}`}>{submission.problem.name}</Link>
+                    </Table.Cell>
+                    <Table.Cell>{submission.claimed?.display_name}</Table.Cell>
+                    <Table.Cell>{submission.language}</Table.Cell>
+                  </Table.Row>
+                )
+              })
             ) : (
               <Table.Row>
                 <Table.Cell colSpan={'100%'}>There are no submissions that match this description.</Table.Cell>
