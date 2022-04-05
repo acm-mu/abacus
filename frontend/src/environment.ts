@@ -6,7 +6,7 @@ interface Config {
 
 const prod: Config = {
   isLocal: false,
-  API_URL: process.env.API_URL || 'http://35.244.155.137',
+  API_URL: process.env.API_URL || 'https://api.codeabac.us',
   environmentText: ''
 }
 
