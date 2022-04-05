@@ -23,6 +23,8 @@ const LoginModal = ({ trigger, open }: LoginModalProps): JSX.Element => {
   useEffect(() => {
     return () => {
       setFormData({ username: '', password: '' });
+      setOpen(false)
+      setLoggingIn(false)
     };
 }, []);
 
