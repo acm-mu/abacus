@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useContext, useState } from 'react'
+import React, { ChangeEvent, useContext, useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
 import { Button, Form, Modal } from 'semantic-ui-react'
 import { AppContext } from 'context'
@@ -19,6 +19,12 @@ const LoginModal = ({ trigger, open }: LoginModalProps): JSX.Element => {
   const [formData, setFormData] = useState({ username: '', password: '' })
   const [isOpen, setOpen] = useState(open || false)
   const [isLoggingIn, setLoggingIn] = useState(false)
+
+  useEffect(() => {
+    return () => {
+      setFormData({ username: '', password: '' });
+    };
+}, []);
 
   const handleChange = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>) =>
     setFormData({ ...formData, [name]: value })
