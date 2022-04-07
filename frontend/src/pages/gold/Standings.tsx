@@ -86,7 +86,7 @@ const Standings = (): JSX.Element => {
       </>
     )
 
-  if (settings && user && isThirtyMinutesBefore(settings.end_date) && user.role === 'team')
+  if (settings && (!user || user && isThirtyMinutesBefore(settings.end_date) && user.role === 'team'))
     return (
       <>
         {helmet}
