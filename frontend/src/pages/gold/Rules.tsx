@@ -54,7 +54,7 @@ const Rules = (): JSX.Element => {
             with other teams is strictly prohibited.
           </li>
           <li>
-            You <b>may</b> use online communication software like email, Zoom, Teams, Skype, Discord, etc. for
+            Only virtual teams <b>may</b> use online communication software like email, Zoom, Teams, Skype, Discord, etc. for
             communication solely between you and your teammates.
           </li>
           <li>There are no restrictions on the number of computers or devices you can use.</li>
@@ -147,7 +147,7 @@ const Rules = (): JSX.Element => {
             <a href="#">Google Meet</a>
           )}{' '}
           or, if your internet is not working, by phone at{' '}
-          <a href={isBeforeCompetition() ? 'tel:4143755336' : '#'}>(414) 375-5336</a>.
+          <a href={isBeforeCompetition() ? 'tel:2628643449' : '#'}>(262) 864-3449</a>.
         </p>
         <p>That is all! Thank you for taking the time to read the rules and happy programming!</p>
       </Block>

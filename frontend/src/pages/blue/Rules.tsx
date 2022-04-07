@@ -116,14 +116,14 @@ const Rules = (): JSX.Element => {
         <h2>Competition Guidelines</h2>
         <p>Here are some other general guidelines that you might find useful:</p>
         <ul>
-          <li>There are no restrictions on the number of computers or devices you can use.</li>
+          <li>For virtual teams, there are no restrictions on the number of computers or devices you can use.  In-person teams are limited to two devices per team.</li>
           <li>
-            You <b>may</b> use online communication software like email, Zoom, Teams, Skype, Discord, etc. for
+            Only virtual teams <b>may</b> use online communication software like email, Zoom, Teams, Skype, Discord, etc. for
             communication <b>solely between</b> you and your teammates.
           </li>
           <li>
-            Your solutions have a runtime limit of <b>30 seconds</b>. When judging, solutions are stopped if they take
-            longer than 30 seconds to execute.
+            Your solutions have a runtime limit of <b>5 seconds</b>. When judging, solutions are stopped if they take
+            longer than 5 seconds to execute.
           </li>
           <li>Ask questions regarding logistics and problems to the judges. This includes:</li>
           <ul>
@@ -145,7 +145,7 @@ const Rules = (): JSX.Element => {
               <a href="#">Google Meet</a>
             )}{' '}
             or, if your internet is not working, by phone at{' '}
-            <a href={isBeforeCompetition() ? 'tel:4143755336' : '#'}>(414) 375-5336</a>.
+            <a href={isBeforeCompetition() ? 'tel:2628643449' : '#'}>(262) 864-3449</a>.
           </li>
         </ul>
 
