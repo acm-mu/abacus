@@ -112,7 +112,7 @@ const Home = (): JSX.Element => {
 
       <Block transparent size="xs-6">
         <h1>
-          <Link to="/judge/submissions?filter=recently_graded">Recently Graded Submissions</Link>
+          <Link to="/judge/submissions?filter=recently_graded">Recently Released Submissions</Link>
         </h1>
 
         <Table>
