@@ -24,8 +24,8 @@ export default class MongoDB extends Database {
 
   scan(TableName: string, query?: ScanOptions, page?: number): Promise<Item[]> {
     var obj = { _id: 0 }
-    if(query?.columns){
-      obj = query.columns.reduce((o, key) => ({ ...o, [key]: 1}), { _id: 0 })
+    if (query?.columns) {
+      obj = query.columns.reduce((o, key) => ({ ...o, [key]: 1 }), { _id: 0 })
     }
 
     const pageSize = 25

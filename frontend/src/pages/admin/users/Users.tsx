@@ -143,16 +143,15 @@ const Users = (): JSX.Element => {
     try {
       const response = await fetch('https://mu.acm.org/api/registered_teams')
       const teams = await response.json()
-      const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-+";
+      const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-+'
 
       let i = 1
 
       for (const team of teams) {
         if (team.division === 'eagle') continue
-        let password = ""
-      
-        for (var j = 0; j < 9; j++)
-          password += possible.charAt(Math.floor(Math.random() * possible.length)); 
+        let password = ''
+
+        for (var j = 0; j < 9; j++) password += possible.charAt(Math.floor(Math.random() * possible.length))
 
         const username = 'team' + i
 
