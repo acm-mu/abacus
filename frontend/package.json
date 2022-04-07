@@ -33,7 +33,7 @@
     "express": "^4.17.1",
     "file-saver": "^2.0.5",
     "jsonwebtoken": "^8.5.1",
-    "moment": "^2.29.1",
+    "moment": "^2.29.2",
     "monaco-editor": "^0.28.1",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",

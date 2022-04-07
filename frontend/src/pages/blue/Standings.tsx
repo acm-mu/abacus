@@ -7,6 +7,8 @@ import config from 'environment'
 import '../Standings.scss'
 import { AppContext, SocketContext } from 'context'
 import { Helmet } from 'react-helmet'
+import moment from 'moment'
+import { isThirtyMinutesBefore } from 'utils'
 
 const Standings = (): JSX.Element => {
   const { user, settings } = useContext(AppContext)
@@ -67,6 +69,19 @@ const Standings = (): JSX.Element => {
       <>
         {helmet}
         <StatusMessage message={{ type: 'error', message: 'An error has occurred! Please contact support' }} />
+      </>
+    )
+
+    
+  if (settings && isThirtyMinutesBefore(settings.end_date))
+    return (
+      <>
+        {helmet}
+        <Countdown />
+        <Block size="xs-12">
+          <h1>Competition almost finished!</h1>
+          <p>Scoreboard is disabled for the remainder of the competition.</p>
+        </Block>
       </>
     )
 

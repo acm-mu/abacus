@@ -1,5 +1,6 @@
 import React from 'react'
 import { User } from 'abacus'
+import moment from 'moment'
 
 // Convert's stored language values in to syntax highlighter friendly values
 export const syntax_lang = (language: string): string => {
@@ -70,4 +71,13 @@ export const compare = (o1: string | number, o2: string | number): number => {
     return o1 > o2 ? 1 : -1
   }
   return 0
+}
+
+export const isThirtyMinutesBefore = (time: Date) => {
+  const newDate = new Date()
+  var beginningTime = moment(newDate);
+var endTime = moment(time);
+var diff = endTime.diff(beginningTime, 'minutes'); 
+console.log("diff",diff);
+  return diff <= 30
 }

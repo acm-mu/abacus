@@ -7,6 +7,8 @@ import config from 'environment'
 import { Table } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import '../Standings.scss'
+import moment from 'moment'
+import { isThirtyMinutesBefore } from 'utils'
 
 interface GoldStandingsUser {
   uid: string
@@ -83,6 +85,18 @@ const Standings = (): JSX.Element => {
         </Block>
       </>
     )
+      
+  if (settings && isThirtyMinutesBefore(settings.end_date))
+    return (
+      <>
+        {helmet}
+        <Countdown />
+        <Block size="xs-12">
+          <h1>Competition almost finished!</h1>
+          <p>Scoreboard is disabled for the remainder of the competition.</p>
+        </Block>
+      </>
+    ) 
 
   if (isLoading) return <PageLoading />
 
