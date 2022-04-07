@@ -22,11 +22,11 @@ const LoginModal = ({ trigger, open }: LoginModalProps): JSX.Element => {
 
   useEffect(() => {
     return () => {
-      setFormData({ username: '', password: '' });
+      setFormData({ username: '', password: '' })
       setOpen(false)
       setLoggingIn(false)
-    };
-}, []);
+    }
+  }, [])
 
   const handleChange = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>) =>
     setFormData({ ...formData, [name]: value })

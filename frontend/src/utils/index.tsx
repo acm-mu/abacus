@@ -75,9 +75,9 @@ export const compare = (o1: string | number, o2: string | number): number => {
 
 export const isThirtyMinutesBefore = (time: Date) => {
   const newDate = new Date()
-  var beginningTime = moment(newDate);
-var endTime = moment(time);
-var diff = endTime.diff(beginningTime, 'minutes'); 
-console.log("diff",diff);
+  var beginningTime = moment(newDate)
+  var endTime = moment(time)
+  var diff = endTime.diff(beginningTime, 'minutes')
+  console.log('diff', diff)
   return diff <= 30
 }

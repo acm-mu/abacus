@@ -85,7 +85,7 @@ const Standings = (): JSX.Element => {
         </Block>
       </>
     )
-      
+
   if (settings && user && isThirtyMinutesBefore(settings.end_date) && user.role === 'team')
     return (
       <>
@@ -96,7 +96,7 @@ const Standings = (): JSX.Element => {
           <p>Scoreboard is disabled for the remainder of the competition.</p>
         </Block>
       </>
-    ) 
+    )
 
   if (isLoading) return <PageLoading />
 
