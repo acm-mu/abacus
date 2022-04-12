@@ -51,12 +51,12 @@ export const rerunSubmission = async (req: Request, res: Response): Promise<void
       await contest.get_settings()
     if (submission) {
       let newSubmission = { ...submission }
+      newSubmission.tests = problem.tests;
       // Update status to 'pending'
       // await updateItem('', { submission.sid }, { status: 'pending' });
       // Extract details and set defaults
       let status = 'accepted'
       for (let test of newSubmission.tests) {
-        // Copy tests from problem
         // Run tests
         const file = { name: newSubmission.filename as string, content: newSubmission['source'] as string }
         // Await response from piston execution
