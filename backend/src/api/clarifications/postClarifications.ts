@@ -4,7 +4,7 @@ import contest from '../../abacus/contest'
 import { v4 as uuidv4 } from 'uuid'
 import { Clarification } from 'abacus'
 import { sendNotification } from '../../server'
-
+import { io } from '../../server'
 export const schema: Record<string, ParamSchema> = {
   body: {
     in: 'body',
@@ -81,6 +81,7 @@ const notify = async (clarification: Clarification) => {
         id: clarification.cid
       }
     })
+   
   }
 }
 
@@ -176,7 +177,7 @@ export const postClarifications = async (req: Request, res: Response): Promise<v
     await contest.create_clarification(clarification)
 
     notify(clarification)
-
+    io.emit('new_clarification', { cid: clarification.cid })
     res.send(clarification)
   } catch (err) {
     console.error(err)

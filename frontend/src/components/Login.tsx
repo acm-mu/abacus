@@ -61,7 +61,8 @@ const LoginModal = ({ trigger, open }: LoginModalProps): JSX.Element => {
       <Modal
         size="tiny"
         closeIcon
-        onClose={() => setOpen(false)}
+        onClose={() => {setOpen(false)
+          setFormData({ username: '', password: '' }) }}
         onOpen={() => setOpen(true)}
         open={isOpen}
         trigger={trigger}>

@@ -1,8 +1,8 @@
 import { Clarification } from 'abacus'
 import { Block, PageLoading, Unauthorized } from 'components'
 import ClarificationModal from 'components/ClarificationModal'
-import { AppContext } from 'context'
-import React, { FormEvent, useContext, useEffect, useState } from 'react'
+import { AppContext, SocketContext } from 'context'
+import React, { FormEvent, useCallback, useContext, useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet'
 import Moment from 'react-moment'
 import { useParams } from 'react-router-dom'
@@ -32,17 +32,16 @@ const Clarifications = (): JSX.Element => {
   const { cid } = useParams<{ cid: string }>()
   const [activeItem, setActiveItem] = useState<string>(cid || '')
   const [showClosed, setShowClosed] = useState(false)
-
+  const socket = useContext(SocketContext)
   const helmet = (
     <Helmet>
       <title>Abacus | Clarifications</title>
     </Helmet>
   )
-
   const loadClarifications = async (): Promise<{ [key: string]: Clarification }> => {
     let clarifications = {}
 
-    const response = await fetch(`${config.API_URL}/clarifications?page=1`, {
+    const response = await fetch(`${config.API_URL}/clarifications`, {
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.accessToken}` }
     })
 
@@ -52,9 +51,10 @@ const Clarifications = (): JSX.Element => {
 
     setClarifications(clarifications)
     setLoading(false)
-
     return clarifications
   }
+
+  socket?.on('new_clarification',() => loadClarifications())
 
   useEffect(() => {
     loadClarifications()
