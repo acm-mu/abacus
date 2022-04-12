@@ -78,7 +78,6 @@ const SubmissionDetail = (): JSX.Element => {
               <Table.HeaderCell>PROBLEM</Table.HeaderCell>
               <Table.HeaderCell>SUB NO</Table.HeaderCell>
               <Table.HeaderCell>STATUS</Table.HeaderCell>
-              <Table.HeaderCell>CPU</Table.HeaderCell>
               <Table.HeaderCell>SCORE</Table.HeaderCell>
               <Table.HeaderCell>LANGUAGE</Table.HeaderCell>
             </Table.Row>
@@ -94,9 +93,6 @@ const SubmissionDetail = (): JSX.Element => {
               {submission_problem}
               <Table.Cell>{submission.sub_no + 1}</Table.Cell>
               {submission_status}
-              <Table.Cell>
-                {rerunning ? <Loader active inline size="small" /> : Math.floor(submission.runtime || 0)}
-              </Table.Cell>
               <Table.Cell>{rerunning ? <Loader active inline size="small" /> : submission.score}</Table.Cell>
               <Table.Cell>{submission.language}</Table.Cell>
             </Table.Row>

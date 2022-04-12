@@ -12,7 +12,6 @@ const Submission = (): JSX.Element => {
   const { sid } = useParams<{ sid: string }>()
   const [submission, setSubmission] = useState<SubmissionType>()
   const [isLoading, setLoading] = useState(true)
-  const [isMounted, setMounted] = useState(true)
   const [isRerunning, setRerunning] = useState(false)
   const [isReleasing, setReleasing] = useState(false)
   const [isClaiming, setClaiming] = useState<{ [key: string]: boolean }>({})
@@ -27,7 +26,6 @@ const Submission = (): JSX.Element => {
       headers: { Authorization: `Bearer ${localStorage.accessToken}` }
     })
 
-    if (!isMounted) return
 
     if (response.ok) {
       setSubmission(Object.values(await response.json())[0] as SubmissionType)
@@ -38,10 +36,7 @@ const Submission = (): JSX.Element => {
   useEffect(() => {
     loadSubmission().then(() => setLoading(false))
     socket?.on('update_submission', loadSubmission)
-    return () => {
-      setMounted(false)
-    }
-  }, [])
+  }, [sid])
 
   if (isLoading) return <PageLoading />
   if (!submission) return <NotFound />
