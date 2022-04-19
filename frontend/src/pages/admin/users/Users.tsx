@@ -151,7 +151,7 @@ const Users = (): JSX.Element => {
         if (team.division === 'eagle') continue
         let password = ''
 
-        for (var j = 0; j < 9; j++) password += possible.charAt(Math.floor(Math.random() * possible.length))
+        for (let j = 0; j < 9; j++) password += possible.charAt(Math.floor(Math.random() * possible.length))
 
         const username = 'team' + i
 
