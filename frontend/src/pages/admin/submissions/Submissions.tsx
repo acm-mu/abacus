@@ -79,7 +79,7 @@ const Submissions = (): JSX.Element => {
       getTableSize()
     }
     //include page as query, so that API can fetch it.
-    const response = await fetch(`${config.API_URL}/submissions?page=${page}`, {
+    const response = await fetch(`${config.API_URL}/submissions`, {
       headers: {
         Authorization: `Bearer ${localStorage.accessToken}`,
         'Content-Type': 'application/json'
@@ -256,11 +256,6 @@ const Submissions = (): JSX.Element => {
             )}
           </Table.Body>
         </Table>
-        <Pagination
-          defaultActivePage={page}
-          totalPages={numberOfPages}
-          onPageChange={(_event, data) => handlePageChange(data.activePage as number)}
-        />
       </Block>
     </Grid>
   )

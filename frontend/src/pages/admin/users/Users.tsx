@@ -105,7 +105,7 @@ const Users = (): JSX.Element => {
         getTableSize()
       }
       //include page as query, so that API can fetch it.
-      const response = await fetch(`${config.API_URL}/users?page=${page}`, {
+      const response = await fetch(`${config.API_URL}/users`, {
         headers: {
           Authorization: `Bearer ${localStorage.accessToken}`,
           'Content-Type': 'application/json'
@@ -271,11 +271,6 @@ const Users = (): JSX.Element => {
         sort={{ column, direction }}
         onClickHeaderItem={(item: any) => sort(item)}
         onCheckAll={checkAll}
-      />
-      <Pagination
-        defaultActivePage={page}
-        totalPages={numberOfPages}
-        onPageChange={(_event: any, data: any) => handlePageChange(data.activePage as number)}
       />
     </Grid>
   )

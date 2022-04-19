@@ -58,7 +58,7 @@ const Clarifications = (): JSX.Element => {
       getTableSize()
     }
     //include page as query, so that API can fetch it.
-    const response = await fetch(`${config.API_URL}/clarifications?page=${page}`, {
+    const response = await fetch(`${config.API_URL}/clarifications`, {
       method: 'GET',
       headers: { Authorization: `Bearer ${localStorage.accessToken}` }
     })
@@ -225,11 +225,6 @@ const Clarifications = (): JSX.Element => {
             )}
           </Table.Body>
         </Table>
-        <Pagination
-          defaultActivePage={page}
-          totalPages={numberOfPages}
-          onPageChange={(_event, data) => handlePageChange(data.activePage as number)}
-        />
       </Block>
     </>
   )
