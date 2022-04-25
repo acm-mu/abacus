@@ -79,5 +79,5 @@ export const isThirtyMinutesBefore = (time: Date) => {
   const endTime = moment(time)
   const diff = endTime.diff(beginningTime, 'minutes')
   console.log('diff', diff)
-  return diff <= 30
+  return diff <= 30 && diff > 0
 }
