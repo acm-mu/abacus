@@ -1,8 +1,8 @@
 import React, { ChangeEvent, FC } from 'react'
 import { Table } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
-import DivisionLabel from 'components/DivisionLabel'
 import { User } from 'abacus'
+import DivisionLabel from './../../components/DivisionLabel'
 
 type SortKey = 'uid' | 'display_name' | 'username' | 'role' | 'division' | 'school'
 type SortConfig = {
