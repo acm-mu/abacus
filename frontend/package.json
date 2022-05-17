@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "react-scripts start",
     "build": "react-scripts build",
-    "test": "echo 'Implement Me!'",
+    "test": "jest",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "@monaco-editor/react": "^4.2.2",
+    "@types/jest": "^27.5.0",
     "@uiw/react-markdown-preview": "^3.3.3",
     "@uiw/react-md-editor": "^3.6.4",
     "dotenv": "^10.0.0",
@@ -55,6 +56,9 @@
     "web-vitals": "^2.1.0"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.17.10",
+    "@babel/preset-react": "^7.16.7",
+    "@babel/preset-typescript": "^7.16.7",
     "@testing-library/dom": "^8.6.0",
     "@testing-library/react": "^12.1.1",
     "@testing-library/user-event": "^13.2.1",
@@ -68,9 +72,15 @@
     "@types/react-syntax-highlighter": "^13.5.2",
     "@types/react-transition-group": "^4.4.3",
     "@types/uuid": "^8.3.1",
+    "babel-jest": "^28.1.0",
     "eslint": "^7.32.0",
     "eslint-plugin-prettier": "^4.0.0",
+    "jest": "^28.1.0",
+    "jest-environment-jsdom": "^28.1.0",
     "prettier": "^2.4.1",
-    "sass": "^1.42.1"
+    "react-test-renderer": "^18.1.0",
+    "sass": "^1.42.1",
+    "ts-jest": "^28.0.1",
+    "ts-node": "^10.7.0"
   }
 }
