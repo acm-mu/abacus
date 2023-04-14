@@ -14,7 +14,7 @@ db.createCollection('user')
 db.user.insert({
     uid: "b126d7588b184db7818693c2ab891887",
     display_name: "Admin",
-    password: "65df4b1116b849b2d02063932b1472a2c15545908d2bdb029c14bd710158c1e2",
+    password: "62b5f0bf8345c5c47ededf67c6a205131b1fa2d0c07e5e3f747395285780cccf",
     role: "admin",
     username: "admin"
 })

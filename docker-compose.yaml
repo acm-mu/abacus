@@ -1,4 +1,5 @@
 version: "3.8"
+
 services:
   mongodb:
     container_name: mongo
@@ -15,26 +16,12 @@ services:
     restart: unless-stopped
     build:
       context: backend
+      dockerfile: Dockerfile.prod
     environment:
-      - MONGO_HOST=mongo
+      - MONGO_HOST=mongo:27017
       - MONGO_USER=username
       - MONGO_PASS=password
       - MONGO_DBNAME=abacus
-    volumes:
-      - "./backend/src:/app/src"
     ports:
       - "80:80"
-    depends_on:
-      - mongodb
-  app:
-    container_name: app
-    restart: unless-stopped
-    build:
-      context: frontend
-    volumes:
-      - ./frontend/public:/app/public
-      - ./frontend/src:/app/src
-    ports:
-      - "3000:3000"
-    depends_on:
-      - server
+

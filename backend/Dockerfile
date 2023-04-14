@@ -1,7 +1,5 @@
 # pull official base image
-FROM node:16
-
-ENV CHOKIDAR_USEPOLLING true
+FROM node:16 as build
 
 # set working directory
 WORKDIR /app
@@ -15,7 +13,19 @@ RUN yarn global add nodemon --silent
 # add app
 COPY . ./
 
+# production environment
+FROM build as production
+
+# add `/app/node_modules/.bin` to PATH
+ENV PATH /app/node_modules/.bin:$PATH
+
+# build app
+RUN yarn build
+
 EXPOSE 80
 
-# run development server
-CMD ["yarn", "dev"]
+# start app
+CMD ["node", "/app/build/server.js"]
+
+# build container: docker build -f Dockerfile.prod -t abacus-server:prod .
+# run container: docker run -it --rm -p 80:80 abacus-server:prod
