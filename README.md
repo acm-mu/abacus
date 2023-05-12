@@ -45,4 +45,4 @@ After doing this, you should have your own branch created, and can now start wor
 
 ## Project Board
 
-[View project board here](https://github.com/acm-mu/abacus/projects/1)
+[View project board here](https://github.com/orgs/acm-mu/projects/3)
