@@ -34,750 +34,69 @@
     call-me-maybe "^1.0.1"
     z-schema "^5.0.1"
 
-"@aws-crypto/ie11-detection@^3.0.0":
-  version "3.0.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-crypto/ie11-detection/-/ie11-detection-3.0.0.tgz#640ae66b4ec3395cee6a8e94ebcd9f80c24cd688"
-  integrity sha1-ZArma07DOVzuao6U682fgMJM1og=
-  dependencies:
-    tslib "^1.11.1"
-
-"@aws-crypto/sha256-browser@3.0.0":
-  version "3.0.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-crypto/sha256-browser/-/sha256-browser-3.0.0.tgz#05f160138ab893f1c6ba5be57cfd108f05827766"
-  integrity sha1-BfFgE4q4k/HGulvlfP0QjwWCd2Y=
-  dependencies:
-    "@aws-crypto/ie11-detection" "^3.0.0"
-    "@aws-crypto/sha256-js" "^3.0.0"
-    "@aws-crypto/supports-web-crypto" "^3.0.0"
-    "@aws-crypto/util" "^3.0.0"
-    "@aws-sdk/types" "^3.222.0"
-    "@aws-sdk/util-locate-window" "^3.0.0"
-    "@aws-sdk/util-utf8-browser" "^3.0.0"
-    tslib "^1.11.1"
-
-"@aws-crypto/sha256-js@3.0.0", "@aws-crypto/sha256-js@^3.0.0":
-  version "3.0.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-crypto/sha256-js/-/sha256-js-3.0.0.tgz#f06b84d550d25521e60d2a0e2a90139341e007c2"
-  integrity sha1-8GuE1VDSVSHmDSoOKpATk0HgB8I=
-  dependencies:
-    "@aws-crypto/util" "^3.0.0"
-    "@aws-sdk/types" "^3.222.0"
-    tslib "^1.11.1"
-
-"@aws-crypto/supports-web-crypto@^3.0.0":
-  version "3.0.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-crypto/supports-web-crypto/-/supports-web-crypto-3.0.0.tgz#5d1bf825afa8072af2717c3e455f35cda0103ec2"
-  integrity sha1-XRv4Ja+oByrycXw+RV81zaAQPsI=
-  dependencies:
-    tslib "^1.11.1"
-
-"@aws-crypto/util@^3.0.0":
-  version "3.0.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-crypto/util/-/util-3.0.0.tgz#1c7ca90c29293f0883468ad48117937f0fe5bfb0"
-  integrity sha1-HHypDCkpPwiDRorUgReTfw/lv7A=
-  dependencies:
-    "@aws-sdk/types" "^3.222.0"
-    "@aws-sdk/util-utf8-browser" "^3.0.0"
-    tslib "^1.11.1"
-
-"@aws-sdk/abort-controller@3.329.0":
-  version "3.329.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/abort-controller/-/abort-controller-3.329.0.tgz#f311f79cad1040b84b853c5e9386ea2e069e571a"
-  integrity sha1-8xH3nK0QQLhLhTxek4bqLgaeVxo=
-  dependencies:
-    "@aws-sdk/types" "3.329.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/client-cognito-identity@3.332.0":
-  version "3.332.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/client-cognito-identity/-/client-cognito-identity-3.332.0.tgz#9f270b9464b0d373e5e10036358871c6918a5c7d"
-  integrity sha1-nycLlGSw03Pl4QA2NYhxxpGKXH0=
-  dependencies:
-    "@aws-crypto/sha256-browser" "3.0.0"
-    "@aws-crypto/sha256-js" "3.0.0"
-    "@aws-sdk/client-sts" "3.332.0"
-    "@aws-sdk/config-resolver" "3.329.0"
-    "@aws-sdk/credential-provider-node" "3.332.0"
-    "@aws-sdk/fetch-http-handler" "3.329.0"
-    "@aws-sdk/hash-node" "3.329.0"
-    "@aws-sdk/invalid-dependency" "3.329.0"
-    "@aws-sdk/middleware-content-length" "3.329.0"
-    "@aws-sdk/middleware-endpoint" "3.329.0"
-    "@aws-sdk/middleware-host-header" "3.329.0"
-    "@aws-sdk/middleware-logger" "3.329.0"
-    "@aws-sdk/middleware-recursion-detection" "3.329.0"
-    "@aws-sdk/middleware-retry" "3.329.0"
-    "@aws-sdk/middleware-serde" "3.329.0"
-    "@aws-sdk/middleware-signing" "3.329.0"
-    "@aws-sdk/middleware-stack" "3.329.0"
-    "@aws-sdk/middleware-user-agent" "3.332.0"
-    "@aws-sdk/node-config-provider" "3.329.0"
-    "@aws-sdk/node-http-handler" "3.329.0"
-    "@aws-sdk/protocol-http" "3.329.0"
-    "@aws-sdk/smithy-client" "3.329.0"
-    "@aws-sdk/types" "3.329.0"
-    "@aws-sdk/url-parser" "3.329.0"
-    "@aws-sdk/util-base64" "3.310.0"
-    "@aws-sdk/util-body-length-browser" "3.310.0"
-    "@aws-sdk/util-body-length-node" "3.310.0"
-    "@aws-sdk/util-defaults-mode-browser" "3.329.0"
-    "@aws-sdk/util-defaults-mode-node" "3.329.0"
-    "@aws-sdk/util-endpoints" "3.332.0"
-    "@aws-sdk/util-retry" "3.329.0"
-    "@aws-sdk/util-user-agent-browser" "3.329.0"
-    "@aws-sdk/util-user-agent-node" "3.329.0"
-    "@aws-sdk/util-utf8" "3.310.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/client-sso-oidc@3.332.0":
-  version "3.332.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/client-sso-oidc/-/client-sso-oidc-3.332.0.tgz#8875ce4834d5d0decefadec828e32cbc0465fc30"
-  integrity sha1-iHXOSDTV0N7O+t7IKOMsvARl/DA=
-  dependencies:
-    "@aws-crypto/sha256-browser" "3.0.0"
-    "@aws-crypto/sha256-js" "3.0.0"
-    "@aws-sdk/config-resolver" "3.329.0"
-    "@aws-sdk/fetch-http-handler" "3.329.0"
-    "@aws-sdk/hash-node" "3.329.0"
-    "@aws-sdk/invalid-dependency" "3.329.0"
-    "@aws-sdk/middleware-content-length" "3.329.0"
-    "@aws-sdk/middleware-endpoint" "3.329.0"
-    "@aws-sdk/middleware-host-header" "3.329.0"
-    "@aws-sdk/middleware-logger" "3.329.0"
-    "@aws-sdk/middleware-recursion-detection" "3.329.0"
-    "@aws-sdk/middleware-retry" "3.329.0"
-    "@aws-sdk/middleware-serde" "3.329.0"
-    "@aws-sdk/middleware-stack" "3.329.0"
-    "@aws-sdk/middleware-user-agent" "3.332.0"
-    "@aws-sdk/node-config-provider" "3.329.0"
-    "@aws-sdk/node-http-handler" "3.329.0"
-    "@aws-sdk/protocol-http" "3.329.0"
-    "@aws-sdk/smithy-client" "3.329.0"
-    "@aws-sdk/types" "3.329.0"
-    "@aws-sdk/url-parser" "3.329.0"
-    "@aws-sdk/util-base64" "3.310.0"
-    "@aws-sdk/util-body-length-browser" "3.310.0"
-    "@aws-sdk/util-body-length-node" "3.310.0"
-    "@aws-sdk/util-defaults-mode-browser" "3.329.0"
-    "@aws-sdk/util-defaults-mode-node" "3.329.0"
-    "@aws-sdk/util-endpoints" "3.332.0"
-    "@aws-sdk/util-retry" "3.329.0"
-    "@aws-sdk/util-user-agent-browser" "3.329.0"
-    "@aws-sdk/util-user-agent-node" "3.329.0"
-    "@aws-sdk/util-utf8" "3.310.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/client-sso@3.332.0":
-  version "3.332.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/client-sso/-/client-sso-3.332.0.tgz#e22fa9ded125cce75ca2cd63d3f3f9a6b8dfaa77"
-  integrity sha1-4i+p3tElzOdcos1j0/P5prjfqnc=
-  dependencies:
-    "@aws-crypto/sha256-browser" "3.0.0"
-    "@aws-crypto/sha256-js" "3.0.0"
-    "@aws-sdk/config-resolver" "3.329.0"
-    "@aws-sdk/fetch-http-handler" "3.329.0"
-    "@aws-sdk/hash-node" "3.329.0"
-    "@aws-sdk/invalid-dependency" "3.329.0"
-    "@aws-sdk/middleware-content-length" "3.329.0"
-    "@aws-sdk/middleware-endpoint" "3.329.0"
-    "@aws-sdk/middleware-host-header" "3.329.0"
-    "@aws-sdk/middleware-logger" "3.329.0"
-    "@aws-sdk/middleware-recursion-detection" "3.329.0"
-    "@aws-sdk/middleware-retry" "3.329.0"
-    "@aws-sdk/middleware-serde" "3.329.0"
-    "@aws-sdk/middleware-stack" "3.329.0"
-    "@aws-sdk/middleware-user-agent" "3.332.0"
-    "@aws-sdk/node-config-provider" "3.329.0"
-    "@aws-sdk/node-http-handler" "3.329.0"
-    "@aws-sdk/protocol-http" "3.329.0"
-    "@aws-sdk/smithy-client" "3.329.0"
-    "@aws-sdk/types" "3.329.0"
-    "@aws-sdk/url-parser" "3.329.0"
-    "@aws-sdk/util-base64" "3.310.0"
-    "@aws-sdk/util-body-length-browser" "3.310.0"
-    "@aws-sdk/util-body-length-node" "3.310.0"
-    "@aws-sdk/util-defaults-mode-browser" "3.329.0"
-    "@aws-sdk/util-defaults-mode-node" "3.329.0"
-    "@aws-sdk/util-endpoints" "3.332.0"
-    "@aws-sdk/util-retry" "3.329.0"
-    "@aws-sdk/util-user-agent-browser" "3.329.0"
-    "@aws-sdk/util-user-agent-node" "3.329.0"
-    "@aws-sdk/util-utf8" "3.310.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/client-sts@3.332.0":
-  version "3.332.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/client-sts/-/client-sts-3.332.0.tgz#15bb163319d3da69f152f80fb4583eabe73e0e30"
-  integrity sha1-FbsWMxnT2mnxUvgPtFg+q+c+DjA=
-  dependencies:
-    "@aws-crypto/sha256-browser" "3.0.0"
-    "@aws-crypto/sha256-js" "3.0.0"
-    "@aws-sdk/config-resolver" "3.329.0"
-    "@aws-sdk/credential-provider-node" "3.332.0"
-    "@aws-sdk/fetch-http-handler" "3.329.0"
-    "@aws-sdk/hash-node" "3.329.0"
-    "@aws-sdk/invalid-dependency" "3.329.0"
-    "@aws-sdk/middleware-content-length" "3.329.0"
-    "@aws-sdk/middleware-endpoint" "3.329.0"
-    "@aws-sdk/middleware-host-header" "3.329.0"
-    "@aws-sdk/middleware-logger" "3.329.0"
-    "@aws-sdk/middleware-recursion-detection" "3.329.0"
-    "@aws-sdk/middleware-retry" "3.329.0"
-    "@aws-sdk/middleware-sdk-sts" "3.329.0"
-    "@aws-sdk/middleware-serde" "3.329.0"
-    "@aws-sdk/middleware-signing" "3.329.0"
-    "@aws-sdk/middleware-stack" "3.329.0"
-    "@aws-sdk/middleware-user-agent" "3.332.0"
-    "@aws-sdk/node-config-provider" "3.329.0"
-    "@aws-sdk/node-http-handler" "3.329.0"
-    "@aws-sdk/protocol-http" "3.329.0"
-    "@aws-sdk/smithy-client" "3.329.0"
-    "@aws-sdk/types" "3.329.0"
-    "@aws-sdk/url-parser" "3.329.0"
-    "@aws-sdk/util-base64" "3.310.0"
-    "@aws-sdk/util-body-length-browser" "3.310.0"
-    "@aws-sdk/util-body-length-node" "3.310.0"
-    "@aws-sdk/util-defaults-mode-browser" "3.329.0"
-    "@aws-sdk/util-defaults-mode-node" "3.329.0"
-    "@aws-sdk/util-endpoints" "3.332.0"
-    "@aws-sdk/util-retry" "3.329.0"
-    "@aws-sdk/util-user-agent-browser" "3.329.0"
-    "@aws-sdk/util-user-agent-node" "3.329.0"
-    "@aws-sdk/util-utf8" "3.310.0"
-    fast-xml-parser "4.1.2"
-    tslib "^2.5.0"
-
-"@aws-sdk/config-resolver@3.329.0":
-  version "3.329.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/config-resolver/-/config-resolver-3.329.0.tgz#f4283c9c8e61752cecad8cfaebb4db52ac1bbf60"
-  integrity sha1-9Cg8nI5hdSzsrYz667TbUqwbv2A=
-  dependencies:
-    "@aws-sdk/types" "3.329.0"
-    "@aws-sdk/util-config-provider" "3.310.0"
-    "@aws-sdk/util-middleware" "3.329.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/credential-provider-cognito-identity@3.332.0":
-  version "3.332.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/credential-provider-cognito-identity/-/credential-provider-cognito-identity-3.332.0.tgz#ab977d6c572b20c16fcfdede0edd145a28e79c6f"
-  integrity sha1-q5d9bFcrIMFvz97eDt0UWijnnG8=
-  dependencies:
-    "@aws-sdk/client-cognito-identity" "3.332.0"
-    "@aws-sdk/property-provider" "3.329.0"
-    "@aws-sdk/types" "3.329.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/credential-provider-env@3.329.0":
-  version "3.329.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/credential-provider-env/-/credential-provider-env-3.329.0.tgz#54bb313de01324e302b5927733083a4c93ed9962"
-  integrity sha1-VLsxPeATJOMCtZJ3Mwg6TJPtmWI=
-  dependencies:
-    "@aws-sdk/property-provider" "3.329.0"
-    "@aws-sdk/types" "3.329.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/credential-provider-imds@3.329.0":
-  version "3.329.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/credential-provider-imds/-/credential-provider-imds-3.329.0.tgz#566b21c37f5e89730ef3b4229f0824b4c455f669"
-  integrity sha1-Vmshw39eiXMO87QinwgktMRV9mk=
-  dependencies:
-    "@aws-sdk/node-config-provider" "3.329.0"
-    "@aws-sdk/property-provider" "3.329.0"
-    "@aws-sdk/types" "3.329.0"
-    "@aws-sdk/url-parser" "3.329.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/credential-provider-ini@3.332.0":
-  version "3.332.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/credential-provider-ini/-/credential-provider-ini-3.332.0.tgz#03c77480a94d07784c789eeca44ca67c0900ba4a"
-  integrity sha1-A8d0gKlNB3hMeJ7spEymfAkAuko=
-  dependencies:
-    "@aws-sdk/credential-provider-env" "3.329.0"
-    "@aws-sdk/credential-provider-imds" "3.329.0"
-    "@aws-sdk/credential-provider-process" "3.329.0"
-    "@aws-sdk/credential-provider-sso" "3.332.0"
-    "@aws-sdk/credential-provider-web-identity" "3.329.0"
-    "@aws-sdk/property-provider" "3.329.0"
-    "@aws-sdk/shared-ini-file-loader" "3.329.0"
-    "@aws-sdk/types" "3.329.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/credential-provider-node@3.332.0":
-  version "3.332.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/credential-provider-node/-/credential-provider-node-3.332.0.tgz#bfd4fa8855dd3cf80f1e0d8d160966441e44c4a7"
-  integrity sha1-v9T6iFXdPPgPHg2NFglmRB5ExKc=
-  dependencies:
-    "@aws-sdk/credential-provider-env" "3.329.0"
-    "@aws-sdk/credential-provider-imds" "3.329.0"
-    "@aws-sdk/credential-provider-ini" "3.332.0"
-    "@aws-sdk/credential-provider-process" "3.329.0"
-    "@aws-sdk/credential-provider-sso" "3.332.0"
-    "@aws-sdk/credential-provider-web-identity" "3.329.0"
-    "@aws-sdk/property-provider" "3.329.0"
-    "@aws-sdk/shared-ini-file-loader" "3.329.0"
-    "@aws-sdk/types" "3.329.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/credential-provider-process@3.329.0":
-  version "3.329.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/credential-provider-process/-/credential-provider-process-3.329.0.tgz#5c07b2f4c67cb97190c69d4af5890c9db3f8a31d"
-  integrity sha1-XAey9MZ8uXGQxp1K9YkMnbP4ox0=
-  dependencies:
-    "@aws-sdk/property-provider" "3.329.0"
-    "@aws-sdk/shared-ini-file-loader" "3.329.0"
-    "@aws-sdk/types" "3.329.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/credential-provider-sso@3.332.0":
-  version "3.332.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/credential-provider-sso/-/credential-provider-sso-3.332.0.tgz#ed12b58d30b6ee359462c7e78672734af22fe713"
-  integrity sha1-7RK1jTC27jWUYsfnhnJzSvIv5xM=
-  dependencies:
-    "@aws-sdk/client-sso" "3.332.0"
-    "@aws-sdk/property-provider" "3.329.0"
-    "@aws-sdk/shared-ini-file-loader" "3.329.0"
-    "@aws-sdk/token-providers" "3.332.0"
-    "@aws-sdk/types" "3.329.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/credential-provider-web-identity@3.329.0":
-  version "3.329.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/credential-provider-web-identity/-/credential-provider-web-identity-3.329.0.tgz#5610293c03bc4c323dfcae522c545c20e2d8dd86"
-  integrity sha1-VhApPAO8TDI9/K5SLFRcIOLY3YY=
-  dependencies:
-    "@aws-sdk/property-provider" "3.329.0"
-    "@aws-sdk/types" "3.329.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/credential-providers@^3.186.0":
-  version "3.332.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/credential-providers/-/credential-providers-3.332.0.tgz#1fe8fd07179ce0d39ea63f2213aacac96af3837e"
-  integrity sha1-H+j9Bxec4NOepj8iE6rKyWrzg34=
-  dependencies:
-    "@aws-sdk/client-cognito-identity" "3.332.0"
-    "@aws-sdk/client-sso" "3.332.0"
-    "@aws-sdk/client-sts" "3.332.0"
-    "@aws-sdk/credential-provider-cognito-identity" "3.332.0"
-    "@aws-sdk/credential-provider-env" "3.329.0"
-    "@aws-sdk/credential-provider-imds" "3.329.0"
-    "@aws-sdk/credential-provider-ini" "3.332.0"
-    "@aws-sdk/credential-provider-node" "3.332.0"
-    "@aws-sdk/credential-provider-process" "3.329.0"
-    "@aws-sdk/credential-provider-sso" "3.332.0"
-    "@aws-sdk/credential-provider-web-identity" "3.329.0"
-    "@aws-sdk/property-provider" "3.329.0"
-    "@aws-sdk/types" "3.329.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/fetch-http-handler@3.329.0":
-  version "3.329.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/fetch-http-handler/-/fetch-http-handler-3.329.0.tgz#5aee0c9a32ad8ff4fa96c6869bba68c345818532"
-  integrity sha1-Wu4MmjKtj/T6lsaGm7pow0WBhTI=
-  dependencies:
-    "@aws-sdk/protocol-http" "3.329.0"
-    "@aws-sdk/querystring-builder" "3.329.0"
-    "@aws-sdk/types" "3.329.0"
-    "@aws-sdk/util-base64" "3.310.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/hash-node@3.329.0":
-  version "3.329.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/hash-node/-/hash-node-3.329.0.tgz#91ef8b1b55e1a438c367f63747673bf146a00499"
-  integrity sha1-ke+LG1XhpDjDZ/Y3R2c78UagBJk=
-  dependencies:
-    "@aws-sdk/types" "3.329.0"
-    "@aws-sdk/util-buffer-from" "3.310.0"
-    "@aws-sdk/util-utf8" "3.310.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/invalid-dependency@3.329.0":
-  version "3.329.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/invalid-dependency/-/invalid-dependency-3.329.0.tgz#83dc33de710f80eba5e084a82aab656c1d240352"
-  integrity sha1-g9wz3nEPgOul4ISoKqtlbB0kA1I=
-  dependencies:
-    "@aws-sdk/types" "3.329.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/is-array-buffer@3.310.0":
-  version "3.310.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/is-array-buffer/-/is-array-buffer-3.310.0.tgz#f87a79f1b858c88744f07e8d8d0a791df204017e"
-  integrity sha1-+Hp58bhYyIdE8H6NjQp5HfIEAX4=
-  dependencies:
-    tslib "^2.5.0"
-
-"@aws-sdk/middleware-content-length@3.329.0":
-  version "3.329.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/middleware-content-length/-/middleware-content-length-3.329.0.tgz#cadd0c3ba7fe3d0b21812523bb7d7f7526c9c700"
-  integrity sha1-yt0MO6f+PQshgSUju31/dSbJxwA=
-  dependencies:
-    "@aws-sdk/protocol-http" "3.329.0"
-    "@aws-sdk/types" "3.329.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/middleware-endpoint@3.329.0":
-  version "3.329.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/middleware-endpoint/-/middleware-endpoint-3.329.0.tgz#50c5f71afa3b6d3062d3b542279009454898314e"
-  integrity sha1-UMX3Gvo7bTBi07VCJ5AJRUiYMU4=
-  dependencies:
-    "@aws-sdk/middleware-serde" "3.329.0"
-    "@aws-sdk/types" "3.329.0"
-    "@aws-sdk/url-parser" "3.329.0"
-    "@aws-sdk/util-middleware" "3.329.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/middleware-host-header@3.329.0":
-  version "3.329.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/middleware-host-header/-/middleware-host-header-3.329.0.tgz#22b1a6d91f3f281ef802f21f2ab0b426526d6066"
-  integrity sha1-IrGm2R8/KB74AvIfKrC0JlJtYGY=
-  dependencies:
-    "@aws-sdk/protocol-http" "3.329.0"
-    "@aws-sdk/types" "3.329.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/middleware-logger@3.329.0":
-  version "3.329.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/middleware-logger/-/middleware-logger-3.329.0.tgz#fa8adc07928da24e713e384d4a32c8d0e36f96ee"
-  integrity sha1-+orcB5KNok5xPjhNSjLI0ONvlu4=
-  dependencies:
-    "@aws-sdk/types" "3.329.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/middleware-recursion-detection@3.329.0":
-  version "3.329.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/middleware-recursion-detection/-/middleware-recursion-detection-3.329.0.tgz#afa676f26f9a050cd3d57a2efa2b0247a6e1d614"
-  integrity sha1-r6Z28m+aBQzT1Xou+isCR6bh1hQ=
-  dependencies:
-    "@aws-sdk/protocol-http" "3.329.0"
-    "@aws-sdk/types" "3.329.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/middleware-retry@3.329.0":
-  version "3.329.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/middleware-retry/-/middleware-retry-3.329.0.tgz#326fb0b7442d665689d311fba43eb49a510d2939"
-  integrity sha1-Mm+wt0QtZlaJ0xH7pD60mlENKTk=
-  dependencies:
-    "@aws-sdk/protocol-http" "3.329.0"
-    "@aws-sdk/service-error-classification" "3.329.0"
-    "@aws-sdk/types" "3.329.0"
-    "@aws-sdk/util-middleware" "3.329.0"
-    "@aws-sdk/util-retry" "3.329.0"
-    tslib "^2.5.0"
-    uuid "^8.3.2"
-
-"@aws-sdk/middleware-sdk-sts@3.329.0":
-  version "3.329.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/middleware-sdk-sts/-/middleware-sdk-sts-3.329.0.tgz#50056cca7688e708e3db6bd66203878bc373ff7d"
-  integrity sha1-UAVsynaI5wjj22vWYgOHi8Nz/30=
-  dependencies:
-    "@aws-sdk/middleware-signing" "3.329.0"
-    "@aws-sdk/types" "3.329.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/middleware-serde@3.329.0":
-  version "3.329.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/middleware-serde/-/middleware-serde-3.329.0.tgz#f822d7419953ba5d31104262724034340908dd28"
-  integrity sha1-+CLXQZlTul0xEEJickA0NAkI3Sg=
-  dependencies:
-    "@aws-sdk/types" "3.329.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/middleware-signing@3.329.0":
-  version "3.329.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/middleware-signing/-/middleware-signing-3.329.0.tgz#25011abb0911c1a23840d8d228676758f5b55926"
-  integrity sha1-JQEauwkRwaI4QNjSKGdnWPW1WSY=
-  dependencies:
-    "@aws-sdk/property-provider" "3.329.0"
-    "@aws-sdk/protocol-http" "3.329.0"
-    "@aws-sdk/signature-v4" "3.329.0"
-    "@aws-sdk/types" "3.329.0"
-    "@aws-sdk/util-middleware" "3.329.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/middleware-stack@3.329.0":
-  version "3.329.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/middleware-stack/-/middleware-stack-3.329.0.tgz#745150a190cc025d0bd7a52c0db5580c05dbbb54"
-  integrity sha1-dFFQoZDMAl0L16UsDbVYDAXbu1Q=
-  dependencies:
-    tslib "^2.5.0"
-
-"@aws-sdk/middleware-user-agent@3.332.0":
-  version "3.332.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/middleware-user-agent/-/middleware-user-agent-3.332.0.tgz#6f2de9579b09dd7feeab27ef8a18c236694ad903"
-  integrity sha1-by3pV5sJ3X/uqyfvihjCNmlK2QM=
-  dependencies:
-    "@aws-sdk/protocol-http" "3.329.0"
-    "@aws-sdk/types" "3.329.0"
-    "@aws-sdk/util-endpoints" "3.332.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/node-config-provider@3.329.0":
-  version "3.329.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/node-config-provider/-/node-config-provider-3.329.0.tgz#32666077565924354a2216a5343ee768d3107eea"
-  integrity sha1-MmZgd1ZZJDVKIhalND7naNMQfuo=
-  dependencies:
-    "@aws-sdk/property-provider" "3.329.0"
-    "@aws-sdk/shared-ini-file-loader" "3.329.0"
-    "@aws-sdk/types" "3.329.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/node-http-handler@3.329.0":
-  version "3.329.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/node-http-handler/-/node-http-handler-3.329.0.tgz#6dc721e6a9df7baebefd145295ef1a8bf1000a51"
-  integrity sha1-bcch5qnfe66+/RRSle8ai/EAClE=
-  dependencies:
-    "@aws-sdk/abort-controller" "3.329.0"
-    "@aws-sdk/protocol-http" "3.329.0"
-    "@aws-sdk/querystring-builder" "3.329.0"
-    "@aws-sdk/types" "3.329.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/property-provider@3.329.0":
-  version "3.329.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/property-provider/-/property-provider-3.329.0.tgz#069dda84e132c9d4eca1a4ae37c62f7a650a0046"
-  integrity sha1-Bp3ahOEyydTsoaSuN8YvemUKAEY=
-  dependencies:
-    "@aws-sdk/types" "3.329.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/protocol-http@3.329.0":
-  version "3.329.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/protocol-http/-/protocol-http-3.329.0.tgz#a8a7e01477831961f5f040fe607c3552f9ccb013"
-  integrity sha1-qKfgFHeDGWH18ED+YHw1UvnMsBM=
-  dependencies:
-    "@aws-sdk/types" "3.329.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/querystring-builder@3.329.0":
-  version "3.329.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/querystring-builder/-/querystring-builder-3.329.0.tgz#c6e6dd03dcd4378d1fbee576ce2a81dd94ac46a6"
-  integrity sha1-xubdA9zUN40fvuV2ziqB3ZSsRqY=
-  dependencies:
-    "@aws-sdk/types" "3.329.0"
-    "@aws-sdk/util-uri-escape" "3.310.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/querystring-parser@3.329.0":
-  version "3.329.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/querystring-parser/-/querystring-parser-3.329.0.tgz#dbbf2fd23ff0dfa2e4663fa414de1d5e60814896"
-  integrity sha1-278v0j/w36LkZj+kFN4dXmCBSJY=
-  dependencies:
-    "@aws-sdk/types" "3.329.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/service-error-classification@3.329.0":
-  version "3.329.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/service-error-classification/-/service-error-classification-3.329.0.tgz#32db59091ff28f14e526cee738bc14e32a6850f6"
-  integrity sha1-MttZCR/yjxTlJs7nOLwU4ypoUPY=
-
-"@aws-sdk/shared-ini-file-loader@3.329.0":
-  version "3.329.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/shared-ini-file-loader/-/shared-ini-file-loader-3.329.0.tgz#190eb922860d49b4259b20ca6df4d20769544802"
-  integrity sha1-GQ65IoYNSbQlmyDKbfTSB2lUSAI=
-  dependencies:
-    "@aws-sdk/types" "3.329.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/signature-v4@3.329.0":
-  version "3.329.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/signature-v4/-/signature-v4-3.329.0.tgz#8d40683189678f49504169c923e8342247b1da70"
-  integrity sha1-jUBoMYlnj0lQQWnJI+g0Ikex2nA=
-  dependencies:
-    "@aws-sdk/is-array-buffer" "3.310.0"
-    "@aws-sdk/types" "3.329.0"
-    "@aws-sdk/util-hex-encoding" "3.310.0"
-    "@aws-sdk/util-middleware" "3.329.0"
-    "@aws-sdk/util-uri-escape" "3.310.0"
-    "@aws-sdk/util-utf8" "3.310.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/smithy-client@3.329.0":
-  version "3.329.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/smithy-client/-/smithy-client-3.329.0.tgz#54705963939855c87ae6e6c88196d23e819d728e"
-  integrity sha1-VHBZY5OYVch65ubIgZbSPoGdco4=
-  dependencies:
-    "@aws-sdk/middleware-stack" "3.329.0"
-    "@aws-sdk/types" "3.329.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/token-providers@3.332.0":
-  version "3.332.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/token-providers/-/token-providers-3.332.0.tgz#d014556ad93c0e43bb20237a3c5e85e9eed612a2"
-  integrity sha1-0BRVatk8DkO7ICN6PF6F6e7WEqI=
-  dependencies:
-    "@aws-sdk/client-sso-oidc" "3.332.0"
-    "@aws-sdk/property-provider" "3.329.0"
-    "@aws-sdk/shared-ini-file-loader" "3.329.0"
-    "@aws-sdk/types" "3.329.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/types@3.329.0", "@aws-sdk/types@^3.222.0":
-  version "3.329.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/types/-/types-3.329.0.tgz#bc20659abfcd666954196c3a24ad47785db80dd3"
-  integrity sha1-vCBlmr/NZmlUGWw6JK1HeF24DdM=
-  dependencies:
-    tslib "^2.5.0"
-
-"@aws-sdk/url-parser@3.329.0":
-  version "3.329.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/url-parser/-/url-parser-3.329.0.tgz#a2862834a832ec1d379791f5233e378b75fc63ad"
-  integrity sha1-ooYoNKgy7B03l5H1Iz43i3X8Y60=
-  dependencies:
-    "@aws-sdk/querystring-parser" "3.329.0"
-    "@aws-sdk/types" "3.329.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/util-base64@3.310.0":
-  version "3.310.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/util-base64/-/util-base64-3.310.0.tgz#d0fd49aff358c5a6e771d0001c63b1f97acbe34c"
-  integrity sha1-0P1Jr/NYxabncdAAHGOx+XrL40w=
-  dependencies:
-    "@aws-sdk/util-buffer-from" "3.310.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/util-body-length-browser@3.310.0":
-  version "3.310.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/util-body-length-browser/-/util-body-length-browser-3.310.0.tgz#3fca9d2f73c058edf1907e4a1d99a392fdd23eca"
-  integrity sha1-P8qdL3PAWO3xkH5KHZmjkv3SPso=
-  dependencies:
-    tslib "^2.5.0"
-
-"@aws-sdk/util-body-length-node@3.310.0":
-  version "3.310.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/util-body-length-node/-/util-body-length-node-3.310.0.tgz#4846ae72834ab0636f29f89fc1878520f6543fed"
-  integrity sha1-SEaucoNKsGNvKfifwYeFIPZUP+0=
-  dependencies:
-    tslib "^2.5.0"
-
-"@aws-sdk/util-buffer-from@3.310.0":
-  version "3.310.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/util-buffer-from/-/util-buffer-from-3.310.0.tgz#7a72cb965984d3c6a7e256ae6cf1621f52e54a57"
-  integrity sha1-enLLllmE08an4laubPFiH1LlSlc=
-  dependencies:
-    "@aws-sdk/is-array-buffer" "3.310.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/util-config-provider@3.310.0":
-  version "3.310.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/util-config-provider/-/util-config-provider-3.310.0.tgz#ff21f73d4774cfd7bd16ae56f905828600dda95f"
-  integrity sha1-/yH3PUd0z9e9Fq5W+QWChgDdqV8=
-  dependencies:
-    tslib "^2.5.0"
-
-"@aws-sdk/util-defaults-mode-browser@3.329.0":
-  version "3.329.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/util-defaults-mode-browser/-/util-defaults-mode-browser-3.329.0.tgz#49fc6836e85968ff86917c56c82fc9ef595c0565"
-  integrity sha1-SfxoNuhZaP+GkXxWyC/J71lcBWU=
-  dependencies:
-    "@aws-sdk/property-provider" "3.329.0"
-    "@aws-sdk/types" "3.329.0"
-    bowser "^2.11.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/util-defaults-mode-node@3.329.0":
-  version "3.329.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/util-defaults-mode-node/-/util-defaults-mode-node-3.329.0.tgz#2296652bcacd56c6abe159194aae283738a796b2"
-  integrity sha1-IpZlK8rNVsar4VkZSq4oNzinlrI=
-  dependencies:
-    "@aws-sdk/config-resolver" "3.329.0"
-    "@aws-sdk/credential-provider-imds" "3.329.0"
-    "@aws-sdk/node-config-provider" "3.329.0"
-    "@aws-sdk/property-provider" "3.329.0"
-    "@aws-sdk/types" "3.329.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/util-endpoints@3.332.0":
-  version "3.332.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/util-endpoints/-/util-endpoints-3.332.0.tgz#e360f65d240c97661988e20f15bb5bca160f773a"
-  integrity sha1-42D2XSQMl2YZiOIPFbtbyhYPdzo=
-  dependencies:
-    "@aws-sdk/types" "3.329.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/util-hex-encoding@3.310.0":
-  version "3.310.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/util-hex-encoding/-/util-hex-encoding-3.310.0.tgz#19294c78986c90ae33f04491487863dc1d33bd87"
-  integrity sha1-GSlMeJhskK4z8ESRSHhj3B0zvYc=
-  dependencies:
-    tslib "^2.5.0"
-
-"@aws-sdk/util-locate-window@^3.0.0":
-  version "3.310.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/util-locate-window/-/util-locate-window-3.310.0.tgz#b071baf050301adee89051032bd4139bba32cc40"
-  integrity sha1-sHG68FAwGt7okFEDK9QTm7oyzEA=
-  dependencies:
-    tslib "^2.5.0"
-
-"@aws-sdk/util-middleware@3.329.0":
-  version "3.329.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/util-middleware/-/util-middleware-3.329.0.tgz#0d4056c8479d80760778928e807ff74c57fcead3"
-  integrity sha1-DUBWyEedgHYHeJKOgH/3TFf86tM=
-  dependencies:
-    tslib "^2.5.0"
-
-"@aws-sdk/util-retry@3.329.0":
-  version "3.329.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/util-retry/-/util-retry-3.329.0.tgz#20b71504dd907e70a457cd56dcd131d08d6de39c"
-  integrity sha1-ILcVBN2QfnCkV81W3NEx0I1t45w=
-  dependencies:
-    "@aws-sdk/service-error-classification" "3.329.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/util-uri-escape@3.310.0":
-  version "3.310.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/util-uri-escape/-/util-uri-escape-3.310.0.tgz#9f942f09a715d8278875013a416295746b6085ba"
-  integrity sha1-n5QvCacV2CeIdQE6QWKVdGtghbo=
-  dependencies:
-    tslib "^2.5.0"
-
-"@aws-sdk/util-user-agent-browser@3.329.0":
-  version "3.329.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/util-user-agent-browser/-/util-user-agent-browser-3.329.0.tgz#6c3353a68f5d3d420156fabdcfab3bf4160f383b"
-  integrity sha1-bDNTpo9dPUIBVvq9z6s79BYPODs=
-  dependencies:
-    "@aws-sdk/types" "3.329.0"
-    bowser "^2.11.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/util-user-agent-node@3.329.0":
-  version "3.329.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/util-user-agent-node/-/util-user-agent-node-3.329.0.tgz#eb0930a1f3315fa6ea6f72e4007bbfce1202a3e5"
-  integrity sha1-6wkwofMxX6bqb3LkAHu/zhICo+U=
-  dependencies:
-    "@aws-sdk/node-config-provider" "3.329.0"
-    "@aws-sdk/types" "3.329.0"
-    tslib "^2.5.0"
-
-"@aws-sdk/util-utf8-browser@^3.0.0":
-  version "3.259.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/util-utf8-browser/-/util-utf8-browser-3.259.0.tgz#3275a6f5eb334f96ca76635b961d3c50259fd9ff"
-  integrity sha1-MnWm9eszT5bKdmNblh08UCWf2f8=
-  dependencies:
-    tslib "^2.3.1"
-
-"@aws-sdk/util-utf8@3.310.0":
-  version "3.310.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@aws-sdk/util-utf8/-/util-utf8-3.310.0.tgz#4a7b9dcebb88e830d3811aeb21e9a6df4273afb4"
-  integrity sha1-SnudzruI6DDTgRrrIemm30Jzr7Q=
-  dependencies:
-    "@aws-sdk/util-buffer-from" "3.310.0"
-    tslib "^2.5.0"
-
-"@cspotcode/source-map-consumer@0.8.0":
-  version "0.8.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@cspotcode/source-map-consumer/-/source-map-consumer-0.8.0.tgz#33bf4b7b39c178821606f669bbc447a6a629786b"
-  integrity sha1-M79LeznBeIIWBvZpu8RHpqYpeGs=
-
-"@cspotcode/source-map-support@0.6.1":
-  version "0.6.1"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@cspotcode/source-map-support/-/source-map-support-0.6.1.tgz#118511f316e2e87ee4294761868e254d3da47960"
-  integrity sha1-EYUR8xbi6H7kKUdhho4lTT2keWA=
-  dependencies:
-    "@cspotcode/source-map-consumer" "0.8.0"
+"@cspotcode/source-map-support@^0.8.0":
+  version "0.8.1"
+  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@cspotcode/source-map-support/-/source-map-support-0.8.1.tgz#00629c35a688e05a88b1cda684fb9d5e73f000a1"
+  integrity sha1-AGKcNaaI4FqIsc2mhPudXnPwAKE=
+  dependencies:
+    "@jridgewell/trace-mapping" "0.3.9"
+
+"@jridgewell/resolve-uri@^3.0.3":
+  version "3.1.1"
+  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@jridgewell/resolve-uri/-/resolve-uri-3.1.1.tgz#c08679063f279615a3326583ba3a90d1d82cc721"
+  integrity sha1-wIZ5Bj8nlhWjMmWDujqQ0dgsxyE=
+
+"@jridgewell/sourcemap-codec@^1.4.10":
+  version "1.4.15"
+  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@jridgewell/sourcemap-codec/-/sourcemap-codec-1.4.15.tgz#d7c6e6755c78567a951e04ab52ef0fd26de59f32"
+  integrity sha1-18bmdVx4VnqVHgSrUu8P0m3lnzI=
+
+"@jridgewell/trace-mapping@0.3.9":
+  version "0.3.9"
+  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@jridgewell/trace-mapping/-/trace-mapping-0.3.9.tgz#6534fd5933a53ba7cbf3a17615e273a0d1273ff9"
+  integrity sha1-ZTT9WTOlO6fL86F2FeJzoNEnP/k=
+  dependencies:
+    "@jridgewell/resolve-uri" "^3.0.3"
+    "@jridgewell/sourcemap-codec" "^1.4.10"
 
 "@jsdevtools/ono@^7.1.3":
   version "7.1.3"
   resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@jsdevtools/ono/-/ono-7.1.3.tgz#9df03bbd7c696a5c58885c34aa06da41c8543796"
   integrity sha1-nfA7vXxpalxYiFw0qgbaQchUN5Y=
+
+"@redis/bloom@1.2.0":
+  version "1.2.0"
+  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@redis/bloom/-/bloom-1.2.0.tgz#d3fd6d3c0af3ef92f26767b56414a370c7b63b71"
+  integrity sha1-0/1tPArz75LyZ2e1ZBSjcMe2O3E=
+
+"@redis/client@1.5.7":
+  version "1.5.7"
+  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@redis/client/-/client-1.5.7.tgz#92cc5c98c76f189e37d24f0e1e17e104c6af17d4"
+  integrity sha1-ksxcmMdvGJ430k8OHhfhBMavF9Q=
+  dependencies:
+    cluster-key-slot "1.1.2"
+    generic-pool "3.9.0"
+    yallist "4.0.0"
+
+"@redis/graph@1.1.0":
+  version "1.1.0"
+  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@redis/graph/-/graph-1.1.0.tgz#cc2b82e5141a29ada2cce7d267a6b74baa6dd519"
+  integrity sha1-zCuC5RQaKa2izOfSZ6a3S6pt1Rk=
+
+"@redis/json@1.0.4":
+  version "1.0.4"
+  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@redis/json/-/json-1.0.4.tgz#f372b5f93324e6ffb7f16aadcbcb4e5c3d39bda1"
+  integrity sha1-83K1+TMk5v+38Wqty8tOXD05vaE=
+
+"@redis/search@1.1.2":
+  version "1.1.2"
+  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@redis/search/-/search-1.1.2.tgz#6a8f66ba90812d39c2457420f859ce8fbd8f3838"
+  integrity sha1-ao9mupCBLTnCRXQg+FnOj72PODg=
+
+"@redis/time-series@1.0.4":
+  version "1.0.4"
+  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@redis/time-series/-/time-series-1.0.4.tgz#af85eb080f6934580e4d3b58046026b6c2b18717"
+  integrity sha1-r4XrCA9pNFgOTTtYBGAmtsKxhxc=
 
 "@socket.io/component-emitter@~3.1.0":
   version "3.1.0"
@@ -878,10 +197,10 @@
   resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@types/json-schema/-/json-schema-7.0.11.tgz#d421b6c527a3037f7c84433fd2c4229e016863d3"
   integrity sha1-1CG2xSejA398hEM/0sQingFoY9M=
 
-"@types/jsonwebtoken@^8.5.0":
-  version "8.5.9"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@types/jsonwebtoken/-/jsonwebtoken-8.5.9.tgz#2c064ecb0b3128d837d2764aa0b117b0ff6e4586"
-  integrity sha1-LAZOywsxKNg30nZKoLEXsP9uRYY=
+"@types/jsonwebtoken@^9.0.2":
+  version "9.0.2"
+  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@types/jsonwebtoken/-/jsonwebtoken-9.0.2.tgz#9eeb56c76dd555039be2a3972218de5bd3b8d83e"
+  integrity sha1-nutWx23VVQOb4qOXIhjeW9O42D4=
   dependencies:
     "@types/node" "*"
 
@@ -902,15 +221,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/node@*", "@types/node@>=10.0.0":
+"@types/node@*", "@types/node@>=10.0.0", "@types/node@^20.1.3":
   version "20.1.3"
   resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@types/node/-/node-20.1.3.tgz#bc8e7cd8065a5fc355a3a191a68db8019c58bc00"
   integrity sha1-vI582AZaX8NVo6GRpo24AZxYvAA=
-
-"@types/node@^16.10.1":
-  version "16.18.29"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@types/node/-/node-16.18.29.tgz#4b5e19b078513fa5e828b98aede649525e5d1750"
-  integrity sha1-S14ZsHhRP6XoKLmK7eZJUl5dF1A=
 
 "@types/qs@*":
   version "6.9.7"
@@ -929,12 +243,12 @@
   dependencies:
     "@types/node" "*"
 
-"@types/redis@^2.8.28":
-  version "2.8.32"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@types/redis/-/redis-2.8.32.tgz#1d3430219afbee10f8cfa389dad2571a05ecfb11"
-  integrity sha1-HTQwIZr77hD4z6OJ2tJXGgXs+xE=
+"@types/redis@^4.0.11":
+  version "4.0.11"
+  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@types/redis/-/redis-4.0.11.tgz#0bb4c11ac9900a21ad40d2a6768ec6aaf651c0e1"
+  integrity sha1-C7TBGsmQCiGtQNKmdo7GqvZRwOE=
   dependencies:
-    "@types/node" "*"
+    redis "*"
 
 "@types/send@*":
   version "0.17.1"
@@ -965,10 +279,10 @@
     "@types/express" "*"
     "@types/serve-static" "*"
 
-"@types/uuid@^8.3.0":
-  version "8.3.4"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@types/uuid/-/uuid-8.3.4.tgz#bd86a43617df0594787d38b735f55c805becf1bc"
-  integrity sha1-vYakNhffBZR4fTi3NfVcgFvs8bw=
+"@types/uuid@^9.0.1":
+  version "9.0.1"
+  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/@types/uuid/-/uuid-9.0.1.tgz#98586dc36aee8dacc98cc396dbca8d0429647aa6"
+  integrity sha1-mFhtw2rujazJjMOW28qNBClkeqY=
 
 "@types/webidl-conversions@*":
   version "7.0.0"
@@ -1063,6 +377,11 @@ async@^3.2.3:
   resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/async/-/async-3.2.4.tgz#2d22e00f8cddeb5fde5dd33522b56d1cf569a81c"
   integrity sha1-LSLgD4zd61/eXdM1IrVtHPVpqBw=
 
+asynckit@^0.4.0:
+  version "0.4.0"
+  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
+  integrity sha1-x57Zf380y48robyXkLzDZkdLS3k=
+
 available-typed-arrays@^1.0.5:
   version "1.0.5"
   resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/available-typed-arrays/-/available-typed-arrays-1.0.5.tgz#92f95616501069d07d10edb2fc37d3e1c65123b7"
@@ -1084,12 +403,14 @@ aws-sdk@^2.991.0:
     uuid "8.0.0"
     xml2js "0.5.0"
 
-axios@^0.21.4:
-  version "0.21.4"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/axios/-/axios-0.21.4.tgz#c67b90dc0568e5c1cf2b0b858c43ba28e2eda575"
-  integrity sha1-xnuQ3AVo5cHPKwuFjEO6KOLtpXU=
+axios@^1.4.0:
+  version "1.4.0"
+  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/axios/-/axios-1.4.0.tgz#38a7bf1224cd308de271146038b551d725f0be1f"
+  integrity sha1-OKe/EiTNMI3icRRgOLVR1yXwvh8=
   dependencies:
-    follow-redirects "^1.14.0"
+    follow-redirects "^1.15.0"
+    form-data "^4.0.0"
+    proxy-from-env "^1.1.0"
 
 balanced-match@^1.0.0:
   version "1.0.2"
@@ -1163,11 +484,6 @@ body-parser@^1.19.0:
     type-is "~1.6.18"
     unpipe "1.0.0"
 
-bowser@^2.11.0:
-  version "2.11.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/bowser/-/bowser-2.11.0.tgz#5ca3c35757a7aa5771500c70a73a9f91ef420a8f"
-  integrity sha1-XKPDV1enqldxUAxwpzqfke9CCo8=
-
 brace-expansion@^1.1.7:
   version "1.1.11"
   resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/brace-expansion/-/brace-expansion-1.1.11.tgz#3c7fcbf529d87226f3d2f52b966ff5271eb441dd"
@@ -1190,12 +506,10 @@ braces@~3.0.2:
   dependencies:
     fill-range "^7.0.1"
 
-bson@^4.7.2:
-  version "4.7.2"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/bson/-/bson-4.7.2.tgz#320f4ad0eaf5312dd9b45dc369cc48945e2a5f2e"
-  integrity sha1-Mg9K0Or1MS3ZtF3DacxIlF4qXy4=
-  dependencies:
-    buffer "^5.6.0"
+bson@^5.3.0:
+  version "5.3.0"
+  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/bson/-/bson-5.3.0.tgz#37b006df4cd91ed125cb686467c1dd6d4606b514"
+  integrity sha1-N7AG30zZHtEly2hkZ8HdbUYGtRQ=
 
 buffer-crc32@^0.2.1, buffer-crc32@^0.2.13:
   version "0.2.13"
@@ -1216,7 +530,7 @@ buffer@4.9.2:
     ieee754 "^1.1.4"
     isarray "^1.0.0"
 
-buffer@^5.5.0, buffer@^5.6.0:
+buffer@^5.5.0:
   version "5.7.1"
   resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/buffer/-/buffer-5.7.1.tgz#ba62e7c13133053582197160851a8f648e99eed0"
   integrity sha1-umLnwTEzBTWCGXFghRqPZI6Z7tA=
@@ -1263,6 +577,18 @@ chokidar@^3.5.2:
     readdirp "~3.6.0"
   optionalDependencies:
     fsevents "~2.3.2"
+
+cluster-key-slot@1.1.2:
+  version "1.1.2"
+  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/cluster-key-slot/-/cluster-key-slot-1.1.2.tgz#88ddaa46906e303b5de30d3153b7d9fe0a0c19ac"
+  integrity sha1-iN2qRpBuMDtd4w0xU7fZ/goMGaw=
+
+combined-stream@^1.0.8:
+  version "1.0.8"
+  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/combined-stream/-/combined-stream-1.0.8.tgz#c3d45a8b34fd730631a110a8a2520682b31d5a7f"
+  integrity sha1-w9RaizT9cwYxoRCoolIGgrMdWn8=
+  dependencies:
+    delayed-stream "~1.0.0"
 
 commander@6.2.0:
   version "6.2.0"
@@ -1368,6 +694,11 @@ debug@~4.3.1, debug@~4.3.2:
   dependencies:
     ms "2.1.2"
 
+delayed-stream@~1.0.0:
+  version "1.0.0"
+  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/delayed-stream/-/delayed-stream-1.0.0.tgz#df3ae199acadfb7d440aaae0b29e2272b24ec619"
+  integrity sha1-3zrhmayt+31ECqrgsp4icrJOxhk=
+
 denque@^1.5.0:
   version "1.5.1"
   resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/denque/-/denque-1.5.1.tgz#07f670e29c9a78f8faecb2566a1e2c11929c5cbf"
@@ -1395,10 +726,10 @@ doctrine@3.0.0:
   dependencies:
     esutils "^2.0.2"
 
-dotenv@^10.0.0:
-  version "10.0.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/dotenv/-/dotenv-10.0.0.tgz#3d4227b8fb95f81096cdd2b66653fb2c7085ba81"
-  integrity sha1-PUInuPuV+BCWzdK2ZlP7LHCFuoE=
+dotenv@^16.0.3:
+  version "16.0.3"
+  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/dotenv/-/dotenv-16.0.3.tgz#115aec42bac5053db3c456db30cc243a5a836a07"
+  integrity sha1-EVrsQrrFBT2zxFbbMMwkOlqDagc=
 
 ecdsa-sig-formatter@1.0.11:
   version "1.0.11"
@@ -1472,10 +803,10 @@ express-fileupload@^1.2.1:
   dependencies:
     busboy "^1.6.0"
 
-express-validator@^6.12.1:
-  version "6.15.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/express-validator/-/express-validator-6.15.0.tgz#5e4601428960b0d66f5f4ae09cb32ed2077374a4"
-  integrity sha1-XkYBQolgsNZvX0rgnLMu0gdzdKQ=
+express-validator@^7.0.1:
+  version "7.0.1"
+  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/express-validator/-/express-validator-7.0.1.tgz#435fac6b5fa838763f78eca05d2206317b92106e"
+  integrity sha1-Q1+sa1+oOHY/eOygXSIGMXuSEG4=
   dependencies:
     lodash "^4.17.21"
     validator "^13.9.0"
@@ -1517,13 +848,6 @@ express@^4.17.1:
     utils-merge "1.0.1"
     vary "~1.1.2"
 
-fast-xml-parser@4.1.2:
-  version "4.1.2"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/fast-xml-parser/-/fast-xml-parser-4.1.2.tgz#5a98c18238d28a57bbdfa9fe4cda01211fff8f4a"
-  integrity sha1-WpjBgjjSile736n+TNoBIR//j0o=
-  dependencies:
-    strnum "^1.0.5"
-
 fill-range@^7.0.1:
   version "7.0.1"
   resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/fill-range/-/fill-range-7.0.1.tgz#1919a6a7c75fe38b2c7c77e5198535da9acdda40"
@@ -1544,7 +868,7 @@ finalhandler@1.2.0:
     statuses "2.0.1"
     unpipe "~1.0.0"
 
-follow-redirects@^1.14.0:
+follow-redirects@^1.15.0:
   version "1.15.2"
   resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/follow-redirects/-/follow-redirects-1.15.2.tgz#b460864144ba63f2681096f274c4e57026da2c13"
   integrity sha1-tGCGQUS6Y/JoEJbydMTlcCbaLBM=
@@ -1555,6 +879,15 @@ for-each@^0.3.3:
   integrity sha1-abRH6IoKXTLD5whPPxcQA0shN24=
   dependencies:
     is-callable "^1.1.3"
+
+form-data@^4.0.0:
+  version "4.0.0"
+  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/form-data/-/form-data-4.0.0.tgz#93919daeaf361ee529584b9b31664dc12c9fa452"
+  integrity sha1-k5Gdrq82HuUpWEubMWZNwSyfpFI=
+  dependencies:
+    asynckit "^0.4.0"
+    combined-stream "^1.0.8"
+    mime-types "^2.1.12"
 
 forwarded@0.2.0:
   version "0.2.0"
@@ -1585,6 +918,11 @@ function-bind@^1.1.1:
   version "1.1.1"
   resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/function-bind/-/function-bind-1.1.1.tgz#a56899d3ea3c9bab874bb9773b7c5ede92f4895d"
   integrity sha1-pWiZ0+o8m6uHS7l3O3xe3pL0iV0=
+
+generic-pool@3.9.0:
+  version "3.9.0"
+  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/generic-pool/-/generic-pool-3.9.0.tgz#36f4a678e963f4fdb8707eab050823abc4e8f5e4"
+  integrity sha1-NvSmeOlj9P24cH6rBQgjq8To9eQ=
 
 get-intrinsic@^1.0.2, get-intrinsic@^1.1.3:
   version "1.2.0"
@@ -1790,21 +1128,15 @@ js-yaml@^4.1.0:
   dependencies:
     argparse "^2.0.1"
 
-jsonwebtoken@^8.5.1:
-  version "8.5.1"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/jsonwebtoken/-/jsonwebtoken-8.5.1.tgz#00e71e0b8df54c2121a1f26137df2280673bcc0d"
-  integrity sha1-AOceC431TCEhofJhN98igGc7zA0=
+jsonwebtoken@^9.0.0:
+  version "9.0.0"
+  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/jsonwebtoken/-/jsonwebtoken-9.0.0.tgz#d0faf9ba1cc3a56255fe49c0961a67e520c1926d"
+  integrity sha1-0Pr5uhzDpWJV/knAlhpn5SDBkm0=
   dependencies:
     jws "^3.2.2"
-    lodash.includes "^4.3.0"
-    lodash.isboolean "^3.0.3"
-    lodash.isinteger "^4.0.4"
-    lodash.isnumber "^3.0.3"
-    lodash.isplainobject "^4.0.6"
-    lodash.isstring "^4.0.1"
-    lodash.once "^4.0.0"
+    lodash "^4.17.21"
     ms "^2.1.1"
-    semver "^5.6.0"
+    semver "^7.3.8"
 
 jwa@^1.4.1:
   version "1.4.1"
@@ -1850,50 +1182,20 @@ lodash.get@^4.4.2:
   resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/lodash.get/-/lodash.get-4.4.2.tgz#2d177f652fa31e939b4438d5341499dfa3825e99"
   integrity sha1-LRd/ZS+jHpObRDjVNBSZ36OCXpk=
 
-lodash.includes@^4.3.0:
-  version "4.3.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/lodash.includes/-/lodash.includes-4.3.0.tgz#60bb98a87cb923c68ca1e51325483314849f553f"
-  integrity sha1-YLuYqHy5I8aMoeUTJUgzFISfVT8=
-
-lodash.isboolean@^3.0.3:
-  version "3.0.3"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/lodash.isboolean/-/lodash.isboolean-3.0.3.tgz#6c2e171db2a257cd96802fd43b01b20d5f5870f6"
-  integrity sha1-bC4XHbKiV82WgC/UOwGyDV9YcPY=
-
 lodash.isequal@^4.5.0:
   version "4.5.0"
   resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/lodash.isequal/-/lodash.isequal-4.5.0.tgz#415c4478f2bcc30120c22ce10ed3226f7d3e18e0"
   integrity sha1-QVxEePK8wwEgwizhDtMib30+GOA=
-
-lodash.isinteger@^4.0.4:
-  version "4.0.4"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/lodash.isinteger/-/lodash.isinteger-4.0.4.tgz#619c0af3d03f8b04c31f5882840b77b11cd68343"
-  integrity sha1-YZwK89A/iwTDH1iChAt3sRzWg0M=
-
-lodash.isnumber@^3.0.3:
-  version "3.0.3"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/lodash.isnumber/-/lodash.isnumber-3.0.3.tgz#3ce76810c5928d03352301ac287317f11c0b1ffc"
-  integrity sha1-POdoEMWSjQM1IwGsKHMX8RwLH/w=
 
 lodash.isplainobject@^4.0.6:
   version "4.0.6"
   resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/lodash.isplainobject/-/lodash.isplainobject-4.0.6.tgz#7c526a52d89b45c45cc690b88163be0497f550cb"
   integrity sha1-fFJqUtibRcRcxpC4gWO+BJf1UMs=
 
-lodash.isstring@^4.0.1:
-  version "4.0.1"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/lodash.isstring/-/lodash.isstring-4.0.1.tgz#d527dfb5456eca7cc9bb95d5daeaf88ba54a5451"
-  integrity sha1-1SfftUVuynzJu5XV2ur4i6VKVFE=
-
 lodash.mergewith@^4.6.2:
   version "4.6.2"
   resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/lodash.mergewith/-/lodash.mergewith-4.6.2.tgz#617121f89ac55f59047c7aec1ccd6654c6590f55"
   integrity sha1-YXEh+JrFX1kEfHrsHM1mVMZZD1U=
-
-lodash.once@^4.0.0:
-  version "4.1.1"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/lodash.once/-/lodash.once-4.1.1.tgz#0dd3971213c7c56df880977d504c88fb471a97ac"
-  integrity sha1-DdOXEhPHxW34gJd9UEyI+0cal6w=
 
 lodash.union@^4.6.0:
   version "4.6.0"
@@ -1904,6 +1206,13 @@ lodash@^4.17.21:
   version "4.17.21"
   resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha1-Z5WRxWTDv/quhFTPCz3zcMPWkRw=
+
+lru-cache@^6.0.0:
+  version "6.0.0"
+  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/lru-cache/-/lru-cache-6.0.0.tgz#6d6fe6570ebd96aaf90fcad1dafa3b2566db3a94"
+  integrity sha1-bW/mVw69lqr5D8rR2vo7JWbbOpQ=
+  dependencies:
+    yallist "^4.0.0"
 
 make-error@^1.1.1:
   version "1.3.6"
@@ -1935,7 +1244,7 @@ mime-db@1.52.0:
   resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/mime-db/-/mime-db-1.52.0.tgz#bbabcdc02859f4987301c856e3387ce5ec43bf70"
   integrity sha1-u6vNwChZ9JhzAchW4zh85exDv3A=
 
-mime-types@~2.1.24, mime-types@~2.1.34:
+mime-types@^2.1.12, mime-types@~2.1.24, mime-types@~2.1.34:
   version "2.1.35"
   resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/mime-types/-/mime-types-2.1.35.tgz#381a871b62a734450660ae3deee44813f70d959a"
   integrity sha1-OBqHG2KnNEUGYK497uRIE/cNlZo=
@@ -1961,7 +1270,7 @@ minimatch@^5.1.0:
   dependencies:
     brace-expansion "^2.0.1"
 
-mongodb-connection-string-url@^2.5.4:
+mongodb-connection-string-url@^2.6.0:
   version "2.6.0"
   resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/mongodb-connection-string-url/-/mongodb-connection-string-url-2.6.0.tgz#57901bf352372abdde812c81be47b75c6b2ec5cf"
   integrity sha1-V5Ab81I3Kr3egSyBvke3XGsuxc8=
@@ -1969,16 +1278,15 @@ mongodb-connection-string-url@^2.5.4:
     "@types/whatwg-url" "^8.2.1"
     whatwg-url "^11.0.0"
 
-mongodb@^4.1.2:
-  version "4.16.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/mongodb/-/mongodb-4.16.0.tgz#8b0043de7b577c6a7e0ce44a2ca7315b9c0a7927"
-  integrity sha1-iwBD3ntXfGp+DORKLKcxW5wKeSc=
+mongodb@^5.5.0:
+  version "5.5.0"
+  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/mongodb/-/mongodb-5.5.0.tgz#5d213ef68f6b48610909d98d537059f2d7f374a1"
+  integrity sha1-XSE+9o9rSGEJCdmNU3BZ8tfzdKE=
   dependencies:
-    bson "^4.7.2"
-    mongodb-connection-string-url "^2.5.4"
+    bson "^5.3.0"
+    mongodb-connection-string-url "^2.6.0"
     socks "^2.7.1"
   optionalDependencies:
-    "@aws-sdk/credential-providers" "^3.186.0"
     saslprep "^1.0.3"
 
 morgan@^1.10.0:
@@ -2114,6 +1422,11 @@ proxy-addr@~2.0.7:
     forwarded "0.2.0"
     ipaddr.js "1.9.1"
 
+proxy-from-env@^1.1.0:
+  version "1.1.0"
+  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/proxy-from-env/-/proxy-from-env-1.1.0.tgz#e102f16ca355424865755d2c9e8ea4f24d58c3e2"
+  integrity sha1-4QLxbKNVQkhldV0sno6k8k1Yw+I=
+
 pstree.remy@^1.1.8:
   version "1.1.8"
   resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/pstree.remy/-/pstree.remy-1.1.8.tgz#c242224f4a67c21f686839bbdb4ac282b8373d3a"
@@ -2219,7 +1532,19 @@ redis-parser@^3.0.0:
   dependencies:
     redis-errors "^1.0.0"
 
-redis@^3.0.0, redis@^3.1.2:
+redis@*, redis@^4.6.6:
+  version "4.6.6"
+  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/redis/-/redis-4.6.6.tgz#46d4f2d149d1634d6ef53db5747412a0ef7974ec"
+  integrity sha1-RtTy0UnRY01u9T21dHQSoO95dOw=
+  dependencies:
+    "@redis/bloom" "1.2.0"
+    "@redis/client" "1.5.7"
+    "@redis/graph" "1.1.0"
+    "@redis/json" "1.0.4"
+    "@redis/search" "1.1.2"
+    "@redis/time-series" "1.0.4"
+
+redis@^3.0.0:
   version "3.1.2"
   resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/redis/-/redis-3.1.2.tgz#766851117e80653d23e0ed536254677ab647638c"
   integrity sha1-dmhREX6AZT0j4O1TYlRnerZHY4w=
@@ -2261,10 +1586,17 @@ sax@>=0.6.0:
   resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
   integrity sha1-KBYjTiN4vdxOU1T6tcqold9xANk=
 
-semver@^5.6.0, semver@^5.7.1:
+semver@^5.7.1:
   version "5.7.1"
   resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/semver/-/semver-5.7.1.tgz#a954f931aeba508d307bbf069eff0c01c96116f7"
   integrity sha1-qVT5Ma66UI0we78Gnv8MAclhFvc=
+
+semver@^7.3.8:
+  version "7.5.0"
+  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/semver/-/semver-7.5.0.tgz#ed8c5dc8efb6c629c88b23d41dc9bf40c1d96cd0"
+  integrity sha1-7YxdyO+2xinIiyPUHcm/QMHZbNA=
+  dependencies:
+    lru-cache "^6.0.0"
 
 semver@~7.0.0:
   version "7.0.0"
@@ -2408,11 +1740,6 @@ string_decoder@~1.1.1:
   dependencies:
     safe-buffer "~5.1.0"
 
-strnum@^1.0.5:
-  version "1.0.5"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/strnum/-/strnum-1.0.5.tgz#5c4e829fe15ad4ff0d20c3db5ac97b73c9b072db"
-  integrity sha1-XE6Cn+Fa1P8NIMPbWsl7c8mwcts=
-
 supports-color@^5.5.0:
   version "5.5.0"
   resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/supports-color/-/supports-color-5.5.0.tgz#e2e69a44ac8772f78a1ec0b35b689df6530efc8f"
@@ -2488,12 +1815,12 @@ tr46@^3.0.0:
   dependencies:
     punycode "^2.1.1"
 
-ts-node@10.2.1:
-  version "10.2.1"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/ts-node/-/ts-node-10.2.1.tgz#4cc93bea0a7aba2179497e65bb08ddfc198b3ab5"
-  integrity sha1-TMk76gp6uiF5SX5luwjd/BmLOrU=
+ts-node@10.9.1:
+  version "10.9.1"
+  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/ts-node/-/ts-node-10.9.1.tgz#e73de9102958af9e1f0b168a6ff320e25adcff4b"
+  integrity sha1-5z3pEClYr54fCxaKb/Mg4lrc/0s=
   dependencies:
-    "@cspotcode/source-map-support" "0.6.1"
+    "@cspotcode/source-map-support" "^0.8.0"
     "@tsconfig/node10" "^1.0.7"
     "@tsconfig/node12" "^1.0.7"
     "@tsconfig/node14" "^1.0.0"
@@ -2504,17 +1831,8 @@ ts-node@10.2.1:
     create-require "^1.1.0"
     diff "^4.0.1"
     make-error "^1.1.1"
+    v8-compile-cache-lib "^3.0.1"
     yn "3.1.1"
-
-tslib@^1.11.1:
-  version "1.14.1"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
-  integrity sha1-zy04vcNKE0vK8QkcQfZhni9nLQA=
-
-tslib@^2.3.1, tslib@^2.5.0:
-  version "2.5.0"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/tslib/-/tslib-2.5.0.tgz#42bfed86f5787aeb41d031866c8f402429e0fddf"
-  integrity sha1-Qr/thvV4eutB0DGGbI9AJCng/d8=
 
 type-is@~1.6.18:
   version "1.6.18"
@@ -2524,10 +1842,10 @@ type-is@~1.6.18:
     media-typer "0.3.0"
     mime-types "~2.1.24"
 
-typescript@4.4.3:
-  version "4.4.3"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/typescript/-/typescript-4.4.3.tgz#bdc5407caa2b109efd4f82fe130656f977a29324"
-  integrity sha1-vcVAfKorEJ79T4L+EwZW+XeikyQ=
+typescript@5.0.4:
+  version "5.0.4"
+  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/typescript/-/typescript-5.0.4.tgz#b217fd20119bd61a94d4011274e0ab369058da3b"
+  integrity sha1-shf9IBGb1hqU1AESdOCrNpBY2js=
 
 uid2@0.0.3:
   version "0.0.3"
@@ -2578,10 +1896,15 @@ uuid@8.0.0:
   resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/uuid/-/uuid-8.0.0.tgz#bc6ccf91b5ff0ac07bbcdbf1c7c4e150db4dbb6c"
   integrity sha1-vGzPkbX/CsB7vNvxx8ThUNtNu2w=
 
-uuid@^8.3.2:
-  version "8.3.2"
-  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
-  integrity sha1-gNW1ztJxu5r2xEXyGhoExgbO++I=
+uuid@^9.0.0:
+  version "9.0.0"
+  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/uuid/-/uuid-9.0.0.tgz#592f550650024a38ceb0c562f2f6aa435761efb5"
+  integrity sha1-WS9VBlACSjjOsMVi8vaqQ1dh77U=
+
+v8-compile-cache-lib@^3.0.1:
+  version "3.0.1"
+  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/v8-compile-cache-lib/-/v8-compile-cache-lib-3.0.1.tgz#6336e8d71965cb3d35a1bbb7868445a7c05264bf"
+  integrity sha1-Yzbo1xllyz01obu3hoRFp8BSZL8=
 
 validator@^13.7.0, validator@^13.9.0:
   version "13.9.0"
@@ -2640,6 +1963,11 @@ xmlbuilder@~11.0.0:
   version "11.0.1"
   resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/xmlbuilder/-/xmlbuilder-11.0.1.tgz#be9bae1c8a046e76b31127726347d0ad7002beb3"
   integrity sha1-vpuuHIoEbnazESdyY0fQrXACvrM=
+
+yallist@4.0.0, yallist@^4.0.0:
+  version "4.0.0"
+  resolved "https://pkgs.dev.azure.com/landstarvsts/_packaging/landstar/npm/registry/yallist/-/yallist-4.0.0.tgz#9bb92790d9c0effec63be73519e11a35019a3a72"
+  integrity sha1-m7knkNnA7/7GO+c1GeEaNQGaOnI=
 
 yaml@2.0.0-1:
   version "2.0.0-1"
