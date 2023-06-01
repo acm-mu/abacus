@@ -1,5 +1,5 @@
 import { User, Notification } from 'abacus'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { Index, Admin, Blue, Gold, Judge, Eagle, Proctor } from 'pages'
 import config from 'environment'
@@ -74,7 +74,7 @@ const App = (): JSX.Element => {
         if (window.sendNotification) window.sendNotification(notification)
         else window.notifications = [notification]
 
-        await loadApp()
+        loadApp()
       }
     }, 15 * 1000)
 
@@ -83,14 +83,11 @@ const App = (): JSX.Element => {
     }
   }, [])
 
-  const appContext: AppContextType = useMemo(
-    () => ({
-      user,
-      setUser,
-      settings
-    }),
-    [user, setUser, settings]
-  )
+  const appContext: AppContextType = {
+    user,
+    setUser,
+    settings
+  }
 
   if (isLoading) return <></>
 

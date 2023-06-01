@@ -9,17 +9,13 @@ jobs:
   test:
     name: Test Frontend
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [16.x]
     steps:
-      - uses: actions/checkout@v3
-      - name: Using Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: '16'
       - uses: egordm/gha-yarn-node-cache@v1
-      - run: yarn install --frozen-lockfile
+      - run: yarn install
         working-directory: frontend
       - run: yarn build
         working-directory: frontend

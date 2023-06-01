@@ -34,24 +34,10 @@ if (process.env.REDIS_HOST) {
   io.adapter(createAdapter({ pubClient, subClient }))
 }
 
-// Enable CORS on all endpoints.
-app.use(cors())
-
-// Middleware to parse body of requests as JSON.
-app.use(express.json())
-
-// Middleware for uploading files to express(accessible in req.files)
-// By default, useTempFiles is 'False', uploaded files will be loaded into RAM.
-app.use(
-  fileUpload({
-    useTempFiles: true,
-    tempFileDir: '/tmp/'
-  })
-)
-
-if (process.env.NODE_ENV == 'development') {
-  app.use(morgan('dev'))
-}
+app.use(cors()) // Enables CORS on all endpoints
+app.use(express.json()) // Middleware to parse body of requests as JSON
+app.use(fileUpload()) // Middleware for uploading files to express (accessible in req.files)
+if (process.env.NODE_ENV == 'development') app.use(morgan('dev'))
 
 app.use(api)
 
@@ -60,7 +46,7 @@ export function sendNotification({ header, to, content, type, context }: Notific
 }
 
 io.on('connection', (socket: Socket) => {
-  socket.on('broadcast', ({ ev, args }: any) => {
+  socket.on('broadcast', ({ ev, args }) => {
     io.sockets.emit(ev, args)
   })
 })

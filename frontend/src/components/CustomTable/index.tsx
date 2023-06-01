@@ -76,12 +76,12 @@ const CustomTable: FC<CustomTableProps> = ({
         {body &&
           body.map((bodyItem) => {
             return (
-              <Table.Row key={bodyItem[id]} uuid={bodyItem[id]}>
+              <Table.Row key={bodyItem[`${id}`]} uuid={bodyItem[`${id}`]}>
                 <Table.Cell>
                   <input
                     type="checkbox"
                     checked={bodyItem['checked']}
-                    id={bodyItem[id]}
+                    id={bodyItem[`${id}`]}
                     onChange={(item) => onCheckItem(item)}
                   />
                 </Table.Cell>
