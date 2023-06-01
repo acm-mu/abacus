@@ -74,7 +74,7 @@ const App = (): JSX.Element => {
         if (window.sendNotification) window.sendNotification(notification)
         else window.notifications = [notification]
 
-        loadApp()
+        await loadApp()
       }
     }, 15 * 1000)
 

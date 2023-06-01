@@ -1,5 +1,4 @@
 import { Notification } from 'abacus'
-import bodyParser from 'body-parser'
 import cors from 'cors'
 import express from 'express'
 import fileUpload from 'express-fileupload'
@@ -35,10 +34,24 @@ if (process.env.REDIS_HOST) {
   io.adapter(createAdapter({ pubClient, subClient }))
 }
 
-app.use(cors()) // Enables CORS on all endpoints
-app.use(bodyParser.json()) // Middleware to parse body of requests as JSON
-app.use(fileUpload()) // Middleware for uploading files to express (accessible in req.files)
-if (process.env.NODE_ENV == 'development') app.use(morgan('dev'))
+// Enable CORS on all endpoints.
+app.use(cors())
+
+// Middleware to parse body of requests as JSON.
+app.use(express.json())
+
+// Middleware for uploading files to express(accessible in req.files)
+// By default, useTempFiles is 'False', uploaded files will be loaded into RAM.
+app.use(
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: '/tmp/'
+  })
+)
+
+if (process.env.NODE_ENV == 'development') {
+  app.use(morgan('dev'))
+}
 
 app.use(api)
 
