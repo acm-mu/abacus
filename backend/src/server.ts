@@ -60,7 +60,7 @@ export function sendNotification({ header, to, content, type, context }: Notific
 }
 
 io.on('connection', (socket: Socket) => {
-  socket.on('broadcast', ({ ev, args }) => {
+  socket.on('broadcast', ({ ev, args }: any) => {
     io.sockets.emit(ev, args)
   })
 })

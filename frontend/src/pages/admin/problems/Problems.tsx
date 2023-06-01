@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import config from 'environment'
 import { Block, DivisionLabel, PageLoading } from 'components'
 import { Helmet } from 'react-helmet'
+import { saveAs } from 'file-saver'
 
 interface ProblemItem extends Problem {
   checked: boolean

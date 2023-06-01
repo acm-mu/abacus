@@ -50,9 +50,9 @@ const SkeletonsEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Elemen
           />
         ))}
         <Menu.Item position="right">
-          {problem.skeletons?.map((skeleton) =>
+          {problem.skeletons?.map((skeleton, index) =>
             skeleton.language == activeSkeleton ? (
-              <Input label="Filename" size="small" name="filename" value={skeleton.file_name} onChange={handleChange} />
+              <Input key={`skeleton-input-${index}`} label="Filename" size="small" name="filename" value={skeleton.file_name} onChange={handleChange} />
             ) : (
               <></>
             )

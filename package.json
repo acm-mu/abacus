@@ -19,17 +19,16 @@
   },
   "homepage": "https://github.com/acm-mu/abacus#readme",
   "devDependencies": {
-    "@types/react": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^5.59.8",
     "@typescript-eslint/parser": "^5.59.8",
     "concurrently": "^8.0.1",
-    "eslint": "^8.41.0",
+    "eslint": "^7.11.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.32.2",
     "prettier": "^2.8.8",
-    "typescript": "^5.0.4"
+    "typescript": ">=3.3.1 <4.5.0"
   }
 }

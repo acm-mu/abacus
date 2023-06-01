@@ -6,13 +6,14 @@ import React, { ChangeEvent, useContext, useEffect, useMemo, useState } from 're
 import { Helmet } from 'react-helmet'
 import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
-import { Button, Checkbox, Grid, Label, Menu, MenuItemProps, Pagination, Table } from 'semantic-ui-react'
+import { Button, Checkbox, Grid, Label, Menu, MenuItemProps, Table } from 'semantic-ui-react'
 import { compare } from 'utils'
+import { saveAs } from 'file-saver'
 
 interface SubmissionItem extends Submission {
   checked: boolean
 }
-type SortKey = 'date' | 'sid' | 'sub_no' | 'language' | 'status' | 'runtime' | 'date' | 'score'
+type SortKey = 'date' | 'sid' | 'sub_no' | 'language' | 'status' | 'runtime' | 'score'
 type SortConfig = {
   column: SortKey
   direction: 'ascending' | 'descending'
