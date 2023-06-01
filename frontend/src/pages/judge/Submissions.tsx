@@ -8,11 +8,12 @@ import { compare } from 'utils'
 import { Helmet } from 'react-helmet'
 import { PageLoading } from 'components'
 import { AppContext, SocketContext } from 'context'
+import { saveAs } from 'file-saver'
 
 interface SubmissionItem extends Submission {
   checked: boolean
 }
-type SortKey = 'date' | 'sid' | 'sub_no' | 'language' | 'status' | 'runtime' | 'date' | 'score'
+type SortKey = 'date' | 'sid' | 'sub_no' | 'language' | 'status' | 'runtime' | 'score'
 type SortConfig = {
   column: SortKey
   direction: 'ascending' | 'descending'

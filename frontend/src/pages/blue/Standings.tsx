@@ -7,7 +7,6 @@ import config from 'environment'
 import '../Standings.scss'
 import { AppContext, SocketContext } from 'context'
 import { Helmet } from 'react-helmet'
-import moment from 'moment'
 import { isThirtyMinutesBefore } from 'utils'
 
 const Standings = (): JSX.Element => {

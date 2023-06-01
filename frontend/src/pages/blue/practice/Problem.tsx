@@ -8,6 +8,7 @@ import { Block, Countdown, NotFound, PageLoading } from 'components'
 import Moment from 'react-moment'
 import '../Problem.scss'
 import { Helmet } from 'react-helmet'
+import { saveAs } from 'file-saver'
 
 interface PracticeProblemProps {
   submissions: Submission[]

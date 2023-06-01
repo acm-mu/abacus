@@ -73,7 +73,7 @@ export const compare = (o1: string | number, o2: string | number): number => {
   return 0
 }
 
-export const isThirtyMinutesBefore = (time: Date) => {
+export const isThirtyMinutesBefore = (time: Date): boolean => {
   const newDate = new Date()
   const beginningTime = moment(newDate)
   const endTime = moment(time)

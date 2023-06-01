@@ -6,6 +6,7 @@ import config from 'environment'
 import { Helmet } from 'react-helmet'
 import { Button } from 'semantic-ui-react'
 import { AppContext, SocketContext } from 'context'
+import { saveAs } from 'file-saver'
 
 const Submission = (): JSX.Element => {
   const socket = useContext(SocketContext)

@@ -6,6 +6,7 @@ import config from 'environment'
 import { Helmet } from 'react-helmet'
 import { Button, Grid } from 'semantic-ui-react'
 import { AppContext } from 'context'
+import { saveAs } from 'file-saver'
 
 const Submission = (): JSX.Element => {
   const { sid } = useParams<{ sid: string }>()
