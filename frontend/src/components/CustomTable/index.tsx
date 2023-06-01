@@ -13,11 +13,12 @@ type SortConfig = {
 interface UserItem extends User {
   checked: boolean
 }
+type HeaderType = keyof UserItem
 
 interface CustomTableProps {
-  header: string[]
+  header: HeaderType[]
   body: UserItem[]
-  id: string
+  id: SortKey
   sort: SortConfig
   onClickHeaderItem: (item: string) => void
   onCheckAll: (item: ChangeEvent<HTMLInputElement>) => void
@@ -37,7 +38,7 @@ const CustomTable: FC<CustomTableProps> = ({
   onCheckAll,
   onCheckItem
 }): JSX.Element => {
-  const renderRow = (cellid: string, property: string, items: any) => {
+  const renderRow = (cellid: string | undefined, property: HeaderType, items: UserItem) => {
     if (property === 'division') {
       return (
         <Table.Cell>
@@ -73,21 +74,21 @@ const CustomTable: FC<CustomTableProps> = ({
       <Table.Body>
         {/* basing this off of the users table, every header value is a property, we go off the header values so that the cells are in order */}
         {body &&
-          body.map((bodyItem: any) => {
+          body.map((bodyItem) => {
             return (
-              <Table.Row key={bodyItem[`${id}`]} uuid={bodyItem[`${id}`]}>
+              <Table.Row key={bodyItem[id]} uuid={bodyItem[id]}>
                 <Table.Cell>
                   <input
                     type="checkbox"
                     checked={bodyItem['checked']}
-                    id={bodyItem[`${id}`]}
+                    id={bodyItem[id]}
                     onChange={(item) => onCheckItem(item)}
                   />
                 </Table.Cell>
                 {bodyItem &&
                   header
-                    .filter((a: string) => a !== 'checked' && a !== id)
-                    .map((item: string) => {
+                    .filter((a: HeaderType) => a !== 'checked' && a !== id)
+                    .map((item: HeaderType) => {
                       return renderRow(bodyItem[id], item, bodyItem)
                     })}
               </Table.Row>

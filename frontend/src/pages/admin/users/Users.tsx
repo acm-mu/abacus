@@ -7,13 +7,16 @@ import { saveAs } from 'file-saver'
 import React, { ChangeEvent, useContext, useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet'
 import { Link } from 'react-router-dom'
-import { Button, Grid, Pagination } from 'semantic-ui-react'
+import { Button, Grid } from 'semantic-ui-react'
 import CreateUser from './CreateUser'
 
 interface UserItem extends User {
   checked: boolean
 }
-type SortKey = 'uid' | 'display_name' | 'username' | 'role' | 'division' | 'school'
+
+const sortKeys = ['uid', 'display_name', 'username', 'role', 'division', 'school'] as const
+type SortKey = typeof sortKeys[number]
+
 type SortConfig = {
   column: SortKey
   direction: 'ascending' | 'descending'
@@ -57,14 +60,15 @@ const Users = (): JSX.Element => {
   const [isDeleting, setDeleting] = useState(false)
   const [isImporting, setImporting] = useState(false)
   const [error, setError] = useState<string>()
-  const [page, setPage] = useState<number>(1)
-  const [numberOfPages, setNumberOfPages] = useState<number>(4)
   const [{ column, direction }, setSortConfig] = useState<SortConfig>({
     column: 'username',
     direction: 'ascending'
   })
 
-  const sort = (newColumn: SortKey, users_list: UserItem[] = users) => {
+  const sort = (maybeColumn: string, users_list: UserItem[] = users) => {
+    const newColumn: SortKey | undefined = sortKeys.find(value => value == maybeColumn)
+    if (!newColumn) return
+
     const newDirection = column === newColumn && direction === 'ascending' ? 'descending' : 'ascending'
     setSortConfig({ column: newColumn, direction: newDirection })
 
@@ -77,33 +81,15 @@ const Users = (): JSX.Element => {
   }
 
   useEffect(() => {
-    loadUsers(page)
-  }, [page])
+    loadUsers()
+  }, [])
 
   /*
   @param page - page to query when paginating
   updates the new page of users.
   */
-  const loadUsers = async (page: number) => {
+  const loadUsers = async () => {
     try {
-      const getTableSize = async () => {
-        const tableSizeRes = await fetch(`${config.API_URL}/tablesize?tablename=user`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.accessToken}`,
-            'Content-Type': 'application/json'
-          }
-        })
-        const numberOfPages = await tableSizeRes.json()
-        const { tableSize } = numberOfPages
-
-        setNumberOfPages(Math.ceil(tableSize))
-        if (tableSize < numberOfPages) {
-          setPage(numberOfPages)
-        }
-      }
-      if (users.length !== 0) {
-        getTableSize()
-      }
       //include page as query, so that API can fetch it.
       const response = await fetch(`${config.API_URL}/users`, {
         headers: {
@@ -112,11 +98,6 @@ const Users = (): JSX.Element => {
         }
       })
       const data = Object.values(await response.json()) as UserItem[]
-      if (users.length === 0 && data.length > 0) {
-        getTableSize()
-      } else if (users.length === 0 && data.length === 0) {
-        setNumberOfPages(0)
-      }
       sort(
         'username',
         data.map((user) => ({ ...user, checked: false }))
@@ -125,10 +106,6 @@ const Users = (): JSX.Element => {
     } catch (err) {
       setError(err as string)
     }
-  }
-
-  const handlePageChange = async (newPage: number) => {
-    setPage(newPage)
   }
 
   const downloadUsers = () => {
@@ -202,7 +179,7 @@ const Users = (): JSX.Element => {
     setUsers(users.map((user) => ({ ...user, checked })))
 
   const createUserCallback = (response: Response) => {
-    if (response.ok) loadUsers(page)
+    if (response.ok) loadUsers()
   }
 
   const deleteSelected = async () => {
@@ -226,7 +203,7 @@ const Users = (): JSX.Element => {
       })
 
       if (response.ok) {
-        loadUsers(page)
+        loadUsers()
         const id = usersToDelete.join()
         window.sendNotification({
           id,
@@ -269,7 +246,7 @@ const Users = (): JSX.Element => {
         body={users}
         onCheckItem={handleChange}
         sort={{ column, direction }}
-        onClickHeaderItem={(item: any) => sort(item)}
+        onClickHeaderItem={(item: string) => sort(item)}
         onCheckAll={checkAll}
       />
     </Grid>

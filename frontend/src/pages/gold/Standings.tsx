@@ -7,7 +7,6 @@ import config from 'environment'
 import { Table } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import '../Standings.scss'
-import moment from 'moment'
 import { isThirtyMinutesBefore } from 'utils'
 
 interface GoldStandingsUser {

@@ -24,8 +24,6 @@ const Submissions = (): JSX.Element => {
   const [isLoading, setLoading] = useState(true)
   const [submissions, setSubmissions] = useState<SubmissionItem[]>([])
   const [isDeleting, setDeleting] = useState(false)
-  const [page, setPage] = useState<number>(1)
-  const [numberOfPages, setNumberOfPages] = useState<number>(4)
   const [showReleased, setShowReleased] = useState(false)
   const [activeDivision, setActiveDivision] = useState('blue')
 
@@ -47,38 +45,16 @@ const Submissions = (): JSX.Element => {
   }
 
   useEffect(() => {
-    loadSubmissions(page).then(() => setLoading(false))
-    socket?.on('new_submission', () => loadSubmissions(page))
-    socket?.on('update_submission', () => loadSubmissions(page))
-  }, [page])
-
-  const handlePageChange = async (page: number) => {
-    setPage(page)
-  }
+    loadSubmissions().then(() => setLoading(false))
+    socket?.on('new_submission', () => loadSubmissions())
+    socket?.on('update_submission', () => loadSubmissions())
+  }, [])
 
   /*
   @param page - page to query when paginating
   updates the new page of submissions
   */
-  const loadSubmissions = async (page: number) => {
-    const getTableSize = async () => {
-      const tableSizeRes = await fetch(`${config.API_URL}/tablesize?tablename=submission`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.accessToken}`,
-          'Content-Type': 'application/json'
-        }
-      })
-      //table call response
-      const numberOfPages = await tableSizeRes.json()
-      const { tableSize } = numberOfPages
-      setNumberOfPages(Math.ceil(tableSize))
-      if (tableSize < numberOfPages) {
-        setPage(numberOfPages)
-      }
-    }
-    if (submissions.length !== 0) {
-      getTableSize()
-    }
+  const loadSubmissions = async () => {
     //include page as query, so that API can fetch it.
     const response = await fetch(`${config.API_URL}/submissions`, {
       headers: {
@@ -87,11 +63,6 @@ const Submissions = (): JSX.Element => {
       }
     })
     const newSubmissions = Object.values(await response.json()) as SubmissionItem[]
-    if (submissions.length === 0 && newSubmissions.length > 0) {
-      getTableSize()
-    } else if (newSubmissions.length === 0 && submissions.length === 0) {
-      setNumberOfPages(0)
-    }
     setSubmissions(newSubmissions.map((submission) => ({ ...submission, checked: false })))
   }
 
@@ -137,7 +108,7 @@ const Submissions = (): JSX.Element => {
           content: 'We deleted the submissions you selected!'
         })
       }
-      loadSubmissions(page)
+      loadSubmissions()
       setDeleting(false)
     }
   }

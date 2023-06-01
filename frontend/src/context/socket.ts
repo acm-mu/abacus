@@ -1,4 +1,4 @@
-import { Submission, Notification, Clarification } from 'abacus'
+import { Submission, Notification } from 'abacus'
 import { createContext } from 'react'
 import { Socket } from 'socket.io-client'
 
