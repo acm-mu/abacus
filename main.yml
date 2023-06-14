@@ -1,6 +1,13 @@
 # main.yml
 ---
--
+-name : Deploy Abacus
+ hosts: local
+ remote_user: root
+
+ tasks:
+ - name: Update Firewall Settings
+ - name: Install Docker Engine
+ - name: Kubernetes
 
 
 ...
