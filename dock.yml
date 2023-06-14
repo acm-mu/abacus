@@ -1,5 +1,12 @@
 # dock.yml
 ---
+  hosts: all
+  become: true
+  vars:
+    container_count: 4
+    default_container_name: docker
+    default_container_image: rockylinux:9
+    default_container_command: sleep 1
 
 
 ...
