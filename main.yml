@@ -8,6 +8,8 @@
  - name: Update Firewall Settings
  - name: Install Docker Engine
  - name: Kubernetes
+ - name: Clone Abacus
+ - name: Deploy Containers
 
 
 ...
