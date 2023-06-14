@@ -1,6 +1,6 @@
 # dock.yml
 ---
-  hosts: all
+  hosts: local
   become: true
   vars:
     container_count: 4
