@@ -1,15 +1,22 @@
 # main.yml
 ---
 -name : Deploy Abacus
- hosts: local
- remote_user: root
-
- tasks:
+ hosts: localhost
+ 
  - name: Update Firewall Settings
+   ansible.builtin.import_playbook: firewall.yml
+
  - name: Install Docker Engine
+   ansible.builtin.import_playblook: dock.yml
+
  - name: Kubernetes
+   ansible.builtin.import_playbook: kube.yml 
+   
  - name: Clone Abacus
+   ansible.builtin.import_playbook: git.yml
+
  - name: Deploy Containers
+   ansible.builtin.import_playbook: deploy.yml
 
 
 ...
