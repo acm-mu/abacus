@@ -1,12 +1,52 @@
 # dock.yml
 ---
-  hosts: local
+- name: Install docker in Rocky
+  hosts: rockylinuxsrv
+  gather_facts: false
   become: true
-  vars:
-    container_count: 4
-    default_container_name: docker
-    default_container_image: rockylinux:9
-    default_container_command: sleep 1
+  tasks:
+    - name: Upgrade all packages
+      dnf:
+        name: '*'
+        state: latest
 
+    - name: Uninstall old versions
+      dnf:
+        name:
+          - docker-client
+          - docker-client-latest
+          - docker-common
+          - docker-latest
+          - docker-latest-logrotate
+          - docker-logrotate
+          - docker-engine
+        state: absent
 
+    - name: Set up docker repository
+      shell: |
+        dnf install -y yum-utils
+        yum config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+      args:
+        warn: no
+
+    - name: Install the latest version of Docker Engine and containerd
+      dnf:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+      notify: Start and enable docker
+
+    - name: Add the current user to the docker group
+      user:
+        name: rocky
+        groups: docker
+        append: yes
+
+  handlers:
+    - name: Start and enable docker
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
 ...
