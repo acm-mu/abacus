@@ -1,0 +1,20 @@
+# user-createq.yml
+---
+- hosts: 'workers, masters'
+  become: yes
+
+  tasks:
+    - name create a new user and name it kube
+      user: name=kube append=yes state=present createhome=yes shell = /bin/bash
+
+    - name: allow the user to run sudo without requiring a password
+      lineinfile:
+        dest: /etc/sudoers
+        line: 'kube ALL=(ALL) NOPASSWD: ALL'
+        validate: 'visudo -cf %s'
+    
+    - name: add authorized key for user
+      authorized_key: user=kube key="{{item}}"
+      with_file:
+        - ~/.ssh/id_rsa.pub
+...
