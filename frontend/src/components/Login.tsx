@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useContext, useEffect, useState } from 'react'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 import { Button, Form, Modal } from 'semantic-ui-react'
 import { AppContext } from 'context'
 import config from 'environment'
@@ -8,16 +8,16 @@ import { userHome } from 'utils'
 import { StatusMessage } from '.'
 
 interface LoginModalProps {
-  trigger?: JSX.Element
+  trigger?: React.JSX.Element
   open?: boolean
 }
 
-const LoginModal = ({ trigger, open }: LoginModalProps): JSX.Element => {
+const LoginModal = ({ trigger, open }: LoginModalProps): React.JSX.Element => {
   const { setUser } = useContext(AppContext)
-  const history = useHistory()
+  const navigate = useNavigate()
   const [error, setError] = useState<string>()
   const [formData, setFormData] = useState({ username: '', password: '' })
-  const [isOpen, setOpen] = useState(open || false)
+  const [isOpen, setOpen] = useState(open ?? false)
   const [isLoggingIn, setLoggingIn] = useState(false)
 
   useEffect(() => {
@@ -44,7 +44,7 @@ const LoginModal = ({ trigger, open }: LoginModalProps): JSX.Element => {
         const { accessToken, ...user } = await response.json()
         localStorage.setItem('accessToken', accessToken)
         setUser(user)
-        history.push(userHome(user))
+        navigate(userHome(user))
       } else {
         const { message } = await response.json()
         setError(message)
@@ -61,8 +61,10 @@ const LoginModal = ({ trigger, open }: LoginModalProps): JSX.Element => {
       <Modal
         size="tiny"
         closeIcon
-        onClose={() => {setOpen(false)
-          setFormData({ username: '', password: '' }) }}
+        onClose={() => {
+          setOpen(false)
+          setFormData({ username: '', password: '' })
+        }}
         onOpen={() => setOpen(true)}
         open={isOpen}
         trigger={trigger}>

@@ -1,6 +1,6 @@
 import { User, Notification } from 'abacus'
 import React, { useEffect, useState } from 'react'
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { Index, Admin, Blue, Gold, Judge, Eagle, Proctor } from 'pages'
 import config from 'environment'
 import { Footer, Notifications } from 'components'
@@ -9,7 +9,7 @@ import { AppContext, AppContextType, SocketContext } from 'context'
 import io from 'socket.io-client'
 import './App.scss'
 
-const App = (): JSX.Element => {
+const App = (): React.JSX.Element => {
   const [user, setUser] = useState<User>()
   const [settings, setSettings] = useState()
   const [isLoading, setLoading] = useState(true)
@@ -94,19 +94,19 @@ const App = (): JSX.Element => {
   return (
     <AppContext.Provider value={appContext}>
       <SocketContext.Provider value={socket}>
-        <Router>
+        <BrowserRouter>
           <Notifications />
-          <Switch>
-            <Route path="/admin" component={Admin} />
-            <Route path="/blue" component={Blue} />
-            <Route path="/gold" component={Gold} />
-            <Route path="/judge" component={Judge} />
-            <Route path="/eagle" component={Eagle} />
-            <Route path="/proctor" component={Proctor} />
-            <Route path="/" component={Index} />
-          </Switch>
-        </Router>
-        <Footer />
+          <Routes>
+            <Route path="admin/*" element={<Admin />} />
+            <Route path="blue/*" element={<Blue />} />
+            <Route path="gold/*" element={<Gold />} />
+            <Route path="judge/*" element={<Judge />} />
+            <Route path="eagle/*" element={<Eagle />} />
+            <Route path="proctor/*" element={<Proctor />} />
+            <Route path="/*" element={<Index />} />
+          </Routes>
+          <Footer />
+        </BrowserRouter>
       </SocketContext.Provider>
     </AppContext.Provider>
   )

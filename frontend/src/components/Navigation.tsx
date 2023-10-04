@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Container, Dropdown, Menu } from 'semantic-ui-react'
 import { AppContext } from 'context'
 import fulllogoy from 'assets/fulllogoy.png'
@@ -12,8 +12,8 @@ type Props = {
   className?: string
 }
 
-const Navigation = (props: Props): JSX.Element => {
-  const history = useHistory()
+const Navigation = (props: Props): React.JSX.Element => {
+  const navigate = useNavigate()
   const { user, setUser } = useContext(AppContext)
   const [isMounted, setMounted] = useState(false)
 
@@ -24,7 +24,7 @@ const Navigation = (props: Props): JSX.Element => {
       // Redirect to homepage 20ms later
       setTimeout(() => {
         setUser(undefined)
-        history.push('/')
+        navigate('/')
       }, 1)
     }
   }
@@ -58,7 +58,7 @@ const Navigation = (props: Props): JSX.Element => {
                     simple
                     text={user.display_name}
                     onClick={() => {
-                      history.push(userHome(user))
+                      navigate(userHome(user))
                     }}>
                     <Dropdown.Menu>
                       <Dropdown.Item onClick={handleLogout} text="Log out" />
