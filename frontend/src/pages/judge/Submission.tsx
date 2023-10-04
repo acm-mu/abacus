@@ -1,6 +1,6 @@
 import { Submission as SubmissionType } from 'abacus'
 import React, { useState, useEffect, useContext } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { NotFound, PageLoading, StatusMessage, SubmissionView } from 'components'
 import config from 'environment'
 import { Helmet } from 'react-helmet'
@@ -20,7 +20,7 @@ const Submission = (): JSX.Element => {
 
   const { user } = useContext(AppContext)
 
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const loadSubmission = async () => {
     const response = await fetch(`${config.API_URL}/submissions?sid=${sid}`, {
@@ -164,7 +164,7 @@ const Submission = (): JSX.Element => {
 
       {error && <StatusMessage message={{ type: 'error', message: error }} />}
 
-      <Button content="Back" icon="arrow left" labelPosition="left" onClick={history.goBack} />
+      <Button content="Back" icon="arrow left" labelPosition="left" onClick={() => navigate(-1)} />
 
       {!submission.released ? (
         submission.claimed ? (

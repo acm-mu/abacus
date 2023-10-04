@@ -41,20 +41,25 @@ const Clarifications = (): JSX.Element => {
   const loadClarifications = async (): Promise<{ [key: string]: Clarification }> => {
     let clarifications = {}
 
-    const response = await fetch(`${config.API_URL}/clarifications`, {
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.accessToken}` }
-    })
+    try {
+      const response = await fetch(`${config.API_URL}/clarifications`, {
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.accessToken}` }
+      })
 
-    if (response.ok) {
-      clarifications = await response.json()
+      if (response.ok) {
+        clarifications = await response.json()
+      }
+
+      setClarifications(clarifications)
+    } catch (e) {
+      console.error(e)
     }
 
-    setClarifications(clarifications)
     setLoading(false)
     return clarifications
   }
 
-  socket?.on('new_clarification',() => loadClarifications())
+  socket?.on('new_clarification', () => loadClarifications())
 
   useEffect(() => {
     loadClarifications()

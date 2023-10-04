@@ -4,12 +4,12 @@ import { NavLink } from 'react-router-dom'
 import { Navigation } from 'components'
 import { AppContext } from 'context'
 
-const DefaultNavigation = (): JSX.Element => {
+const DefaultNavigation = (): React.JSX.Element => {
   const { user } = useContext(AppContext)
 
   return (
     <Navigation>
-      <Menu.Item as={NavLink} exact to="/">
+      <Menu.Item as={NavLink} end to="/">
         Home
       </Menu.Item>
 
