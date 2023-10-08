@@ -29,7 +29,7 @@ const Problem = (): React.JSX.Element => {
 
   const [isMounted, setMounted] = useState(true)
 
-  usePageTitle(() => `Abacus | ${problem?.name ?? ""}`, [problem])
+  usePageTitle(`Abacus | ${problem?.name ?? ""}`)
 
   useEffect(() => {
     loadProblem()

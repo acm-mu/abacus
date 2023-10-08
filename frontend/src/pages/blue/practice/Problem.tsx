@@ -19,7 +19,7 @@ const PracticeProblem = ({ submissions }: PracticeProblemProps): React.JSX.Eleme
   const [problem, setProblem] = useState<Problem>()
   const [isLoading, setLoading] = useState(true)
 
-  usePageTitle(() => `Abacus | ${problem?.name ?? ""}`, [problem])
+  usePageTitle(`Abacus | ${problem?.name ?? ""}`)
 
   useEffect(() => {
     fetch(`/problems/${id}.json`)

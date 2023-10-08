@@ -18,7 +18,7 @@ const SubmitPractice = (): React.JSX.Element => {
   const [file, setFile] = useState<File>()
   const navigate = useNavigate()
 
-  usePageTitle(() => `Abacus | Submit Practice ${problem?.id ?? ""}`, [problem])
+  usePageTitle(`Abacus | Submit Practice ${problem?.id ?? ""}`)
 
   useEffect(() => {
     fetch(`/problems/${id}.json`)

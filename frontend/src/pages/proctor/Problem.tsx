@@ -15,7 +15,7 @@ const Problem = (): React.JSX.Element => {
   const [problem, setProblem] = useState<ProblemType>()
   const { pid } = useParams<{ pid: string }>()
 
-  usePageTitle(() => `Abacus | Proctor ${problem?.name ?? ""}`, [problem])
+  usePageTitle(`Abacus | Proctor ${problem?.name ?? ""}`)
 
   const [isMounted, setMounted] = useState(true)
 

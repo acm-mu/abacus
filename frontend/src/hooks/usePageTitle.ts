@@ -1,12 +1,9 @@
-import React, {useEffect} from 'react'
+import {useEffect} from 'react'
 
-const usePageTitle = (pageTitle: (() => string) | undefined | string = undefined, dependencies: React.DependencyList = []) => {
-  const getValue = () => pageTitle instanceof Function ? pageTitle() : pageTitle
-
+const usePageTitle = (pageTitle:  undefined | string = undefined) => {
   useEffect(() => {
-    const value = getValue()
-    if (value) document.title = value
-  }, [...dependencies, pageTitle])
+    if (pageTitle) document.title = pageTitle
+  }, [pageTitle])
 }
 
 export default usePageTitle

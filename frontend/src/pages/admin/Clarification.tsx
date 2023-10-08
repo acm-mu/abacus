@@ -26,7 +26,7 @@ const ClarificationPage = (): React.JSX.Element => {
   const [isChangingState, setChangingState] = useState(false)
   const [isReplying, setReplying] = useState(false)
 
-  usePageTitle(() => `Abacus | Admin ${clarification?.title ?? ""}`, [clarification])
+  usePageTitle(`Abacus | Admin ${clarification?.title ?? ""}`)
 
   const loadClarification = async () => {
     const response = await fetch(`${config.API_URL}/clarifications?cid=${cid}`, {
