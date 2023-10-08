@@ -5,15 +5,17 @@ import { Divider } from 'semantic-ui-react'
 import { Problem } from 'abacus'
 import config from 'environment'
 import MDEditor from '@uiw/react-md-editor'
+import {usePageTitle} from 'hooks'
 
 const Home = (): React.JSX.Element => {
+  usePageTitle("Abacus | Eagle Problem")
+
   const { user, settings } = useContext(AppContext)
   const [isLoading, setLoading] = useState(true)
   const [problem, setProblem] = useState<Problem>()
   const [isMounted, setMounted] = useState(true)
 
   useEffect(() => {
-    document.title = "Abacus | Eagle Problem"
     loadProblem()
     return () => {
       setMounted(false)

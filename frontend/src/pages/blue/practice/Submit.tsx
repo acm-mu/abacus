@@ -5,6 +5,7 @@ import { useNavigate, useParams, Link } from 'react-router-dom'
 import { Breadcrumb, Button, Form } from 'semantic-ui-react'
 import { Language, languages } from 'utils'
 import { v4 as uuidv4 } from 'uuid'
+import {usePageTitle} from 'hooks'
 
 const SubmitPractice = (): React.JSX.Element => {
   const { id } = useParams<{ id: string }>()
@@ -17,6 +18,8 @@ const SubmitPractice = (): React.JSX.Element => {
   const [file, setFile] = useState<File>()
   const navigate = useNavigate()
 
+  usePageTitle(() => `Abacus | Submit Practice ${problem?.id ?? ""}`, [problem])
+
   useEffect(() => {
     fetch(`/problems/${id}.json`)
       .then((response) => response.json())
@@ -25,10 +28,6 @@ const SubmitPractice = (): React.JSX.Element => {
         setPageLoading(false)
       })
   }, [])
-
-  useEffect(() => {
-    document.title = `Abacus | Submit Practice ${problem?.id ?? ""}`
-  }, [problem])
 
   const testSubmission = async (submission: Submission): Promise<Submission> => {
     let runtime = -1

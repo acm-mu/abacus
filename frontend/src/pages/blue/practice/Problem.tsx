@@ -8,6 +8,7 @@ import { Block, Countdown, NotFound, PageLoading } from 'components'
 import Moment from 'react-moment'
 import '../Problem.scss'
 import { saveAs } from 'file-saver'
+import {usePageTitle} from 'hooks'
 
 interface PracticeProblemProps {
   submissions: Submission[]
@@ -18,6 +19,8 @@ const PracticeProblem = ({ submissions }: PracticeProblemProps): React.JSX.Eleme
   const [problem, setProblem] = useState<Problem>()
   const [isLoading, setLoading] = useState(true)
 
+  usePageTitle(() => `Abacus | ${problem?.name ?? ""}`, [problem])
+
   useEffect(() => {
     fetch(`/problems/${id}.json`)
       .then((res) => res.json())
@@ -27,9 +30,6 @@ const PracticeProblem = ({ submissions }: PracticeProblemProps): React.JSX.Eleme
       })
   }, [])
 
-  useEffect(() => {
-    document.title = `Abacus | ${problem?.name ?? ""}`
-  }, [problem])
 
   const downloadFiles = () => {
     if (problem?.skeletons)

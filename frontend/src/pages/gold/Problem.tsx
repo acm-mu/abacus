@@ -7,6 +7,7 @@ import { Block, Countdown, NotFound, ClarificationModal, PageLoading, Unauthoriz
 import config from 'environment'
 import { AppContext } from 'context'
 import { userHome } from 'utils'
+import {usePageTitle} from 'hooks'
 
 const Problem = (): React.JSX.Element => {
   const { user, settings } = useContext(AppContext)
@@ -27,6 +28,8 @@ const Problem = (): React.JSX.Element => {
 
   const [isMounted, setMounted] = useState(true)
 
+  usePageTitle(() => `Abacus | ${problem?.name ?? ""}`, [problem])
+
   useEffect(() => {
     loadProblem().then(() => {
       setLoading(false)
@@ -35,10 +38,6 @@ const Problem = (): React.JSX.Element => {
       setMounted(false)
     }
   }, [])
-
-  useEffect(() => {
-    document.title = `Abacus | ${problem?.name ?? ""}`
-  }, [problem])
 
   const loadProblem = async () => {
     let response = await fetch(

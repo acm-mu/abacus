@@ -2,8 +2,8 @@ import React, { ChangeEvent, useEffect, useState } from 'react'
 import { Button, Form, Input } from 'semantic-ui-react'
 import { Block, PageLoading, StatusMessage } from 'components'
 import config from 'environment'
-
 import { StatusMessageType } from 'components/StatusMessage'
+import {usePageTitle} from 'hooks'
 
 const timezoneOffset = () => new Date().getTimezoneOffset() * 60 * 1000
 
@@ -13,6 +13,8 @@ const toLocalDateString = (date: number): string => toLocal(date).toISOString().
 const toLocalTimeString = (date: number): string => toLocal(date).toISOString().substring(11, 16)
 
 const Settings = (): React.JSX.Element => {
+  usePageTitle("Abacus | Admin Settings")
+
   const [settings, setSettings] = useState<{ [key: string]: string }>({
     competition_name: '',
     practice_name: '',
@@ -35,7 +37,6 @@ const Settings = (): React.JSX.Element => {
   const [message, setMessage] = useState<StatusMessageType>()
 
   useEffect(() => {
-    document.title = "Abacus | Admin Settings"
     loadSettings()
     return () => {
       setMounted(false)

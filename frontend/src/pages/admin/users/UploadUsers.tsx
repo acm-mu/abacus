@@ -5,12 +5,15 @@ import { Button, Label, Message, Table } from 'semantic-ui-react'
 import { Block, FileDialog } from 'components'
 import config from 'environment'
 import sha256 from 'crypto-js/sha256'
+import {usePageTitle} from 'hooks'
 
 interface UserItem extends User {
   checked: boolean
 }
 
 const UploadUsers = (): React.JSX.Element => {
+  usePageTitle("Abacus | Admin Upload Users")
+
   const navigate = useNavigate()
   const [file, setFile] = useState<File>()
   const [existingUsers, setExistingUsers] = useState<{ [key: string]: User }>()
@@ -48,7 +51,6 @@ const UploadUsers = (): React.JSX.Element => {
   }
 
   useEffect(() => {
-    document.title = "Abacus | Admin Upload Users"
     loadExistingUsers()
 
     return () => setMounted(false)

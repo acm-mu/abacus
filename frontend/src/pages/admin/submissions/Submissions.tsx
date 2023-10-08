@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom'
 import { Button, Checkbox, Grid, Label, Menu, MenuItemProps, Table } from 'semantic-ui-react'
 import { compare } from 'utils'
 import { saveAs } from 'file-saver'
+import {usePageTitle} from 'hooks'
 
 interface SubmissionItem extends Submission {
   checked: boolean
@@ -19,6 +20,8 @@ type SortConfig = {
 }
 
 const Submissions = (): React.JSX.Element => {
+  usePageTitle("Abacus | Admin Submissions")
+
   const socket = useContext(SocketContext)
   const [isLoading, setLoading] = useState(true)
   const [submissions, setSubmissions] = useState<SubmissionItem[]>([])
@@ -44,7 +47,6 @@ const Submissions = (): React.JSX.Element => {
   }
 
   useEffect(() => {
-    document.title = "Abacus | Admin Submissions"
     loadSubmissions().then(() => setLoading(false))
     socket?.on('new_submission', () => loadSubmissions())
     socket?.on('update_submission', () => loadSubmissions())

@@ -23,8 +23,11 @@ import {
 } from 'semantic-ui-react'
 import config from '../environment'
 import './Clarifications.scss'
+import {usePageTitle} from 'hooks'
 
 const Clarifications = (): React.JSX.Element => {
+  usePageTitle("Abacus | Clarifications")
+
   const { user } = useContext(AppContext)
   const [isLoading, setLoading] = useState(true)
   const [clarifications, setClarifications] = useState<{ [key: string]: Clarification }>()
@@ -57,7 +60,6 @@ const Clarifications = (): React.JSX.Element => {
   socket?.on('new_clarification', () => loadClarifications())
 
   useEffect(() => {
-    document.title = "Abacus | Clarifications"
     loadClarifications()
   }, [])
 

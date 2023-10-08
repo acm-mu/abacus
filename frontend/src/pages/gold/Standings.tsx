@@ -7,6 +7,7 @@ import { Table } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import '../Standings.scss'
 import { isThirtyMinutesBefore } from 'utils'
+import {usePageTitle} from 'hooks'
 
 interface GoldStandingsUser {
   uid: string
@@ -22,6 +23,8 @@ interface GoldStandingsUser {
 }
 
 const Standings = (): React.JSX.Element => {
+  usePageTitle("Abacus | Gold Standings")
+
   const { user, settings } = useContext(AppContext)
   const socket = useContext(SocketContext)
   const [problems, setProblems] = useState<Problem[]>()
@@ -60,7 +63,6 @@ const Standings = (): React.JSX.Element => {
   socket?.on('new_submission', loadData)
 
   useEffect(() => {
-    document.title = "Abacus | Gold Standings"
     loadData()
     return () => {
       setMounted(false)

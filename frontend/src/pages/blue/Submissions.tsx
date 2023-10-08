@@ -6,15 +6,17 @@ import { Table } from 'semantic-ui-react'
 import { Block, Countdown, PageLoading, Unauthorized } from 'components'
 import { AppContext } from 'context'
 import config from 'environment'
+import {usePageTitle} from 'hooks'
 
 const Submissions = (): React.JSX.Element => {
+  usePageTitle("Abacus | Blue Submissions")
+
   const { user } = useContext(AppContext)
   const [isMounted, setMounted] = useState(true)
   const [isLoading, setLoading] = useState(true)
   const [submissions, setSubmissions] = useState<Submission[]>()
 
   useEffect(() => {
-    document.title = "Abacus | Blue Submissions"
     loadSubmissions()
     return () => {
       setMounted(false)

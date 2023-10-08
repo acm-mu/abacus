@@ -1,10 +1,8 @@
-import React, {useEffect} from 'react'
+import React from 'react'
+import {usePageTitle} from 'hooks'
 
 const Unauthorized = (): React.JSX.Element => {
-
-  useEffect(() => {
-    document.title = "Abacus | Unauthorized"
-  }, [])
+  usePageTitle("Abacus | Unauthorized")
 
   return <div>
     <h1>Error 401 - Unauthorized</h1>

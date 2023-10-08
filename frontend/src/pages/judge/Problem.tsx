@@ -7,6 +7,7 @@ import { Block, Countdown, NotFound, PageLoading } from 'components'
 import config from 'environment'
 import { AppContext } from 'context'
 import './Problem.scss'
+import {usePageTitle} from 'hooks'
 
 const Problem = (): React.JSX.Element => {
   const { user } = useContext(AppContext)
@@ -16,16 +17,14 @@ const Problem = (): React.JSX.Element => {
 
   const [isMounted, setMounted] = useState(true)
 
+  usePageTitle(() => `Abacus | ${problem?.name ?? ""}`, [problem])
+
   useEffect(() => {
     loadProblem()
     return () => {
       setMounted(false)
     }
   }, [])
-
-  useEffect(() => {
-    document.title = `Abacus | ${problem?.name ?? ""}`
-  }, [problem])
 
   const loadProblem = async () => {
     const response = await fetch(

@@ -4,6 +4,7 @@ import { Table } from 'semantic-ui-react'
 import config from 'environment'
 import { AppContext } from 'context'
 import { PageLoading, StatusMessage } from 'components'
+import {usePageTitle} from 'hooks'
 
 type SortKey = 'uid' | 'display_name' | 'username' | 'role' | 'division' | 'school'
 type SortConfig = {
@@ -12,6 +13,8 @@ type SortConfig = {
 }
 
 const Teams = (): React.JSX.Element => {
+  usePageTitle("Abacus | Users")
+
   const { user } = useContext(AppContext)
 
   const [users, setUsers] = useState<User[]>([])
@@ -37,7 +40,6 @@ const Teams = (): React.JSX.Element => {
   }
 
   useEffect(() => {
-    document.title = "Abacus | Users"
     loadUsers()
     return () => {
       setMounted(false)

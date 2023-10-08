@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import config from 'environment'
 import { Block, PageLoading } from 'components'
 import { AppContext } from 'context'
+import {usePageTitle} from 'hooks'
 
 type SortKey = 'id' | 'name'
 type SortConfig = {
@@ -13,6 +14,8 @@ type SortConfig = {
 }
 
 const Problems = (): React.JSX.Element => {
+  usePageTitle("Abacus | Judge Problems")
+
   const [isLoading, setLoading] = useState(true)
   const [problems, setProblems] = useState<Problem[]>([])
   const [submissions, setSubmissions] = useState<{ [key: string]: Submission[] }>()
@@ -37,7 +40,6 @@ const Problems = (): React.JSX.Element => {
   }
 
   useEffect(() => {
-    document.title = "Abacus | Judge Problems"
     loadProblems()
     return () => {
       setMounted(false)

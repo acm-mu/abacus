@@ -8,6 +8,7 @@ import { compare } from 'utils'
 import { PageLoading } from 'components'
 import { AppContext, SocketContext } from 'context'
 import { saveAs } from 'file-saver'
+import {usePageTitle} from 'hooks'
 
 interface SubmissionItem extends Submission {
   checked: boolean
@@ -19,6 +20,8 @@ type SortConfig = {
 }
 
 const Submissions = (): React.JSX.Element => {
+  usePageTitle("Abacus | Judge Submissions")
+
   const socket = useContext(SocketContext)
   const [isLoading, setLoading] = useState(true)
   const [submissions, setSubmissions] = useState<SubmissionItem[]>([])
@@ -48,7 +51,6 @@ const Submissions = (): React.JSX.Element => {
   }
 
   useEffect(() => {
-    document.title = "Abacus | Judge Submissions"
     loadSubmissions().then(() => setLoading(false))
     socket?.on('new_submission', loadSubmissions)
     socket?.on('update_submission', loadSubmissions)

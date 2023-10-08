@@ -6,8 +6,11 @@ import config from 'environment'
 import { Button, Grid } from 'semantic-ui-react'
 import { AppContext } from 'context'
 import { saveAs } from 'file-saver'
+import {usePageTitle} from 'hooks'
 
 const Submission = (): React.JSX.Element => {
+  usePageTitle("Abacus | Admin Submission")
+
   const { sid } = useParams<{ sid: string }>()
   const [submission, setSubmission] = useState<SubmissionType>()
   const [isLoading, setLoading] = useState(true)
@@ -37,7 +40,6 @@ const Submission = (): React.JSX.Element => {
   }
 
   useEffect(() => {
-    document.title = "Abacus | Admin Submission"
     loadSubmission()
     return () => {
       setMounted(false)

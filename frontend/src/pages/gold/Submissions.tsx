@@ -7,15 +7,17 @@ import { Block, Countdown, PageLoading, Unauthorized } from 'components'
 import { AppContext } from 'context'
 import config from 'environment'
 import 'components/Icons.scss'
+import {usePageTitle} from 'hooks'
 
 const Submissions = (): React.JSX.Element => {
+  usePageTitle("Abacus | Gold Submissions")
+
   const { user } = useContext(AppContext)
   const [isMounted, setMounted] = useState(true)
   const [isLoading, setLoading] = useState(true)
   const [submissions, setSubmissions] = useState<Submission[]>()
 
   useEffect(() => {
-    document.title = "Abacus | Gold Submissions"
     loadSubmissions()
     return () => {
       setMounted(false)

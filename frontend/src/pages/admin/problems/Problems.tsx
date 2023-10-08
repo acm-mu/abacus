@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import config from 'environment'
 import { Block, DivisionLabel, PageLoading } from 'components'
 import { saveAs } from 'file-saver'
+import {usePageTitle} from 'hooks'
 
 interface ProblemItem extends Problem {
   checked: boolean
@@ -16,6 +17,8 @@ type SortConfig = {
 }
 
 const Problems = (): React.JSX.Element => {
+  usePageTitle("Abacus | Admin Problems")
+
   const [isLoading, setLoading] = useState(true)
   const [problems, setProblems] = useState<ProblemItem[]>([])
   const [submissions, setSubmissions] = useState<{ [key: string]: Submission[] }>()
@@ -45,7 +48,6 @@ const Problems = (): React.JSX.Element => {
   }
 
   useEffect(() => {
-    document.title = "Abacus | Admin Problems"
     loadProblems()
     return () => {
       setMounted(false)

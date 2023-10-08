@@ -1,16 +1,15 @@
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import { Block } from 'components'
 import java from 'assets/java.png'
 import python from 'assets/python.png'
 import { Icon, Message } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
+import {usePageTitle} from 'hooks'
 
 const Home = (): React.JSX.Element => {
-  const [isDismissed, setDismissed] = useState<boolean>(localStorage.dismissedRules)
+  usePageTitle("Abacus | Blue")
 
-  useEffect(() => {
-    document.title = "Abacus | Blue"
-  }, [])
+  const [isDismissed, setDismissed] = useState<boolean>(localStorage.dismissedRules)
 
   return (
     <>

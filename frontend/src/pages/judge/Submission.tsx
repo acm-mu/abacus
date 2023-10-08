@@ -6,8 +6,11 @@ import config from 'environment'
 import { Button } from 'semantic-ui-react'
 import { AppContext, SocketContext } from 'context'
 import { saveAs } from 'file-saver'
+import {usePageTitle} from 'hooks'
 
 const Submission = (): React.JSX.Element => {
+  usePageTitle("Abacus | Judge Submission")
+
   const socket = useContext(SocketContext)
   const { sid } = useParams<{ sid: string }>()
   const [submission, setSubmission] = useState<SubmissionType>()
@@ -34,7 +37,6 @@ const Submission = (): React.JSX.Element => {
   }
 
   useEffect(() => {
-    document.title = "Abacus | Judge Submission"
     loadSubmission().then(() => setLoading(false))
     socket?.on('update_submission', loadSubmission)
   }, [sid])

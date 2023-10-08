@@ -5,8 +5,11 @@ import { useParams } from 'react-router-dom'
 import { Loader } from 'semantic-ui-react'
 import PracticeProblem from './Problem'
 import PracticeSubmission from './Submission'
+import {usePageTitle} from 'hooks'
 
 const ProblemOrSubmission = (): React.JSX.Element => {
+  usePageTitle("Abacus | Practice")
+
   const [isMounted, setMounted] = useState(true)
   const [isLoading, setLoading] = useState(true)
   const [problems, setProblems] = useState<Problem[]>([])
@@ -24,7 +27,6 @@ const ProblemOrSubmission = (): React.JSX.Element => {
   }
 
   useEffect(() => {
-    document.title = "Abacus | Practice"
     loadProblems()
     return () => {
       setMounted(false)

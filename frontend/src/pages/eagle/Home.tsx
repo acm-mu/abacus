@@ -1,11 +1,9 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 import { Block } from 'components'
+import {usePageTitle} from 'hooks'
 
 const Home = (): React.JSX.Element => {
-
-  useEffect(() => {
-    document.title = "Abacus | Eagle Division"
-  }, [])
+  usePageTitle("Abacus | Eagle Division")
 
   return <Block size="xs-12">
     <h1>Eagle Division</h1>

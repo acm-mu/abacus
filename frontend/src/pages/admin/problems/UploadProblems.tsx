@@ -4,12 +4,15 @@ import { useNavigate } from 'react-router-dom'
 import { Button, Label, Message, Table } from 'semantic-ui-react'
 import { Block, FileDialog } from 'components'
 import config from 'environment'
+import {usePageTitle} from 'hooks'
 
 interface ProblemItem extends Problem {
   checked: boolean
 }
 
 const UploadProblems = (): React.JSX.Element => {
+  usePageTitle("Abacus | Admin Upload Problems")
+
   const navigate = useNavigate()
   const [file, setFile] = useState<File>()
   const [existingProblems, setExistingProblems] = useState<{ [key: string]: Problem }>()
@@ -51,7 +54,6 @@ const UploadProblems = (): React.JSX.Element => {
   }
 
   useEffect(() => {
-    document.title = "Abacus | Admin Upload Problems"
     loadExistingProblems()
 
     return () => setMounted(false)

@@ -7,8 +7,11 @@ import config from 'environment'
 import { AppContext } from 'context'
 import 'components/Table.scss'
 import { userHome } from 'utils'
+import {usePageTitle} from 'hooks'
 
 const Problems = (): React.JSX.Element => {
+  usePageTitle("Abacus | Blue Problems")
+
   const { user, settings } = useContext(AppContext)
   const [isMounted, setMounted] = useState(true)
   const [isLoading, setLoading] = useState(true)
@@ -16,7 +19,6 @@ const Problems = (): React.JSX.Element => {
   const [submissions, setSubmissions] = useState<{ [key: string]: Submission[] }>()
 
   useEffect(() => {
-    document.title = "Abacus | Blue Problems"
     loadProblems()
     return () => {
       setMounted(false)

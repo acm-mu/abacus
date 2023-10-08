@@ -6,8 +6,11 @@ import config from 'environment'
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import MDEditor from '@uiw/react-md-editor'
 import { AppContext } from 'context'
+import {usePageTitle} from 'hooks'
 
 const Submit = (): React.JSX.Element => {
+  usePageTitle( "Abacus | Gold Submit")
+
   const { pid: problem_id } = useParams<{ pid: string }>()
   const [problems, setProblems] = useState<{ [key: string]: Problem }>({})
   const [problem, setProblem] = useState<Problem>()
@@ -33,7 +36,6 @@ const Submit = (): React.JSX.Element => {
   }, [project_url])
 
   useEffect(() => {
-    document.title = "Abacus | Gold Submit"
     loadProblems()
     return () => {
       setMounted(false)

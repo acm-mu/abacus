@@ -6,6 +6,7 @@ import config from 'environment'
 import { compare } from 'utils'
 import { PageLoading } from 'components'
 import { AppContext, SocketContext } from 'context'
+import {usePageTitle} from 'hooks'
 
 type SortKey = 'date' | 'sid' | 'sub_no' | 'language'
 type SortConfig = {
@@ -14,6 +15,8 @@ type SortConfig = {
 }
 
 const Submissions = (): React.JSX.Element => {
+  usePageTitle("Abacus | Proctor Submissions")
+
   const socket = useContext(SocketContext)
   const [isLoading, setLoading] = useState(true)
   const [submissions, setSubmissions] = useState<Submission[]>([])
@@ -40,7 +43,6 @@ const Submissions = (): React.JSX.Element => {
   }
 
   useEffect(() => {
-    document.title = "Abacus | Proctor Submissions"
     loadSubmissions().then(() => setLoading(false))
     socket?.on('new_submission', loadSubmissions)
     socket?.on('update_submission', loadSubmissions)

@@ -7,8 +7,11 @@ import config from 'environment'
 import '../Standings.scss'
 import { AppContext, SocketContext } from 'context'
 import { isThirtyMinutesBefore } from 'utils'
+import {usePageTitle} from 'hooks'
 
 const Standings = (): React.JSX.Element => {
+  usePageTitle("Abacus | Blue Standings")
+
   const { user, settings } = useContext(AppContext)
   const socket = useContext(SocketContext)
   const [problems, setProblems] = useState<Problem[]>()
@@ -36,7 +39,6 @@ const Standings = (): React.JSX.Element => {
   socket?.on('new_submission', loadData)
 
   useEffect(() => {
-    document.title = "Abacus | Blue Standings"
     loadData()
     return () => {
       setMounted(false)

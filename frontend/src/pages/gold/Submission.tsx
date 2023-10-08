@@ -5,8 +5,11 @@ import { Block, Countdown, NotFound, PageLoading, SubmissionView, Unauthorized }
 import config from 'environment'
 import { Breadcrumb } from 'semantic-ui-react'
 import { AppContext } from 'context'
+import {usePageTitle} from 'hooks'
 
 const Submission = (): React.JSX.Element => {
+  usePageTitle("Abacus | Gold Submission")
+
   const { sid } = useParams<{ sid: string }>()
   const { user } = useContext(AppContext)
   const [submission, setSubmission] = useState<SubmissionType>()
@@ -14,7 +17,6 @@ const Submission = (): React.JSX.Element => {
   const [isLoading, setLoading] = useState(true)
 
   useEffect(() => {
-    document.title = "Abacus | Gold Submission"
     loadSubmission()
     return () => {
       setMounted(false)

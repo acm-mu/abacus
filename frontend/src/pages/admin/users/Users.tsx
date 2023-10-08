@@ -8,6 +8,7 @@ import React, { ChangeEvent, useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Grid } from 'semantic-ui-react'
 import CreateUser from './CreateUser'
+import {usePageTitle} from 'hooks'
 
 interface UserItem extends User {
   checked: boolean
@@ -52,6 +53,7 @@ type SortConfig = {
 */
 
 const Users = (): React.JSX.Element => {
+  usePageTitle("Abacus | Users")
   const { user } = useContext(AppContext)
 
   const [users, setUsers] = useState<UserItem[]>([])
@@ -80,7 +82,6 @@ const Users = (): React.JSX.Element => {
   }
 
   useEffect(() => {
-    document.title = "Abacus | Users"
     loadUsers()
   }, [])
 

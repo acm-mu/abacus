@@ -6,8 +6,11 @@ import config from 'environment'
 import moment from 'moment'
 import { Table } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
+import {usePageTitle} from 'hooks'
 
 const Home = (): React.JSX.Element => {
+  usePageTitle("Abacus | Admin")
+
   const socket = useContext(SocketContext)
   const [isLoading, setLoading] = useState(true)
   const [submissions, setSubmissions] = useState<Submission[]>()
@@ -36,7 +39,6 @@ const Home = (): React.JSX.Element => {
   }
 
   useEffect(() => {
-    document.title = "Abacus | Admin"
     loadSubmissions().then(() => setLoading(false))
     socket?.on('new_submission', loadSubmissions)
     socket?.on('update_submission', loadSubmissions)

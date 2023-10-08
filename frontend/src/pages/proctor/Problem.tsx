@@ -8,11 +8,14 @@ import config from 'environment'
 import './Problem.scss'
 import SolutionsEditor from 'components/editor/SolutionsEditor'
 import TestDataEditor from 'components/editor/TestDataEditor'
+import {usePageTitle} from 'hooks'
 
 const Problem = (): React.JSX.Element => {
   const [isLoading, setLoading] = useState(true)
   const [problem, setProblem] = useState<ProblemType>()
   const { pid } = useParams<{ pid: string }>()
+
+  usePageTitle(() => `Abacus | Proctor ${problem?.name ?? ""}`, [problem])
 
   const [isMounted, setMounted] = useState(true)
 
@@ -22,10 +25,6 @@ const Problem = (): React.JSX.Element => {
       setMounted(false)
     }
   }, [])
-
-  useEffect(() => {
-    document.title = `Abacus | Proctor ${problem?.name ?? ""}`
-  }, [problem])
 
   const loadProblem = async () => {
     const response = await fetch(

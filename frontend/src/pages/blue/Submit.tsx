@@ -6,8 +6,11 @@ import { Block, Countdown, FileDialog, NotFound, PageLoading, StatusMessage, Una
 import config from 'environment'
 import { AppContext } from 'context'
 import { Language, languages } from 'utils'
+import {usePageTitle} from 'hooks'
 
 const Submit = (): React.JSX.Element => {
+  usePageTitle("Abacus | Blue Submit")
+
   const { user } = useContext(AppContext)
   const [submissions, setSubmissions] = useState<Submission[]>()
   const [problem, setProblem] = useState<Problem>()
@@ -23,7 +26,6 @@ const Submit = (): React.JSX.Element => {
   const { pid } = useParams<{ pid: string }>()
 
   useEffect(() => {
-    document.title = "Abacus | Blue Submit"
     loadProblem()
     return () => {
       setMounted(false)

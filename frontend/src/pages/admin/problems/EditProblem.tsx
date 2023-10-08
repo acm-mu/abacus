@@ -5,8 +5,11 @@ import config from 'environment'
 import { ProblemEditor } from 'components/editor'
 import { PageLoading, StatusMessage } from 'components'
 import { StatusMessageType } from 'components/StatusMessage'
+import {usePageTitle} from 'hooks'
 
 const EditProblems = (): React.JSX.Element => {
+  usePageTitle("Abacus | Admin Edit Problem")
+
   const { pid } = useParams<{ pid: string }>()
   const [problem, setProblem] = useState<Problem>()
 
@@ -15,7 +18,6 @@ const EditProblems = (): React.JSX.Element => {
   const [isLoading, setLoading] = useState(true)
 
   useEffect(() => {
-    document.title = "Abacus | Admin Edit Problem"
     loadProblem()
     return () => {
       setMounted(false)

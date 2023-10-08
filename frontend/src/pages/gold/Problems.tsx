@@ -6,8 +6,11 @@ import { Block, Countdown, PageLoading, Unauthorized } from 'components'
 import config from 'environment'
 import { AppContext } from 'context'
 import { userHome } from 'utils'
+import {usePageTitle} from 'hooks'
 
 const Problems = (): React.JSX.Element => {
+  usePageTitle("Abacus | Gold Problems")
+
   const { user, settings } = useContext(AppContext)
   const [isMounted, setMounted] = useState(true)
   const [isLoading, setLoading] = useState(true)
@@ -15,7 +18,6 @@ const Problems = (): React.JSX.Element => {
   const [submissions, setSubmissions] = useState<{ [key: string]: Submission[] }>()
 
   useEffect(() => {
-    document.title = "Abacus | Gold Problems"
     loadProblems()
     return () => {
       setMounted(false)

@@ -4,6 +4,7 @@ import { Table } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import config from 'environment'
 import { Block, PageLoading } from 'components'
+import {usePageTitle} from 'hooks'
 
 type SortKey = 'id' | 'name'
 type SortConfig = {
@@ -12,6 +13,8 @@ type SortConfig = {
 }
 
 const Problems = (): React.JSX.Element => {
+  usePageTitle("Abacus | Proctor Problems")
+
   const [isLoading, setLoading] = useState(true)
   const [problems, setProblems] = useState<Problem[]>([])
   const [isMounted, setMounted] = useState(true)
@@ -34,7 +37,6 @@ const Problems = (): React.JSX.Element => {
   }
 
   useEffect(() => {
-    document.title = "Abacus | Proctor Problems"
     loadProblems()
     return () => {
       setMounted(false)

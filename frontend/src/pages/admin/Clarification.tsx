@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom'
 import { Button, ButtonProps, Comment, Divider, Form, Label, Message, Table } from 'semantic-ui-react'
 import config from '../../environment'
 import './Clarification.scss'
+import {usePageTitle} from 'hooks'
 
 interface ClarificationProps {
   clarification: Clarification
@@ -24,6 +25,8 @@ const ClarificationPage = (): React.JSX.Element => {
   const [isMounted, setMounted] = useState(true)
   const [isChangingState, setChangingState] = useState(false)
   const [isReplying, setReplying] = useState(false)
+
+  usePageTitle(() => `Abacus | Admin ${clarification?.title ?? ""}`, [clarification])
 
   const loadClarification = async () => {
     const response = await fetch(`${config.API_URL}/clarifications?cid=${cid}`, {
@@ -59,10 +62,6 @@ const ClarificationPage = (): React.JSX.Element => {
       setMounted(false)
     }
   }, [])
-
-  useEffect(() => {
-    document.title = `Abacus | Admin ${clarification?.title ?? ""}`
-  }, [clarification])
 
   const handleSubmit = async () => {
     if (!clarification) {

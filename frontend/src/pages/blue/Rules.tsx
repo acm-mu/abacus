@@ -1,16 +1,15 @@
-import React, {useContext, useEffect} from 'react'
+import React, {useContext} from 'react'
 import { Block } from 'components'
 import { Divider } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { AppContext } from 'context'
+import {usePageTitle} from 'hooks'
 
 const Rules = (): React.JSX.Element => {
+  usePageTitle("Abacus | Blue Rules")
+
   const { user } = useContext(AppContext)
   const { settings } = useContext(AppContext)
-
-  useEffect(() => {
-    document.title = "Abacus | Blue Rules"
-  }, [])
 
   const isBeforeCompetition = () => !settings || new Date() < settings.start_date
   const hasAccessTo = () => user?.role == 'admin' || user?.division == 'blue'

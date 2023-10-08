@@ -6,6 +6,7 @@ import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
 import { Button, Checkbox, CheckboxProps, Label, Table } from 'semantic-ui-react'
 import { compare } from 'utils'
+import {usePageTitle} from 'hooks'
 
 interface ClarificationItem extends Clarification {
   checked: boolean
@@ -18,6 +19,8 @@ type SortConfig = {
 }
 
 const Clarifications = (): React.JSX.Element => {
+  usePageTitle("Abacus | Admin Clarifications")
+
   const [isLoading, setLoading] = useState(true)
   const [isDeleting, setDeleting] = useState(false)
   const [clarifications, setClarifications] = useState<ClarificationItem[]>([])
@@ -91,7 +94,6 @@ const Clarifications = (): React.JSX.Element => {
   }
 
   useEffect(() => {
-    document.title = "Abacus | Admin Clarifications"
     loadClarifications()
   }, [])
 

@@ -5,8 +5,11 @@ import { Label, Table } from 'semantic-ui-react'
 import config from 'environment'
 import { Submission } from 'abacus'
 import { Link } from 'react-router-dom'
+import {usePageTitle} from 'hooks'
 
 const Home = (): React.JSX.Element => {
+  usePageTitle("Abacus | Proctor Dashboard")
+
   const { user } = useContext(AppContext)
   const socket = useContext(SocketContext)
   const [isLoading, setLoading] = useState(true)
@@ -33,7 +36,6 @@ const Home = (): React.JSX.Element => {
   }
 
   useEffect(() => {
-    document.title = "Abacus | Proctor Dashboard"
     loadData().then(() => setLoading(false))
     socket?.on('new_submission', loadData)
     socket?.on('update_submission', loadData)

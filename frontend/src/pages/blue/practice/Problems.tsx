@@ -4,8 +4,11 @@ import { Breadcrumb, Button, Label, Loader, Table } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { Problem } from '.'
 import { Submission } from 'abacus'
+import {usePageTitle} from 'hooks'
 
 const PracticeProblems = (): React.JSX.Element => {
+  usePageTitle("Abacus | Practice Problems")
+
   const [isMounted, setMounted] = useState(true)
   const [isLoading, setLoading] = useState(true)
 
@@ -28,7 +31,6 @@ const PracticeProblems = (): React.JSX.Element => {
   }
 
   useEffect(() => {
-    document.title = "Abacus | Practice Problems"
     loadProblems()
     return () => {
       setMounted(false)
