@@ -5,17 +5,17 @@ import { Link } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
 import { Block, Countdown, PageLoading, Unauthorized } from 'components'
 import { AppContext } from 'context'
-import { Helmet } from 'react-helmet'
 import config from 'environment'
 import 'components/Icons.scss'
 
-const Submissions = (): JSX.Element => {
+const Submissions = (): React.JSX.Element => {
   const { user } = useContext(AppContext)
   const [isMounted, setMounted] = useState(true)
   const [isLoading, setLoading] = useState(true)
   const [submissions, setSubmissions] = useState<Submission[]>()
 
   useEffect(() => {
+    document.title = "Abacus | Gold Submissions"
     loadSubmissions()
     return () => {
       setMounted(false)
@@ -41,9 +41,6 @@ const Submissions = (): JSX.Element => {
 
   return (
     <>
-      <Helmet>
-        <title>Abacus | Gold Submissions</title>
-      </Helmet>
       <Countdown />
       <Block size="xs-12" transparent>
         <Table>

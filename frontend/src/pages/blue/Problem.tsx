@@ -7,10 +7,9 @@ import { Block, Countdown, NotFound, ClarificationModal, PageLoading, Unauthoriz
 import config from 'environment'
 import { AppContext } from 'context'
 import './Problem.scss'
-import { Helmet } from 'react-helmet'
 import { userHome } from 'utils'
 
-const Problem = (): JSX.Element => {
+const Problem = (): React.JSX.Element => {
   const { user, settings } = useContext(AppContext)
   const [isLoading, setLoading] = useState(true)
   const [problem, setProblem] = useState<ProblemType>()
@@ -35,6 +34,10 @@ const Problem = (): JSX.Element => {
       setMounted(false)
     }
   }, [])
+
+  useEffect(() => {
+    document.title = `Abacus | ${problem?.name ?? ""}`
+  }, [problem])
 
   const loadProblem = async () => {
     let response = await fetch(`${config.API_URL}/problems?division=blue&columns=description&id=${pid}`, {
@@ -74,9 +77,6 @@ const Problem = (): JSX.Element => {
 
   return (
     <>
-      <Helmet>
-        <title>Abacus | {problem.name}</title>
-      </Helmet>
       <Countdown />
       <Block transparent size="xs-12">
         <Breadcrumb>

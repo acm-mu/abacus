@@ -2,7 +2,6 @@ import { Clarification } from 'abacus'
 import { Block, ClarificationModal, DivisionLabel, PageLoading } from 'components'
 import config from 'environment'
 import React, { ChangeEvent, useEffect, useState } from 'react'
-import { Helmet } from 'react-helmet'
 import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
 import { Button, Checkbox, CheckboxProps, Label, Table } from 'semantic-ui-react'
@@ -18,7 +17,7 @@ type SortConfig = {
   direction: 'ascending' | 'descending'
 }
 
-const Clarifications = (): JSX.Element => {
+const Clarifications = (): React.JSX.Element => {
   const [isLoading, setLoading] = useState(true)
   const [isDeleting, setDeleting] = useState(false)
   const [clarifications, setClarifications] = useState<ClarificationItem[]>([])
@@ -92,6 +91,7 @@ const Clarifications = (): JSX.Element => {
   }
 
   useEffect(() => {
+    document.title = "Abacus | Admin Clarifications"
     loadClarifications()
   }, [])
 
@@ -99,9 +99,6 @@ const Clarifications = (): JSX.Element => {
 
   return (
     <>
-      <Helmet>
-        <title>Abacus | Admin Clarifications</title>
-      </Helmet>
       <ClarificationModal trigger={<Button content="Create Clarification" />} />
       {clarifications.filter((clarification) => clarification.checked).length ? (
         <Button

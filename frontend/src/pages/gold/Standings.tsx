@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { AppContext, SocketContext } from 'context'
 import { Block, Countdown, PageLoading, StatusMessage } from 'components'
-import { Helmet } from 'react-helmet'
 import { Problem } from 'abacus'
 import config from 'environment'
 import { Table } from 'semantic-ui-react'
@@ -22,19 +21,13 @@ interface GoldStandingsUser {
   >
 }
 
-const Standings = (): JSX.Element => {
+const Standings = (): React.JSX.Element => {
   const { user, settings } = useContext(AppContext)
   const socket = useContext(SocketContext)
   const [problems, setProblems] = useState<Problem[]>()
   const [standings, setStandings] = useState<[]>()
   const [isLoading, setLoading] = useState(true)
   const [isMounted, setMounted] = useState(true)
-
-  const helmet = (
-    <Helmet>
-      <title>Abacus | Gold Standings</title>
-    </Helmet>
-  )
 
   const loadData = async () => {
     const response = await fetch(`${config.API_URL}/standings?division=gold`)
@@ -67,6 +60,7 @@ const Standings = (): JSX.Element => {
   socket?.on('new_submission', loadData)
 
   useEffect(() => {
+    document.title = "Abacus | Gold Standings"
     loadData()
     return () => {
       setMounted(false)
@@ -76,7 +70,6 @@ const Standings = (): JSX.Element => {
   if ((!settings || new Date() < settings.start_date) && settings && new Date() > settings?.practice_end_date)
     return (
       <>
-        {helmet}
         <Countdown />
         <Block center size="xs-12">
           <h1>Competition not yet started!</h1>
@@ -88,7 +81,6 @@ const Standings = (): JSX.Element => {
   if (settings && ((!user || user && user.role === 'team') && isThirtyMinutesBefore(settings.end_date)))
     return (
       <>
-        {helmet}
         <Countdown />
         <Block size="xs-12">
           <h1>Competition almost finished!</h1>
@@ -100,19 +92,13 @@ const Standings = (): JSX.Element => {
   if (isLoading) return <PageLoading />
 
   if (!standings || !problems)
-    return (
-      <>
-        {helmet}
-        <StatusMessage message={{ type: 'error', message: 'An error has occurred! Please contact support' }} />
-      </>
-    )
+    return <StatusMessage message={{ type: 'error', message: 'An error has occurred! Please contact support' }} />
 
   let rk = 0
   let last = 0
 
   return (
     <>
-      {helmet}
       <Countdown />
       <Block size="xs-12" transparent>
         <div className="table-legend">

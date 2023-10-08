@@ -9,7 +9,7 @@ interface SubmissionProps {
   rerunning?: boolean
 }
 
-const SubmissionView = ({ submission, setSubmission, rerunning }: SubmissionProps): JSX.Element => (
+const SubmissionView = ({ submission, setSubmission, rerunning }: SubmissionProps): React.JSX.Element => (
   <SubmissionContext.Provider value={{ submission, setSubmission, rerunning }}>
     {submission.division == 'blue' && <BlueSubmission />}
     {submission.division == 'gold' && <GoldSubmission />}

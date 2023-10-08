@@ -3,7 +3,6 @@ import React, { useState, useEffect, useContext } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { NotFound, PageLoading, SubmissionView } from 'components'
 import config from 'environment'
-import { Helmet } from 'react-helmet'
 import { Button, Grid } from 'semantic-ui-react'
 import { AppContext } from 'context'
 import { saveAs } from 'file-saver'
@@ -38,6 +37,7 @@ const Submission = (): React.JSX.Element => {
   }
 
   useEffect(() => {
+    document.title = "Abacus | Admin Submission"
     loadSubmission()
     return () => {
       setMounted(false)
@@ -176,10 +176,6 @@ const Submission = (): React.JSX.Element => {
 
   return (
     <Grid>
-      <Helmet>
-        <title>Abacus | Admin Submission</title>
-      </Helmet>
-
       <Button content="Back" icon="arrow left" labelPosition="left" onClick={() => navigate(-1)} />
       <Button
         disabled={isRerunning}

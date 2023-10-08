@@ -1,13 +1,13 @@
-import React from 'react'
-import { Block } from 'components'
-import { Helmet } from 'react-helmet'
+import React, {useEffect} from 'react'
+import {Block} from 'components'
 
-const About = (): JSX.Element => (
-  <>
-    <Helmet>
-      <title>Abacus | About</title>
-    </Helmet>
+const About = (): React.JSX.Element => {
 
+  useEffect(() => {
+    document.title = "Abacus | About"
+  }, [])
+
+  return <>
     <Block size="xs-12">
       <h1>About the Marquette ACM/ACM-W/UPE Programming Competition</h1>
     </Block>
@@ -66,6 +66,6 @@ const About = (): JSX.Element => (
       </p>
     </Block>
   </>
-)
+}
 
 export default About

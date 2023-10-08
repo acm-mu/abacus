@@ -24,6 +24,7 @@ const ProblemOrSubmission = (): React.JSX.Element => {
   }
 
   useEffect(() => {
+    document.title = "Abacus | Practice"
     loadProblems()
     return () => {
       setMounted(false)
@@ -33,12 +34,7 @@ const ProblemOrSubmission = (): React.JSX.Element => {
   const subsForId = (id: string) => Object.values(submissions).filter((submission) => submission.pid == id)
 
   if (isLoading) {
-    return (
-      <>
-        <title>Abacus | Practice</title>
-        <Loader active inline="centered" content="Loading..." />
-      </>
-    )
+    return <Loader active inline="centered" content="Loading..." />
   }
 
   if (id) {

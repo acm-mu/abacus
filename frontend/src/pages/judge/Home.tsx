@@ -5,9 +5,8 @@ import { Table } from 'semantic-ui-react'
 import config from 'environment'
 import { Submission } from 'abacus'
 import { Link } from 'react-router-dom'
-import { Helmet } from 'react-helmet'
 
-const Home = (): JSX.Element => {
+const Home = (): React.JSX.Element => {
   const { user } = useContext(AppContext)
   const socket = useContext(SocketContext)
   const [isLoading, setLoading] = useState(true)
@@ -52,6 +51,7 @@ const Home = (): JSX.Element => {
   }
 
   useEffect(() => {
+    document.title = "Abacus | Judging Dashboard"
     loadData().then(() => setLoading(false))
     socket?.on('new_submission', loadData)
     socket?.on('update_submission', loadData)
@@ -65,10 +65,6 @@ const Home = (): JSX.Element => {
 
   return (
     <>
-      <Helmet>
-        <title>Abacus | Judging Dashboard</title>
-      </Helmet>
-
       <Block transparent size="xs-6">
         <h1>
           <Link to="/judge/submissions?filter=my_claimed">My Claimed Submissions</Link>

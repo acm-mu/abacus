@@ -7,9 +7,8 @@ import { Block, Countdown, NotFound, PageLoading } from 'components'
 import config from 'environment'
 import { AppContext } from 'context'
 import './Problem.scss'
-import { Helmet } from 'react-helmet'
 
-const Problem = (): JSX.Element => {
+const Problem = (): React.JSX.Element => {
   const { user } = useContext(AppContext)
   const [isLoading, setLoading] = useState(true)
   const [problem, setProblem] = useState<ProblemType>()
@@ -23,6 +22,10 @@ const Problem = (): JSX.Element => {
       setMounted(false)
     }
   }, [])
+
+  useEffect(() => {
+    document.title = `Abacus | ${problem?.name ?? ""}`
+  }, [problem])
 
   const loadProblem = async () => {
     const response = await fetch(
@@ -49,9 +52,6 @@ const Problem = (): JSX.Element => {
 
   return (
     <>
-      <Helmet>
-        <title>Abacus | {problem.name}</title>
-      </Helmet>
       <Countdown />
 
       <Block size="xs-9" className="problem">

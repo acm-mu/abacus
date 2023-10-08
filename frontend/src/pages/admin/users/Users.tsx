@@ -5,7 +5,6 @@ import { AppContext } from 'context'
 import config from 'environment'
 import { saveAs } from 'file-saver'
 import React, { ChangeEvent, useContext, useEffect, useState } from 'react'
-import { Helmet } from 'react-helmet'
 import { Link } from 'react-router-dom'
 import { Button, Grid } from 'semantic-ui-react'
 import CreateUser from './CreateUser'
@@ -52,7 +51,7 @@ type SortConfig = {
       </Table>
 */
 
-const Users = (): JSX.Element => {
+const Users = (): React.JSX.Element => {
   const { user } = useContext(AppContext)
 
   const [users, setUsers] = useState<UserItem[]>([])
@@ -81,6 +80,7 @@ const Users = (): JSX.Element => {
   }
 
   useEffect(() => {
+    document.title = "Abacus | Users"
     loadUsers()
   }, [])
 
@@ -222,9 +222,6 @@ const Users = (): JSX.Element => {
 
   return (
     <Grid>
-      <Helmet>
-        <title>Abacus | Users</title>
-      </Helmet>
       <CreateUser trigger={<Button content="Add User" primary />} callback={createUserCallback} />
       <Button as={Link} to={'/admin/users/upload'} content="Upload Users" />
       <Button loading={isImporting} disabled={isImporting} content="Import Users" onClick={importUsers} />

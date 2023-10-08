@@ -6,13 +6,12 @@ import { Breadcrumb, Label, Menu, MenuItemProps, Message, Table } from 'semantic
 import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
 import { capitalize, format_text, syntax_lang } from 'utils'
-import { Helmet } from 'react-helmet'
 
 interface PracticeSubmissionProps {
   submission: Submission
 }
 
-const PracticeSubmission = ({ submission }: PracticeSubmissionProps): JSX.Element => {
+const PracticeSubmission = ({ submission }: PracticeSubmissionProps): React.JSX.Element => {
   const [activeItem, setActiveItem] = useState('source-code')
   const [activeTestItem, setActiveTestItem] = useState(0)
 
@@ -21,9 +20,6 @@ const PracticeSubmission = ({ submission }: PracticeSubmissionProps): JSX.Elemen
 
   return (
     <>
-      <Helmet>
-        <title>Abacus | Practice Submission</title>
-      </Helmet>
       <Countdown />
       <Block transparent size="xs-12">
         <Breadcrumb>

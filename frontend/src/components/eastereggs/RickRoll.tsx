@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Modal } from 'semantic-ui-react'
 
-export const RickRoll = ({ trigger }: { trigger: JSX.Element }): JSX.Element => {
+export const RickRoll = ({ trigger }: { trigger: React.JSX.Element }): React.JSX.Element => {
   const [isOpen, setOpen] = useState(false)
   return (
     <Modal

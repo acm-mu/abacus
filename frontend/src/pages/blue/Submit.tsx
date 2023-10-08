@@ -6,7 +6,6 @@ import { Block, Countdown, FileDialog, NotFound, PageLoading, StatusMessage, Una
 import config from 'environment'
 import { AppContext } from 'context'
 import { Language, languages } from 'utils'
-import { Helmet } from 'react-helmet'
 
 const Submit = (): React.JSX.Element => {
   const { user } = useContext(AppContext)
@@ -22,7 +21,9 @@ const Submit = (): React.JSX.Element => {
   const [isMounted, setMounted] = useState(true)
 
   const { pid } = useParams<{ pid: string }>()
+
   useEffect(() => {
+    document.title = "Abacus | Blue Submit"
     loadProblem()
     return () => {
       setMounted(false)
@@ -118,9 +119,6 @@ const Submit = (): React.JSX.Element => {
   if (user.disabled) {
     return (
       <>
-        <Helmet>
-          <title>Abacus | Blue Submit</title>
-        </Helmet>
         <Countdown />
         <Block size="xs-12">
           <h2>Your account has been disabled!</h2>
@@ -133,9 +131,6 @@ const Submit = (): React.JSX.Element => {
   if (submissions?.filter((e) => e.status == 'accepted').length !== 0) {
     return (
       <>
-        <Helmet>
-          <title>Abacus | Blue Submit</title>
-        </Helmet>
         <Countdown />
         <Block size="xs-12">
           <h2>You Already Solved This Problem!</h2>
@@ -152,9 +147,6 @@ const Submit = (): React.JSX.Element => {
   if (submissions?.filter(({ status, released }) => status == 'pending' || !released).length !== 0) {
     return (
       <>
-        <Helmet>
-          <title>Abacus | Blue Submit</title>
-        </Helmet>
         <Countdown />
         <Block size="xs-12">
           <h2>Cannot submit to {problem.name}</h2>
@@ -169,9 +161,6 @@ const Submit = (): React.JSX.Element => {
 
   return (
     <>
-      <Helmet>
-        <title>Abacus | Blue Submit</title>
-      </Helmet>
       <Countdown />
       <Block transparent size="xs-12">
         <Breadcrumb>

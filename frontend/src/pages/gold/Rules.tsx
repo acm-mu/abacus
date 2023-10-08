@@ -1,22 +1,22 @@
-import React, { useContext } from 'react'
+import React, {useContext, useEffect} from 'react'
 import { Block } from 'components'
-import { Helmet } from 'react-helmet'
 import { Divider } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { AppContext } from 'context'
 
-const Rules = (): JSX.Element => {
+const Rules = (): React.JSX.Element => {
   const { user } = useContext(AppContext)
   const { settings } = useContext(AppContext)
 
   const isBeforeCompetition = () => !settings || new Date() < settings.start_date
   const hasAccessTo = () => user?.role == 'admin' || user?.division == 'gold'
 
+  useEffect(() => {
+    document.title = "Abacus | Gold Rules"
+  }, [])
+
   return (
     <>
-      <Helmet>
-        <title>Abacus | Gold Rules</title>
-      </Helmet>
       <Block size="xs-12">
         <h1>Rules</h1>
         <p>

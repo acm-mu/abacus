@@ -4,7 +4,6 @@ import { Checkbox, Label, Table } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import config from 'environment'
 import { compare } from 'utils'
-import { Helmet } from 'react-helmet'
 import { PageLoading } from 'components'
 import { AppContext, SocketContext } from 'context'
 
@@ -14,7 +13,7 @@ type SortConfig = {
   direction: 'ascending' | 'descending'
 }
 
-const Submissions = (): JSX.Element => {
+const Submissions = (): React.JSX.Element => {
   const socket = useContext(SocketContext)
   const [isLoading, setLoading] = useState(true)
   const [submissions, setSubmissions] = useState<Submission[]>([])
@@ -41,6 +40,7 @@ const Submissions = (): JSX.Element => {
   }
 
   useEffect(() => {
+    document.title = "Abacus | Proctor Submissions"
     loadSubmissions().then(() => setLoading(false))
     socket?.on('new_submission', loadSubmissions)
     socket?.on('update_submission', loadSubmissions)
@@ -71,9 +71,6 @@ const Submissions = (): JSX.Element => {
 
   return (
     <>
-      <Helmet>
-        <title>Abacus | Proctor Submissions</title>
-      </Helmet>
       <Checkbox toggle label="Show Viewed" checked={showViewed} onClick={onFilterChange} />
 
       <Table singleLine sortable>

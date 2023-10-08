@@ -3,7 +3,7 @@ import React, { useState, MouseEvent, ChangeEvent } from 'react'
 import { Input, InputOnChangeData, Menu, MenuItemProps } from 'semantic-ui-react'
 import { ProblemStateProps } from '.'
 
-const SkeletonsEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Element => {
+const SkeletonsEditor = ({ problem, setProblem }: ProblemStateProps): React.JSX.Element => {
   const [activeSkeleton, setActiveSkeleton] = useState('python')
 
   if (!problem || !setProblem) return <></>

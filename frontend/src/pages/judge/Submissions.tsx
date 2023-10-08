@@ -5,7 +5,6 @@ import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
 import config from 'environment'
 import { compare } from 'utils'
-import { Helmet } from 'react-helmet'
 import { PageLoading } from 'components'
 import { AppContext, SocketContext } from 'context'
 import { saveAs } from 'file-saver'
@@ -19,7 +18,7 @@ type SortConfig = {
   direction: 'ascending' | 'descending'
 }
 
-const Submissions = (): JSX.Element => {
+const Submissions = (): React.JSX.Element => {
   const socket = useContext(SocketContext)
   const [isLoading, setLoading] = useState(true)
   const [submissions, setSubmissions] = useState<SubmissionItem[]>([])
@@ -49,6 +48,7 @@ const Submissions = (): JSX.Element => {
   }
 
   useEffect(() => {
+    document.title = "Abacus | Judge Submissions"
     loadSubmissions().then(() => setLoading(false))
     socket?.on('new_submission', loadSubmissions)
     socket?.on('update_submission', loadSubmissions)
@@ -160,10 +160,6 @@ const Submissions = (): JSX.Element => {
 
   return (
     <>
-      <Helmet>
-        <title>Abacus | Judge Submissions</title>
-      </Helmet>
-
       <Button content="Download Submissions" onClick={downloadSubmissions} />
       {submissions.filter((submission) => submission.checked).length ? (
         <Button

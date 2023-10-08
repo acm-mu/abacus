@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom'
 import { Button, Label, Message, Table } from 'semantic-ui-react'
 import { Block, FileDialog } from 'components'
 import config from 'environment'
-import { Helmet } from 'react-helmet'
 import sha256 from 'crypto-js/sha256'
 
 interface UserItem extends User {
@@ -49,6 +48,7 @@ const UploadUsers = (): React.JSX.Element => {
   }
 
   useEffect(() => {
+    document.title = "Abacus | Admin Upload Users"
     loadExistingUsers()
 
     return () => setMounted(false)
@@ -87,9 +87,6 @@ const UploadUsers = (): React.JSX.Element => {
 
   return (
     <>
-      <Helmet>
-        <title>Abacus | Admin Upload Users</title>
-      </Helmet>
       <Block size="xs-12" transparent>
         <h1>Upload Users</h1>
         <Block transparent size="xs-12">

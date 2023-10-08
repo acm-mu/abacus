@@ -7,14 +7,13 @@ import MDEditor from '@uiw/react-md-editor'
 import { Block, Countdown, NotFound, PageLoading } from 'components'
 import Moment from 'react-moment'
 import '../Problem.scss'
-import { Helmet } from 'react-helmet'
 import { saveAs } from 'file-saver'
 
 interface PracticeProblemProps {
   submissions: Submission[]
 }
 
-const PracticeProblem = ({ submissions }: PracticeProblemProps): JSX.Element => {
+const PracticeProblem = ({ submissions }: PracticeProblemProps): React.JSX.Element => {
   const { id } = useParams<{ id: string }>()
   const [problem, setProblem] = useState<Problem>()
   const [isLoading, setLoading] = useState(true)
@@ -28,6 +27,10 @@ const PracticeProblem = ({ submissions }: PracticeProblemProps): JSX.Element => 
       })
   }, [])
 
+  useEffect(() => {
+    document.title = `Abacus | ${problem?.name ?? ""}`
+  }, [problem])
+
   const downloadFiles = () => {
     if (problem?.skeletons)
       for (const skeleton of problem.skeletons) {
@@ -40,9 +43,6 @@ const PracticeProblem = ({ submissions }: PracticeProblemProps): JSX.Element => 
 
   return (
     <>
-      <Helmet>
-        <title>Abacus | {problem.name}</title>
-      </Helmet>
       <Countdown />
       <Block transparent size="xs-12">
         <Breadcrumb>

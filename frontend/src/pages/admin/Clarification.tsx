@@ -2,7 +2,6 @@ import { Clarification, Submission } from 'abacus'
 import { AppContext } from 'context'
 import { Block, DivisionLabel, NotFound, PageLoading } from 'components'
 import React, { useContext, useEffect, useState } from 'react'
-import { Helmet } from 'react-helmet'
 import Moment from 'react-moment'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Link } from 'react-router-dom'
@@ -14,7 +13,7 @@ interface ClarificationProps {
   clarification: Clarification
 }
 
-const ClarificationPage = (): JSX.Element => {
+const ClarificationPage = (): React.JSX.Element => {
   const navigate = useNavigate()
   const { user } = useContext(AppContext)
   const { cid } = useParams<{ cid: string }>()
@@ -60,6 +59,10 @@ const ClarificationPage = (): JSX.Element => {
       setMounted(false)
     }
   }, [])
+
+  useEffect(() => {
+    document.title = `Abacus | Admin ${clarification?.title ?? ""}`
+  }, [clarification])
 
   const handleSubmit = async () => {
     if (!clarification) {
@@ -151,9 +154,6 @@ const ClarificationPage = (): JSX.Element => {
 
   return (
     <>
-      <Helmet>
-        <title>Abacus | Admin {clarification.title}</title>
-      </Helmet>
       <h1 style={{ display: 'inline' }}>
         {clarification.title}{' '}
         {!clarification.open ? (

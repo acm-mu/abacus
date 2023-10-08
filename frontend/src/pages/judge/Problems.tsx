@@ -4,7 +4,6 @@ import { Table } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import config from 'environment'
 import { Block, PageLoading } from 'components'
-import { Helmet } from 'react-helmet'
 import { AppContext } from 'context'
 
 type SortKey = 'id' | 'name'
@@ -13,7 +12,7 @@ type SortConfig = {
   direction: 'ascending' | 'descending'
 }
 
-const Problems = (): JSX.Element => {
+const Problems = (): React.JSX.Element => {
   const [isLoading, setLoading] = useState(true)
   const [problems, setProblems] = useState<Problem[]>([])
   const [submissions, setSubmissions] = useState<{ [key: string]: Submission[] }>()
@@ -38,6 +37,7 @@ const Problems = (): JSX.Element => {
   }
 
   useEffect(() => {
+    document.title = "Abacus | Judge Problems"
     loadProblems()
     return () => {
       setMounted(false)
@@ -83,65 +83,58 @@ const Problems = (): JSX.Element => {
 
   if (isLoading) return <PageLoading />
 
-  return (
-    <>
-      <Helmet>
-        <title>Abacus | Judge Problems</title>
-      </Helmet>
-      <Block size="xs-12" transparent>
-        <Table sortable>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell
-                sorted={column === 'id' ? direction : undefined}
-                onClick={() => sort('id')}
-                content="ID"
-              />
-              <Table.HeaderCell
-                sorted={column === 'name' ? direction : undefined}
-                onClick={() => sort('name')}
-                content="Problem Name"
-              />
-              <Table.HeaderCell># of Tests</Table.HeaderCell>
-              <Table.HeaderCell>Solved Attempts</Table.HeaderCell>
-              <Table.HeaderCell>Total Attempts</Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {problems.length == 0 ? (
-              <Table.Row>
-                <Table.Cell colSpan={'100%'} style={{ textAlign: 'center' }}>
-                  No Problems
+  return <Block size="xs-12" transparent>
+    <Table sortable>
+      <Table.Header>
+        <Table.Row>
+          <Table.HeaderCell
+            sorted={column === 'id' ? direction : undefined}
+            onClick={() => sort('id')}
+            content="ID"
+          />
+          <Table.HeaderCell
+            sorted={column === 'name' ? direction : undefined}
+            onClick={() => sort('name')}
+            content="Problem Name"
+          />
+          <Table.HeaderCell># of Tests</Table.HeaderCell>
+          <Table.HeaderCell>Solved Attempts</Table.HeaderCell>
+          <Table.HeaderCell>Total Attempts</Table.HeaderCell>
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
+        {problems.length == 0 ? (
+          <Table.Row>
+            <Table.Cell colSpan={'100%'} style={{ textAlign: 'center' }}>
+              No Problems
+            </Table.Cell>
+          </Table.Row>
+        ) : (
+          problems.map((problem: Problem, index: number) => {
+            return (
+              <Table.Row key={index}>
+                <Table.Cell>
+                  <Link to={`/judge/problems/${problem.pid}`}>{problem.id}</Link>
                 </Table.Cell>
+                <Table.Cell>
+                  <Link to={`/judge/problems/${problem.pid}`}>{problem.name}</Link>
+                </Table.Cell>
+                <Table.Cell>{problem.tests?.length}</Table.Cell>
+                {submissions && (
+                  <>
+                    <Table.Cell>
+                      {problem.pid in submissions ? submissions[problem.pid].filter((p) => p.score > 0).length : 0}
+                    </Table.Cell>
+                    <Table.Cell>{problem.pid in submissions ? submissions[problem.pid].length : 0}</Table.Cell>
+                  </>
+                )}
               </Table.Row>
-            ) : (
-              problems.map((problem: Problem, index: number) => {
-                return (
-                  <Table.Row key={index}>
-                    <Table.Cell>
-                      <Link to={`/judge/problems/${problem.pid}`}>{problem.id}</Link>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <Link to={`/judge/problems/${problem.pid}`}>{problem.name}</Link>
-                    </Table.Cell>
-                    <Table.Cell>{problem.tests?.length}</Table.Cell>
-                    {submissions && (
-                      <>
-                        <Table.Cell>
-                          {problem.pid in submissions ? submissions[problem.pid].filter((p) => p.score > 0).length : 0}
-                        </Table.Cell>
-                        <Table.Cell>{problem.pid in submissions ? submissions[problem.pid].length : 0}</Table.Cell>
-                      </>
-                    )}
-                  </Table.Row>
-                )
-              })
-            )}
-          </Table.Body>
-        </Table>
-      </Block>
-    </>
-  )
+            )
+          })
+        )}
+      </Table.Body>
+    </Table>
+  </Block>
 }
 
 export default Problems

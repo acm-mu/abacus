@@ -4,7 +4,6 @@ import { Table, Button, Menu, MenuItemProps, Grid } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import config from 'environment'
 import { Block, DivisionLabel, PageLoading } from 'components'
-import { Helmet } from 'react-helmet'
 import { saveAs } from 'file-saver'
 
 interface ProblemItem extends Problem {
@@ -16,7 +15,7 @@ type SortConfig = {
   direction: 'ascending' | 'descending'
 }
 
-const Problems = (): JSX.Element => {
+const Problems = (): React.JSX.Element => {
   const [isLoading, setLoading] = useState(true)
   const [problems, setProblems] = useState<ProblemItem[]>([])
   const [submissions, setSubmissions] = useState<{ [key: string]: Submission[] }>()
@@ -46,6 +45,7 @@ const Problems = (): JSX.Element => {
   }
 
   useEffect(() => {
+    document.title = "Abacus | Admin Problems"
     loadProblems()
     return () => {
       setMounted(false)
@@ -145,9 +145,6 @@ const Problems = (): JSX.Element => {
 
   return (
     <Grid>
-      <Helmet>
-        <title>Abacus | Admin Problems</title>
-      </Helmet>
       <Button as={Link} to="/admin/problems/new" primary content="Add Problem" />
       <Link to="/admin/problems/upload">
         <Button content="Upload Problems" />

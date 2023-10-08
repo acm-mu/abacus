@@ -3,7 +3,6 @@ import React, { ChangeEvent, SyntheticEvent, useContext, useEffect, useMemo, use
 import { Form, DropdownProps, InputOnChangeData, Breadcrumb } from 'semantic-ui-react'
 import { Block, PageLoading, ScratchViewer, StatusMessage, Unauthorized } from 'components'
 import config from 'environment'
-import { Helmet } from 'react-helmet'
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import MDEditor from '@uiw/react-md-editor'
 import { AppContext } from 'context'
@@ -34,6 +33,7 @@ const Submit = (): React.JSX.Element => {
   }, [project_url])
 
   useEffect(() => {
+    document.title = "Abacus | Gold Submit"
     loadProblems()
     return () => {
       setMounted(false)
@@ -97,9 +97,6 @@ const Submit = (): React.JSX.Element => {
 
   return (
     <>
-      <Helmet>
-        <title>Abacus | Gold Submit</title>
-      </Helmet>
       <Block transparent size="xs-12">
         <Breadcrumb>
           <Breadcrumb.Section as={Link} to="/gold/problems" content="Problems" />

@@ -1,7 +1,6 @@
 import { Problem, Submission } from 'abacus'
 import { Block, Countdown, FileDialog, NotFound, PageLoading } from 'components'
 import React, { ChangeEvent, useEffect, useState } from 'react'
-import { Helmet } from 'react-helmet'
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import { Breadcrumb, Button, Form } from 'semantic-ui-react'
 import { Language, languages } from 'utils'
@@ -26,6 +25,10 @@ const SubmitPractice = (): React.JSX.Element => {
         setPageLoading(false)
       })
   }, [])
+
+  useEffect(() => {
+    document.title = `Abacus | Submit Practice ${problem?.id ?? ""}`
+  }, [problem])
 
   const testSubmission = async (submission: Submission): Promise<Submission> => {
     let runtime = -1
@@ -138,9 +141,6 @@ const SubmitPractice = (): React.JSX.Element => {
 
   return (
     <>
-      <Helmet>
-        <title>Abacus | Submit Practice {problem.id}</title>
-      </Helmet>
       <Countdown />
       <Block transparent size="xs-12">
         <Breadcrumb>

@@ -5,7 +5,6 @@ import { Button, Checkbox, CheckboxProps, Form, Input, Label, Menu, Select } fro
 import config from 'environment'
 import { Block, NotFound, PageLoading } from 'components'
 import { divisions, roles } from 'utils'
-import { Helmet } from 'react-helmet'
 import StatusMessage, { StatusMessageType } from 'components/StatusMessage'
 
 const EditUser = (): React.JSX.Element => {
@@ -91,6 +90,7 @@ const EditUser = (): React.JSX.Element => {
   }
 
   useEffect(() => {
+    document.title = "Abacus | Edit User"
     loadUser()
     return () => {
       setMounted(false)
@@ -102,9 +102,6 @@ const EditUser = (): React.JSX.Element => {
 
   return (
     <>
-      <Helmet>
-        <title>Abacus | Edit User</title>
-      </Helmet>
       <h1 className="justify-center">
         {user.display_name}
         {user.disabled && <Label color="red">Disabled</Label>}

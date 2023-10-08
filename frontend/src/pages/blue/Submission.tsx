@@ -3,11 +3,10 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Block, Countdown, NotFound, PageLoading, SubmissionView, Unauthorized } from 'components'
 import config from 'environment'
-import { Helmet } from 'react-helmet'
 import { Breadcrumb } from 'semantic-ui-react'
 import { AppContext } from 'context'
 
-const Submission = (): JSX.Element => {
+const Submission = (): React.JSX.Element => {
   const { sid } = useParams<{ sid: string }>()
   const { user } = useContext(AppContext)
   const [submission, setSubmission] = useState<SubmissionType>()
@@ -15,6 +14,7 @@ const Submission = (): JSX.Element => {
   const [isLoading, setLoading] = useState(true)
 
   useEffect(() => {
+    document.title = "Abacus | Blue Submission"
     loadSubmission()
     return () => {
       setMounted(false)
@@ -43,9 +43,6 @@ const Submission = (): JSX.Element => {
 
   return (
     <>
-      <Helmet>
-        <title>Abacus | Blue Submission</title>
-      </Helmet>
       <Countdown />
       <Block transparent size="xs-12">
         <Breadcrumb>
