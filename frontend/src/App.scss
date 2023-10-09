@@ -28,10 +28,10 @@ html {
   outline: none;
 }
 
-body {
-  background: var(--bg-color) !important;
-  color: #555 !important;
-  font-family: 'Open Sans', sans-serif !important;
+body:has(#root) {
+  background: var(--bg-color);
+  color: #555;
+  font-family: 'Open Sans', sans-serif;
   -moz-osx-font-smoothing: grayscale;
 }
 
