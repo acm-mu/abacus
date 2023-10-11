@@ -1,6 +1,11 @@
 # git.yml
 ---
-
-
-
-...
+- name: Install GitHub Repository on Rocky Linux
+  hosts: rockylinuxsrv  
+  become: yes              # Run tasks as sudo (if needed)
+  tasks:
+    - name: Clone GitHub Repository
+      git:
+        repo: https://github.com/acm-mu/abacus.git  
+        dest: /abacus/abacus2/  # Replace with the desired destination directory
+        update: yes  # If the repository already exists, update it (optional)
