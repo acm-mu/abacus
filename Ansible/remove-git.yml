@@ -1,0 +1,10 @@
+#remove ansible
+---
+- name: Remove Git Repository from Directory
+  hosts: rockylinuxsrv  
+  become: yes             
+  tasks:
+    - name: Remove Git Repository Directory
+      file:
+        path: /abacus/abacus2/ 
+        state: absent
