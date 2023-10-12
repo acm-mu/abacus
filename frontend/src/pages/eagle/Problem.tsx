@@ -5,7 +5,7 @@ import { Divider } from 'semantic-ui-react'
 import { Problem } from 'abacus'
 import config from 'environment'
 import MDEditor from '@uiw/react-md-editor'
-import {usePageTitle} from 'hooks'
+import { usePageTitle } from 'hooks'
 
 const Home = (): React.JSX.Element => {
   usePageTitle("Abacus | Eagle Problem")

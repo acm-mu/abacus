@@ -1,6 +1,6 @@
 import React from 'react'
 import notfound from 'assets/404.png'
-import {usePageTitle} from 'hooks'
+import { usePageTitle } from 'hooks'
 
 const NotFound = (): React.JSX.Element => {
   usePageTitle("Abacus | Not Found")

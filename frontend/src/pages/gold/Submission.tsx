@@ -5,7 +5,7 @@ import { Block, Countdown, NotFound, PageLoading, SubmissionView, Unauthorized }
 import config from 'environment'
 import { Breadcrumb } from 'semantic-ui-react'
 import { AppContext } from 'context'
-import {usePageTitle} from 'hooks'
+import { usePageTitle } from 'hooks'
 
 const Submission = (): React.JSX.Element => {
   usePageTitle("Abacus | Gold Submission")

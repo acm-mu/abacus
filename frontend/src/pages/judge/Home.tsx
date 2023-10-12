@@ -5,7 +5,7 @@ import { Table } from 'semantic-ui-react'
 import config from 'environment'
 import { Submission } from 'abacus'
 import { Link } from 'react-router-dom'
-import {usePageTitle} from 'hooks'
+import { usePageTitle } from 'hooks'
 
 const Home = (): React.JSX.Element => {
   usePageTitle("Abacus | Judging Dashboard")

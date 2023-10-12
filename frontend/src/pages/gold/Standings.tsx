@@ -7,7 +7,7 @@ import { Table } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import '../Standings.scss'
 import { isThirtyMinutesBefore } from 'utils'
-import {usePageTitle} from 'hooks'
+import { usePageTitle } from 'hooks'
 
 interface GoldStandingsUser {
   uid: string

@@ -8,7 +8,7 @@ import { Block, Countdown, NotFound, PageLoading } from 'components'
 import Moment from 'react-moment'
 import '../Problem.scss'
 import { saveAs } from 'file-saver'
-import {usePageTitle} from 'hooks'
+import { usePageTitle } from 'hooks'
 
 interface PracticeProblemProps {
   submissions: Submission[]

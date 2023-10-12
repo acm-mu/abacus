@@ -4,7 +4,7 @@ import { Breadcrumb, Button, Label, Loader, Table } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { Problem } from '.'
 import { Submission } from 'abacus'
-import {usePageTitle} from 'hooks'
+import { usePageTitle } from 'hooks'
 
 const PracticeProblems = (): React.JSX.Element => {
   usePageTitle("Abacus | Practice Problems")

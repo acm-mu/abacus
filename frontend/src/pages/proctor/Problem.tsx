@@ -8,7 +8,7 @@ import config from 'environment'
 import './Problem.scss'
 import SolutionsEditor from 'components/editor/SolutionsEditor'
 import TestDataEditor from 'components/editor/TestDataEditor'
-import {usePageTitle} from 'hooks'
+import { usePageTitle } from 'hooks'
 
 const Problem = (): React.JSX.Element => {
   const [isLoading, setLoading] = useState(true)

@@ -1,9 +1,9 @@
-import React, {useContext} from 'react'
+import React, { useContext } from 'react'
 import { Block } from 'components'
 import { Divider } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { AppContext } from 'context'
-import {usePageTitle} from 'hooks'
+import { usePageTitle } from 'hooks'
 
 const Rules = (): React.JSX.Element => {
   usePageTitle("Abacus | Blue Rules")

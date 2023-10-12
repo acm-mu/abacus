@@ -1,6 +1,6 @@
 import React from 'react'
-import {Block} from 'components'
-import {usePageTitle} from 'hooks'
+import { Block } from 'components'
+import { usePageTitle } from 'hooks'
 
 const About = (): React.JSX.Element => {
   usePageTitle("Abacus | About")

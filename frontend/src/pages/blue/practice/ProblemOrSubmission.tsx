@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom'
 import { Loader } from 'semantic-ui-react'
 import PracticeProblem from './Problem'
 import PracticeSubmission from './Submission'
-import {usePageTitle} from 'hooks'
+import { usePageTitle } from 'hooks'
 
 const ProblemOrSubmission = (): React.JSX.Element => {
   usePageTitle("Abacus | Practice")

@@ -7,7 +7,7 @@ import { Block, Countdown, NotFound, PageLoading } from 'components'
 import config from 'environment'
 import { AppContext } from 'context'
 import './Problem.scss'
-import {usePageTitle} from 'hooks'
+import { usePageTitle } from 'hooks'
 
 const Problem = (): React.JSX.Element => {
   const { user } = useContext(AppContext)

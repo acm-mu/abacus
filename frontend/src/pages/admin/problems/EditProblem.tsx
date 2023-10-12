@@ -5,7 +5,7 @@ import config from 'environment'
 import { ProblemEditor } from 'components/editor'
 import { PageLoading, StatusMessage } from 'components'
 import { StatusMessageType } from 'components/StatusMessage'
-import {usePageTitle} from 'hooks'
+import { usePageTitle } from 'hooks'
 
 const EditProblems = (): React.JSX.Element => {
   usePageTitle("Abacus | Admin Edit Problem")

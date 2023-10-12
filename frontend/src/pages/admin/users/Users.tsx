@@ -8,7 +8,7 @@ import React, { ChangeEvent, useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Grid } from 'semantic-ui-react'
 import CreateUser from './CreateUser'
-import {usePageTitle} from 'hooks'
+import { usePageTitle } from 'hooks'
 
 interface UserItem extends User {
   checked: boolean

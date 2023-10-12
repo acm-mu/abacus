@@ -6,7 +6,7 @@ import { Block, Countdown, FileDialog, NotFound, PageLoading, StatusMessage, Una
 import config from 'environment'
 import { AppContext } from 'context'
 import { Language, languages } from 'utils'
-import {usePageTitle} from 'hooks'
+import { usePageTitle } from 'hooks'
 
 const Submit = (): React.JSX.Element => {
   usePageTitle("Abacus | Blue Submit")

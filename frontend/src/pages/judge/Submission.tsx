@@ -6,7 +6,7 @@ import config from 'environment'
 import { Button } from 'semantic-ui-react'
 import { AppContext, SocketContext } from 'context'
 import { saveAs } from 'file-saver'
-import {usePageTitle} from 'hooks'
+import { usePageTitle } from 'hooks'
 
 const Submission = (): React.JSX.Element => {
   usePageTitle("Abacus | Judge Submission")

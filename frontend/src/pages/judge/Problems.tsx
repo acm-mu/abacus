@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import config from 'environment'
 import { Block, PageLoading } from 'components'
 import { AppContext } from 'context'
-import {usePageTitle} from 'hooks'
+import { usePageTitle } from 'hooks'
 
 type SortKey = 'id' | 'name'
 type SortConfig = {

@@ -5,7 +5,7 @@ import { Button, Label, Message, Table } from 'semantic-ui-react'
 import { Block, FileDialog } from 'components'
 import config from 'environment'
 import sha256 from 'crypto-js/sha256'
-import {usePageTitle} from 'hooks'
+import { usePageTitle } from 'hooks'
 
 interface UserItem extends User {
   checked: boolean

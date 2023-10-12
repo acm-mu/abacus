@@ -8,7 +8,7 @@ import config from 'environment'
 import { AppContext } from 'context'
 import './Problem.scss'
 import { userHome } from 'utils'
-import {usePageTitle} from 'hooks'
+import { usePageTitle } from 'hooks'
 
 const Problem = (): React.JSX.Element => {
   const { user, settings } = useContext(AppContext)

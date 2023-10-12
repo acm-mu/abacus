@@ -8,7 +8,7 @@ import { compare } from 'utils'
 import { PageLoading } from 'components'
 import { AppContext, SocketContext } from 'context'
 import { saveAs } from 'file-saver'
-import {usePageTitle} from 'hooks'
+import { usePageTitle } from 'hooks'
 
 interface SubmissionItem extends Submission {
   checked: boolean

@@ -23,7 +23,7 @@ import {
 } from 'semantic-ui-react'
 import config from '../environment'
 import './Clarifications.scss'
-import {usePageTitle} from 'hooks'
+import { usePageTitle } from 'hooks'
 
 const Clarifications = (): React.JSX.Element => {
   usePageTitle("Abacus | Clarifications")

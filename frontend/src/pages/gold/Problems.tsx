@@ -6,7 +6,7 @@ import { Block, Countdown, PageLoading, Unauthorized } from 'components'
 import config from 'environment'
 import { AppContext } from 'context'
 import { userHome } from 'utils'
-import {usePageTitle} from 'hooks'
+import { usePageTitle } from 'hooks'
 
 const Problems = (): React.JSX.Element => {
   usePageTitle("Abacus | Gold Problems")

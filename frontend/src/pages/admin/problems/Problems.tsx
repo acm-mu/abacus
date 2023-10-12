@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import config from 'environment'
 import { Block, DivisionLabel, PageLoading } from 'components'
 import { saveAs } from 'file-saver'
-import {usePageTitle} from 'hooks'
+import { usePageTitle } from 'hooks'
 
 interface ProblemItem extends Problem {
   checked: boolean

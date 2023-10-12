@@ -1,11 +1,11 @@
 import { Problem } from 'abacus'
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { StatusMessage } from 'components'
 import config from 'environment'
 import { ProblemEditor } from 'components/editor'
 import { StatusMessageType } from 'components/StatusMessage'
-import {usePageTitle} from 'hooks'
+import { usePageTitle } from 'hooks'
 
 const NewProblem = (): React.JSX.Element => {
   usePageTitle("Abacus | Admin New Problem")

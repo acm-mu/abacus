@@ -1,4 +1,4 @@
-import React, {useContext} from 'react'
+import React, { useContext } from 'react'
 import { Route, Routes, Outlet } from 'react-router-dom'
 import { Block } from 'components'
 import { AppContext } from 'context'
@@ -6,7 +6,7 @@ import { AppContext } from 'context'
 import PracticeProblems from './Problems'
 import SubmitPractice from './Submit'
 import ProblemOrSubmission from './ProblemOrSubmission'
-import {usePageTitle} from 'hooks'
+import { usePageTitle } from 'hooks'
 
 export type Problem = {
   id: string

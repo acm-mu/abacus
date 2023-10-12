@@ -7,7 +7,7 @@ import config from 'environment'
 import '../Standings.scss'
 import { AppContext, SocketContext } from 'context'
 import { isThirtyMinutesBefore } from 'utils'
-import {usePageTitle} from 'hooks'
+import { usePageTitle } from 'hooks'
 
 const Standings = (): React.JSX.Element => {
   usePageTitle("Abacus | Blue Standings")
@@ -61,7 +61,7 @@ const Standings = (): React.JSX.Element => {
   if (!standings || !problems)
     return <StatusMessage message={{ type: 'error', message: 'An error has occurred! Please contact support' }} />
 
-    if (settings && ((!user || user && user.role === 'team') && isThirtyMinutesBefore(settings.end_date)))
+  if (settings && ((!user || user && user.role === 'team') && isThirtyMinutesBefore(settings.end_date)))
     return (
       <>
         <Countdown />

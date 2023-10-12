@@ -4,7 +4,7 @@ import { Table } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import config from 'environment'
 import { Block, PageLoading } from 'components'
-import {usePageTitle} from 'hooks'
+import { usePageTitle } from 'hooks'
 
 type SortKey = 'id' | 'name'
 type SortConfig = {

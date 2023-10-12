@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom'
 import { Button, ButtonProps, Comment, Divider, Form, Label, Message, Table } from 'semantic-ui-react'
 import config from '../../environment'
 import './Clarification.scss'
-import {usePageTitle} from 'hooks'
+import { usePageTitle } from 'hooks'
 
 interface ClarificationProps {
   clarification: Clarification

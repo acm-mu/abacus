@@ -5,7 +5,7 @@ import { useNavigate, useParams, Link } from 'react-router-dom'
 import { Breadcrumb, Button, Form } from 'semantic-ui-react'
 import { Language, languages } from 'utils'
 import { v4 as uuidv4 } from 'uuid'
-import {usePageTitle} from 'hooks'
+import { usePageTitle } from 'hooks'
 
 const SubmitPractice = (): React.JSX.Element => {
   const { id } = useParams<{ id: string }>()

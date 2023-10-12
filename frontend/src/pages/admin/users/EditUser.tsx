@@ -6,7 +6,7 @@ import config from 'environment'
 import { Block, NotFound, PageLoading } from 'components'
 import { divisions, roles } from 'utils'
 import StatusMessage, { StatusMessageType } from 'components/StatusMessage'
-import {usePageTitle} from 'hooks'
+import { usePageTitle } from 'hooks'
 
 const EditUser = (): React.JSX.Element => {
   usePageTitle("Abacus | Edit User")

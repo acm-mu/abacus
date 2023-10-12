@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom'
 import { Button, Checkbox, Grid, Label, Menu, MenuItemProps, Table } from 'semantic-ui-react'
 import { compare } from 'utils'
 import { saveAs } from 'file-saver'
-import {usePageTitle} from 'hooks'
+import { usePageTitle } from 'hooks'
 
 interface SubmissionItem extends Submission {
   checked: boolean

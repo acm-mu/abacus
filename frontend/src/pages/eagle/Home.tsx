@@ -1,6 +1,6 @@
 import React from 'react'
 import { Block } from 'components'
-import {usePageTitle} from 'hooks'
+import { usePageTitle } from 'hooks'
 
 const Home = (): React.JSX.Element => {
   usePageTitle("Abacus | Eagle Division")

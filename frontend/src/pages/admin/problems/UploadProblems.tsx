@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { Button, Label, Message, Table } from 'semantic-ui-react'
 import { Block, FileDialog } from 'components'
 import config from 'environment'
-import {usePageTitle} from 'hooks'
+import { usePageTitle } from 'hooks'
 
 interface ProblemItem extends Problem {
   checked: boolean

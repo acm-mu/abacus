@@ -3,7 +3,7 @@ import { Button, Form, Input } from 'semantic-ui-react'
 import { Block, PageLoading, StatusMessage } from 'components'
 import config from 'environment'
 import { StatusMessageType } from 'components/StatusMessage'
-import {usePageTitle} from 'hooks'
+import { usePageTitle } from 'hooks'
 
 const timezoneOffset = () => new Date().getTimezoneOffset() * 60 * 1000
 

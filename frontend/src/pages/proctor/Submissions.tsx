@@ -6,7 +6,7 @@ import config from 'environment'
 import { compare } from 'utils'
 import { PageLoading } from 'components'
 import { AppContext, SocketContext } from 'context'
-import {usePageTitle} from 'hooks'
+import { usePageTitle } from 'hooks'
 
 type SortKey = 'date' | 'sid' | 'sub_no' | 'language'
 type SortConfig = {

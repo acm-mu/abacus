@@ -1,5 +1,5 @@
 import React from 'react'
-import {usePageTitle} from 'hooks'
+import { usePageTitle } from 'hooks'
 
 const Unauthorized = (): React.JSX.Element => {
   usePageTitle("Abacus | Unauthorized")

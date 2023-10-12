@@ -4,7 +4,7 @@ import { Table } from 'semantic-ui-react'
 import config from 'environment'
 import { AppContext } from 'context'
 import { PageLoading, StatusMessage } from 'components'
-import {usePageTitle} from 'hooks'
+import { usePageTitle } from 'hooks'
 
 type SortKey = 'uid' | 'display_name' | 'username' | 'role' | 'division' | 'school'
 type SortConfig = {
