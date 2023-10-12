@@ -3,8 +3,8 @@ import React, { ChangeEvent, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button, Label, Message, Table } from 'semantic-ui-react'
 import { Block, FileDialog } from 'components'
-import config from 'environment'
 import { usePageTitle } from 'hooks'
+import {ProblemRepository} from 'api'
 
 interface ProblemItem extends Problem {
   checked: boolean
@@ -13,9 +13,11 @@ interface ProblemItem extends Problem {
 const UploadProblems = (): React.JSX.Element => {
   usePageTitle("Abacus | Admin Upload Problems")
 
+  const problemRepo = new ProblemRepository()
+
   const navigate = useNavigate()
   const [file, setFile] = useState<File>()
-  const [existingProblems, setExistingProblems] = useState<{ [key: string]: Problem }>()
+  const [existingProblems, setExistingProblems] = useState<Problem[]>()
   const [newProblems, setNewProblems] = useState<ProblemItem[]>()
   const [isMounted, setMounted] = useState(true)
 
@@ -41,16 +43,13 @@ const UploadProblems = (): React.JSX.Element => {
   }
 
   const loadExistingProblems = async () => {
-    const response = await fetch(
-      `${config.API_URL}/problems?columns=description,design_document,project_id,skeletons,solutions,tests`,
-      {
-        headers: { Authorization: `Bearer ${localStorage.accessToken}` }
-      }
-    )
+    const response = await problemRepo.getMany()
 
-    if (!response.ok || !isMounted) return
+    if (!isMounted) return
 
-    setExistingProblems(await response.json())
+    if (response.ok && response.data) {
+      setExistingProblems(response.data)
+    }
   }
 
   useEffect(() => {
@@ -76,14 +75,7 @@ const UploadProblems = (): React.JSX.Element => {
   const handleSubmit = async () => {
     if (newProblems) {
       for (const problem of newProblems.filter((p) => p.checked)) {
-        const response = await fetch(`${config.API_URL}/problems`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.accessToken}`
-          },
-          body: JSON.stringify(problem)
-        })
+        const response = await problemRepo.create(problem)
         if (response.ok) {
           navigate('/admin/problems')
         }

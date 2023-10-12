@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import config from 'environment'
+import {ScratchProject} from "abacus"
 import { Grid, Header, Icon, Label, Segment } from 'semantic-ui-react'
 import Moment from 'react-moment'
+import {ScratchService} from 'api'
 import './ScratchViewer.scss'
 
 interface ScratchViewerProps {
@@ -9,34 +10,24 @@ interface ScratchViewerProps {
   content?: React.JSX.Element
 }
 
-interface ScratchProject {
-  title: string
-  description: string
-  public: boolean
-  visibility: string
-  is_published: boolean
-  author: {
-    username: string
-  }
-  history: {
-    created: string
-    modified: string
-    shared: string
-  }
-}
-
-const ScratchViewer = ({ project_id, content = <></> }: ScratchViewerProps): React.JSX.Element => {
+const ScratchViewer = ({ project_id, content = <></> }: ScratchViewerProps): JSX.Element => {
+  const scratchService = new ScratchService()
   const [project, setProject] = useState<ScratchProject>()
 
   useEffect(() => {
-    fetch(`${config.API_URL}/scratch/project?project_id=${project_id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log('data', data)
-        setProject(data)
-      })
-      .catch(() => setProject(undefined))
+    loadProject()
   }, [project_id])
+
+  const loadProject = async () => {
+    if (!project_id) return
+
+    const response = await scratchService.getProject(project_id)
+    if (response.ok) {
+      setProject(response.data)
+    } else {
+      setProject(undefined)
+    }
+  }
 
   if (project_id == undefined) return <></>
 

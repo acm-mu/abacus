@@ -4,12 +4,15 @@ import { Link, useParams } from 'react-router-dom'
 import { Breadcrumb, Button, Message } from 'semantic-ui-react'
 import MDEditor from '@uiw/react-md-editor'
 import { Block, Countdown, NotFound, ClarificationModal, PageLoading, Unauthorized } from 'components'
-import config from 'environment'
 import { AppContext } from 'context'
 import { userHome } from 'utils'
 import { usePageTitle } from 'hooks'
+import {ProblemRepository, SubmissionRepository} from 'api'
 
 const Problem = (): React.JSX.Element => {
+  const problemRepository = new ProblemRepository()
+  const submissionRepository = new SubmissionRepository()
+
   const { user, settings } = useContext(AppContext)
   const [isLoading, setLoading] = useState(true)
   const [problem, setProblem] = useState<ProblemType>()
@@ -40,31 +43,30 @@ const Problem = (): React.JSX.Element => {
   }, [])
 
   const loadProblem = async () => {
-    let response = await fetch(
-      `${config.API_URL}/problems?division=gold&id=${pid}&columns=description,project_id,design_document`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.accessToken}`
-        }
+    const problemResponse = await problemRepository.getMany({
+      filterBy: {
+        division: 'gold',
+        problemId: pid
       }
-    )
+    })
+
 
     if (!isMounted) return
 
-    if (response.ok) {
-      const problem = Object.values(await response.json())[0] as ProblemType
-      setProblem(problem)
+    if (problemResponse.ok && problemResponse.data) {
+      setProblem(problemResponse.data)
 
-      response = await fetch(`${config.API_URL}/submissions?tid=${user?.uid}&pid=${problem?.pid}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.accessToken}`
+      const submissionResponse = await submissionRepository.getMany({
+        filterBy: {
+          teamId: user?.uid,
+          problemId: problem?.pid
         }
       })
 
       if (!isMounted) return
 
-      if (response.ok) {
-        setSubmissions(Object.values(await response.json()))
+      if (submissionResponse.ok) {
+        setSubmissions(submissionResponse.data)
       }
     }
   }

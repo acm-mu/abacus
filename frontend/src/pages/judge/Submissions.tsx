@@ -3,12 +3,12 @@ import React, { ChangeEvent, useState, useEffect, useMemo, useContext } from 're
 import { Button, Checkbox, Label, Table } from 'semantic-ui-react'
 import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
-import config from 'environment'
 import { compare } from 'utils'
 import { PageLoading } from 'components'
 import { AppContext, SocketContext } from 'context'
 import { saveAs } from 'file-saver'
 import { usePageTitle } from 'hooks'
+import {SubmissionRepository} from 'api'
 
 interface SubmissionItem extends Submission {
   checked: boolean
@@ -21,6 +21,8 @@ type SortConfig = {
 
 const Submissions = (): React.JSX.Element => {
   usePageTitle("Abacus | Judge Submissions")
+
+  const submissionRepo = new SubmissionRepository()
 
   const socket = useContext(SocketContext)
   const [isLoading, setLoading] = useState(true)
@@ -58,20 +60,20 @@ const Submissions = (): React.JSX.Element => {
   }, [])
 
   const loadSubmissions = async () => {
-    const response = await fetch(`${config.API_URL}/submissions?division=${user?.division}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.accessToken}`
+    const response = await submissionRepo.getMany({
+      filterBy: {
+        division: user?.division
       }
     })
-    const submissions = Object.values(await response.json()) as SubmissionItem[]
 
     if (!isMounted) return
 
-    setSubmissions(
-      submissions
-        .filter((submission) => !submission.team.disabled)
-        .map((submission) => ({ ...submission, checked: false }))
-    )
+    if (response.ok && response.data) {
+      setSubmissions(
+        response.data
+          .filter((submission) => !submission.team.disabled)
+          .map((submission) => ({...submission, checked: false})))
+    }
   }
 
   const onFilterChange = () => setShowReleased(!showReleased)
@@ -88,14 +90,9 @@ const Submissions = (): React.JSX.Element => {
     const submissionsToDelete = submissions
       .filter((submission) => submission.checked)
       .map((submission) => submission.sid)
-    const response = await fetch(`${config.API_URL}/submissions`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.accessToken}`
-      },
-      body: JSON.stringify({ sid: submissionsToDelete })
-    })
+
+    const response = await submissionRepo.delete(submissionsToDelete)
+
     if (response.ok) {
       loadSubmissions()
     }
@@ -104,14 +101,9 @@ const Submissions = (): React.JSX.Element => {
 
   const claim = async (sid: string) => {
     setClaiming({ ...isClaiming, [sid]: true })
-    const response = await fetch(`${config.API_URL}/submissions`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.accessToken}`
-      },
-      body: JSON.stringify({ sid, claimed: user?.uid })
-    })
+
+    const submissionRepo = new SubmissionRepository()
+    const response = await submissionRepo.update(sid, {claimed: user?.uid})
 
     if (response.ok) {
       setSubmissions(submissions.map((sub) => (sub.sid == sid ? { ...sub, claimed: user } : sub)))
@@ -122,14 +114,7 @@ const Submissions = (): React.JSX.Element => {
 
   const unclaim = async (sid: string) => {
     setClaiming({ ...isClaiming, [sid]: true })
-    const response = await fetch(`${config.API_URL}/submissions`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.accessToken}`
-      },
-      body: JSON.stringify({ sid, claimed: null })
-    })
+    const response = await submissionRepo.update(sid, {claimed: null})
 
     if (response.ok) {
       setSubmissions(submissions.map((sub) => (sub.sid == sid ? { ...sub, claimed: undefined } : sub)))

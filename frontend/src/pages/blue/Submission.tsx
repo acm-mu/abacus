@@ -2,10 +2,10 @@ import { Submission as SubmissionType } from 'abacus'
 import React, { useContext, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Block, Countdown, NotFound, PageLoading, SubmissionView, Unauthorized } from 'components'
-import config from 'environment'
 import { Breadcrumb } from 'semantic-ui-react'
 import { AppContext } from 'context'
 import { usePageTitle } from 'hooks'
+import {SubmissionRepository} from 'api'
 
 const Submission = (): React.JSX.Element => {
   usePageTitle("Abacus | Blue Submission")
@@ -24,16 +24,13 @@ const Submission = (): React.JSX.Element => {
   }, [])
 
   const loadSubmission = async () => {
-    const response = await fetch(`${config.API_URL}/submissions?sid=${sid}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.accessToken}`
-      }
-    })
+    const submissions = new SubmissionRepository()
+    const response = await submissions.get(sid)
 
     if (!isMounted) return
 
     if (response.ok) {
-      setSubmission(Object.values(await response.json())[0] as SubmissionType)
+      setSubmission(response.data)
     }
 
     setLoading(false)

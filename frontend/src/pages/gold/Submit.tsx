@@ -1,15 +1,18 @@
-import { Problem, Submission } from 'abacus'
+import { Problem } from 'abacus'
 import React, { ChangeEvent, SyntheticEvent, useContext, useEffect, useMemo, useState } from 'react'
 import { Form, DropdownProps, InputOnChangeData, Breadcrumb } from 'semantic-ui-react'
 import { Block, PageLoading, ScratchViewer, StatusMessage, Unauthorized } from 'components'
-import config from 'environment'
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import MDEditor from '@uiw/react-md-editor'
 import { AppContext } from 'context'
+import {ProblemRepository, SubmissionRepository} from 'api'
 import { usePageTitle } from 'hooks'
 
 const Submit = (): React.JSX.Element => {
   usePageTitle( "Abacus | Gold Submit")
+
+  const submissionRepo = new SubmissionRepository()
+  const problemRepo = new ProblemRepository()
 
   const { pid: problem_id } = useParams<{ pid: string }>()
   const [problems, setProblems] = useState<{ [key: string]: Problem }>({})
@@ -43,14 +46,15 @@ const Submit = (): React.JSX.Element => {
   }, [])
 
   const loadProblems = async () => {
-    const response = await fetch(`${config.API_URL}/problems?division=gold&columns=design_document`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.accessToken}`
+    const response = await problemRepo.getMany({
+      filterBy: {
+        division: 'gold'
       }
     })
+
     if (response.ok && isMounted) {
-      const problems: { [key: string]: Problem } = await response.json()
-      for (const prob of Object.values(problems)) if (prob.id == problem_id) setProblem(prob)
+      const problems: { [key: string]: Problem } = response.data
+      for (const prob of response.data) if (prob.id == problem_id) setProblem(prob)
 
       setProblems(problems)
     }
@@ -68,25 +72,16 @@ const Submit = (): React.JSX.Element => {
     formData.set('division', 'gold')
     if (description) formData.set('design_document', description)
 
-    const response = await fetch(`${config.API_URL}/submissions`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${localStorage.accessToken}`
-      },
-      body: formData
-    })
+    const response = await submissionRepo.create(formData)
 
-    if (response.status !== 200) {
+    if (response.ok) {
       setSubmitting(false)
-      const { message } = await response.json()
-      setError(message)
+      setError(response.errors)
       return
     }
 
-    const body: Submission = await response.json()
-
     setSubmitting(false)
-    navigate(`/gold/submissions/${body.sid}`)
+    navigate(`/gold/submissions/${response.data?.sid}`)
   }
 
   const handleProblemChange = (event: SyntheticEvent<HTMLElement, Event>, { value }: DropdownProps) =>

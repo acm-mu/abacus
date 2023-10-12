@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
+import {Submission} from "abacus"
 import MDEditor from '@uiw/react-md-editor'
 import { Block, ScratchViewer } from 'components'
 import SubmissionContext from './SubmissionContext'
@@ -6,24 +7,32 @@ import SubmissionDetail from './SubmissionDetail'
 import './Submission.scss'
 import { Form, Header, Rating, RatingProps, Segment, TextArea } from 'semantic-ui-react'
 import { AppContext } from 'context'
-import config from 'environment'
 import { userHome } from 'utils'
 import { Link } from 'react-router-dom'
+import {SubmissionRepository} from 'api'
 
 const GoldFeedback = (): React.JSX.Element => {
+  const submissionRepository = new SubmissionRepository()
+
   const { user } = useContext(AppContext)
   const { submission, setSubmission } = useContext(SubmissionContext)
+  const [submissions, setSubmissions] = useState<Submission[]>()
 
-  const [submissions, setSubmissions] = useState([])
   useEffect(() => {
-    fetch(`${config.API_URL}/submissions?tid=${submission?.tid}&pid=${submission?.pid}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.accessToken}`
+    loadSubmission()
+  }, [submission])
+
+  const loadSubmission = async () => {
+    const response = await submissionRepository.getMany({
+      filterBy: {
+        teamId: submission?.tid,
+        problemId: submission?.pid
       }
     })
-      .then((res) => res.json())
-      .then((data) => setSubmissions(Object.values(data)))
-  }, [])
+    if(response.ok) {
+      setSubmissions(response.data)
+    }
+  }
 
   const handleScore = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, { rating: score }: RatingProps) => {
     if (!submission || !setSubmission) return

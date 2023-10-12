@@ -11,6 +11,7 @@ declare module 'abacus' {
     practice_start_date: Date
     practice_end_date: Date
   }
+
   export interface Submission {
     sid: string
     sub_no: number
@@ -40,6 +41,7 @@ declare module 'abacus' {
     project_id?: number
     design_document?: string
   }
+
   export interface Problem {
     pid: string
     practice?: boolean
@@ -59,6 +61,7 @@ declare module 'abacus' {
     max_points?: number
     capped_points?: boolean
   }
+
   export interface User {
     uid: string
     role: string
@@ -69,6 +72,7 @@ declare module 'abacus' {
     division?: string
     school?: string
   }
+
   export interface Test {
     in: string
     out: string
@@ -76,22 +80,26 @@ declare module 'abacus' {
     result?: string
     include?: boolean
   }
+
   export interface Skeleton {
     language: string
     source: string
     file_name: string
   }
+
   export interface Solution {
     language: string
     source: string
     file_name: string
   }
+
   export interface ProblemScore {
     num_submissions: number
     problem_score: number
     solved: boolean
     submissions: Submission[]
   }
+
   export interface StandingsUser {
     display_name: string
     uid: string
@@ -129,7 +137,29 @@ declare module 'abacus' {
     type?: 'success' | 'warning' | 'error'
   }
 
+  export interface ScratchProject {
+    title: string
+    description: string
+    public: boolean
+    visibility: string
+    is_published: boolean
+    author: {
+      username: string
+    }
+    history: {
+      created: string
+      modified: string
+      shared: string
+    }
+  }
+
   export interface Args {
     [key: string]: unknown
   }
+
+  export type NullablePartial<
+    T,
+    NK extends keyof T = { [K in keyof T]: null extends T[K] ? K : never }[keyof T],
+    NP = Partial<Pick<T, NK>> & Pick<T, Exclude<keyof T, NK>>
+  > = { [K in keyof NP]: NP[K] }
 }

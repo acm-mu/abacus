@@ -2,10 +2,10 @@ import { Submission as SubmissionType } from 'abacus'
 import React, { useState, useEffect, useContext } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { NotFound, PageLoading, SubmissionView } from 'components'
-import config from 'environment'
 import { Button } from 'semantic-ui-react'
 import { AppContext, SocketContext } from 'context'
 import { usePageTitle } from 'hooks'
+import {SubmissionRepository} from 'api'
 
 const Submission = (): React.JSX.Element => {
   usePageTitle("Abacus | Judge Submission")
@@ -24,14 +24,13 @@ const Submission = (): React.JSX.Element => {
   const navigate = useNavigate()
 
   const loadSubmission = async () => {
-    const response = await fetch(`${config.API_URL}/submissions?sid=${sid}`, {
-      headers: { Authorization: `Bearer ${localStorage.accessToken}` }
-    })
+    const submissionRepo = new SubmissionRepository()
+    const response = await submissionRepo.get(sid)
 
     if (!isMounted) return
 
     if (response.ok) {
-      setSubmission(Object.values(await response.json())[0] as SubmissionType)
+      setSubmission(response.data)
     }
     setLoading(false)
   }
@@ -49,34 +48,27 @@ const Submission = (): React.JSX.Element => {
 
   const view = async () => {
     setViewing(true)
-    const response = await fetch(`${config.API_URL}/submissions`, {
-      method: 'PUT',
-      headers: {
-        Authorization: `Bearer ${localStorage.accessToken}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ sid, viewed: true })
-    })
+
+    const submissionsRepo = new SubmissionRepository()
+    const response = await submissionsRepo.update(sid, {viewed: true})
+
     if (response.ok) {
       setSubmission({ ...submission, viewed: true })
     }
+
     setViewing(false)
   }
 
   const flag = async () => {
     if (!sid) return
-    setFlagging({ ...isFlagging, [sid]: true })
-    const response = await fetch(`${config.API_URL}/submissions`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.accessToken}`
-      },
-      body: JSON.stringify({ sid, viewed: true, flagged: user?.uid })
-    })
+
+    const submissionRepo = new SubmissionRepository()
+    const response = await submissionRepo.update(sid, {viewed: true, flagged: user?.uid})
+
+    setFlagging({...isFlagging, [sid]: true})
 
     if (response.ok) {
-      setSubmission({ ...submission, viewed: true, flagged: user })
+      setSubmission({...submission, viewed: true, flagged: user})
     }
 
     setFlagging({ ...isFlagging, [sid]: false })
@@ -84,15 +76,10 @@ const Submission = (): React.JSX.Element => {
 
   const unflag = async () => {
     if (!sid) return
-    setUnFlagging({ ...isUnFlagging, [sid]: true })
-    const response = await fetch(`${config.API_URL}/submissions`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.accessToken}`
-      },
-      body: JSON.stringify({ sid, flagged: null })
-    })
+    setUnFlagging({ ...isUnFlagging, [sid]: true})
+
+    const submissionRepo = new SubmissionRepository()
+    const response = await submissionRepo.update(sid, {flagged: undefined})
 
     if (response.ok) {
       setSubmission({ ...submission, flagged: undefined })

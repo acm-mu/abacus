@@ -1,9 +1,9 @@
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import { Button, Form, Input } from 'semantic-ui-react'
 import { Block, PageLoading, StatusMessage } from 'components'
-import config from 'environment'
 import { StatusMessageType } from 'components/StatusMessage'
 import { usePageTitle } from 'hooks'
+import {ContestService} from 'api'
 
 const timezoneOffset = () => new Date().getTimezoneOffset() * 60 * 1000
 
@@ -14,6 +14,8 @@ const toLocalTimeString = (date: number): string => toLocal(date).toISOString().
 
 const Settings = (): React.JSX.Element => {
   usePageTitle("Abacus | Admin Settings")
+
+  const contestService = new ContestService()
 
   const [settings, setSettings] = useState<{ [key: string]: string }>({
     competition_name: '',
@@ -47,8 +49,8 @@ const Settings = (): React.JSX.Element => {
     setSettings({ ...settings, [name]: value })
 
   const loadSettings = async () => {
-    const response = await fetch(`${config.API_URL}/contest`)
-    const data = await response.json()
+    const response = await contestService.getContest()
+    const data = response.data
     if (!isMounted) return
 
     setSettings({
@@ -87,19 +89,12 @@ const Settings = (): React.JSX.Element => {
       `${Date.parse(`${settings.practice_end_date} ${settings.practice_end_time}`) / 1000.0}`
     )
 
-    const response = await fetch(`${config.API_URL}/contest`, {
-      method: 'PUT',
-      headers: {
-        Authorization: `Bearer ${localStorage.accessToken}`
-      },
-      body: formData
-    })
+    const response = await contestService.updateContest(formData)
 
     if (response.ok) {
       setMessage({ type: 'success', message: 'Settings saved successfully!' })
     } else {
-      const body = await response.json()
-      setMessage({ type: 'error', message: body.message })
+      setMessage({ type: 'error', message: response.errors })
     }
     setSaving(false)
   }

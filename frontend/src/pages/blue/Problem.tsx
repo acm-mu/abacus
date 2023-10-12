@@ -8,9 +8,13 @@ import config from 'environment'
 import { AppContext } from 'context'
 import './Problem.scss'
 import { userHome } from 'utils'
+import {ProblemRepository, SubmissionRepository} from 'api'
 import { usePageTitle } from 'hooks'
 
 const Problem = (): React.JSX.Element => {
+  const problemRepository = new ProblemRepository()
+  const submissionRepository = new SubmissionRepository()
+
   const { user, settings } = useContext(AppContext)
   const [isLoading, setLoading] = useState(true)
   const [problem, setProblem] = useState<ProblemType>()
@@ -39,29 +43,24 @@ const Problem = (): React.JSX.Element => {
   }, [])
 
   const loadProblem = async () => {
-    let response = await fetch(`${config.API_URL}/problems?division=blue&columns=description&id=${pid}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.accessToken}`
-      }
-    })
+    const problemResponse = await problemRepository.getMany({filterBy: {division: 'blue', id: pid}})
 
     if (!isMounted) return
 
-    if (response.ok) {
-      const problem = Object.values(await response.json())[0] as ProblemType
-      setProblem(problem)
+    if (problemResponse.ok) {
+      setProblem(problemResponse.data[0])
 
-      response = await fetch(`${config.API_URL}/submissions?tid=${user?.uid}&pid=${problem?.pid}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.accessToken}`
+      const submissionResponse = await submissionRepository.getMany({
+        filterBy: {
+          teamId: user?.uid,
+          pid: problem?.pid
         }
       })
 
       if (!isMounted) return
 
-      if (response.ok) {
-        const submissions = Object.values(await response.json()) as Submission[]
-        setSubmissions(submissions)
+      if (submissionResponse.ok) {
+        setSubmissions(submissionResponse.data)
       }
     }
 

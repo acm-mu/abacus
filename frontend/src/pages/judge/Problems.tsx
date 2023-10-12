@@ -2,10 +2,10 @@ import { Problem, Submission } from 'abacus'
 import React, { useState, useEffect, useContext } from 'react'
 import { Table } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
-import config from 'environment'
 import { Block, PageLoading } from 'components'
 import { AppContext } from 'context'
 import { usePageTitle } from 'hooks'
+import {ProblemRepository, SubmissionRepository} from 'api'
 
 type SortKey = 'id' | 'name'
 type SortConfig = {
@@ -15,6 +15,9 @@ type SortConfig = {
 
 const Problems = (): React.JSX.Element => {
   usePageTitle("Abacus | Judge Problems")
+
+  const submissionRepo = new SubmissionRepository()
+  const problemRepo = new ProblemRepository()
 
   const [isLoading, setLoading] = useState(true)
   const [problems, setProblems] = useState<Problem[]>([])
@@ -47,30 +50,23 @@ const Problems = (): React.JSX.Element => {
   }, [])
 
   const loadProblems = async () => {
-    let response = await fetch(`${config.API_URL}/problems?columns=tests&division=${user?.division}`, {
-      headers: {
-        authorization: `Bearer ${localStorage.accessToken}`
+    const response = await problemRepo.getMany({
+      filterBy: {
+        division: user?.division
       }
     })
 
     if (response.ok) {
-      const problems = Object.values(await response.json()) as Problem[]
+      if (!isMounted) return
+
+      sort('id', response.data)
+
+      const submissionsReponse = await submissionRepo.getMany()
 
       if (!isMounted) return
 
-      sort('id', problems)
-
-      response = await fetch(`${config.API_URL}/submissions`, {
-        headers: {
-          authorization: `Bearer ${localStorage.accessToken}`
-        }
-      })
-
-      if (!isMounted) return
-
-      const submissions = Object.values(await response.json()) as Submission[]
       const subs: { [key: string]: Submission[] } = {}
-      submissions.forEach((sub: Submission) => {
+      submissionsReponse.data?.forEach((sub: Submission) => {
         const { pid } = sub
         if (!(pid in subs)) subs[pid] = []
         subs[pid].push(sub)

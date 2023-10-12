@@ -2,9 +2,9 @@ import { Problem } from 'abacus'
 import React, { useState, useEffect } from 'react'
 import { Table } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
-import config from 'environment'
 import { Block, PageLoading } from 'components'
 import { usePageTitle } from 'hooks'
+import {ProblemRepository} from 'api'
 
 type SortKey = 'id' | 'name'
 type SortConfig = {
@@ -14,6 +14,8 @@ type SortConfig = {
 
 const Problems = (): React.JSX.Element => {
   usePageTitle("Abacus | Proctor Problems")
+
+  const problemRepo = new ProblemRepository()
 
   const [isLoading, setLoading] = useState(true)
   const [problems, setProblems] = useState<Problem[]>([])
@@ -44,18 +46,16 @@ const Problems = (): React.JSX.Element => {
   }, [])
 
   const loadProblems = async () => {
-    const response = await fetch(`${config.API_URL}/problems?columns=tests&division=blue`, {
-      headers: {
-        authorization: `Bearer ${localStorage.accessToken}`
+    const response = await problemRepo.getMany({
+      filterBy: {
+        division: 'blue'
       }
     })
 
     if (response.ok) {
-      const problems = Object.values(await response.json()) as Problem[]
-
       if (!isMounted) return
 
-      sort('id', problems)
+      sort('id', response.data)
     } else {
       setProblems([])
     }

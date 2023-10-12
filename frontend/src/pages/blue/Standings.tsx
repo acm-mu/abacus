@@ -3,14 +3,16 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
 import { Block, Countdown, PageLoading, StatusMessage } from 'components'
-import config from 'environment'
 import '../Standings.scss'
 import { AppContext, SocketContext } from 'context'
 import { isThirtyMinutesBefore } from 'utils'
 import { usePageTitle } from 'hooks'
+import {StandingsService} from 'api'
 
 const Standings = (): React.JSX.Element => {
   usePageTitle("Abacus | Blue Standings")
+
+  const standingsService = new StandingsService()
 
   const { user, settings } = useContext(AppContext)
   const socket = useContext(SocketContext)
@@ -20,17 +22,17 @@ const Standings = (): React.JSX.Element => {
   const [isMounted, setMounted] = useState(true)
 
   const loadData = async () => {
-    const response = await fetch(`${config.API_URL}/standings?division=blue`)
-
-    const data = await response.json()
+    const response = await standingsService.getStandings('blue')
 
     if (!isMounted) return
 
-    setStandings(data.standings)
+    if(response.ok) {
+      setStandings(response.data.standings)
 
-    if (data.problems) {
-      const problems = Object.values(data.problems) as Problem[]
-      setProblems(problems.sort((p1, p2) => p1.id.localeCompare(p2.id)))
+      if (data.problems) {
+        const problems = Object.values(data.problems) as Problem[]
+        setProblems(problems.sort((p1, p2) => p1.id.localeCompare(p2.id)))
+      }
     }
 
     setLoading(false)

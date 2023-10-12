@@ -1,7 +1,10 @@
 import { Clarification } from 'abacus'
+import { ClarificationRepository } from 'api'
+import './Clarifications.scss'
 import { Block, PageLoading, Unauthorized } from 'components'
 import ClarificationModal from 'components/ClarificationModal'
 import { AppContext, SocketContext } from 'context'
+import { usePageTitle } from 'hooks'
 import React, { FormEvent, useContext, useEffect, useState } from 'react'
 import Moment from 'react-moment'
 import { useParams } from 'react-router-dom'
@@ -21,12 +24,11 @@ import {
   Popup,
   Segment
 } from 'semantic-ui-react'
-import config from '../environment'
-import './Clarifications.scss'
-import { usePageTitle } from 'hooks'
 
 const Clarifications = (): React.JSX.Element => {
   usePageTitle("Abacus | Clarifications")
+
+  const clarificationRepo = new ClarificationRepository()
 
   const { user } = useContext(AppContext)
   const [isLoading, setLoading] = useState(true)
@@ -36,25 +38,13 @@ const Clarifications = (): React.JSX.Element => {
   const [showClosed, setShowClosed] = useState(false)
   const socket = useContext(SocketContext)
 
-  const loadClarifications = async (): Promise<{ [key: string]: Clarification }> => {
-    let clarifications = {}
-
-    try {
-      const response = await fetch(`${config.API_URL}/clarifications`, {
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.accessToken}` }
-      })
-
-      if (response.ok) {
-        clarifications = await response.json()
-      }
-
-      setClarifications(clarifications)
-    } catch (e) {
-      console.error(e)
+  const loadClarifications = async () => {
+    const response = await clarificationRepo.getMany()
+    if (response.ok) {
+      setClarifications(response.data ?? [])
     }
 
     setLoading(false)
-    return clarifications
   }
 
   socket?.on('new_clarification', () => loadClarifications())
@@ -110,19 +100,12 @@ const Clarifications = (): React.JSX.Element => {
     // Admins can delete any clarification, Judge's can delete their own
     const canDelete = user?.role == 'admin' || (user?.role == 'judge' && clarification.user.uid == user?.uid)
 
-    const deleteClarification = () => {
-      fetch(`${config.API_URL}/clarifications`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.accessToken}`,
-          'Content-Type': 'application/json'
-        },
-        method: 'DELETE',
-        body: JSON.stringify({ cid: clarification.cid })
-      }).then((response) => {
-        if (response.ok) {
-          loadClarifications()
-        }
-      })
+    const deleteClarification = async () => {
+      const response = await clarificationRepo.delete(clarification.cid)
+
+      if (response.ok) {
+        loadClarifications()
+      }
     }
 
     return (
@@ -153,17 +136,8 @@ const Clarifications = (): React.JSX.Element => {
 
     const handleSubmit = async () => {
       setReplyLoading(true)
-      const response = await fetch(`${config.API_URL}/clarifications`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.accessToken}`,
-          'Content-Type': 'application/json'
-        },
-        method: 'POST',
-        body: JSON.stringify({
-          parent: activeItem,
-          body
-        })
-      })
+
+      const response = await clarificationRepo.create({ 'parent': activeItem, body })
 
       if (response.ok) {
         await loadClarifications()
@@ -173,14 +147,7 @@ const Clarifications = (): React.JSX.Element => {
     }
 
     const handleLock = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, { value: open }: ButtonProps) => {
-      const response = await fetch(`${config.API_URL}/clarifications`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.accessToken}`,
-          'Content-Type': 'application/json'
-        },
-        method: 'PUT',
-        body: JSON.stringify({ cid: activeItem, open })
-      })
+      const response = await clarificationRepo.update(activeItem, open)
       if (response.ok) {
         loadClarifications()
       }

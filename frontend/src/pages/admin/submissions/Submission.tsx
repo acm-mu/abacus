@@ -2,14 +2,16 @@ import { Submission as SubmissionType } from 'abacus'
 import React, { useState, useEffect, useContext } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { NotFound, PageLoading, SubmissionView } from 'components'
-import config from 'environment'
 import { Button, Grid } from 'semantic-ui-react'
 import { AppContext } from 'context'
 import { saveAs } from 'file-saver'
 import { usePageTitle } from 'hooks'
+import {SubmissionRepository} from 'api'
 
 const Submission = (): React.JSX.Element => {
   usePageTitle("Abacus | Admin Submission")
+
+  const submissionRepository = new SubmissionRepository()
 
   const { sid } = useParams<{ sid: string }>()
   const [submission, setSubmission] = useState<SubmissionType>()
@@ -27,14 +29,12 @@ const Submission = (): React.JSX.Element => {
   const navigate = useNavigate()
 
   const loadSubmission = async () => {
-    const response = await fetch(`${config.API_URL}/submissions?sid=${sid}`, {
-      headers: { Authorization: `Bearer ${localStorage.accessToken}` }
-    })
+    const response = await submissionRepository.get(sid)
 
     if (!isMounted) return
 
     if (response.ok) {
-      setSubmission(Object.values(await response.json())[0] as SubmissionType)
+      setSubmission(response.data)
     }
     setLoading(false)
   }
@@ -54,14 +54,8 @@ const Submission = (): React.JSX.Element => {
     if (window.confirm('Are you sure you want to delete this submission?')) {
       //if the user selects ok, then the code below runs, otherwise nothing occurs
       setDeleting(true)
-      const response = await fetch(`${config.API_URL}/submissions`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.accessToken}`
-        },
-        body: JSON.stringify({ sid: submission.sid })
-      })
+      const response = await submissionRepository.delete(submission.sid)
+
       if (response.ok) {
         window.sendNotification({
           id: sid,
@@ -78,19 +72,9 @@ const Submission = (): React.JSX.Element => {
   const rerun = async () => {
     if (!setSubmission) return
     setRerunning(true)
-    const response = await fetch(`${config.API_URL}/submissions/rerun`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.accessToken}`
-      },
-      body: JSON.stringify({ sid: submission.sid })
-    })
+    const response = await submissionRepository.rerun(submission.sid)
     if (response.ok) {
-      const result = await response.json()
-      if (result.submissions && submission.sid in result.submissions) {
-        setSubmission({ team: submission?.team, problem: submission?.problem, ...result.submissions[submission.sid] })
-      }
+      setSubmission({team: submission?.team, problem: submission?.problem, ...response.data})
     }
     setRerunning(false)
   }
@@ -98,23 +82,16 @@ const Submission = (): React.JSX.Element => {
     if (!setSubmission) return
     if (!submission) return
     setReleasing(true)
-    const response = await fetch(`${config.API_URL}/submissions`, {
-      method: 'PUT',
-      headers: {
-        Authorization: `Bearer ${localStorage.accessToken}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        sid: submission.sid,
-        released: true,
-        status: submission.status,
-        feedback: submission.feedback,
-        score: submission.score
-      })
+
+    const response = await submissionRepository.update(submission.sid, {
+      released: true,
+      status: submission.status,
+      feedback: submission.feedback,
+      score: submission.score
     })
-    if (response.ok) {
-      const result = await response.json()
-      setSubmission({ ...submission, released: result.released })
+
+    if (response.ok && response.data) {
+      setSubmission({ ...submission, released: response.data.released })
     }
     setReleasing(false)
   }
@@ -122,28 +99,15 @@ const Submission = (): React.JSX.Element => {
   const save = async () => {
     setSaving(true)
 
-    await fetch(`${config.API_URL}/submissions`, {
-      method: 'PUT',
-      headers: {
-        Authorization: `Bearer ${localStorage.accessToken}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(submission)
-    })
+    await submissionRepository.update(submission.sid, submission)
+
     setSaving(false)
   }
 
   const flag = async () => {
     if (!sid) return
     setFlagging({ ...isFlagging, [sid]: true })
-    const response = await fetch(`${config.API_URL}/submissions`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.accessToken}`
-      },
-      body: JSON.stringify({ sid, viewed: true, flagged: user?.uid })
-    })
+    const response = await submissionRepository.update(sid, {viewed: true, flagged: user})
 
     if (response.ok) {
       setSubmission({ ...submission, viewed: true, flagged: user })
@@ -155,14 +119,7 @@ const Submission = (): React.JSX.Element => {
   const unflag = async () => {
     if (!sid) return
     setUnFlagging({ ...isUnFlagging, [sid]: true })
-    const response = await fetch(`${config.API_URL}/submissions`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.accessToken}`
-      },
-      body: JSON.stringify({ sid, flagged: null })
-    })
+    const response = await submissionRepository.update(sid, {flagged: undefined})
 
     if (response.ok) {
       setSubmission({ ...submission, flagged: undefined })

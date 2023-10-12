@@ -3,9 +3,9 @@ import { Block, Countdown, PageLoading, Unauthorized } from 'components'
 import { AppContext } from 'context'
 import { Divider } from 'semantic-ui-react'
 import { Problem } from 'abacus'
-import config from 'environment'
 import MDEditor from '@uiw/react-md-editor'
 import { usePageTitle } from 'hooks'
+import ProblemRepository from "../../api/problem.repository";
 
 const Home = (): React.JSX.Element => {
   usePageTitle("Abacus | Eagle Problem")
@@ -23,17 +23,13 @@ const Home = (): React.JSX.Element => {
   }, [])
 
   const loadProblem = async () => {
-    const response = await fetch(`${config.API_URL}/problems?division=eagle&columns=description`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.accessToken}`
-      }
-    })
+    const problems = new ProblemRepository()
+    const response = await problems.getMany()
 
     if (!isMounted) return
 
     if (response.ok) {
-      const problem = Object.values(await response.json())[0] as Problem
-      setProblem(problem)
+      setProblem(response.data)
     }
 
     setLoading(false)

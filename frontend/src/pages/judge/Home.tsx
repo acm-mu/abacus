@@ -2,14 +2,15 @@ import { Block, PageLoading, Unauthorized } from 'components'
 import { AppContext, SocketContext } from 'context'
 import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { Table } from 'semantic-ui-react'
-import config from 'environment'
 import { Submission } from 'abacus'
 import { Link } from 'react-router-dom'
 import { usePageTitle } from 'hooks'
+import {SubmissionRepository} from 'api'
 
 const Home = (): React.JSX.Element => {
   usePageTitle("Abacus | Judging Dashboard")
 
+  const submissionRepository = new SubmissionRepository()
   const { user } = useContext(AppContext)
   const socket = useContext(SocketContext)
   const [isLoading, setLoading] = useState(true)
@@ -40,16 +41,13 @@ const Home = (): React.JSX.Element => {
   )
 
   const loadData = async () => {
-    const response = await fetch(`${config.API_URL}/submissions`, {
-      headers: { Authorization: `Bearer ${localStorage.accessToken}` }
-    })
+    const response = await submissionRepository.getMany({filterBy: {
+      }})
 
     if (!isMounted) return
 
     if (response.ok) {
-      const data = await response.json()
-      const submissions = Object.values(data) as Submission[]
-      setSubmissions(submissions.filter((submission) => !submission.team.disabled))
+      setSubmissions(response.data?.filter((submission) => !submission.team.disabled))
     }
   }
 

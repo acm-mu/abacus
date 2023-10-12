@@ -1,12 +1,12 @@
 import { Clarification } from 'abacus'
 import { Block, ClarificationModal, DivisionLabel, PageLoading } from 'components'
-import config from 'environment'
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
 import { Button, Checkbox, CheckboxProps, Label, Table } from 'semantic-ui-react'
 import { compare } from 'utils'
 import { usePageTitle } from 'hooks'
+import {ClarificationRepository} from 'api'
 
 interface ClarificationItem extends Clarification {
   checked: boolean
@@ -20,6 +20,8 @@ type SortConfig = {
 
 const Clarifications = (): React.JSX.Element => {
   usePageTitle("Abacus | Admin Clarifications")
+
+  const clarificationRepo = new ClarificationRepository()
 
   const [isLoading, setLoading] = useState(true)
   const [isDeleting, setDeleting] = useState(false)
@@ -39,17 +41,10 @@ const Clarifications = (): React.JSX.Element => {
 
   const loadClarifications = async () => {
     //include page as query, so that API can fetch it.
-    const response = await fetch(`${config.API_URL}/clarifications`, {
-      method: 'GET',
-      headers: { Authorization: `Bearer ${localStorage.accessToken}` }
-    })
-    if (response.ok) {
-      const newClarifications = Object.values(await response.json()) as ClarificationItem[]
-      setClarifications(
-        newClarifications
-          .map((clarification) => ({ ...clarification, checked: false }))
-          .sort((c1, c2) => c2.date - c1.date)
-      )
+    const response = await clarificationRepo.getMany({sortBy: 'date'})
+
+    if (response.ok && response.data) {
+      setClarifications(response.data.map((clarification) => ({ ...clarification, checked: false })))
     } else {
       setClarifications([])
     }
@@ -81,14 +76,9 @@ const Clarifications = (): React.JSX.Element => {
     const clarificationsToDelete = clarifications
       .filter((clarification) => clarification.checked)
       .map((clarification) => clarification.cid)
-    await fetch(`${config.API_URL}/clarifications`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.accessToken}`
-      },
-      body: JSON.stringify({ cid: clarificationsToDelete })
-    })
+
+    await clarificationRepo.delete(clarificationsToDelete)
+
     setDeleting(false)
     loadClarifications()
   }

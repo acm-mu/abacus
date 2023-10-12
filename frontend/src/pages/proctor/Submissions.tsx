@@ -2,11 +2,11 @@ import { Submission } from 'abacus'
 import React, { useState, useEffect, useMemo, useContext } from 'react'
 import { Checkbox, Label, Table } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
-import config from 'environment'
 import { compare } from 'utils'
 import { PageLoading } from 'components'
 import { AppContext, SocketContext } from 'context'
 import { usePageTitle } from 'hooks'
+import {SubmissionRepository} from 'api'
 
 type SortKey = 'date' | 'sid' | 'sub_no' | 'language'
 type SortConfig = {
@@ -50,16 +50,12 @@ const Submissions = (): React.JSX.Element => {
   }, [])
 
   const loadSubmissions = async () => {
-    const response = await fetch(`${config.API_URL}/submissions?division=blue`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.accessToken}`
-      }
-    })
-    const submissions = Object.values(await response.json()) as Submission[]
+    const submissions = new SubmissionRepository()
+    const response = await submissions.getMany({filterBy: {division: 'blue'}})
 
     if (!isMounted) return
 
-    setSubmissions(submissions.map((submission) => ({ ...submission, checked: false })))
+    setSubmissions(response.data?.map((submission) => ({...submission, checked: false})))
   }
 
   const onFilterChange = () => setShowViewed(!showViewed)

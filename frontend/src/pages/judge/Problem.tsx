@@ -4,12 +4,13 @@ import { useParams } from 'react-router-dom'
 import { Divider } from 'semantic-ui-react'
 import MDEditor from '@uiw/react-md-editor'
 import { Block, Countdown, NotFound, PageLoading } from 'components'
-import config from 'environment'
 import { AppContext } from 'context'
 import './Problem.scss'
 import { usePageTitle } from 'hooks'
+import {ProblemRepository} from 'api'
 
 const Problem = (): React.JSX.Element => {
+  const problemRepository = new ProblemRepository()
   const { user } = useContext(AppContext)
   const [isLoading, setLoading] = useState(true)
   const [problem, setProblem] = useState<ProblemType>()
@@ -27,20 +28,17 @@ const Problem = (): React.JSX.Element => {
   }, [])
 
   const loadProblem = async () => {
-    const response = await fetch(
-      `${config.API_URL}/problems?division=${user?.division}&columns=description&pid=${pid}`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.accessToken}`
-        }
+    const response = await problemRepository.getMany({
+      filterBy: {
+        division: user?.division,
+        problemId: pid
       }
-    )
+    })
 
     if (!isMounted) return
 
     if (response.ok) {
-      const problem = Object.values(await response.json())[0] as ProblemType
-      setProblem(problem)
+      setProblem(response.data[0])
     }
 
     setLoading(false)

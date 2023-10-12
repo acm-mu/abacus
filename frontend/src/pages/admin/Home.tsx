@@ -2,11 +2,11 @@ import { Submission } from 'abacus'
 import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { AppContext, SocketContext } from 'context'
 import { Block, PageLoading } from 'components'
-import config from 'environment'
 import moment from 'moment'
 import { Table } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { usePageTitle } from 'hooks'
+import {SubmissionRepository} from "../../api";
 
 const Home = (): React.JSX.Element => {
   usePageTitle("Abacus | Admin")
@@ -19,15 +19,13 @@ const Home = (): React.JSX.Element => {
   const { user, settings } = useContext(AppContext)
 
   const loadSubmissions = async () => {
-    const getSubmissions = await fetch(`${config.API_URL}/submissions`, {
-      headers: { Authorization: `Bearer ${localStorage.accessToken}` }
-    })
+    const submissionRepo = new SubmissionRepository()
+    const response = await submissionRepo.getMany()
 
     if (!isMounted) return
 
-    const subs: Submission[] = Object.values(await getSubmissions.json())
     setSubmissions(
-      subs.filter(
+      response.data?.filter(
         ({ team, date }) =>
           team &&
           !team.disabled &&

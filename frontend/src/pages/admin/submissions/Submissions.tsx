@@ -1,7 +1,6 @@
 import { Submission } from 'abacus'
 import { Block, DivisionLabel, PageLoading } from 'components'
 import { SocketContext } from 'context'
-import config from 'environment'
 import React, { ChangeEvent, useContext, useEffect, useMemo, useState } from 'react'
 import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
@@ -9,6 +8,7 @@ import { Button, Checkbox, Grid, Label, Menu, MenuItemProps, Table } from 'seman
 import { compare } from 'utils'
 import { saveAs } from 'file-saver'
 import { usePageTitle } from 'hooks'
+import {SubmissionRepository} from 'api'
 
 interface SubmissionItem extends Submission {
   checked: boolean
@@ -21,6 +21,8 @@ type SortConfig = {
 
 const Submissions = (): React.JSX.Element => {
   usePageTitle("Abacus | Admin Submissions")
+
+  const submissionRepository = new SubmissionRepository()
 
   const socket = useContext(SocketContext)
   const [isLoading, setLoading] = useState(true)
@@ -57,15 +59,10 @@ const Submissions = (): React.JSX.Element => {
   updates the new page of submissions
   */
   const loadSubmissions = async () => {
-    //include page as query, so that API can fetch it.
-    const response = await fetch(`${config.API_URL}/submissions`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.accessToken}`,
-        'Content-Type': 'application/json'
-      }
-    })
-    const newSubmissions = Object.values(await response.json()) as SubmissionItem[]
-    setSubmissions(newSubmissions.map((submission) => ({ ...submission, checked: false })))
+    const response = await submissionRepository.getMany()
+    if(response.ok) {
+      setSubmissions(response.data?.map((submission) => ({...submission, checked: false})))
+    }
   }
 
   const onReleaseChange = () => setShowReleased(!showReleased)
@@ -92,14 +89,9 @@ const Submissions = (): React.JSX.Element => {
       const submissionsToDelete = submissions
         .filter((submission) => submission.checked && (!submission.released || showReleased))
         .map((submission) => submission.sid)
-      const response = await fetch(`${config.API_URL}/submissions`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.accessToken}`
-        },
-        body: JSON.stringify({ sid: submissionsToDelete })
-      })
+
+      const response = await submissionRepository.delete(submissionsToDelete)
+
       if (response.ok) {
         //tells the toast container below to display a message saying 'Deleted selected submissions'
         const id = submissionsToDelete.join()

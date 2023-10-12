@@ -3,14 +3,17 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Popup, Table } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { Block, Countdown, PageLoading, Unauthorized } from 'components'
-import config from 'environment'
 import { AppContext } from 'context'
 import 'components/Table.scss'
 import { userHome } from 'utils'
 import { usePageTitle } from 'hooks'
+import {ProblemRepository, SubmissionRepository} from 'api'
 
 const Problems = (): React.JSX.Element => {
   usePageTitle("Abacus | Blue Problems")
+
+  const problemRepository = new ProblemRepository()
+  const submissionRepository = new SubmissionRepository()
 
   const { user, settings } = useContext(AppContext)
   const [isMounted, setMounted] = useState(true)
@@ -26,31 +29,29 @@ const Problems = (): React.JSX.Element => {
   }, [])
 
   const loadProblems = async () => {
-    let response = await fetch(`${config.API_URL}/problems?division=blue`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.accessToken}`
-      }
+    const problemResponse = await problemRepository.getMany({
+      filterBy: {
+        division: 'blue'
+      },
+      sortBy: 'id'
     })
 
     if (!isMounted) return
 
-    if (response.ok) {
-      let problems = Object.values(await response.json()) as Problem[]
-      problems = problems.sort((p1: Problem, p2: Problem) => p1.id.localeCompare(p2.id))
-      setProblems(problems)
+    if (problemResponse.ok) {
+      setProblems(problemResponse.data)
 
-      response = await fetch(`${config.API_URL}/submissions?tid=${user?.uid}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.accessToken}`
+      const submissionResponse = await submissionRepository.getMany({
+        filterBy: {
+          teamId: user?.uid
         }
       })
 
       if (!isMounted) return
 
-      if (response.ok) {
+      if (submissionResponse.ok) {
         const submissions: { [key: string]: Submission[] } = {}
-        const userSubmissions: Submission[] = Object.values(await response.json())
-        for (const submission of userSubmissions) {
+        for (const submission of submissionResponse.data) {
           if (submissions[submission.pid] == undefined) submissions[submission.pid] = []
           submissions[submission.pid].push(submission)
         }

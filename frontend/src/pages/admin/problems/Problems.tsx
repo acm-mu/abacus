@@ -2,9 +2,9 @@ import { Problem, Submission } from 'abacus'
 import React, { ChangeEvent, useState, useEffect, useMemo } from 'react'
 import { Table, Button, Menu, MenuItemProps, Grid } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
-import config from 'environment'
 import { Block, DivisionLabel, PageLoading } from 'components'
 import { saveAs } from 'file-saver'
+import {ProblemRepository, SubmissionRepository} from 'api'
 import { usePageTitle } from 'hooks'
 
 interface ProblemItem extends Problem {
@@ -18,6 +18,9 @@ type SortConfig = {
 
 const Problems = (): React.JSX.Element => {
   usePageTitle("Abacus | Admin Problems")
+
+  const problemRepo = new ProblemRepository()
+  const submissionRepo = new SubmissionRepository()
 
   const [isLoading, setLoading] = useState(true)
   const [problems, setProblems] = useState<ProblemItem[]>([])
@@ -55,15 +58,9 @@ const Problems = (): React.JSX.Element => {
   }, [])
 
   const loadProblems = async () => {
-    let response = await fetch(`${config.API_URL}/problems?columns=tests`, {
-      headers: {
-        authorization: `Bearer ${localStorage.accessToken}`
-      }
-    })
+    const response = await problemRepo.getMany({sortBy: 'id'})
 
     if (response.ok) {
-      const problems = Object.values(await response.json()) as ProblemItem[]
-
       if (!isMounted) return
 
       sort(
@@ -71,17 +68,12 @@ const Problems = (): React.JSX.Element => {
         problems.map((problem) => ({ ...problem, checked: false }))
       )
 
-      response = await fetch(`${config.API_URL}/submissions`, {
-        headers: {
-          authorization: `Bearer ${localStorage.accessToken}`
-        }
-      })
+      const submissionResponse = await submissionRepo.getMany()
 
       if (!isMounted) return
 
-      const submissions = Object.values(await response.json()) as Submission[]
       const subs: { [key: string]: Submission[] } = {}
-      submissions.forEach((sub: Submission) => {
+      submissionResponse.data?.forEach((sub: Submission) => {
         const { pid } = sub
         if (!(pid in subs)) subs[pid] = []
         subs[pid].push(sub)
@@ -95,14 +87,10 @@ const Problems = (): React.JSX.Element => {
   }
 
   const downloadProblems = async () => {
-    const response = await fetch(
-      `${config.API_URL}/problems?columns=description,design_document,project_id,skeletons,solutions,tests`,
-      {
-        headers: { Authorization: `Bearer ${localStorage.accessToken}` }
-      }
-    )
+    const response = await problemRepo.getMany()
+
     if (response.ok) {
-      const sanitized = JSON.stringify(Object.values(await response.json()), null, '\t')
+      const sanitized = JSON.stringify(response.data, null, '\t')
       saveAs(new File([sanitized], 'problems.json', { type: 'text/json;charset=utf-8' }))
     }
   }
@@ -118,14 +106,7 @@ const Problems = (): React.JSX.Element => {
       //if the user selects ok, then the code below runs, otherwise nothing occurs
       setDeleting(true)
       const problemsToDelete = activeProblems.filter((problem) => problem.checked).map((problem) => problem.pid)
-      const response = await fetch(`${config.API_URL}/problems`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.accessToken}`
-        },
-        body: JSON.stringify({ pid: problemsToDelete })
-      })
+      const response = await problemRepo.delete(problemsToDelete)
       if (response.ok) {
         setProblems(problems.filter((problem) => !problemsToDelete.includes(problem.pid)))
         const id = problemsToDelete.join()

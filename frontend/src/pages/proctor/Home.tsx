@@ -2,9 +2,9 @@ import { Block, PageLoading, Unauthorized } from 'components'
 import { AppContext, SocketContext } from 'context'
 import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { Label, Table } from 'semantic-ui-react'
-import config from 'environment'
 import { Submission } from 'abacus'
 import { Link } from 'react-router-dom'
+import {SubmissionRepository} from 'api'
 import { usePageTitle } from 'hooks'
 
 const Home = (): React.JSX.Element => {
@@ -23,15 +23,17 @@ const Home = (): React.JSX.Element => {
   const unviewedSubmission = useMemo(() => submissions?.filter(({ viewed }) => !viewed), [submissions])
 
   const loadData = async () => {
-    const response = await fetch(`${config.API_URL}/submissions?division=blue`, {
-      headers: { Authorization: `Bearer ${localStorage.accessToken}` }
+    const submissions = new SubmissionRepository()
+    const response = await submissions.getMany({
+      filterBy: {
+        division: 'blue'
+      }
     })
 
     if (!isMounted) return
 
     if (response.ok) {
-      const data = await response.json()
-      setSubmissions(Object.values(data))
+      setSubmissions(response.data)
     }
   }
 

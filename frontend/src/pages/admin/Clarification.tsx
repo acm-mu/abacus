@@ -6,7 +6,7 @@ import Moment from 'react-moment'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import { Button, ButtonProps, Comment, Divider, Form, Label, Message, Table } from 'semantic-ui-react'
-import config from '../../environment'
+import {ClarificationRepository, SubmissionRepository} from "api"
 import './Clarification.scss'
 import { usePageTitle } from 'hooks'
 
@@ -15,6 +15,9 @@ interface ClarificationProps {
 }
 
 const ClarificationPage = (): React.JSX.Element => {
+  const submissionRepo = new SubmissionRepository()
+  const clarificationRepo = new ClarificationRepository()
+
   const navigate = useNavigate()
   const { user } = useContext(AppContext)
   const { cid } = useParams<{ cid: string }>()
@@ -29,29 +32,25 @@ const ClarificationPage = (): React.JSX.Element => {
   usePageTitle(`Abacus | Admin ${clarification?.title ?? ""}`)
 
   const loadClarification = async () => {
-    const response = await fetch(`${config.API_URL}/clarifications?cid=${cid}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.accessToken}`
-      }
-    })
+    if (!cid) return
+    const response = await clarificationRepo.get(cid)
+
     if (response.ok) {
-      const clarifications: Clarification[] = Object.values(await response.json())
-      if (clarifications.length > 0) setClarification(clarifications[0])
+      setClarification(response.data)
     }
     setLoading(false)
   }
 
   const loadSubmissions = async () => {
-    const response = await fetch(`${config.API_URL}/submissions?tid=${clarification?.user.uid}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.accessToken}`
+    const response = await submissionRepo.getMany({
+      filterBy: {
+        teamId: clarification?.user.uid
       }
     })
-    const submissions = Object.values(await response.json()) as Submission[]
 
     if (!isMounted) return
 
-    setSubmissions(submissions.map((submission) => ({ ...submission, checked: false })))
+    setSubmissions(response.data?.map((submission) => ({...submission, checked: false})) ?? [])
     setLoading(false)
   }
 
@@ -70,14 +69,7 @@ const ClarificationPage = (): React.JSX.Element => {
     }
 
     setReplying(true)
-    const response = await fetch(`${config.API_URL}/clarifications`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.accessToken}`,
-        'Content-Type': 'application/json'
-      },
-      method: 'POST',
-      body: JSON.stringify({ parent: clarification.cid, body })
-    })
+    const response = await clarificationRepo.create({parent: clarification.cid, body})
 
     if (response.ok) {
       await loadClarification()
@@ -95,14 +87,8 @@ const ClarificationPage = (): React.JSX.Element => {
     }
 
     setChangingState(true)
-    const response = await fetch(`${config.API_URL}/clarifications`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.accessToken}`,
-        'Content-Type': 'application/json'
-      },
-      method: 'PUT',
-      body: JSON.stringify({ cid: clarification.cid, open })
-    })
+    const response = await clarificationRepo.update(clarification.cid, {open})
+
     if (response.ok) {
       loadClarification()
     }
@@ -110,20 +96,13 @@ const ClarificationPage = (): React.JSX.Element => {
   }
 
   const ClarificationComment = ({ clarification }: ClarificationProps) => {
-    const deleteClarification = () => {
-      fetch(`${config.API_URL}/clarifications`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.accessToken}`,
-          'Content-Type': 'application/json'
-        },
-        method: 'DELETE',
-        body: JSON.stringify({ cid: clarification.cid })
-      }).then((response) => {
-        if (response.ok) {
-          if (clarification.cid == cid) navigate('/admin/clarifications')
-          else loadClarification()
-        }
-      })
+    const deleteClarification = async () => {
+      const response = await clarificationRepo.delete(clarification.cid)
+
+      if (response.ok) {
+        if (clarification.cid === cid) navigate('/admin/clarifications')
+        else loadClarification()
+      }
     }
 
     return (

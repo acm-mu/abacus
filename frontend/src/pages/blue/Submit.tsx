@@ -3,13 +3,17 @@ import React, { ChangeEvent, useContext, useEffect, useState } from 'react'
 import { Form, Button, Breadcrumb } from 'semantic-ui-react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Block, Countdown, FileDialog, NotFound, PageLoading, StatusMessage, Unauthorized } from 'components'
-import config from 'environment'
 import { AppContext } from 'context'
 import { Language, languages } from 'utils'
+import { Helmet } from 'react-helmet'
+import {ProblemRepository, SubmissionRepository} from 'api'
 import { usePageTitle } from 'hooks'
 
 const Submit = (): React.JSX.Element => {
   usePageTitle("Abacus | Blue Submit")
+
+  const problemRepo = new ProblemRepository()
+  const submissionRepo = new SubmissionRepository()
 
   const { user } = useContext(AppContext)
   const [submissions, setSubmissions] = useState<Submission[]>()
@@ -33,29 +37,26 @@ const Submit = (): React.JSX.Element => {
   }, [])
 
   const loadProblem = async () => {
-    let response = await fetch(`${config.API_URL}/problems?division=blue&id=${pid}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.accessToken}`
-      }
-    })
+    const response = await problemRepo.getMany({filterBy: {division: 'blue', id: pid}})
 
     if (!isMounted) return
 
     if (response.ok) {
-      const problem = Object.values(await response.json())[0] as Problem
+      const problem = response.data[0]
 
       setProblem(problem)
       if (problem) {
-        response = await fetch(`${config.API_URL}/submissions?tid=${user?.uid}&pid=${problem.pid}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.accessToken}`
+        const submissionResponse = await submissionRepo .getMany ({
+          filterBy: {
+            teamId: user?.uid,
+            problemId: problem.pid
           }
         })
 
         if (!isMounted) return
 
         if (response.ok) {
-          setSubmissions(Object.values(await response.json()))
+          setSubmissions(submissionResponse.data)
         }
       }
     }
@@ -70,25 +71,18 @@ const Submit = (): React.JSX.Element => {
     formData.set('source', file, file.name)
     formData.set('language', language.key)
     user.division && formData.set('division', user.division)
-    const res = await fetch(`${config.API_URL}/submissions`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${localStorage.accessToken}`
-      },
-      body: formData
-    })
 
-    if (res.status != 200) {
-      const { message } = await res.json()
-      setError(message)
+    const response = await submissionRepo.create(formData)
+
+    if (response.ok) {
+      setError(response.errors)
       setSubmitting(false)
       return
     }
 
-    const body: Submission = await res.json()
     setSubmitting(false)
 
-    navigate(`/blue/submissions/${body.sid}`)
+    navigate(`/blue/submissions/${response.data?.sid}`)
   }
 
   const uploadChange = (event: ChangeEvent<HTMLInputElement>) => {

@@ -1,14 +1,16 @@
 import { Problem } from 'abacus'
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import config from 'environment'
 import { ProblemEditor } from 'components/editor'
 import { PageLoading, StatusMessage } from 'components'
 import { StatusMessageType } from 'components/StatusMessage'
 import { usePageTitle } from 'hooks'
+import {ProblemRepository} from 'api'
 
 const EditProblems = (): React.JSX.Element => {
   usePageTitle("Abacus | Admin Edit Problem")
+
+  const problemRepo = new ProblemRepository()
 
   const { pid } = useParams<{ pid: string }>()
   const [problem, setProblem] = useState<Problem>()
@@ -25,18 +27,12 @@ const EditProblems = (): React.JSX.Element => {
   }, [])
 
   const loadProblem = async () => {
-    const response = await fetch(
-      `${config.API_URL}/problems?pid=${pid}&columns=description,solutions,project_id,skeletons,tests,design_document`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.accessToken}`
-        }
-      }
-    )
-    if (!isMounted) return
-    const problem = Object.values(await response.json())[0] as Problem
 
-    setProblem(problem)
+    const response = await problemRepo.get(pid)
+
+    if (!isMounted) return
+
+    setProblem(response.data)
     setLoading(false)
   }
 
@@ -46,19 +42,12 @@ const EditProblems = (): React.JSX.Element => {
   }
 
   const handleSubmit = async (problem: Problem) => {
-    const response = await fetch(`${config.API_URL}/problems`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.accessToken}`
-      },
-      body: JSON.stringify(problem)
-    })
+    const response = await problemRepo.update(problem.pid, problem)
+
     if (response.ok) {
       showMessage('success', 'Problem saved successfully!')
     } else {
-      const body = await response.json()
-      showMessage('error', body.message)
+      showMessage('error', response.errors)
     }
   }
 

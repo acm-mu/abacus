@@ -1,11 +1,11 @@
 import React, { ChangeEvent, SyntheticEvent, useContext, useState } from 'react'
 import { Button, DropdownProps, Form, Modal } from 'semantic-ui-react'
-import config from 'environment'
 import { AppContext } from 'context'
 import { useNavigate } from 'react-router-dom'
 import { divisions } from 'utils'
 import { Clarification, Context } from 'abacus'
 import { StatusMessage } from '.'
+import {ClarificationRepository} from 'api'
 
 interface ClarificationModalProps {
   trigger: React.JSX.Element
@@ -35,14 +35,13 @@ const ClarificationModal = ({ trigger, title = '', context }: ClarificationModal
 
   const handleSubmit = async () => {
     setLoading(true)
-    const response = await fetch(`${config.API_URL}/clarifications`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.accessToken}` },
-      body: JSON.stringify(clarification)
-    })
 
-    if (response.ok) {
-      const { cid } = await response.json()
+    const clarifications = new ClarificationRepository()
+
+    const response = await clarifications.create(clarification)
+
+    if (response.ok && response.data) {
+      const { cid } = response.data
 
       if (user?.role === 'admin') {
         navigate(`/admin/clarifications/${cid}`)
@@ -58,8 +57,7 @@ const ClarificationModal = ({ trigger, title = '', context }: ClarificationModal
       })
       setOpen(false)
     } else {
-      const body = await response.json()
-      setError(body.message)
+      setError(response.errors)
 
       setTimeout(() => {
         setError(undefined)

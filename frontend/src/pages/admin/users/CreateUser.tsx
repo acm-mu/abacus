@@ -1,8 +1,8 @@
 import React, { ChangeEvent, useState } from 'react'
 import { Modal, Form, Input, Select, Button } from 'semantic-ui-react'
-import config from 'environment'
 import { divisions, roles } from 'utils'
 import { StatusMessage } from 'components'
+import {UserRepository} from 'api'
 
 type CreateUserProps = {
   trigger: React.JSX.Element
@@ -10,6 +10,8 @@ type CreateUserProps = {
 }
 
 const CreateUser = ({ trigger, callback }: CreateUserProps): React.JSX.Element => {
+  const userRepo = new UserRepository()
+
   const empty = {
     username: '',
     role: '',
@@ -30,21 +32,13 @@ const CreateUser = ({ trigger, callback }: CreateUserProps): React.JSX.Element =
 
   const handleSubmit = async () => {
     setCreating(true)
-    const response = await fetch(`${config.API_URL}/users`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        authorization: `Bearer ${localStorage.accessToken}`
-      },
-      body: JSON.stringify({ ...user, school: user.role == 'team' ? user.school : '' })
-    })
+    const response = await userRepo.create({ ...user, school: user.role == 'team' ? user.school : '' })
     callback && callback(response)
 
     if (response.ok) {
       setOpen(false)
     } else {
-      const body = await response.json()
-      setError(body.message)
+      setError(response.errors)
     }
 
     setCreating(false)

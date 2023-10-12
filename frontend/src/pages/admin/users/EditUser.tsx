@@ -2,14 +2,16 @@ import { User } from 'abacus'
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Button, Checkbox, CheckboxProps, Form, Input, Label, Menu, Select } from 'semantic-ui-react'
-import config from 'environment'
 import { Block, NotFound, PageLoading } from 'components'
 import { divisions, roles } from 'utils'
 import StatusMessage, { StatusMessageType } from 'components/StatusMessage'
+import {UserRepository} from 'api'
 import { usePageTitle } from 'hooks'
 
 const EditUser = (): React.JSX.Element => {
   usePageTitle("Abacus | Edit User")
+
+  const userRepo = new UserRepository()
 
   const [user, setUser] = useState<User>()
   const [formUser, setFormUser] = useState<User>({
@@ -35,14 +37,7 @@ const EditUser = (): React.JSX.Element => {
     setFormUser({ ...formUser, [name]: value })
   const handleCheckboxChange = async (_event: React.FormEvent<HTMLInputElement>, { checked }: CheckboxProps) => {
     setSaving(true)
-    const response = await fetch(`${config.API_URL}/users`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.accessToken}`
-      },
-      body: JSON.stringify({ uid, disabled: checked })
-    })
+    const response = await userRepo.update(uid, {disabled: checked})
 
     if (response.ok) {
       await loadUser()
@@ -55,38 +50,29 @@ const EditUser = (): React.JSX.Element => {
 
   const handleSubmit = async () => {
     setSaving(true)
-    const response = await fetch(`${config.API_URL}/users`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        authorization: `Bearer ${localStorage.accessToken}`
-      },
-      body: JSON.stringify({ ...formUser, school: formUser.role == 'team' ? formUser.school : '' })
-    })
+    const response = await userRepo.update(formUser.uid,
+      {
+        ...formUser,
+        school: formUser.role === 'team' ? formUser.school : ''
+      })
+
     if (response.ok) {
-      const body = await response.json()
       setMessage({ type: 'success', message: 'User saved successfully!' })
-      setUser(body)
-      setFormUser({ ...body, password: '' })
+      setUser(response.data)
+      setFormUser({ ...response.data, password: '' })
     } else {
-      const body = await response.json()
-      setMessage({ type: 'error', message: body.message })
+      setMessage({ type: 'error', message: response.errors })
     }
     setSaving(false)
   }
 
   const loadUser = async () => {
-    const response = await fetch(`${config.API_URL}/users?uid=${uid}`, {
-      headers: {
-        authorization: `Bearer ${localStorage.accessToken}`
-      }
-    })
+    const response = await userRepo.get(uid)
     if (!isMounted) return
 
-    const users: User[] = Object.values(await response.json())
-    if (users.length > 0) {
-      setUser(users[0])
-      setFormUser({ ...users[0], password: '' })
+    if(response.ok && response.data) {
+      setUser(response.data)
+      setFormUser({...response.data, password: ''})
     }
 
     setLoading(false)

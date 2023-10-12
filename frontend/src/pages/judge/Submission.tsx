@@ -2,14 +2,16 @@ import { Submission as SubmissionType } from 'abacus'
 import React, { useState, useEffect, useContext } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { NotFound, PageLoading, StatusMessage, SubmissionView } from 'components'
-import config from 'environment'
 import { Button } from 'semantic-ui-react'
 import { AppContext, SocketContext } from 'context'
 import { saveAs } from 'file-saver'
 import { usePageTitle } from 'hooks'
+import {SubmissionRepository} from 'api'
 
 const Submission = (): React.JSX.Element => {
   usePageTitle("Abacus | Judge Submission")
+
+  const submissionRepository = new SubmissionRepository()
 
   const socket = useContext(SocketContext)
   const { sid } = useParams<{ sid: string }>()
@@ -25,13 +27,10 @@ const Submission = (): React.JSX.Element => {
   const navigate = useNavigate()
 
   const loadSubmission = async () => {
-    const response = await fetch(`${config.API_URL}/submissions?sid=${sid}`, {
-      headers: { Authorization: `Bearer ${localStorage.accessToken}` }
-    })
-
+    const response = await submissionRepository.get(sid)
 
     if (response.ok) {
-      setSubmission(Object.values(await response.json())[0] as SubmissionType)
+      setSubmission(response.data)
     }
     setLoading(false)
   }
@@ -47,26 +46,14 @@ const Submission = (): React.JSX.Element => {
   const rerun = async () => {
     if (!setSubmission) return
     setRerunning(true)
-    const response = await fetch(`${config.API_URL}/submissions/rerun`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.accessToken}`
-      },
-      body: JSON.stringify({ sid: submission.sid })
-    })
+    const response = await submissionRepository.rerun(submission.sid)
     if (response.ok) {
-      const result = await response.json()
+      const result = response.data
       if (result.submissions && submission.sid in result.submissions) {
         setSubmission({ team: submission?.team, problem: submission?.problem, ...result.submissions[submission.sid] })
       }
     } else {
-      try {
-        const { message } = await response.json()
-        setError(message)
-      } catch (_err) {
-        return
-      }
+      setError(response.errors)
     }
     setRerunning(false)
   }
@@ -74,28 +61,22 @@ const Submission = (): React.JSX.Element => {
     if (!setSubmission) return
     if (!submission) return
     setReleasing(true)
-    const response = await fetch(`${config.API_URL}/submissions`, {
-      method: 'PUT',
-      headers: {
-        Authorization: `Bearer ${localStorage.accessToken}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        sid: submission.sid,
-        feedback: submission.feedback,
-        score: submission.score,
-        released: true,
-        claimed: undefined,
-        status: submission.status
-      })
+
+    const response = await submissionRepository.update(sid, {
+      feedback: submission.feedback,
+      score: submission.score,
+      released: true,
+      claimed: undefined,
+      status: submission.status
     })
+
     if (response.ok) {
-      const result = await response.json()
-      setSubmission({ ...submission, released: result.released, claimed: undefined })
+      const result = response.data
+      if (result)
+        setSubmission({...submission, released: result.released, claimed: undefined })
     } else {
       try {
-        const { message } = await response.json()
-        setError(message)
+        setError(response.errors)
       } catch (_err) {
         return
       }
@@ -105,21 +86,14 @@ const Submission = (): React.JSX.Element => {
 
   const claim = async (sid: string) => {
     setClaiming({ ...isClaiming, [sid]: true })
-    const response = await fetch(`${config.API_URL}/submissions`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.accessToken}`
-      },
-      body: JSON.stringify({ sid, claimed: user?.uid })
-    })
+
+    const response = await submissionRepository.update(sid, {claimed: user?.uid})
 
     if (response.ok) {
       setSubmission({ ...submission, claimed: user })
     } else {
       try {
-        const { message } = await response.json()
-        setError(message)
+        setError(response.errors)
       } catch (_err) {
         return
       }
@@ -130,21 +104,13 @@ const Submission = (): React.JSX.Element => {
 
   const unclaim = async (sid: string) => {
     setClaiming({ ...isClaiming, [sid]: true })
-    const response = await fetch(`${config.API_URL}/submissions`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.accessToken}`
-      },
-      body: JSON.stringify({ sid, claimed: null })
-    })
+    const response = await submissionRepository.update(sid, {claimed: null})
 
     if (response.ok) {
       setSubmission({ ...submission, claimed: undefined })
     } else {
       try {
-        const { message } = await response.json()
-        setError(message)
+        setError(response.errors)
       } catch (_err) {
         return
       }

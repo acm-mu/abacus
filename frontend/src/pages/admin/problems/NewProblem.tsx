@@ -2,10 +2,10 @@ import { Problem } from 'abacus'
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { StatusMessage } from 'components'
-import config from 'environment'
 import { ProblemEditor } from 'components/editor'
 import { StatusMessageType } from 'components/StatusMessage'
 import { usePageTitle } from 'hooks'
+import {ProblemRepository} from 'api'
 
 const NewProblem = (): React.JSX.Element => {
   usePageTitle("Abacus | Admin New Problem")
@@ -14,19 +14,13 @@ const NewProblem = (): React.JSX.Element => {
   const [message, setMessage] = useState<StatusMessageType>()
 
   const handleSubmit = async (problem: Problem) => {
-    const res = await fetch(`${config.API_URL}/problems`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.accessToken}`
-      },
-      body: JSON.stringify(problem)
-    })
-    const body = await res.json()
-    if (res.status == 200) {
+    const problems = new ProblemRepository()
+    const response = await problems.create(problem)
+
+    if (response.ok) {
       navigate(`/admin/problems`)
     } else {
-      setMessage({ type: 'error', message: body.message })
+      setMessage({ type: 'error', message: response.errors})
     }
   }
 

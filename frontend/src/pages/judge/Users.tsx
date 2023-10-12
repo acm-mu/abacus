@@ -1,9 +1,9 @@
 import { User } from 'abacus'
 import React, { useState, useEffect, useContext } from 'react'
 import { Table } from 'semantic-ui-react'
-import config from 'environment'
 import { AppContext } from 'context'
 import { PageLoading, StatusMessage } from 'components'
+import {UserRepository} from 'api'
 import { usePageTitle } from 'hooks'
 
 type SortKey = 'uid' | 'display_name' | 'username' | 'role' | 'division' | 'school'
@@ -15,6 +15,7 @@ type SortConfig = {
 const Teams = (): React.JSX.Element => {
   usePageTitle("Abacus | Users")
 
+  const userRepository = new UserRepository()
   const { user } = useContext(AppContext)
 
   const [users, setUsers] = useState<User[]>([])
@@ -47,19 +48,18 @@ const Teams = (): React.JSX.Element => {
   }, [])
 
   const loadUsers = async () => {
-    try {
-      const response = await fetch(`${config.API_URL}/users?division=${user?.division}&role=team`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.accessToken}`
-        }
-      })
-      if (isMounted) {
-        const data = Object.values(await response.json()) as User[]
-        sort('username', data)
-        setLoading(false)
+    const response = await userRepository.getMany({
+      filterBy: {
+        division: user?.division,
+        role: 'team'
       }
-    } catch (err) {
-      setError(err as string)
+    })
+
+    if (isMounted && response.ok) {
+      sort('username', response.data)
+      setLoading(false)
+    } else {
+      setError(response.errors)
     }
   }
 

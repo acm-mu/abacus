@@ -2,10 +2,10 @@ import React, { ChangeEvent, useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button, Form, Modal } from 'semantic-ui-react'
 import { AppContext } from 'context'
-import config from 'environment'
 import fulllogo from 'assets/fulllogo.png'
 import { userHome } from 'utils'
 import { StatusMessage } from '.'
+import {AuthService} from 'api'
 
 interface LoginModalProps {
   trigger?: React.JSX.Element
@@ -13,6 +13,8 @@ interface LoginModalProps {
 }
 
 const LoginModal = ({ trigger, open }: LoginModalProps): React.JSX.Element => {
+  const authService = new AuthService()
+
   const { setUser } = useContext(AppContext)
   const navigate = useNavigate()
   const [error, setError] = useState<string>()
@@ -33,21 +35,15 @@ const LoginModal = ({ trigger, open }: LoginModalProps): React.JSX.Element => {
   const handleSubmit = async () => {
     try {
       setLoggingIn(true)
-      const response = await fetch(`${config.API_URL}/auth`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      })
-      if (response.status == 200) {
-        const { accessToken, ...user } = await response.json()
+      const response = await authService.login(formData.username, formData.password)
+
+      if (response.ok) {
+        const {accessToken, ...user} = response.data
         localStorage.setItem('accessToken', accessToken)
         setUser(user)
         navigate(userHome(user))
       } else {
-        const { message } = await response.json()
-        setError(message)
+        setError(response.errors)
       }
     } catch (err) {
       console.error(err)

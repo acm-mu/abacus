@@ -5,11 +5,13 @@ import { Link } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
 import { Block, Countdown, PageLoading, Unauthorized } from 'components'
 import { AppContext } from 'context'
-import config from 'environment'
 import { usePageTitle } from 'hooks'
+import {SubmissionRepository} from 'api'
 
 const Submissions = (): React.JSX.Element => {
   usePageTitle("Abacus | Blue Submissions")
+
+  const submissionRepo = new SubmissionRepository()
 
   const { user } = useContext(AppContext)
   const [isMounted, setMounted] = useState(true)
@@ -24,14 +26,16 @@ const Submissions = (): React.JSX.Element => {
   }, [])
 
   const loadSubmissions = async () => {
-    const response = await fetch(`${config.API_URL}/submissions?division=blue&tid=${user?.uid}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.accessToken}`
+    const response = await submissionRepo.getMany({
+      filterBy: {
+        division: 'blue',
+        teamId: user?.uid
       }
     })
+
     if (!isMounted) return
     if (response.ok) {
-      setSubmissions(Object.values(await response.json()))
+      setSubmissions(response.data)
     }
     setLoading(false)
   }

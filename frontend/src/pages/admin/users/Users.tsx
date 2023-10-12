@@ -2,13 +2,13 @@ import { User } from 'abacus'
 import { PageLoading, StatusMessage } from 'components'
 import CustomTable from 'components/CustomTable'
 import { AppContext } from 'context'
-import config from 'environment'
 import { saveAs } from 'file-saver'
 import React, { ChangeEvent, useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Grid } from 'semantic-ui-react'
 import CreateUser from './CreateUser'
 import { usePageTitle } from 'hooks'
+import {UserRepository} from 'api'
 
 interface UserItem extends User {
   checked: boolean
@@ -54,6 +54,8 @@ type SortConfig = {
 
 const Users = (): React.JSX.Element => {
   usePageTitle("Abacus | Users")
+  
+  const userRepo = new UserRepository()
   const { user } = useContext(AppContext)
 
   const [users, setUsers] = useState<UserItem[]>([])
@@ -92,16 +94,11 @@ const Users = (): React.JSX.Element => {
   const loadUsers = async () => {
     try {
       //include page as query, so that API can fetch it.
-      const response = await fetch(`${config.API_URL}/users`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.accessToken}`,
-          'Content-Type': 'application/json'
-        }
-      })
-      const data = Object.values(await response.json()) as UserItem[]
+      const userRepository = new UserRepository()
+      const response = await userRepository.getMany()
       sort(
         'username',
-        data.map((user) => ({ ...user, checked: false }))
+        response.data?.map((user) => ({ ...user, checked: false }))
       )
       setLoading(false)
     } catch (err) {
@@ -133,23 +130,16 @@ const Users = (): React.JSX.Element => {
 
         const username = 'team' + i
 
-        const res = await fetch(`${config.API_URL}/users`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.accessToken}`
-          },
-          body: JSON.stringify({
-            division: team.division,
-            display_name: team.team_name,
-            school: team.school_name,
-            password,
-            role: 'team',
-            username
-          })
+        const response =await  userRepo.create({
+          division: team.division,
+          display_name: team.team_name,
+          school: team.school,
+          password,
+          role: 'team',
+          username
         })
 
-        if (res.ok) {
+        if (response.ok && response.data) {
           passwords.push({
             username,
             display_name: team.team_name,
@@ -157,8 +147,7 @@ const Users = (): React.JSX.Element => {
             division: team.division,
             password
           })
-          const new_user = await res.json()
-          setUsers((users) => users.concat(new_user))
+          setUsers((users) => users.concat(response.data))
         }
         i++
       }
@@ -194,14 +183,7 @@ const Users = (): React.JSX.Element => {
       setDeleting(true)
 
       const usersToDelete = users.filter((user) => user.checked).map((user) => user.uid)
-      const response = await fetch(`${config.API_URL}/users`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.accessToken}`
-        },
-        body: JSON.stringify({ uid: usersToDelete })
-      })
+      const response = await userRepo.delete(usersToDelete)
 
       if (response.ok) {
         loadUsers()

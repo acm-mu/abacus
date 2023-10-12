@@ -19,21 +19,17 @@ const App = (): React.JSX.Element => {
   const socket = io(config.API_URL, { transports: ['websocket'] })
 
   const checkAuth = async () => {
-    try {
-      const response = await fetch(`${config.API_URL}/auth`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` }
-      })
-      if (response.ok) {
-        setUser(await response.json())
-      }
+    const response = await authService.checkAuth()
+    if(response.ok) {
+      setUser(response.data)
       return true
-    } catch (err) {
+    } else {
       return false
     }
   }
 
   const loadSettings = async (): Promise<boolean> => {
-    const response = await fetch(`${config.API_URL}/contest`)
+    const response = await contestService.getContest()
     if (response.ok) {
       const data = await response.json()
 

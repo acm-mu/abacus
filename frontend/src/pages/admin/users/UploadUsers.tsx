@@ -3,9 +3,9 @@ import React, { ChangeEvent, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button, Label, Message, Table } from 'semantic-ui-react'
 import { Block, FileDialog } from 'components'
-import config from 'environment'
 import sha256 from 'crypto-js/sha256'
 import { usePageTitle } from 'hooks'
+import {UserRepository} from 'api'
 
 interface UserItem extends User {
   checked: boolean
@@ -14,6 +14,7 @@ interface UserItem extends User {
 const UploadUsers = (): React.JSX.Element => {
   usePageTitle("Abacus | Admin Upload Users")
 
+  const userRepository = new UserRepository()
   const navigate = useNavigate()
   const [file, setFile] = useState<File>()
   const [existingUsers, setExistingUsers] = useState<{ [key: string]: User }>()
@@ -41,13 +42,11 @@ const UploadUsers = (): React.JSX.Element => {
   }
 
   const loadExistingUsers = async () => {
-    const response = await fetch(`${config.API_URL}/users`, {
-      headers: { Authorization: `Bearer ${localStorage.accessToken}` }
-    })
+    const response = await userRepository.getMany()
 
     if (!response.ok || !isMounted) return
 
-    setExistingUsers(await response.json())
+    setExistingUsers(response.data)
   }
 
   useEffect(() => {
@@ -72,14 +71,14 @@ const UploadUsers = (): React.JSX.Element => {
   const handleSubmit = async () => {
     if (newUsers) {
       for (const user of newUsers.filter((u) => u.checked)) {
-        const response = await fetch(`${config.API_URL}/users`, {
-          method: Object.keys(existingUsers || {}).includes(user.uid) ? 'PUT' : 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.accessToken}`
-          },
-          body: JSON.stringify(user)
-        })
+        let response: ApiResponse<User>
+
+        if (Object.keys(existingUsers || {}).includes(user.uid)) {
+          response = await userRepository.update(user.uid, user)
+        } else {
+          response = await userRepository.create(user)
+        }
+
         if (response.ok) {
           navigate('/admin/users')
         }
