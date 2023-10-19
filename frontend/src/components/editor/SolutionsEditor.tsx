@@ -53,9 +53,10 @@ const SolutionsEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Elemen
         ))}
         {setProblem && (
           <Menu.Item position="right">
-            {problem.solutions?.map((solution) =>
+            {problem.solutions?.map((solution, index) =>
               solution.language == activeSolution ? (
                 <Input
+                  key={`skeleton-input-${index}`}
                   label="Filename"
                   size="small"
                   name="filename"

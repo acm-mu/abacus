@@ -1,18 +1,19 @@
 import { Submission } from 'abacus'
-import React, { ChangeEvent, useState, useEffect, useMemo, useContext } from 'react'
-import { Button, Checkbox, Label, Menu, MenuItemProps, Table } from 'semantic-ui-react'
-import Moment from 'react-moment'
-import { Link } from 'react-router-dom'
-import config from 'environment'
-import { compare } from 'utils'
-import { Helmet } from 'react-helmet'
 import { Block, DivisionLabel, PageLoading } from 'components'
 import { SocketContext } from 'context'
+import config from 'environment'
+import React, { ChangeEvent, useContext, useEffect, useMemo, useState } from 'react'
+import { Helmet } from 'react-helmet'
+import Moment from 'react-moment'
+import { Link } from 'react-router-dom'
+import { Button, Checkbox, Grid, Label, Menu, MenuItemProps, Table } from 'semantic-ui-react'
+import { compare } from 'utils'
+import { saveAs } from 'file-saver'
 
 interface SubmissionItem extends Submission {
   checked: boolean
 }
-type SortKey = 'date' | 'sid' | 'sub_no' | 'language' | 'status' | 'runtime' | 'date' | 'score'
+type SortKey = 'date' | 'sid' | 'sub_no' | 'language' | 'status' | 'runtime' | 'score'
 type SortConfig = {
   column: SortKey
   direction: 'ascending' | 'descending'
@@ -22,7 +23,6 @@ const Submissions = (): JSX.Element => {
   const socket = useContext(SocketContext)
   const [isLoading, setLoading] = useState(true)
   const [submissions, setSubmissions] = useState<SubmissionItem[]>([])
-  const [isMounted, setMounted] = useState(true)
   const [isDeleting, setDeleting] = useState(false)
   const [showReleased, setShowReleased] = useState(false)
   const [activeDivision, setActiveDivision] = useState('blue')
@@ -46,22 +46,24 @@ const Submissions = (): JSX.Element => {
 
   useEffect(() => {
     loadSubmissions().then(() => setLoading(false))
-    socket?.on('new_submission', loadSubmissions)
-    socket?.on('update_submission', loadSubmissions)
-    return () => setMounted(false)
+    socket?.on('new_submission', () => loadSubmissions())
+    socket?.on('update_submission', () => loadSubmissions())
   }, [])
 
+  /*
+  @param page - page to query when paginating
+  updates the new page of submissions
+  */
   const loadSubmissions = async () => {
+    //include page as query, so that API can fetch it.
     const response = await fetch(`${config.API_URL}/submissions`, {
       headers: {
-        Authorization: `Bearer ${localStorage.accessToken}`
+        Authorization: `Bearer ${localStorage.accessToken}`,
+        'Content-Type': 'application/json'
       }
     })
-    const submissions = Object.values(await response.json()) as SubmissionItem[]
-
-    if (!isMounted) return
-
-    setSubmissions(submissions.map((submission) => ({ ...submission, checked: false })))
+    const newSubmissions = Object.values(await response.json()) as SubmissionItem[]
+    setSubmissions(newSubmissions.map((submission) => ({ ...submission, checked: false })))
   }
 
   const onReleaseChange = () => setShowReleased(!showReleased)
@@ -82,22 +84,33 @@ const Submissions = (): JSX.Element => {
     )
 
   const deleteSelected = async () => {
-    setDeleting(true)
-    const submissionsToDelete = submissions
-      .filter((submission) => submission.checked && (!submission.released || showReleased))
-      .map((submission) => submission.sid)
-    const response = await fetch(`${config.API_URL}/submissions`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.accessToken}`
-      },
-      body: JSON.stringify({ sid: submissionsToDelete })
-    })
-    if (response.ok) {
+    if (window.confirm('are you sure you want to delete these submissions?')) {
+      //if the user selects ok, then the code below runs, otherwise nothing occurs
+      setDeleting(true)
+      const submissionsToDelete = submissions
+        .filter((submission) => submission.checked && (!submission.released || showReleased))
+        .map((submission) => submission.sid)
+      const response = await fetch(`${config.API_URL}/submissions`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.accessToken}`
+        },
+        body: JSON.stringify({ sid: submissionsToDelete })
+      })
+      if (response.ok) {
+        //tells the toast container below to display a message saying 'Deleted selected submissions'
+        const id = submissionsToDelete.join()
+        window.sendNotification({
+          id,
+          type: 'success',
+          header: 'Success!',
+          content: 'We deleted the submissions you selected!'
+        })
+      }
       loadSubmissions()
+      setDeleting(false)
     }
-    setDeleting(false)
   }
 
   const handleItemClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, { name }: MenuItemProps) =>
@@ -114,7 +127,7 @@ const Submissions = (): JSX.Element => {
   if (isLoading) return <PageLoading />
 
   return (
-    <>
+    <Grid>
       <Helmet>
         <title>Abacus | Admin Submissions</title>
       </Helmet>
@@ -216,7 +229,7 @@ const Submissions = (): JSX.Element => {
           </Table.Body>
         </Table>
       </Block>
-    </>
+    </Grid>
   )
 }
 

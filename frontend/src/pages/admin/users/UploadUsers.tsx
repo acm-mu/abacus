@@ -1,18 +1,18 @@
 import { User } from 'abacus'
 import React, { ChangeEvent, useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Button, Label, Message, Table } from 'semantic-ui-react'
 import { Block, FileDialog } from 'components'
 import config from 'environment'
 import { Helmet } from 'react-helmet'
-import { sha256 } from 'utils'
+import sha256 from 'crypto-js/sha256'
 
 interface UserItem extends User {
   checked: boolean
 }
 
-const UploadUsers = (): JSX.Element => {
-  const history = useHistory()
+const UploadUsers = (): React.JSX.Element => {
+  const navigate = useNavigate()
   const [file, setFile] = useState<File>()
   const [existingUsers, setExistingUsers] = useState<{ [key: string]: User }>()
   const [newUsers, setNewUsers] = useState<UserItem[]>()
@@ -57,7 +57,7 @@ const UploadUsers = (): JSX.Element => {
   const filterUser = (user1: User, u2: User) => {
     if (!u2) return true
     const { ...user2 } = u2
-    if (user1.password) user1.password = sha256(user1.password)
+    if (user1.password) user1.password = sha256(user1.password).toString()
 
     return JSON.stringify(user1, Object.keys(user1).sort()) !== JSON.stringify(user2, Object.keys(user2).sort())
   }
@@ -79,7 +79,7 @@ const UploadUsers = (): JSX.Element => {
           body: JSON.stringify(user)
         })
         if (response.ok) {
-          history.push('/admin/users')
+          navigate('/admin/users')
         }
       }
     }
@@ -93,7 +93,7 @@ const UploadUsers = (): JSX.Element => {
       <Block size="xs-12" transparent>
         <h1>Upload Users</h1>
         <Block transparent size="xs-12">
-          <Button content="Back" icon="arrow left" labelPosition="left" onClick={history.goBack} />
+          <Button content="Back" icon="arrow left" labelPosition="left" onClick={() => navigate(-1)} />
         </Block>
 
         <FileDialog

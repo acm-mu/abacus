@@ -2,20 +2,20 @@ import React, { ChangeEvent, SyntheticEvent, useContext, useState } from 'react'
 import { Button, DropdownProps, Form, Modal } from 'semantic-ui-react'
 import config from 'environment'
 import { AppContext } from 'context'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 import { divisions } from 'utils'
 import { Clarification, Context } from 'abacus'
 import { StatusMessage } from '.'
 
 interface ClarificationModalProps {
-  trigger: JSX.Element
+  trigger: React.JSX.Element
   title?: string
   context?: Context
   callback?: (clarification: Clarification) => void
 }
 
-const ClarificationModal = ({ trigger, title = '', context }: ClarificationModalProps): JSX.Element => {
-  const history = useHistory()
+const ClarificationModal = ({ trigger, title = '', context }: ClarificationModalProps): React.JSX.Element => {
+  const navigate = useNavigate()
   const { user } = useContext(AppContext)
   const [isLoading, setLoading] = useState(false)
   const [isOpen, setOpen] = useState(false)
@@ -25,7 +25,7 @@ const ClarificationModal = ({ trigger, title = '', context }: ClarificationModal
     title,
     context,
     body: '',
-    division: user?.division || ''
+    division: user?.division ?? ''
   })
 
   const handleChange = ({ target: { name, value } }: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
@@ -45,16 +45,16 @@ const ClarificationModal = ({ trigger, title = '', context }: ClarificationModal
       const { cid } = await response.json()
 
       if (user?.role === 'admin') {
-        history.push(`/admin/clarifications/${cid}`)
+        navigate(`/admin/clarifications/${cid}`)
       } else {
-        history.push(`/${user?.division}/clarifications/`)
+        navigate(`/${user?.division}/clarifications/`)
       }
 
       setClarification({
         title: '',
         body: '',
         context: undefined,
-        division: user?.division || ''
+        division: user?.division ?? ''
       })
       setOpen(false)
     } else {

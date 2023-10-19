@@ -1,6 +1,6 @@
 import { Problem } from 'abacus'
 import React, { ChangeEvent, useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Button, Label, Message, Table } from 'semantic-ui-react'
 import { Block, FileDialog } from 'components'
 import config from 'environment'
@@ -10,8 +10,8 @@ interface ProblemItem extends Problem {
   checked: boolean
 }
 
-const UploadProblems = (): JSX.Element => {
-  const history = useHistory()
+const UploadProblems = (): React.JSX.Element => {
+  const navigate = useNavigate()
   const [file, setFile] = useState<File>()
   const [existingProblems, setExistingProblems] = useState<{ [key: string]: Problem }>()
   const [newProblems, setNewProblems] = useState<ProblemItem[]>()
@@ -75,7 +75,7 @@ const UploadProblems = (): JSX.Element => {
     if (newProblems) {
       for (const problem of newProblems.filter((p) => p.checked)) {
         const response = await fetch(`${config.API_URL}/problems`, {
-          method: 'PUT',
+          method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${localStorage.accessToken}`
@@ -83,7 +83,7 @@ const UploadProblems = (): JSX.Element => {
           body: JSON.stringify(problem)
         })
         if (response.ok) {
-          history.push('/admin/problems')
+          navigate('/admin/problems')
         }
       }
     }
@@ -98,7 +98,7 @@ const UploadProblems = (): JSX.Element => {
       <Block size="xs-12" transparent>
         <h1>Upload Problems</h1>
         <Block transparent size="xs-12">
-          <Button content="Back" icon="arrow left" labelPosition="left" onClick={history.goBack} />
+          <Button content="Back" icon="arrow left" labelPosition="left" onClick={() => navigate(-1)} />
         </Block>
 
         <FileDialog

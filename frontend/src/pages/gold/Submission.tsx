@@ -19,7 +19,7 @@ const Submission = (): JSX.Element => {
     return () => {
       setMounted(false)
     }
-  }, [])
+  }, [sid])
 
   const loadSubmission = async () => {
     const response = await fetch(`${config.API_URL}/submissions?sid=${sid}`, {

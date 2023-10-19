@@ -24,6 +24,7 @@ yarn-error.log*
 .mypy_cache
 .pytest_cache
 .vscode
+.idea
 *.rest
 
 mongo-volume

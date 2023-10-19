@@ -1,9 +1,9 @@
 import { Problem, Settings, Test, User } from 'abacus'
 import { Request, Response } from 'express'
 import { matchedData, ParamSchema, validationResult } from 'express-validator'
-import { transpose } from '../../utils'
-import contest from '../../abacus/contest'
 import { userHasRole } from '../../abacus/authlib'
+import contest from '../../abacus/contest'
+import { transpose } from '../../utils'
 
 export const schema: Record<string, ParamSchema> = {
   sid: {
@@ -150,6 +150,9 @@ const showToUser = (user: User | undefined, problem: Problem, settings: Settings
  *         description: A server error occurred while trying to complete request.
  */
 export const getSubmissions = async (req: Request, res: Response): Promise<void> => {
+  const page = req.query.page
+  //page comes in as string due to being a query
+  const newPage = page ? parseInt(page as string) : 0
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })
@@ -167,21 +170,22 @@ export const getSubmissions = async (req: Request, res: Response): Promise<void>
       item.tid = req.user.uid
     }
 
-    let submissions = await contest.get_resolved_submissions(item)
+    let submissions = await contest.get_resolved_submissions(item, newPage)
 
     // Obfuscate submission details to teams if not yet released.
-    submissions = submissions
-      .map((submission) => {
-        if (req.user?.role == 'team' && !submission.released) {
-          submission.status = 'pending'
-          submission.score = 0
-          submission.tests = submission.tests?.map((test: Test) => ({ ...test, result: '' }))
-        }
-        return submission
-      })
-      .filter((submission) => showToUser(req.user, submission.problem, settings))
-
-    res.send(transpose(submissions, 'sid'))
+    if (submissions !== []) {
+      submissions = submissions
+        .map((submission) => {
+          if (req.user?.role == 'team' && !submission.released) {
+            submission.status = 'pending'
+            submission.score = 0
+            submission.tests = submission.tests?.map((test: Test) => ({ ...test, result: '' }))
+          }
+          return submission
+        })
+        .filter((submission) => showToUser(req.user, submission.problem, settings))
+    }
+    submissions !== [] ? res.send(transpose(submissions, 'sid')) : res.send([])
   } catch (err) {
     console.error(err)
     res.sendStatus(500)

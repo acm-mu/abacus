@@ -6,7 +6,7 @@ interface Config {
 
 const prod: Config = {
   isLocal: false,
-  API_URL: 'https://api.codeabac.us',
+  API_URL: process.env.API_URL || 'https://api.codeabac.us',
   environmentText: ''
 }
 
@@ -18,7 +18,7 @@ const dev: Config = {
 
 const staging: Config = {
   isLocal: true,
-  API_URL: 'https://api-staging.codeabac.us',
+  API_URL: process.env.API_URL || 'https://api-staging.codeabac.us',
   environmentText: 'STAGING ENV.'
 }
 

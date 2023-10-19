@@ -1,13 +1,14 @@
 import { Submission as SubmissionType } from 'abacus'
 import React, { useState, useEffect, useContext } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { NotFound, PageLoading, SubmissionView } from 'components'
 import config from 'environment'
 import { Helmet } from 'react-helmet'
-import { Button } from 'semantic-ui-react'
+import { Button, Grid } from 'semantic-ui-react'
 import { AppContext } from 'context'
+import { saveAs } from 'file-saver'
 
-const Submission = (): JSX.Element => {
+const Submission = (): React.JSX.Element => {
   const { sid } = useParams<{ sid: string }>()
   const [submission, setSubmission] = useState<SubmissionType>()
   const [isLoading, setLoading] = useState(true)
@@ -21,7 +22,7 @@ const Submission = (): JSX.Element => {
 
   const { user } = useContext(AppContext)
 
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const loadSubmission = async () => {
     const response = await fetch(`${config.API_URL}/submissions?sid=${sid}`, {
@@ -47,19 +48,29 @@ const Submission = (): JSX.Element => {
   if (!submission) return <NotFound />
 
   const deleteSubmission = async () => {
-    setDeleting(true)
-    const response = await fetch(`${config.API_URL}/submissions`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.accessToken}`
-      },
-      body: JSON.stringify({ sid: submission.sid })
-    })
-    if (response.ok) {
-      history.push('/admin/submissions')
+    if (!sid) return
+    if (window.confirm('Are you sure you want to delete this submission?')) {
+      //if the user selects ok, then the code below runs, otherwise nothing occurs
+      setDeleting(true)
+      const response = await fetch(`${config.API_URL}/submissions`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.accessToken}`
+        },
+        body: JSON.stringify({ sid: submission.sid })
+      })
+      if (response.ok) {
+        window.sendNotification({
+          id: sid,
+          type: 'success',
+          header: 'Success!',
+          content: 'We deleted the submission you selected!'
+        })
+        navigate('/admin/submissions')
+      }
+      setDeleting(false)
     }
-    setDeleting(false)
   }
 
   const rerun = async () => {
@@ -121,6 +132,7 @@ const Submission = (): JSX.Element => {
   }
 
   const flag = async () => {
+    if (!sid) return
     setFlagging({ ...isFlagging, [sid]: true })
     const response = await fetch(`${config.API_URL}/submissions`, {
       method: 'PUT',
@@ -139,6 +151,7 @@ const Submission = (): JSX.Element => {
   }
 
   const unflag = async () => {
+    if (!sid) return
     setUnFlagging({ ...isUnFlagging, [sid]: true })
     const response = await fetch(`${config.API_URL}/submissions`, {
       method: 'PUT',
@@ -162,12 +175,12 @@ const Submission = (): JSX.Element => {
     saveAs(new File([submission?.source], submission.filename, { type: 'text/plain;charset=utf-8' }))
 
   return (
-    <>
+    <Grid>
       <Helmet>
         <title>Abacus | Admin Submission</title>
       </Helmet>
 
-      <Button content="Back" icon="arrow left" labelPosition="left" onClick={history.goBack} />
+      <Button content="Back" icon="arrow left" labelPosition="left" onClick={() => navigate(-1)} />
       <Button
         disabled={isRerunning}
         loading={isRerunning}
@@ -176,7 +189,6 @@ const Submission = (): JSX.Element => {
         labelPosition="left"
         onClick={rerun}
       />
-
       {submission.released ? (
         <Button icon="check" positive content="Released" labelPosition="left" />
       ) : (
@@ -222,7 +234,7 @@ const Submission = (): JSX.Element => {
       />
 
       <SubmissionView submission={submission} setSubmission={setSubmission} rerunning={isRerunning} />
-    </>
+    </Grid>
   )
 }
 

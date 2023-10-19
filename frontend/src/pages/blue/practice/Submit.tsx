@@ -2,13 +2,12 @@ import { Problem, Submission } from 'abacus'
 import { Block, Countdown, FileDialog, NotFound, PageLoading } from 'components'
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet'
-import { useHistory, useParams } from 'react-router'
-import { Link } from 'react-router-dom'
+import { useNavigate, useParams, Link } from 'react-router-dom'
 import { Breadcrumb, Button, Form } from 'semantic-ui-react'
 import { Language, languages } from 'utils'
 import { v4 as uuidv4 } from 'uuid'
 
-const SubmitPractice = (): JSX.Element => {
+const SubmitPractice = (): React.JSX.Element => {
   const { id } = useParams<{ id: string }>()
   const [isLoading, setLoading] = useState(false)
   const [isPageLoading, setPageLoading] = useState(true)
@@ -17,7 +16,7 @@ const SubmitPractice = (): JSX.Element => {
 
   const [language, setLanguage] = useState<Language>()
   const [file, setFile] = useState<File>()
-  const history = useHistory()
+  const navigate = useNavigate()
 
   useEffect(() => {
     fetch(`/problems/${id}.json`)
@@ -31,6 +30,8 @@ const SubmitPractice = (): JSX.Element => {
   const testSubmission = async (submission: Submission): Promise<Submission> => {
     let runtime = -1
     let status = 'accepted'
+    //GET  https://emkc.org/api/v2/piston/runtimes
+    //POST https://emkc.org/api/v2/piston/execute
     if (submission.tests) {
       for (const test of submission.tests) {
         // Await response from piston execution
@@ -104,9 +105,7 @@ const SubmitPractice = (): JSX.Element => {
         source: data.toString()
       })
 
-      localStorage.setItem('submissions', JSON.stringify(submissions))
-
-      history.push(`/blue/practice/${sid}`)
+      navigate(`/blue/practice/${sid}`)
     }
 
     fileReader.readAsText(file)

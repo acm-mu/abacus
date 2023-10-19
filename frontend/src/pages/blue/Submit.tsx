@@ -1,14 +1,14 @@
 import { Problem, Submission } from 'abacus'
 import React, { ChangeEvent, useContext, useEffect, useState } from 'react'
 import { Form, Button, Breadcrumb } from 'semantic-ui-react'
-import { Link, useHistory, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Block, Countdown, FileDialog, NotFound, PageLoading, StatusMessage, Unauthorized } from 'components'
 import config from 'environment'
 import { AppContext } from 'context'
 import { Language, languages } from 'utils'
 import { Helmet } from 'react-helmet'
 
-const Submit = (): JSX.Element => {
+const Submit = (): React.JSX.Element => {
   const { user } = useContext(AppContext)
   const [submissions, setSubmissions] = useState<Submission[]>()
   const [problem, setProblem] = useState<Problem>()
@@ -17,7 +17,7 @@ const Submit = (): JSX.Element => {
   const [file, setFile] = useState<File>()
   const [isSubmitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string>()
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const [isMounted, setMounted] = useState(true)
 
@@ -66,7 +66,7 @@ const Submit = (): JSX.Element => {
     formData.set('pid', problem.pid)
     formData.set('source', file, file.name)
     formData.set('language', language.key)
-
+    user.division && formData.set('division', user.division)
     const res = await fetch(`${config.API_URL}/submissions`, {
       method: 'POST',
       headers: {
@@ -85,7 +85,7 @@ const Submit = (): JSX.Element => {
     const body: Submission = await res.json()
     setSubmitting(false)
 
-    history.push(`/blue/submissions/${body.sid}`)
+    navigate(`/blue/submissions/${body.sid}`)
   }
 
   const uploadChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -223,7 +223,7 @@ const Submit = (): JSX.Element => {
               loading={isSubmitting}
               disabled={isSubmitting}
             />
-            <Button onClick={history.goBack}>Cancel</Button>
+            <Button onClick={() => navigate(-1)}>Cancel</Button>
           </Form.Group>
         </Form>
       </Block>

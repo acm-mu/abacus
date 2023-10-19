@@ -4,7 +4,7 @@ import { Menu } from 'semantic-ui-react'
 import { Navigation } from 'components'
 import { AppContext } from 'context'
 
-const BlueNavigation = (): JSX.Element => {
+const BlueNavigation = (): React.JSX.Element => {
   const { user, settings } = useContext(AppContext)
 
   const hasAccessTo = () => user?.role == 'admin' || user?.division == 'blue'
@@ -12,7 +12,7 @@ const BlueNavigation = (): JSX.Element => {
 
   return (
     <Navigation className="blue-div">
-      <Menu.Item as={NavLink} exact to="/blue" content="Home" />
+      <Menu.Item as={NavLink} end to="/blue" content="Home" />
       <Menu.Item as={NavLink} to="/blue/rules" content="Rules" />
       {hasAccessTo() || (settings && new Date() > settings.end_date) ? (
         <Menu.Item as={NavLink} to="/blue/problems" content="Problems" />

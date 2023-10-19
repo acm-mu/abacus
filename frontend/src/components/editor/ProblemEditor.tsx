@@ -1,6 +1,6 @@
 import { Problem } from 'abacus'
 import React, { MouseEvent, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Menu, Button, MenuItemProps, Divider } from 'semantic-ui-react'
 import { Block } from 'components'
 import ProblemInfoEditor from './ProblemInfoEditor'
@@ -15,9 +15,9 @@ interface ProblemEditorProps {
   handleSubmit: (problem: Problem) => Promise<void>
 }
 
-const ProblemEditor = ({ problem: defaultProblem, handleSubmit }: ProblemEditorProps): JSX.Element => {
+const ProblemEditor = ({ problem: defaultProblem, handleSubmit }: ProblemEditorProps): React.JSX.Element => {
   const [problem, setProblem] = useState<Problem>(
-    defaultProblem || {
+    defaultProblem ?? {
       pid: '',
       id: '',
       name: '',
@@ -34,7 +34,7 @@ const ProblemEditor = ({ problem: defaultProblem, handleSubmit }: ProblemEditorP
 
   const [activeItem, setActiveItem] = useState<string>('problem-info')
   const handleItemClick = (_event: MouseEvent, data: MenuItemProps) => setActiveItem(data.tab)
-  const history = useHistory()
+  const navigate = useNavigate()
 
   return (
     <>
@@ -89,7 +89,7 @@ const ProblemEditor = ({ problem: defaultProblem, handleSubmit }: ProblemEditorP
           }
         })()}
         <Divider />
-        <Button floated="right" onClick={history.goBack}>
+        <Button floated="right" onClick={() => navigate(-1)}>
           Cancel
         </Button>
         <Button floated="right" primary onClick={submitPress} loading={isSaving} disabled={isSaving}>
