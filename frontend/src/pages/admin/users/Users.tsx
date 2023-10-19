@@ -1,22 +1,56 @@
 import { User } from 'abacus'
-import React, { ChangeEvent, useState, useEffect, useContext } from 'react'
-import { Table, Button, Label } from 'semantic-ui-react'
-import { saveAs } from 'file-saver'
-import { Link } from 'react-router-dom'
-import config from 'environment'
+import { PageLoading, StatusMessage } from 'components'
+import CustomTable from 'components/CustomTable'
 import { AppContext } from 'context'
-import CreateUser from './CreateUser'
+import config from 'environment'
+import { saveAs } from 'file-saver'
+import React, { ChangeEvent, useContext, useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet'
-import { DivisionLabel, PageLoading, StatusMessage } from 'components'
+import { Link } from 'react-router-dom'
+import { Button, Grid } from 'semantic-ui-react'
+import CreateUser from './CreateUser'
 
 interface UserItem extends User {
   checked: boolean
 }
-type SortKey = 'uid' | 'display_name' | 'username' | 'role' | 'division' | 'school'
+
+const sortKeys = ['uid', 'display_name', 'username', 'role', 'division', 'school'] as const
+type SortKey = typeof sortKeys[number]
+
 type SortConfig = {
   column: SortKey
   direction: 'ascending' | 'descending'
 }
+/*
+ <Table sortable>
+        <Table.Header>
+        map shit here -> 
+         {users.map((user: UserItem) => (
+          <Table.Row>
+         {content}
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+         map each row here -> {users.map((user: UserItem) => (
+            <Table.Row key={user.uid} uuid={`${user.uid}`}>
+              <Table.Cell>
+                <input type="checkbox" checked={user.checked} id={user.uid} onChange={handleChange} />
+              </Table.Cell>
+              <Table.Cell className="space-between">
+                <Link to={`/admin/users/${user.uid}`}>{user.username}</Link>
+                {user.disabled && <Label color="red" content="Disabled" />}
+              </Table.Cell>
+              <Table.Cell>{user.role}</Table.Cell>
+              <Table.Cell>
+                <DivisionLabel division={user.division} />
+              </Table.Cell>
+              <Table.Cell>{user.school}</Table.Cell>
+              <Table.Cell>{user.display_name}</Table.Cell>
+            </Table.Row>
+          ))}
+        </Table.Body>
+      </Table>
+*/
 
 const Users = (): JSX.Element => {
   const { user } = useContext(AppContext)
@@ -26,14 +60,15 @@ const Users = (): JSX.Element => {
   const [isDeleting, setDeleting] = useState(false)
   const [isImporting, setImporting] = useState(false)
   const [error, setError] = useState<string>()
-
-  const [isMounted, setMounted] = useState(true)
   const [{ column, direction }, setSortConfig] = useState<SortConfig>({
     column: 'username',
     direction: 'ascending'
   })
 
-  const sort = (newColumn: SortKey, users_list: UserItem[] = users) => {
+  const sort = (maybeColumn: string, users_list: UserItem[] = users) => {
+    const newColumn: SortKey | undefined = sortKeys.find(value => value == maybeColumn)
+    if (!newColumn) return
+
     const newDirection = column === newColumn && direction === 'ascending' ? 'descending' : 'ascending'
     setSortConfig({ column: newColumn, direction: newDirection })
 
@@ -47,26 +82,27 @@ const Users = (): JSX.Element => {
 
   useEffect(() => {
     loadUsers()
-    return () => {
-      setMounted(false)
-    }
   }, [])
 
+  /*
+  @param page - page to query when paginating
+  updates the new page of users.
+  */
   const loadUsers = async () => {
     try {
+      //include page as query, so that API can fetch it.
       const response = await fetch(`${config.API_URL}/users`, {
         headers: {
-          Authorization: `Bearer ${localStorage.accessToken}`
+          Authorization: `Bearer ${localStorage.accessToken}`,
+          'Content-Type': 'application/json'
         }
       })
-      if (isMounted) {
-        const data = Object.values(await response.json()) as UserItem[]
-        sort(
-          'username',
-          data.map((user) => ({ ...user, checked: false }))
-        )
-        setLoading(false)
-      }
+      const data = Object.values(await response.json()) as UserItem[]
+      sort(
+        'username',
+        data.map((user) => ({ ...user, checked: false }))
+      )
+      setLoading(false)
     } catch (err) {
       setError(err as string)
     }
@@ -84,14 +120,15 @@ const Users = (): JSX.Element => {
     try {
       const response = await fetch('https://mu.acm.org/api/registered_teams')
       const teams = await response.json()
+      const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-+'
 
       let i = 1
 
       for (const team of teams) {
         if (team.division === 'eagle') continue
-        const password = await (
-          await fetch('https://www.passwordrandom.com/query?command=password&scheme=rrVNvNRRNN')
-        ).text()
+        let password = ''
+
+        for (let j = 0; j < 9; j++) password += possible.charAt(Math.floor(Math.random() * possible.length))
 
         const username = 'team' + i
 
@@ -113,8 +150,10 @@ const Users = (): JSX.Element => {
 
         if (res.ok) {
           passwords.push({
-            display_name: team.team_name,
             username,
+            display_name: team.team_name,
+            school: team.school_name,
+            division: team.division,
             password
           })
           const new_user = await res.json()
@@ -144,35 +183,45 @@ const Users = (): JSX.Element => {
   }
 
   const deleteSelected = async () => {
-    if (users.filter((u) => u.checked && u.uid == user?.uid).length > 0) {
-      alert('Cannot delete currently logged in user!')
-      return
+    if (window.confirm('are you sure you want to delete these users?')) {
+      //if the user selects ok, then the code below runs, otherwise nothing occurs
+      if (users.filter((u) => u.checked && u.uid == user?.uid).length > 0) {
+        alert('Cannot delete currently logged in user!')
+        return
+      }
+
+      setDeleting(true)
+
+      const usersToDelete = users.filter((user) => user.checked).map((user) => user.uid)
+      const response = await fetch(`${config.API_URL}/users`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.accessToken}`
+        },
+        body: JSON.stringify({ uid: usersToDelete })
+      })
+
+      if (response.ok) {
+        loadUsers()
+        const id = usersToDelete.join()
+        window.sendNotification({
+          id,
+          type: 'success',
+          header: 'Success!',
+          content: 'We deleted the users you selected!'
+        })
+      }
+
+      setDeleting(false)
     }
-
-    setDeleting(true)
-
-    const usersToDelete = users.filter((user) => user.checked).map((user) => user.uid)
-    const response = await fetch(`${config.API_URL}/users`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.accessToken}`
-      },
-      body: JSON.stringify({ uid: usersToDelete })
-    })
-
-    if (response.ok) {
-      setUsers(users.filter((user) => !usersToDelete.includes(user.uid)))
-    }
-
-    setDeleting(false)
   }
 
   if (isLoading) return <PageLoading />
   if (error) return <StatusMessage message={{ type: 'error', message: error }} />
 
   return (
-    <>
+    <Grid>
       <Helmet>
         <title>Abacus | Users</title>
       </Helmet>
@@ -191,61 +240,16 @@ const Users = (): JSX.Element => {
       ) : (
         <></>
       )}
-
-      <Table sortable>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell collapsing>
-              <input type="checkbox" onChange={checkAll} />
-            </Table.HeaderCell>
-            <Table.HeaderCell
-              sorted={column === 'username' ? direction : undefined}
-              onClick={() => sort('username')}
-              content="Username"
-            />
-            <Table.HeaderCell
-              sorted={column === 'role' ? direction : undefined}
-              onClick={() => sort('role')}
-              content="Role"
-            />
-            <Table.HeaderCell
-              sorted={column === 'division' ? direction : undefined}
-              onClick={() => sort('division')}
-              content="Division"
-            />
-            <Table.HeaderCell
-              sorted={column === 'school' ? direction : undefined}
-              onClick={() => sort('school')}
-              content="School"
-            />
-            <Table.HeaderCell
-              sorted={column === 'display_name' ? direction : undefined}
-              onClick={() => sort('display_name')}
-              content="Display Name"
-            />
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {users.map((user: UserItem) => (
-            <Table.Row key={user.uid} uuid={`${user.uid}`}>
-              <Table.Cell>
-                <input type="checkbox" checked={user.checked} id={user.uid} onChange={handleChange} />
-              </Table.Cell>
-              <Table.Cell className="space-between">
-                <Link to={`/admin/users/${user.uid}`}>{user.username}</Link>
-                {user.disabled && <Label color="red" content="Disabled" />}
-              </Table.Cell>
-              <Table.Cell>{user.role}</Table.Cell>
-              <Table.Cell>
-                <DivisionLabel division={user.division} />
-              </Table.Cell>
-              <Table.Cell>{user.school}</Table.Cell>
-              <Table.Cell>{user.display_name}</Table.Cell>
-            </Table.Row>
-          ))}
-        </Table.Body>
-      </Table>
-    </>
+      <CustomTable
+        id={'uid'}
+        header={['username', 'role', 'division', 'school', 'display_name']}
+        body={users}
+        onCheckItem={handleChange}
+        sort={{ column, direction }}
+        onClickHeaderItem={(item: string) => sort(item)}
+        onCheckAll={checkAll}
+      />
+    </Grid>
   )
 }
 

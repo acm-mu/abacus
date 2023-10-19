@@ -1,8 +1,8 @@
 import { Clarification, User } from 'abacus'
 import { Request, Response } from 'express'
 import { matchedData, ParamSchema, validationResult } from 'express-validator'
-import { transpose } from '../../utils'
 import { contest } from '../../abacus'
+import { transpose } from '../../utils'
 
 export const schema: Record<string, ParamSchema> = {
   cid: {
@@ -110,17 +110,19 @@ const hasAccessTo = ({ type, division, uid }: Clarification, user?: User) => {
  *         description: Could not authenticate user.
  */
 export const getClarifications = async (req: Request, res: Response): Promise<void> => {
+  const page = req.query.page
+  //page comes in as string due to being a query
+  const newPage = page ? parseInt(page as string) : 0
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })
     return
   }
-
   const query = matchedData(req)
   const users = transpose(await contest.get_users(), 'uid') as Record<string, User>
 
   try {
-    let clarifications = await contest.get_clarifications()
+    let clarifications = await contest.get_clarifications({}, newPage)
     if (clarifications.length == 0) {
       res.sendStatus(404)
       return

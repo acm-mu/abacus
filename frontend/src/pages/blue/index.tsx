@@ -1,5 +1,5 @@
 import React from 'react'
-import { Switch, Route } from 'react-router-dom'
+import { Route, Routes, Outlet } from 'react-router-dom'
 import { Container } from 'semantic-ui-react'
 import { NotFound } from 'components'
 import BlueNavigation from './BlueNavigation'
@@ -14,25 +14,27 @@ import Clarifications from '../Clarifications'
 import Practice from './practice'
 import Rules from './Rules'
 
-const Blue = (): JSX.Element => (
+const Blue = (): React.JSX.Element => (
   <>
     <BlueNavigation />
     <Container text className="main">
-      <Switch>
-        <Route exact path="/blue/" component={Home} />
-        <Route path="/blue/problem/" component={Problem} />
-        <Route path="/blue/problems/:pid/submit" component={Submit} />
-        <Route path="/blue/problems/:pid" component={Problem} />
-        <Route path="/blue/problems" component={Problems} />
-        <Route path="/blue/standings" component={Standings} />
-        <Route path="/blue/submissions/:sid" component={Submission} />
-        <Route path="/blue/submissions" component={Submissions} />
-        <Route path="/blue/clarifications/:cid" component={Clarifications} />
-        <Route path="/blue/clarifications" component={Clarifications} />
-        <Route path="/blue/practice" component={Practice} />
-        <Route path="/blue/rules" component={Rules} />
-        <Route component={NotFound} />
-      </Switch>
+      <Routes>
+        <Route path="problems" element={<Outlet />}>
+          <Route path=":pid/submit" element={<Submit />} />
+          <Route path=":pid" element={<Problem />} />
+          <Route path="" element={<Problems />} />
+        </Route>
+        <Route path="problem" element={<Problem />} />
+        <Route path="standings" element={<Standings />} />
+        <Route path="submissions/:sid" element={<Submission />} />
+        <Route path="submissions" element={<Submissions />} />
+        <Route path="clarifications/:cid" element={<Clarifications />} />
+        <Route path="clarifications" element={<Clarifications />} />
+        <Route path="practice" element={<Practice />} />
+        <Route path="rules" element={<Rules />} />
+        <Route path="" element={<Home />} />
+        <Route element={<NotFound />} />
+      </Routes>
     </Container>
   </>
 )

@@ -123,7 +123,7 @@ const Help = (): JSX.Element => {
           <Accordion.Content active={activeIndex === 3}>
             <p>
               We are planning on opening access for students to get familiar with Abacus{' '}
-              <b>one week before the competition (April 8, 2021)</b>. During this week, they will be able to submit a
+              <b>one week before the competition (April 13, 2022)</b>. During this week, they will be able to submit a
               solution to a practice problem, see how feedback works, and much more.
             </p>
             <p>
@@ -160,7 +160,7 @@ const Help = (): JSX.Element => {
 
         <br />
         <p>
-          Have more questions that are not on this page? <a href="mailto:acm-eboard@mscs.mu.edu">Let us know!</a>
+          Have more questions that are not on this page? <a href="mailto:acm@marquette.edu">Let us know!</a>
         </p>
       </Block>
     </>
