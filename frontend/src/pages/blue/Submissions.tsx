@@ -5,10 +5,12 @@ import { Link } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
 import { Block, Countdown, PageLoading, Unauthorized } from 'components'
 import { AppContext } from 'context'
-import { Helmet } from 'react-helmet'
 import config from 'environment'
+import { usePageTitle } from 'hooks'
 
-const Submissions = (): JSX.Element => {
+const Submissions = (): React.JSX.Element => {
+  usePageTitle("Abacus | Blue Submissions")
+
   const { user } = useContext(AppContext)
   const [isMounted, setMounted] = useState(true)
   const [isLoading, setLoading] = useState(true)
@@ -40,9 +42,6 @@ const Submissions = (): JSX.Element => {
 
   return (
     <>
-      <Helmet>
-        <title>Abacus | Blue Submissions</title>
-      </Helmet>
       <Countdown />
       <Block transparent size="xs-12">
         <Table>

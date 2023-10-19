@@ -7,7 +7,7 @@ import { statuses, userHome } from 'utils'
 import { AppContext } from 'context'
 import SubmissionContext from './SubmissionContext'
 
-const SubmissionDetail = (): JSX.Element => {
+const SubmissionDetail = (): React.JSX.Element => {
   const { user, settings } = useContext(AppContext)
   const { rerunning, submission, setSubmission } = useContext(SubmissionContext)
 

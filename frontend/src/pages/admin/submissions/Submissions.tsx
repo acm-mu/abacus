@@ -3,12 +3,12 @@ import { Block, DivisionLabel, PageLoading } from 'components'
 import { SocketContext } from 'context'
 import config from 'environment'
 import React, { ChangeEvent, useContext, useEffect, useMemo, useState } from 'react'
-import { Helmet } from 'react-helmet'
 import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
 import { Button, Checkbox, Grid, Label, Menu, MenuItemProps, Table } from 'semantic-ui-react'
 import { compare } from 'utils'
 import { saveAs } from 'file-saver'
+import { usePageTitle } from 'hooks'
 
 interface SubmissionItem extends Submission {
   checked: boolean
@@ -19,7 +19,9 @@ type SortConfig = {
   direction: 'ascending' | 'descending'
 }
 
-const Submissions = (): JSX.Element => {
+const Submissions = (): React.JSX.Element => {
+  usePageTitle("Abacus | Admin Submissions")
+
   const socket = useContext(SocketContext)
   const [isLoading, setLoading] = useState(true)
   const [submissions, setSubmissions] = useState<SubmissionItem[]>([])
@@ -128,9 +130,6 @@ const Submissions = (): JSX.Element => {
 
   return (
     <Grid>
-      <Helmet>
-        <title>Abacus | Admin Submissions</title>
-      </Helmet>
       <Button content="Download Submissions" onClick={downloadSubmissions} />
       {submissions.filter((submission) => submission.checked && submission.division == activeDivision).length ? (
         <Button

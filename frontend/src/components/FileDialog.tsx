@@ -4,10 +4,10 @@ import './FileDialog.scss'
 type FileDialogProps = {
   file: File | undefined
   onChange: (event: ChangeEvent<HTMLInputElement>) => void
-  control: (file: File | undefined) => JSX.Element
+  control: (file: File | undefined) => React.JSX.Element
 }
 
-const FileDialog = (props: FileDialogProps): JSX.Element => {
+const FileDialog = (props: FileDialogProps): React.JSX.Element => {
   return (
     <div id="file_dialog">
       <div className="message">{props.control(props.file)}</div>

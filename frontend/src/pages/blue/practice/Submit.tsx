@@ -1,11 +1,11 @@
 import { Problem, Submission } from 'abacus'
 import { Block, Countdown, FileDialog, NotFound, PageLoading } from 'components'
 import React, { ChangeEvent, useEffect, useState } from 'react'
-import { Helmet } from 'react-helmet'
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import { Breadcrumb, Button, Form } from 'semantic-ui-react'
 import { Language, languages } from 'utils'
 import { v4 as uuidv4 } from 'uuid'
+import { usePageTitle } from 'hooks'
 
 const SubmitPractice = (): React.JSX.Element => {
   const { id } = useParams<{ id: string }>()
@@ -17,6 +17,8 @@ const SubmitPractice = (): React.JSX.Element => {
   const [language, setLanguage] = useState<Language>()
   const [file, setFile] = useState<File>()
   const navigate = useNavigate()
+
+  usePageTitle(`Abacus | Submit Practice ${problem?.id ?? ""}`)
 
   useEffect(() => {
     fetch(`/problems/${id}.json`)
@@ -138,9 +140,6 @@ const SubmitPractice = (): React.JSX.Element => {
 
   return (
     <>
-      <Helmet>
-        <title>Abacus | Submit Practice {problem.id}</title>
-      </Helmet>
       <Countdown />
       <Block transparent size="xs-12">
         <Breadcrumb>

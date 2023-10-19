@@ -14,7 +14,7 @@ interface StatusMessageProps {
   style?: Record<string, string | number>
 }
 
-const StatusMessage = ({ message: msg, style, onDismiss }: StatusMessageProps): JSX.Element => {
+const StatusMessage = ({ message: msg, style, onDismiss }: StatusMessageProps): React.JSX.Element => {
   if (!msg) return <></>
   const { type, message, icon, header } = msg
 

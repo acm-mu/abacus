@@ -3,7 +3,7 @@ import { Loader, Menu, MenuItemProps } from 'semantic-ui-react'
 import { capitalize, format_text } from 'utils'
 import SubmissionContext from './SubmissionContext'
 
-const SubmissionTestOutput = (): JSX.Element => {
+const SubmissionTestOutput = (): React.JSX.Element => {
   const { submission, rerunning } = useContext(SubmissionContext)
 
   const [activeTestItem, setActiveTestItem] = useState(0)

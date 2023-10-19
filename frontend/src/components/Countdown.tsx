@@ -6,7 +6,7 @@ import { AppContext } from 'context'
 
 import './Countdown.scss'
 
-const Countdown = (): JSX.Element => {
+const Countdown = (): React.JSX.Element => {
   const { settings } = useContext(AppContext)
   const [time, setTime] = useState<Date>(new Date())
   const [isMounted, setMounted] = useState(true)

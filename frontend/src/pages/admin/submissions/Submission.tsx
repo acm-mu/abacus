@@ -3,12 +3,14 @@ import React, { useState, useEffect, useContext } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { NotFound, PageLoading, SubmissionView } from 'components'
 import config from 'environment'
-import { Helmet } from 'react-helmet'
 import { Button, Grid } from 'semantic-ui-react'
 import { AppContext } from 'context'
 import { saveAs } from 'file-saver'
+import { usePageTitle } from 'hooks'
 
 const Submission = (): React.JSX.Element => {
+  usePageTitle("Abacus | Admin Submission")
+
   const { sid } = useParams<{ sid: string }>()
   const [submission, setSubmission] = useState<SubmissionType>()
   const [isLoading, setLoading] = useState(true)
@@ -176,10 +178,6 @@ const Submission = (): React.JSX.Element => {
 
   return (
     <Grid>
-      <Helmet>
-        <title>Abacus | Admin Submission</title>
-      </Helmet>
-
       <Button content="Back" icon="arrow left" labelPosition="left" onClick={() => navigate(-1)} />
       <Button
         disabled={isRerunning}

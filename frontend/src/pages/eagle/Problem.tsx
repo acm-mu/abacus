@@ -1,13 +1,15 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Block, Countdown, PageLoading, Unauthorized } from 'components'
-import { Helmet } from 'react-helmet'
 import { AppContext } from 'context'
 import { Divider } from 'semantic-ui-react'
 import { Problem } from 'abacus'
 import config from 'environment'
 import MDEditor from '@uiw/react-md-editor'
+import { usePageTitle } from 'hooks'
 
-const Home = (): JSX.Element => {
+const Home = (): React.JSX.Element => {
+  usePageTitle("Abacus | Eagle Problem")
+
   const { user, settings } = useContext(AppContext)
   const [isLoading, setLoading] = useState(true)
   const [problem, setProblem] = useState<Problem>()
@@ -37,18 +39,11 @@ const Home = (): JSX.Element => {
     setLoading(false)
   }
 
-  const helmet = (
-    <Helmet>
-      <title>Abacus | Eagle Problem</title>
-    </Helmet>
-  )
-
   if (isLoading) return <PageLoading />
   if (user?.division != 'eagle' && user?.role != 'admin') return <Unauthorized />
 
   return (
     <>
-      {helmet}
       <Countdown />
       <Block size="xs-12" className="problem">
         {!settings || new Date() < settings.start_date ? (

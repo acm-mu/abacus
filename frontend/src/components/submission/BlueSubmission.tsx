@@ -8,7 +8,7 @@ import SubmissionTestOutput from './SubmissionTestOutput'
 import './Submission.scss'
 import { AppContext } from 'context'
 
-const BlueSubmission = (): JSX.Element => {
+const BlueSubmission = (): React.JSX.Element => {
   const { user } = useContext(AppContext)
   const { submission } = useContext(SubmissionContext)
 

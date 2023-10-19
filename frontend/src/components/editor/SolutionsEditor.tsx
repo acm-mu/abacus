@@ -5,7 +5,7 @@ import { Input, InputOnChangeData, Menu, MenuItemProps } from 'semantic-ui-react
 import { syntax_lang } from 'utils'
 import { ProblemStateProps } from '.'
 
-const SolutionsEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Element => {
+const SolutionsEditor = ({ problem, setProblem }: ProblemStateProps): React.JSX.Element => {
   const [activeSolution, setActiveSolution] = useState('python')
 
   if (!problem) return <></>

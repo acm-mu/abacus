@@ -5,11 +5,11 @@ import { divisions, roles } from 'utils'
 import { StatusMessage } from 'components'
 
 type CreateUserProps = {
-  trigger: JSX.Element
+  trigger: React.JSX.Element
   callback?: (res: Response) => void
 }
 
-const CreateUser = ({ trigger, callback }: CreateUserProps): JSX.Element => {
+const CreateUser = ({ trigger, callback }: CreateUserProps): React.JSX.Element => {
   const empty = {
     username: '',
     role: '',

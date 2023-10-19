@@ -2,11 +2,11 @@ import { Clarification } from 'abacus'
 import { Block, ClarificationModal, DivisionLabel, PageLoading } from 'components'
 import config from 'environment'
 import React, { ChangeEvent, useEffect, useState } from 'react'
-import { Helmet } from 'react-helmet'
 import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
 import { Button, Checkbox, CheckboxProps, Label, Table } from 'semantic-ui-react'
 import { compare } from 'utils'
+import { usePageTitle } from 'hooks'
 
 interface ClarificationItem extends Clarification {
   checked: boolean
@@ -18,7 +18,9 @@ type SortConfig = {
   direction: 'ascending' | 'descending'
 }
 
-const Clarifications = (): JSX.Element => {
+const Clarifications = (): React.JSX.Element => {
+  usePageTitle("Abacus | Admin Clarifications")
+
   const [isLoading, setLoading] = useState(true)
   const [isDeleting, setDeleting] = useState(false)
   const [clarifications, setClarifications] = useState<ClarificationItem[]>([])
@@ -99,9 +101,6 @@ const Clarifications = (): JSX.Element => {
 
   return (
     <>
-      <Helmet>
-        <title>Abacus | Admin Clarifications</title>
-      </Helmet>
       <ClarificationModal trigger={<Button content="Create Clarification" />} />
       {clarifications.filter((clarification) => clarification.checked).length ? (
         <Button

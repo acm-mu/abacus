@@ -3,12 +3,14 @@ import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { AppContext, SocketContext } from 'context'
 import { Block, PageLoading } from 'components'
 import config from 'environment'
-import { Helmet } from 'react-helmet'
 import moment from 'moment'
 import { Table } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
+import { usePageTitle } from 'hooks'
 
-const Home = (): JSX.Element => {
+const Home = (): React.JSX.Element => {
+  usePageTitle("Abacus | Admin")
+
   const socket = useContext(SocketContext)
   const [isLoading, setLoading] = useState(true)
   const [submissions, setSubmissions] = useState<Submission[]>()
@@ -100,9 +102,6 @@ const Home = (): JSX.Element => {
 
   return (
     <>
-      <Helmet>
-        <title>Abacus | Admin</title>
-      </Helmet>
       <Block size="xs-12">
         <h1>Admin Dashboard</h1>
       </Block>

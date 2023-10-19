@@ -6,22 +6,18 @@ import { Block, Countdown, PageLoading, StatusMessage } from 'components'
 import config from 'environment'
 import '../Standings.scss'
 import { AppContext, SocketContext } from 'context'
-import { Helmet } from 'react-helmet'
 import { isThirtyMinutesBefore } from 'utils'
+import { usePageTitle } from 'hooks'
 
-const Standings = (): JSX.Element => {
+const Standings = (): React.JSX.Element => {
+  usePageTitle("Abacus | Blue Standings")
+
   const { user, settings } = useContext(AppContext)
   const socket = useContext(SocketContext)
   const [problems, setProblems] = useState<Problem[]>()
   const [standings, setStandings] = useState<StandingsUser[]>()
   const [isLoading, setLoading] = useState(true)
   const [isMounted, setMounted] = useState(true)
-
-  const helmet = (
-    <Helmet>
-      <title>Abacus | Blue Standings</title>
-    </Helmet>
-  )
 
   const loadData = async () => {
     const response = await fetch(`${config.API_URL}/standings?division=blue`)
@@ -52,7 +48,6 @@ const Standings = (): JSX.Element => {
   if (!settings || new Date() < settings.practice_start_date)
     return (
       <>
-        {helmet}
         <Countdown />
         <Block size="xs-12">
           <h1>Competition not yet started!</h1>
@@ -64,17 +59,11 @@ const Standings = (): JSX.Element => {
   if (isLoading) return <PageLoading />
 
   if (!standings || !problems)
-    return (
-      <>
-        {helmet}
-        <StatusMessage message={{ type: 'error', message: 'An error has occurred! Please contact support' }} />
-      </>
-    )
+    return <StatusMessage message={{ type: 'error', message: 'An error has occurred! Please contact support' }} />
 
-    if (settings && ((!user || user && user.role === 'team') && isThirtyMinutesBefore(settings.end_date)))
+  if (settings && ((!user || user && user.role === 'team') && isThirtyMinutesBefore(settings.end_date)))
     return (
       <>
-        {helmet}
         <Countdown />
         <Block size="xs-12">
           <h1>Competition almost finished!</h1>
@@ -88,7 +77,6 @@ const Standings = (): JSX.Element => {
 
   return (
     <>
-      {helmet}
       <Countdown />
       <Block size="xs-12" transparent>
         <div className="table-legend">

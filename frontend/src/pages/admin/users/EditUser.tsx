@@ -5,10 +5,12 @@ import { Button, Checkbox, CheckboxProps, Form, Input, Label, Menu, Select } fro
 import config from 'environment'
 import { Block, NotFound, PageLoading } from 'components'
 import { divisions, roles } from 'utils'
-import { Helmet } from 'react-helmet'
 import StatusMessage, { StatusMessageType } from 'components/StatusMessage'
+import { usePageTitle } from 'hooks'
 
 const EditUser = (): React.JSX.Element => {
+  usePageTitle("Abacus | Edit User")
+
   const [user, setUser] = useState<User>()
   const [formUser, setFormUser] = useState<User>({
     uid: '',
@@ -102,9 +104,6 @@ const EditUser = (): React.JSX.Element => {
 
   return (
     <>
-      <Helmet>
-        <title>Abacus | Edit User</title>
-      </Helmet>
       <h1 className="justify-center">
         {user.display_name}
         {user.disabled && <Label color="red">Disabled</Label>}

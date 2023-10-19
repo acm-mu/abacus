@@ -32,7 +32,7 @@ function timeRemaining(endtime: Date) {
   }
 }
 
-const FlipClock = (props: { count_to: Date }): JSX.Element => {
+const FlipClock = (props: { count_to: Date }): React.JSX.Element => {
   const [flip, setFlip] = useState('')
 
   return (

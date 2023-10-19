@@ -4,7 +4,7 @@ import { Table } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import config from 'environment'
 import { Block, PageLoading } from 'components'
-import { Helmet } from 'react-helmet'
+import { usePageTitle } from 'hooks'
 
 type SortKey = 'id' | 'name'
 type SortConfig = {
@@ -12,7 +12,9 @@ type SortConfig = {
   direction: 'ascending' | 'descending'
 }
 
-const Problems = (): JSX.Element => {
+const Problems = (): React.JSX.Element => {
+  usePageTitle("Abacus | Proctor Problems")
+
   const [isLoading, setLoading] = useState(true)
   const [problems, setProblems] = useState<Problem[]>([])
   const [isMounted, setMounted] = useState(true)
@@ -64,9 +66,6 @@ const Problems = (): JSX.Element => {
 
   return (
     <>
-      <Helmet>
-        <title>Abacus | Proctor Problems</title>
-      </Helmet>
       <Block size="xs-12" transparent>
         <Table sortable>
           <Table.Header>

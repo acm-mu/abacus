@@ -37,7 +37,7 @@ const CustomTable: FC<CustomTableProps> = ({
   onClickHeaderItem,
   onCheckAll,
   onCheckItem
-}): JSX.Element => {
+}): React.JSX.Element => {
   const renderRow = (cellid: string | undefined, property: HeaderType, items: UserItem) => {
     if (property === 'division') {
       return (

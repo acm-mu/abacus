@@ -3,11 +3,13 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { StatusMessage } from 'components'
 import config from 'environment'
-import { Helmet } from 'react-helmet'
 import { ProblemEditor } from 'components/editor'
 import { StatusMessageType } from 'components/StatusMessage'
+import { usePageTitle } from 'hooks'
 
 const NewProblem = (): React.JSX.Element => {
+  usePageTitle("Abacus | Admin New Problem")
+
   const navigate = useNavigate()
   const [message, setMessage] = useState<StatusMessageType>()
 
@@ -30,13 +32,8 @@ const NewProblem = (): React.JSX.Element => {
 
   return (
     <>
-      <Helmet>
-        {' '}
-        <title>Abacus | Admin New Problem</title>
-      </Helmet>
       <h1>New Problem</h1>
       <StatusMessage message={message} onDismiss={() => setMessage(undefined)} />
-
       <ProblemEditor handleSubmit={handleSubmit} />
     </>
   )

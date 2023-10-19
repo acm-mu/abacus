@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Table, Loader, Message, Icon } from 'semantic-ui-react'
 import { Countdown, Block, DivisionLabel } from 'components'
-import { Helmet } from 'react-helmet'
 import { Link } from 'react-router-dom'
 
 type TeamType = {
@@ -12,7 +11,7 @@ type TeamType = {
   num_of_students: number
 }
 
-const Home = (): JSX.Element => {
+const Home = (): React.JSX.Element => {
   const [isLoading, setLoading] = useState(true)
   const [teams, setTeams] = useState<TeamType[]>([])
   const [isMounted, setMounted] = useState(true)
@@ -39,9 +38,6 @@ const Home = (): JSX.Element => {
 
   return (
     <>
-      <Helmet>
-        <title>Abacus</title>
-      </Helmet>
       <Message icon color='green'>
         <Icon name='trophy' />
         <Message.Content>

@@ -1,14 +1,11 @@
 import React from 'react'
 import notfound from 'assets/404.png'
-import { Helmet } from 'react-helmet'
+import { usePageTitle } from 'hooks'
 
-const NotFound = (): JSX.Element => (
-  <>
-    <Helmet>
-      <title>Abacus | Not Found</title>
-    </Helmet>
-    <img src={notfound} width="100%" height="auto" alt="404 Not Found" />
-  </>
-)
+const NotFound = (): React.JSX.Element => {
+  usePageTitle("Abacus | Not Found")
+
+  return <img src={notfound} width="100%" height="auto" alt="404 Not Found"/>
+}
 
 export default NotFound

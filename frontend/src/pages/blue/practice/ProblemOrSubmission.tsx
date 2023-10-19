@@ -5,8 +5,11 @@ import { useParams } from 'react-router-dom'
 import { Loader } from 'semantic-ui-react'
 import PracticeProblem from './Problem'
 import PracticeSubmission from './Submission'
+import { usePageTitle } from 'hooks'
 
 const ProblemOrSubmission = (): React.JSX.Element => {
+  usePageTitle("Abacus | Practice")
+
   const [isMounted, setMounted] = useState(true)
   const [isLoading, setLoading] = useState(true)
   const [problems, setProblems] = useState<Problem[]>([])
@@ -33,12 +36,7 @@ const ProblemOrSubmission = (): React.JSX.Element => {
   const subsForId = (id: string) => Object.values(submissions).filter((submission) => submission.pid == id)
 
   if (isLoading) {
-    return (
-      <>
-        <title>Abacus | Practice</title>
-        <Loader active inline="centered" content="Loading..." />
-      </>
-    )
+    return <Loader active inline="centered" content="Loading..." />
   }
 
   if (id) {

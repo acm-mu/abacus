@@ -3,7 +3,7 @@ import React, { ChangeEvent } from 'react'
 import { Form, InputOnChangeData } from 'semantic-ui-react'
 import { ProblemStateProps } from '.'
 
-const TemplateEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Element => {
+const TemplateEditor = ({ problem, setProblem }: ProblemStateProps): React.JSX.Element => {
   if (!problem || !setProblem) return <></>
 
   const handleChange = (_event: ChangeEvent<HTMLInputElement>, { value }: InputOnChangeData) =>

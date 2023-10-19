@@ -5,9 +5,11 @@ import { Label, Table } from 'semantic-ui-react'
 import config from 'environment'
 import { Submission } from 'abacus'
 import { Link } from 'react-router-dom'
-import { Helmet } from 'react-helmet'
+import { usePageTitle } from 'hooks'
 
-const Home = (): JSX.Element => {
+const Home = (): React.JSX.Element => {
+  usePageTitle("Abacus | Proctor Dashboard")
+
   const { user } = useContext(AppContext)
   const socket = useContext(SocketContext)
   const [isLoading, setLoading] = useState(true)
@@ -47,10 +49,6 @@ const Home = (): JSX.Element => {
 
   return (
     <>
-      <Helmet>
-        <title>Abacus | Proctor Dashboard</title>
-      </Helmet>
-
       <Block transparent size="xs-6">
         <h1>Unviewed Submissions</h1>
         <Table>

@@ -4,7 +4,7 @@ import { Table } from 'semantic-ui-react'
 import { syntax_lang } from 'utils'
 import SubmissionContext from './SubmissionContext'
 
-const SubmissionSource = (): JSX.Element => {
+const SubmissionSource = (): React.JSX.Element => {
   const { submission } = useContext(SubmissionContext)
 
   if (!submission) return <></>
