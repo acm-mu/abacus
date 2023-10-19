@@ -1,6 +1,6 @@
 import React from 'react'
 import { User } from 'abacus'
-import { createHash } from 'crypto'
+import moment from 'moment'
 
 // Convert's stored language values in to syntax highlighter friendly values
 export const syntax_lang = (language: string): string => {
@@ -53,7 +53,7 @@ export interface Language {
 }
 
 export const languages: Language[] = [
-  { key: 'python3', value: 'Python 3', text: 'Python 3', file_extension: '.py' },
+  { key: 'python', value: 'Python 3', text: 'Python 3', file_extension: '.py' },
   { key: 'java', value: 'Java', text: 'Java', file_extension: '.java' }
 ]
 
@@ -74,12 +74,11 @@ export const compare = (o1: string | number, o2: string | number): number => {
   return 0
 }
 
-export const timezoneOffset = (): number => new Date().getTimezoneOffset() * 60 * 1000
-
-export const toLocal = (date: number): Date => new Date(date * 1000 - timezoneOffset())
-
-export const toLocalDateString = (date: number): string => toLocal(date).toISOString().substring(0, 10)
-
-export const toLocalTimeString = (date: number): string => toLocal(date).toISOString().substring(11, 16)
-
-export const sha256 = (str: string): string => createHash('sha256').update(str).digest('hex')
+export const isThirtyMinutesBefore = (time: Date): boolean => {
+  const newDate = new Date()
+  const beginningTime = moment(newDate)
+  const endTime = moment(time)
+  const diff = endTime.diff(beginningTime, 'minutes')
+  console.log('diff', diff)
+  return diff <= 30 && diff > 0
+}

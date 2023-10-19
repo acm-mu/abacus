@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { Switch, Route } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import { Container } from 'semantic-ui-react'
 
 import Home from './Home'
@@ -20,8 +20,9 @@ import { AppContext } from 'context'
 import DefaultNavigation from 'pages/DefaultNavigation'
 import Clarifications from './Clarifications'
 import ClarificationPage from './Clarification'
+import { Outlet } from 'react-router-dom'
 
-const Admin = (): JSX.Element => {
+const Admin = (): React.JSX.Element => {
   const { user } = useContext(AppContext)
 
   if (!user)
@@ -39,22 +40,30 @@ const Admin = (): JSX.Element => {
     <>
       <AdminNavigation />
       <Container text className="main">
-        <Switch>
-          <Route exact path="/admin/" component={Home} />
-          <Route path="/admin/settings" component={Settings} />
-          <Route path="/admin/problems/new" component={NewProblem} />
-          <Route path="/admin/problems/upload" component={UploadProblems} />
-          <Route path="/admin/problems/:pid" component={EditProblem} />
-          <Route path="/admin/problems" component={Problems} />
-          <Route path="/admin/users/upload" component={UploadUsers} />
-          <Route path="/admin/users/:uid" component={EditUser} />
-          <Route path="/admin/users" component={Users} />
-          <Route path="/admin/submissions/:sid" component={Submission} />
-          <Route path="/admin/submissions" component={Submissions} />
-          <Route path="/admin/clarifications/:cid" component={ClarificationPage} />
-          <Route path="/admin/clarifications" component={Clarifications} />
-          <Route component={NotFound} />
-        </Switch>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="settings" element={<Settings />} />
+          <Route path="problems" element={<Outlet />}>
+            <Route path="new" element={<NewProblem />} />
+            <Route path="upload" element={<UploadProblems />} />
+            <Route path=":pid" element={<EditProblem />} />
+            <Route path="" element={<Problems />} />
+          </Route>
+          <Route path="users" element={<Outlet />}>
+            <Route path="upload" element={<UploadUsers />} />
+            <Route path=":uid" element={<EditUser />} />
+            <Route path="" element={<Users />} />
+          </Route>
+          <Route path="submissions" element={<Outlet />} >
+            <Route path=":sid" element={<Submission />} />
+            <Route path="" element={<Submissions />} />
+          </Route>
+          <Route path="clarifications" element={<Outlet />}>
+            <Route path=":cid" element={<ClarificationPage />} />
+            <Route path="" element={<Clarifications />} />
+          </Route>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
       </Container>
     </>
   )

@@ -1,12 +1,12 @@
 import { Problem, Submission } from 'abacus'
 import { NotFound } from 'components'
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router'
+import { useParams } from 'react-router-dom'
 import { Loader } from 'semantic-ui-react'
 import PracticeProblem from './Problem'
 import PracticeSubmission from './Submission'
 
-const ProblemOrSubmission = (): JSX.Element => {
+const ProblemOrSubmission = (): React.JSX.Element => {
   const [isMounted, setMounted] = useState(true)
   const [isLoading, setLoading] = useState(true)
   const [problems, setProblems] = useState<Problem[]>([])
@@ -41,8 +41,10 @@ const ProblemOrSubmission = (): JSX.Element => {
     )
   }
 
-  if (id in submissions) return <PracticeSubmission submission={submissions[id]} />
-  if (id in problems) return <PracticeProblem submissions={subsForId(id)} />
+  if (id) {
+    if (id in submissions) return <PracticeSubmission submission={submissions[id]} />
+    if (id in problems) return <PracticeProblem submissions={subsForId(id)} />
+  }
 
   return <NotFound />
 }
