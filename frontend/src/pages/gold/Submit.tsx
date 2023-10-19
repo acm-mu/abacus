@@ -4,18 +4,17 @@ import { Form, DropdownProps, InputOnChangeData, Breadcrumb } from 'semantic-ui-
 import { Block, PageLoading, ScratchViewer, StatusMessage, Unauthorized } from 'components'
 import config from 'environment'
 import { Helmet } from 'react-helmet'
-import { useHistory, useParams } from 'react-router'
+import { useNavigate, useParams, Link } from 'react-router-dom'
 import MDEditor from '@uiw/react-md-editor'
-import { Link } from 'react-router-dom'
 import { AppContext } from 'context'
 
-const Submit = (): JSX.Element => {
+const Submit = (): React.JSX.Element => {
   const { pid: problem_id } = useParams<{ pid: string }>()
   const [problems, setProblems] = useState<{ [key: string]: Problem }>({})
   const [problem, setProblem] = useState<Problem>()
 
   const { project_id: default_project_id } = useParams<{ project_id: string }>()
-  const [project_url, setProjectUrl] = useState<string>(`https://scratch.mit.edu/projects/${default_project_id || ''}`)
+  const [project_url, setProjectUrl] = useState<string>(`https://scratch.mit.edu/projects/${default_project_id ?? ''}`)
   const [description, setDescription] = useState<string>()
 
   const [isLoading, setLoading] = useState(true)
@@ -26,7 +25,7 @@ const Submit = (): JSX.Element => {
 
   const { user } = useContext(AppContext)
 
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const project_id = useMemo(() => {
     const match = project_url.match(/https:\/\/scratch\.mit\.edu\/projects\/(\d*)/)
@@ -61,7 +60,10 @@ const Submit = (): JSX.Element => {
     setSubmitting(true)
     const formData = new FormData()
     formData.set('pid', problem.pid)
+    console.log('project_id', project_id)
     formData.set('project_id', project_id)
+    formData.set('language', 'scratch')
+    formData.set('division', 'gold')
     if (description) formData.set('design_document', description)
 
     const response = await fetch(`${config.API_URL}/submissions`, {
@@ -82,7 +84,7 @@ const Submit = (): JSX.Element => {
     const body: Submission = await response.json()
 
     setSubmitting(false)
-    history.push(`/gold/submissions/${body.sid}`)
+    navigate(`/gold/submissions/${body.sid}`)
   }
 
   const handleProblemChange = (event: SyntheticEvent<HTMLElement, Event>, { value }: DropdownProps) =>
@@ -149,7 +151,7 @@ const Submit = (): JSX.Element => {
       {problem?.design_document == true ? (
         <Block transparent size="xs-12">
           <h2>Design Document</h2>
-          <MDEditor value={description || ''} onChange={(value) => setDescription(value || '')} height={500} />
+          <MDEditor value={description ?? ''} onChange={(value) => setDescription(value ?? '')} height={500} />
         </Block>
       ) : (
         <></>

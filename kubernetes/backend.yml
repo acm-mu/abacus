@@ -1,0 +1,71 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  selector:
+    matchLabels:
+      app: abacus
+      tier: backend
+      track: stable
+  template:
+    metadata:
+      labels:
+        app: abacus
+        tier: backend
+        track: stable
+    spec:
+      containers:
+        - name: backend
+          image: "ghcr.io/acm-mu/abacus/backend:latest"
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "500m"
+            limits:           
+               memory: "1Gi"
+               cpu: "500m"
+          ports:
+            - name: http
+              containerPort: 80
+          env:
+          - name: MONGO_HOST
+            value: "10.128.0.12"
+          - name: MONGO_USER
+            value: "username"
+          - name: MONGO_PASS
+            value: "password"
+          - name: MONGO_DBNAME
+            value: "abacus"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+spec:
+  selector:
+    app: abacus
+    tier: backend
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: http
+  type: ClusterIP
+---
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: backend-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1beta1
+    kind: Deployment
+    name: backend
+  minReplicas: 7
+  maxReplicas: 30
+  metrics:
+  - type: Resource
+    resource:
+      name: memory
+      targetAverageUtilization: 75

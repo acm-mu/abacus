@@ -31,7 +31,10 @@ const ScratchViewer = ({ project_id, content = <></> }: ScratchViewerProps): JSX
   useEffect(() => {
     fetch(`${config.API_URL}/scratch/project?project_id=${project_id}`)
       .then((res) => res.json())
-      .then((data) => setProject(data))
+      .then((data) => {
+        console.log('data', data)
+        setProject(data)
+      })
       .catch(() => setProject(undefined))
   }, [project_id])
 

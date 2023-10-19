@@ -1,4 +1,11 @@
+import { Clarification } from 'abacus'
+import { Block, PageLoading, Unauthorized } from 'components'
+import ClarificationModal from 'components/ClarificationModal'
+import { AppContext, SocketContext } from 'context'
 import React, { FormEvent, useContext, useEffect, useState } from 'react'
+import { Helmet } from 'react-helmet'
+import Moment from 'react-moment'
+import { useParams } from 'react-router-dom'
 import {
   Button,
   ButtonProps,
@@ -15,15 +22,8 @@ import {
   Popup,
   Segment
 } from 'semantic-ui-react'
-import { Clarification } from 'abacus'
 import config from '../environment'
-import Moment from 'react-moment'
 import './Clarifications.scss'
-import { Block, PageLoading, Unauthorized } from 'components'
-import { AppContext } from 'context'
-import { useParams } from 'react-router-dom'
-import { Helmet } from 'react-helmet'
-import ClarificationModal from 'components/ClarificationModal'
 
 const Clarifications = (): JSX.Element => {
   const { user } = useContext(AppContext)
@@ -32,28 +32,34 @@ const Clarifications = (): JSX.Element => {
   const { cid } = useParams<{ cid: string }>()
   const [activeItem, setActiveItem] = useState<string>(cid || '')
   const [showClosed, setShowClosed] = useState(false)
-
+  const socket = useContext(SocketContext)
   const helmet = (
     <Helmet>
       <title>Abacus | Clarifications</title>
     </Helmet>
   )
-
   const loadClarifications = async (): Promise<{ [key: string]: Clarification }> => {
     let clarifications = {}
-    const response = await fetch(`${config.API_URL}/clarifications`, {
-      headers: { Authorization: `Bearer ${localStorage.accessToken}` }
-    })
 
-    if (response.ok) {
-      clarifications = await response.json()
+    try {
+      const response = await fetch(`${config.API_URL}/clarifications`, {
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.accessToken}` }
+      })
+
+      if (response.ok) {
+        clarifications = await response.json()
+      }
+
+      setClarifications(clarifications)
+    } catch (e) {
+      console.error(e)
     }
 
-    setClarifications(clarifications)
     setLoading(false)
-
     return clarifications
   }
+
+  socket?.on('new_clarification', () => loadClarifications())
 
   useEffect(() => {
     loadClarifications()

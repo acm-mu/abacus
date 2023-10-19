@@ -9,14 +9,14 @@ const About = (): JSX.Element => (
     </Helmet>
 
     <Block size="xs-12">
-      <h1>About the Marquette ACM/UPE Programming Competition</h1>
+      <h1>About the Marquette ACM/ACM-W/UPE Programming Competition</h1>
     </Block>
     <Block size="xs-12">
       <h2>Overview</h2>
       <p>
-        The Wisconsin-Dairyland chapter of the CSTA, in conjunction with the Marquette University chapters of ACM and
-        UPE, welcomes high school students with Java, Python, or Scratch programming experience to participate in a
-        morning of computer science problem solving and/or storytelling. This Competition features three divisions:
+        Marquette University chapters of ACM, ACM-W, and UPE welcomes high school students with Java, Python, or Scratch
+        programming experience to participate in a morning of computer science problem solving and/or storytelling. This
+        Competition features three divisions:
       </p>
 
       <h2>Java/Python Division (Blue)</h2>
@@ -61,8 +61,8 @@ const About = (): JSX.Element => (
         working prototype. We are not expecting a flushed out UI, but a program of some sort that accomplishes their
         implementation/solution to the problem is what we are aiming for. At the end of the three hours, each team will
         present (5 – 10 minutes) their solution to a small board of faculty and/or student members. The board will ask a
-        few questions and ultimately vote on a winner. We will have a Google Meet call where students will present and
-        gain the feedback mentioned earlier.
+        few questions and ultimately vote on a winner. For in-person teams, we will have a room for teams to present in.
+        For virtual teams, we will have a Teams meeting where students will present.
       </p>
     </Block>
   </>

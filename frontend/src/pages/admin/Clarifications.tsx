@@ -1,13 +1,12 @@
-import React, { ChangeEvent, useEffect, useState } from 'react'
-import { Block, DivisionLabel, PageLoading } from 'components'
-import { Button, Checkbox, CheckboxProps, Label, Table } from 'semantic-ui-react'
-import config from 'environment'
 import { Clarification } from 'abacus'
-import { Link } from 'react-router-dom'
-import { compare } from 'utils'
-import Moment from 'react-moment'
+import { Block, ClarificationModal, DivisionLabel, PageLoading } from 'components'
+import config from 'environment'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet'
-import ClarificationModal from 'components/ClarificationModal'
+import Moment from 'react-moment'
+import { Link } from 'react-router-dom'
+import { Button, Checkbox, CheckboxProps, Label, Table } from 'semantic-ui-react'
+import { compare } from 'utils'
 
 interface ClarificationItem extends Clarification {
   checked: boolean
@@ -21,7 +20,6 @@ type SortConfig = {
 
 const Clarifications = (): JSX.Element => {
   const [isLoading, setLoading] = useState(true)
-  const [isMounted, setMounted] = useState(true)
   const [isDeleting, setDeleting] = useState(false)
   const [clarifications, setClarifications] = useState<ClarificationItem[]>([])
   const [showClosed, setShowClosed] = useState(false)
@@ -32,24 +30,28 @@ const Clarifications = (): JSX.Element => {
 
   const onFilterChange = (event: React.FormEvent<HTMLInputElement>, { checked }: CheckboxProps) =>
     setShowClosed(checked || false)
+  /*
+  @param page - page to query when paginating
+  updates the new page of clarifications
+  */
 
   const loadClarifications = async () => {
+    //include page as query, so that API can fetch it.
     const response = await fetch(`${config.API_URL}/clarifications`, {
+      method: 'GET',
       headers: { Authorization: `Bearer ${localStorage.accessToken}` }
     })
     if (response.ok) {
-      const clarifications = Object.values(await response.json()) as ClarificationItem[]
-
-      if (!isMounted) return
-
+      const newClarifications = Object.values(await response.json()) as ClarificationItem[]
       setClarifications(
-        clarifications
+        newClarifications
           .map((clarification) => ({ ...clarification, checked: false }))
           .sort((c1, c2) => c2.date - c1.date)
       )
     } else {
       setClarifications([])
     }
+
     setLoading(false)
   }
 
@@ -91,9 +93,6 @@ const Clarifications = (): JSX.Element => {
 
   useEffect(() => {
     loadClarifications()
-    return () => {
-      setMounted(false)
-    }
   }, [])
 
   if (isLoading) return <PageLoading />
@@ -103,8 +102,7 @@ const Clarifications = (): JSX.Element => {
       <Helmet>
         <title>Abacus | Admin Clarifications</title>
       </Helmet>
-
-      <ClarificationModal trigger={<Button content="Create Clarification" />} callback={loadClarifications} />
+      <ClarificationModal trigger={<Button content="Create Clarification" />} />
       {clarifications.filter((clarification) => clarification.checked).length ? (
         <Button
           content="Delete Selected"

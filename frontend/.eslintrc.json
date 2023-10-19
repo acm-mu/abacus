@@ -18,5 +18,9 @@
       "version": "detect"
     }
   },
-  "rules": {}
+  "rules": {  
+    "semi": ["error", "never"],
+    "@typescript-eslint/semi": "off",
+    "no-unexpected-multiline": "error"
+  }
 }
