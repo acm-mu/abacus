@@ -35,26 +35,33 @@ exports.handler = async(event) => {
         // Run tests
         for (const test of submission.tests) {
             // Await response from piston execution
-            const res = await axios.post("https://piston.codeabac.us/execute", {
-                language,
-                source,
-                stdin: test.in
-            }, {
-                headers: {
-                    "Content-Type": "application/json"
+            try {
+                const res = await axios.post("https://piston.codeabac.us:2000/api/v2/execute", {
+                    language: language === 'python3' ? 'python' : 'java',
+                    version: language === 'python3' ? '3.9.4' : '15.0.2',
+                    files: [{content: source}],
+                    stdin: test.in
+                }, {
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+
+                runtime = Math.max(runtime, res.data.runtime);
+                test.stdout = res.data.output;
+
+                if (res.data.output !== test.out) {
+                    console.log("Result: REJECTED");
+                    status = "rejected";
+                    test['result'] = "rejected";
+                } else {
+                    console.log("Result: ACCEPTED");
+                    test['result'] = "accepted";
                 }
-            });
-
-            runtime = Math.max(runtime, res.data.runtime);
-            test.stdout = res.data.output;
-
-            if (res.data.output != test.out) {
-                console.log("Result: REJECTED");
-                status = "rejected";
-                test['result'] = "rejected";
-            } else {
-                console.log("Result: ACCEPTED");
-                test['result'] = "accepted";
+            } catch (e) {
+                console.log(e)
+                console.log("An error occurred while running test")
+                return
             }
         }
 
