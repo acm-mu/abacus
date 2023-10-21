@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Container, Dropdown, Menu } from 'semantic-ui-react'
 import { AppContext } from 'context'
 import fulllogoy from 'assets/fulllogoy.png'
-import { LoginModal } from 'components'
+import { LoginModal } from 'components/modal'
 import { userHome } from 'utils'
 import config from 'environment'
 

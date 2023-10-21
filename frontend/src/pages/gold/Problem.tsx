@@ -1,13 +1,14 @@
+import MDEditor from '@uiw/react-md-editor'
 import { Problem as ProblemType, Submission } from 'abacus'
-import React, { useState, useEffect, useContext, useMemo } from 'react'
+import { Block, Countdown, NotFound, PageLoading, Unauthorized } from 'components'
+import { ClarificationModal } from 'components/modal'
+import { AppContext } from 'context'
+import config from 'environment'
+import { usePageTitle } from 'hooks'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Breadcrumb, Button, Message } from 'semantic-ui-react'
-import MDEditor from '@uiw/react-md-editor'
-import { Block, Countdown, NotFound, ClarificationModal, PageLoading, Unauthorized } from 'components'
-import config from 'environment'
-import { AppContext } from 'context'
 import { userHome } from 'utils'
-import { usePageTitle } from 'hooks'
 
 const Problem = (): React.JSX.Element => {
   const { user, settings } = useContext(AppContext)

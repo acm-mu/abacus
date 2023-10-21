@@ -1,7 +1,10 @@
 import { Clarification } from 'abacus'
 import { Block, PageLoading, Unauthorized } from 'components'
-import ClarificationModal from 'components/ClarificationModal'
+import { ClarificationModal } from 'components/modal'
 import { AppContext, SocketContext } from 'context'
+import config from 'environment'
+import './Clarifications.scss'
+import { usePageTitle } from 'hooks'
 import React, { FormEvent, useContext, useEffect, useState } from 'react'
 import Moment from 'react-moment'
 import { useParams } from 'react-router-dom'
@@ -21,9 +24,6 @@ import {
   Popup,
   Segment
 } from 'semantic-ui-react'
-import config from '../environment'
-import './Clarifications.scss'
-import { usePageTitle } from 'hooks'
 
 const Clarifications = (): React.JSX.Element => {
   usePageTitle("Abacus | Clarifications")

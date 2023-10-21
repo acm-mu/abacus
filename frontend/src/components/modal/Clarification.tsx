@@ -1,11 +1,11 @@
-import React, { ChangeEvent, SyntheticEvent, useContext, useState } from 'react'
-import { Button, DropdownProps, Form, Modal } from 'semantic-ui-react'
-import config from 'environment'
-import { AppContext } from 'context'
-import { useNavigate } from 'react-router-dom'
-import { divisions } from 'utils'
 import { Clarification, Context } from 'abacus'
-import { StatusMessage } from '.'
+import { StatusMessage } from 'components'
+import { AppContext } from 'context'
+import config from 'environment'
+import React, { ChangeEvent, SyntheticEvent, useContext, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { Button, DropdownProps, Form, Modal } from 'semantic-ui-react'
+import { divisions } from 'utils'
 
 interface ClarificationModalProps {
   trigger: React.JSX.Element
@@ -14,7 +14,7 @@ interface ClarificationModalProps {
   callback?: (clarification: Clarification) => void
 }
 
-const ClarificationModal = ({ trigger, title = '', context }: ClarificationModalProps): React.JSX.Element => {
+const Clarification = ({ trigger, title = '', context }: ClarificationModalProps): React.JSX.Element => {
   const navigate = useNavigate()
   const { user } = useContext(AppContext)
   const [isLoading, setLoading] = useState(false)
@@ -111,4 +111,4 @@ const ClarificationModal = ({ trigger, title = '', context }: ClarificationModal
   )
 }
 
-export default ClarificationModal
+export default Clarification

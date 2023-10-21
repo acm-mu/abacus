@@ -1,12 +1,13 @@
 import { Clarification } from 'abacus'
-import { Block, ClarificationModal, DivisionLabel, PageLoading } from 'components'
+import { Block, DivisionLabel, PageLoading } from 'components'
+import { ClarificationModal } from 'components/modal'
 import config from 'environment'
+import { usePageTitle } from 'hooks'
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
 import { Button, Checkbox, CheckboxProps, Label, Table } from 'semantic-ui-react'
 import { compare } from 'utils'
-import { usePageTitle } from 'hooks'
 
 interface ClarificationItem extends Clarification {
   checked: boolean

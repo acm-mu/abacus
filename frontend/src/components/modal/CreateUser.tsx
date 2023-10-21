@@ -1,8 +1,8 @@
-import React, { ChangeEvent, useState } from 'react'
-import { Modal, Form, Input, Select, Button } from 'semantic-ui-react'
-import config from 'environment'
-import { divisions, roles } from 'utils'
 import { StatusMessage } from 'components'
+import config from 'environment'
+import React, { ChangeEvent, useState } from 'react'
+import { Button, Form, Input, Modal, Select } from 'semantic-ui-react'
+import { divisions, roles } from 'utils'
 
 type CreateUserProps = {
   trigger: React.JSX.Element

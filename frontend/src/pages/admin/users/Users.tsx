@@ -1,14 +1,14 @@
 import { User } from 'abacus'
 import { PageLoading, StatusMessage } from 'components'
 import CustomTable from 'components/CustomTable'
+import { CreateUserModal } from 'components/modal'
 import { AppContext } from 'context'
 import config from 'environment'
 import { saveAs } from 'file-saver'
+import { usePageTitle } from 'hooks'
 import React, { ChangeEvent, useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Grid } from 'semantic-ui-react'
-import CreateUser from './CreateUser'
-import { usePageTitle } from 'hooks'
 
 interface UserItem extends User {
   checked: boolean
@@ -223,7 +223,7 @@ const Users = (): React.JSX.Element => {
 
   return (
     <Grid>
-      <CreateUser trigger={<Button content="Add User" primary />} callback={createUserCallback} />
+      <CreateUserModal trigger={<Button content="Add User" primary />} callback={createUserCallback} />
       <Button as={Link} to={'/admin/users/upload'} content="Upload Users" />
       <Button loading={isImporting} disabled={isImporting} content="Import Users" onClick={importUsers} />
       <Button content="Download Users" onClick={downloadUsers} />

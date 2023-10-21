@@ -1,11 +1,11 @@
+import fulllogo from 'assets/fulllogo.png'
+import { StatusMessage } from 'components'
+import { AppContext } from 'context'
+import config from 'environment'
 import React, { ChangeEvent, useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button, Form, Modal } from 'semantic-ui-react'
-import { AppContext } from 'context'
-import config from 'environment'
-import fulllogo from 'assets/fulllogo.png'
 import { userHome } from 'utils'
-import { StatusMessage } from '.'
 
 interface LoginModalProps {
   trigger?: React.JSX.Element

@@ -1,8 +1,8 @@
-import React, { ChangeEvent, FC } from 'react'
-import { Table } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
 import { User } from 'abacus'
-import DivisionLabel from './../../components/DivisionLabel'
+import { DivisionLabel } from 'components'
+import React, { ChangeEvent, FC } from 'react'
+import { Link } from 'react-router-dom'
+import { Table } from 'semantic-ui-react'
 
 type SortKey = 'uid' | 'display_name' | 'username' | 'role' | 'division' | 'school'
 type SortConfig = {
@@ -13,6 +13,7 @@ type SortConfig = {
 interface UserItem extends User {
   checked: boolean
 }
+
 type HeaderType = keyof UserItem
 
 interface CustomTableProps {
@@ -30,14 +31,14 @@ body ->
 */
 
 const CustomTable: FC<CustomTableProps> = ({
-  header,
-  body,
-  id,
-  sort,
-  onClickHeaderItem,
-  onCheckAll,
-  onCheckItem
-}): React.JSX.Element => {
+                                             header,
+                                             body,
+                                             id,
+                                             sort,
+                                             onClickHeaderItem,
+                                             onCheckAll,
+                                             onCheckItem
+                                           }): React.JSX.Element => {
   const renderRow = (cellid: string | undefined, property: HeaderType, items: UserItem) => {
     if (property === 'division') {
       return (
