@@ -33,40 +33,40 @@ const Navigation = (props: Props): React.JSX.Element => {
 
   return (
     <>
-    <Menu className={`fixed ${props.className}`} inverted>
+      <Menu className={`fixed ${props.className}`} inverted>
         {config.isLocal && (
           <Menu.Item style={{ fontWeight: 'bold', position: 'fixed' }} content={config.environmentText} />
         )}
-      <Container>
-        <Menu.Item as={Link} to="/" header>
-          <img className="logo" src={fulllogoy} alt="Abacus" />
-        </Menu.Item>
+        <Container>
+          <Menu.Item as={Link} to="/" header>
+            <img className="logo" src={fulllogoy} alt="Abacus" />
+          </Menu.Item>
 
-        {props.children}
+          {props.children}
 
           {
-        <Menu.Menu position="right">
+            <Menu.Menu position="right">
               {user ? (
                 <>
-            <Dropdown
-              item
-              simple
-              text={user.display_name}
-              onClick={() => {
-                navigate(userHome(user))
-              }}>
-              <Dropdown.Menu>
-                <Dropdown.Item onClick={handleLogout} text="Log out" />
-              </Dropdown.Menu>
+                  <Dropdown
+                    item
+                    simple
+                    text={user.display_name}
+                    onClick={() => {
+                      navigate(userHome(user))
+                    }}>
+                    <Dropdown.Menu>
+                      <Dropdown.Item onClick={handleLogout} text="Log out" />
+                    </Dropdown.Menu>
                   </Dropdown>
                 </>
               ) : (
                 <LoginModal trigger={<Menu.Item content="Log in" />} />
               )}
-        </Menu.Menu>
+            </Menu.Menu>
           }
-      </Container>
-    </Menu>
+        </Container>
+      </Menu>
     </>
   )
 }

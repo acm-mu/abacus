@@ -6,7 +6,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import Moment from 'react-moment'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Button, ButtonProps, Comment, Divider, Form, Label, Message, Table } from 'semantic-ui-react'
-import config from '../../environment'
+import config from 'environment'
 import './Clarification.scss'
 
 interface ClarificationProps {

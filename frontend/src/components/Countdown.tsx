@@ -1,10 +1,10 @@
 import { Block, FlipClock } from 'components'
 import { AppContext } from 'context'
-import './Countdown.scss'
 import { useIsMounted } from 'hooks'
 import React, { useContext, useEffect, useState } from 'react'
 import Moment from 'react-moment'
 import { Loader } from 'semantic-ui-react'
+import './Countdown.scss'
 
 const Countdown = (): React.JSX.Element => {
   const isMounted = useIsMounted()
