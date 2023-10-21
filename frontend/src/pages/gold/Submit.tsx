@@ -1,22 +1,22 @@
-import { Problem } from 'abacus'
-import React, { ChangeEvent, SyntheticEvent, useContext, useEffect, useMemo, useState } from 'react'
-import { Form, DropdownProps, InputOnChangeData, Breadcrumb } from 'semantic-ui-react'
-import { Block, PageLoading, ScratchViewer, StatusMessage, Unauthorized } from 'components'
-import { useNavigate, useParams, Link } from 'react-router-dom'
 import MDEditor from '@uiw/react-md-editor'
+import type { IProblem } from 'abacus'
+import { ProblemRepository, SubmissionRepository } from 'api'
+import { Block, PageLoading, ScratchViewer, StatusMessage, Unauthorized } from 'components'
 import { AppContext } from 'context'
-import {ProblemRepository, SubmissionRepository} from 'api'
 import { usePageTitle } from 'hooks'
+import React, { ChangeEvent, SyntheticEvent, useContext, useEffect, useMemo, useState } from 'react'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Breadcrumb, DropdownProps, Form, InputOnChangeData } from 'semantic-ui-react'
 
 const Submit = (): React.JSX.Element => {
-  usePageTitle( "Abacus | Gold Submit")
+  usePageTitle("Abacus | Gold Submit")
 
   const submissionRepo = new SubmissionRepository()
   const problemRepo = new ProblemRepository()
 
   const { pid: problem_id } = useParams<{ pid: string }>()
-  const [problems, setProblems] = useState<{ [key: string]: Problem }>({})
-  const [problem, setProblem] = useState<Problem>()
+  const [problems, setProblems] = useState<{ [key: string]: IProblem }>({})
+  const [problem, setProblem] = useState<IProblem>()
 
   const { project_id: default_project_id } = useParams<{ project_id: string }>()
   const [project_url, setProjectUrl] = useState<string>(`https://scratch.mit.edu/projects/${default_project_id ?? ''}`)
@@ -53,7 +53,7 @@ const Submit = (): React.JSX.Element => {
     })
 
     if (response.ok && isMounted) {
-      const problems: { [key: string]: Problem } = response.data
+      const problems: { [key: string]: IProblem } = response.data
       for (const prob of response.data) if (prob.id == problem_id) setProblem(prob)
 
       setProblems(problems)

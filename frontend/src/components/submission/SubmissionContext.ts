@@ -1,9 +1,9 @@
-import { Submission } from 'abacus'
+import type { ISubmission } from 'abacus'
 import React, { createContext } from 'react'
 
 interface SubmissionContextType {
-  submission: Submission | undefined
-  setSubmission?: React.Dispatch<React.SetStateAction<Submission | undefined>>
+  submission: ISubmission | undefined
+  setSubmission?: React.Dispatch<React.SetStateAction<ISubmission | undefined>>
   rerunning?: boolean
 }
 

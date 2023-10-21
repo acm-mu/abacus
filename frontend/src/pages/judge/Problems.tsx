@@ -1,11 +1,11 @@
-import { Problem, Submission } from 'abacus'
-import React, { useState, useEffect, useContext } from 'react'
-import { Table } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
+import type { IProblem, ISubmission } from 'abacus'
+import { ProblemRepository, SubmissionRepository } from 'api'
 import { Block, PageLoading } from 'components'
 import { AppContext } from 'context'
 import { usePageTitle } from 'hooks'
-import {ProblemRepository, SubmissionRepository} from 'api'
+import React, { useContext, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { Table } from 'semantic-ui-react'
 
 type SortKey = 'id' | 'name'
 type SortConfig = {
@@ -20,8 +20,8 @@ const Problems = (): React.JSX.Element => {
   const problemRepo = new ProblemRepository()
 
   const [isLoading, setLoading] = useState(true)
-  const [problems, setProblems] = useState<Problem[]>([])
-  const [submissions, setSubmissions] = useState<{ [key: string]: Submission[] }>()
+  const [problems, setProblems] = useState<IProblem[]>([])
+  const [submissions, setSubmissions] = useState<{ [key: string]: ISubmission[] }>()
   const [isMounted, setMounted] = useState(true)
   const { user } = useContext(AppContext)
 
@@ -30,13 +30,13 @@ const Problems = (): React.JSX.Element => {
     direction: 'ascending'
   })
 
-  const sort = (newColumn: SortKey, problem_list: Problem[] = problems) => {
+  const sort = (newColumn: SortKey, problem_list: IProblem[] = problems) => {
     const newDirection = column === newColumn && direction == 'ascending' ? 'descending' : 'ascending'
     setSortConfig({ column: newColumn, direction: newDirection })
 
     setProblems(
       problem_list.sort(
-        (p1: Problem, p2: Problem) =>
+        (p1: IProblem, p2: IProblem) =>
           (p1[newColumn] || 'ZZ').localeCompare(p2[newColumn] || 'ZZ') * (direction == 'ascending' ? 1 : -1)
       )
     )
@@ -65,8 +65,8 @@ const Problems = (): React.JSX.Element => {
 
       if (!isMounted) return
 
-      const subs: { [key: string]: Submission[] } = {}
-      submissionsReponse.data?.forEach((sub: Submission) => {
+      const subs: { [key: string]: ISubmission[] } = {}
+      submissionsReponse.data?.forEach((sub: ISubmission) => {
         const { pid } = sub
         if (!(pid in subs)) subs[pid] = []
         subs[pid].push(sub)
@@ -108,7 +108,7 @@ const Problems = (): React.JSX.Element => {
             </Table.Cell>
           </Table.Row>
         ) : (
-          problems.map((problem: Problem, index: number) => {
+          problems.map((problem: IProblem, index: number) => {
             return (
               <Table.Row key={index}>
                 <Table.Cell>

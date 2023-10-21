@@ -1,14 +1,14 @@
-import { Submission, Test } from 'abacus'
-import React, { MouseEvent, useState } from 'react'
+import type { ISubmission, ITest } from 'abacus'
 import { Block, Countdown } from 'components'
-import SyntaxHighlighter from 'react-syntax-highlighter/dist/esm/default-highlight'
-import { Breadcrumb, Label, Menu, MenuItemProps, Message, Table } from 'semantic-ui-react'
+import React, { MouseEvent, useState } from 'react'
 import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
+import SyntaxHighlighter from 'react-syntax-highlighter/dist/esm/default-highlight'
+import { Breadcrumb, Label, Menu, MenuItemProps, Message, Table } from 'semantic-ui-react'
 import { capitalize, format_text, syntax_lang } from 'utils'
 
 interface PracticeSubmissionProps {
-  submission: Submission
+  submission: ISubmission
 }
 
 const PracticeSubmission = ({ submission }: PracticeSubmissionProps): React.JSX.Element => {
@@ -61,7 +61,7 @@ const PracticeSubmission = ({ submission }: PracticeSubmissionProps): React.JSX.
                 <span className={`icn status ${submission.status}`} />
               </Table.Cell>
               <Table.Cell>
-                {submission?.tests?.map((test: Test, index: number) => {
+                {submission?.tests?.map((test: ITest, index: number) => {
                   switch (test.result) {
                     case 'accepted':
                       return <span key={`test-${index}`} className="result icn accepted" />
@@ -138,7 +138,7 @@ const PracticeSubmission = ({ submission }: PracticeSubmissionProps): React.JSX.
             />
             <div style={{ display: 'flex' }}>
               <Menu secondary vertical>
-                {submission.tests?.map((test: Test, index: number) => (
+                {submission.tests?.map((test: ITest, index: number) => (
                   <Menu.Item
                     key={`test-case-${index}`}
                     name={`Test Case #${index + 1}`}
@@ -149,7 +149,7 @@ const PracticeSubmission = ({ submission }: PracticeSubmissionProps): React.JSX.
                 ))}
               </Menu>
 
-              {submission.tests?.map((test: Test, index: number) => (
+              {submission.tests?.map((test: ITest, index: number) => (
                 <React.Fragment key={`test-result-${index}`}>
                   {index == activeTestItem ? (
                     <div className="testRun">

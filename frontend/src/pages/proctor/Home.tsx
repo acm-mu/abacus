@@ -1,11 +1,11 @@
+import type { ISubmission } from 'abacus'
+import { SubmissionRepository } from 'api'
 import { Block, PageLoading, Unauthorized } from 'components'
 import { AppContext, SocketContext } from 'context'
-import React, { useContext, useEffect, useMemo, useState } from 'react'
-import { Label, Table } from 'semantic-ui-react'
-import { Submission } from 'abacus'
-import { Link } from 'react-router-dom'
-import {SubmissionRepository} from 'api'
 import { usePageTitle } from 'hooks'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { Label, Table } from 'semantic-ui-react'
 
 const Home = (): React.JSX.Element => {
   usePageTitle("Abacus | Proctor Dashboard")
@@ -14,7 +14,7 @@ const Home = (): React.JSX.Element => {
   const socket = useContext(SocketContext)
   const [isLoading, setLoading] = useState(true)
   const [isMounted, setMounted] = useState(true)
-  const [submissions, setSubmissions] = useState<Submission[]>()
+  const [submissions, setSubmissions] = useState<ISubmission[]>()
 
   const flaggedSubmissions = useMemo(
     () => submissions?.filter(({ flagged }) => flagged).sort(({ date: date1 }, { date: date2 }) => date2 - date1),

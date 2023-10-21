@@ -1,19 +1,19 @@
-import { Problem, Submission } from 'abacus'
+import type { IProblem, ISubmission } from 'abacus'
 import { NotFound } from 'components'
+import { usePageTitle } from 'hooks'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Loader } from 'semantic-ui-react'
 import PracticeProblem from './Problem'
 import PracticeSubmission from './Submission'
-import { usePageTitle } from 'hooks'
 
 const ProblemOrSubmission = (): React.JSX.Element => {
   usePageTitle("Abacus | Practice")
 
   const [isMounted, setMounted] = useState(true)
   const [isLoading, setLoading] = useState(true)
-  const [problems, setProblems] = useState<Problem[]>([])
-  const submissions: { [key: string]: Submission } = localStorage.submissions
+  const [problems, setProblems] = useState<IProblem[]>([])
+  const submissions: { [key: string]: ISubmission } = localStorage.submissions
     ? JSON.parse(localStorage.submissions)
     : {}
 

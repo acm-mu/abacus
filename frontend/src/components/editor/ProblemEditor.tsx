@@ -1,22 +1,22 @@
-import { Problem } from 'abacus'
+import type { IProblem } from 'abacus'
+import { Block } from 'components'
 import React, { MouseEvent, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Menu, Button, MenuItemProps, Divider } from 'semantic-ui-react'
-import { Block } from 'components'
-import ProblemInfoEditor from './ProblemInfoEditor'
-import TestDataEditor from './TestDataEditor'
+import { Button, Divider, Menu, MenuItemProps } from 'semantic-ui-react'
 import DescriptionEditor from './DescriptionEditor'
+import ProblemInfoEditor from './ProblemInfoEditor'
 import SkeletonsEditor from './SkeletonsEditor'
 import SolutionsEditor from './SolutionsEditor'
 import TemplateEditor from './TemplateEditor'
+import TestDataEditor from './TestDataEditor'
 
 interface ProblemEditorProps {
-  problem?: Problem
-  handleSubmit: (problem: Problem) => Promise<void>
+  problem?: IProblem
+  handleSubmit: (problem: IProblem) => Promise<void>
 }
 
 const ProblemEditor = ({ problem: defaultProblem, handleSubmit }: ProblemEditorProps): React.JSX.Element => {
-  const [problem, setProblem] = useState<Problem>(
+  const [problem, setProblem] = useState<IProblem>(
     defaultProblem ?? {
       pid: '',
       id: '',

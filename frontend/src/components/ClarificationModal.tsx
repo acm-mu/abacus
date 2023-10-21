@@ -1,17 +1,17 @@
-import React, { ChangeEvent, SyntheticEvent, useContext, useState } from 'react'
-import { Button, DropdownProps, Form, Modal } from 'semantic-ui-react'
+import type { IClarification, IContext } from 'abacus'
+import { ClarificationRepository } from 'api'
 import { AppContext } from 'context'
+import React, { ChangeEvent, SyntheticEvent, useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Button, DropdownProps, Form, Modal } from 'semantic-ui-react'
 import { divisions } from 'utils'
-import { Clarification, Context } from 'abacus'
 import { StatusMessage } from '.'
-import {ClarificationRepository} from 'api'
 
 interface ClarificationModalProps {
   trigger: React.JSX.Element
   title?: string
-  context?: Context
-  callback?: (clarification: Clarification) => void
+  context?: IContext
+  callback?: (clarification: IClarification) => void
 }
 
 const ClarificationModal = ({ trigger, title = '', context }: ClarificationModalProps): React.JSX.Element => {

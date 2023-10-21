@@ -1,13 +1,13 @@
-import { Problem, Submission } from 'abacus'
-import React, { useContext, useEffect, useState } from 'react'
-import { Popup, Table } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
+import type { IProblem, ISubmission } from 'abacus'
+import { ProblemRepository, SubmissionRepository } from 'api'
 import { Block, Countdown, PageLoading, Unauthorized } from 'components'
 import { AppContext } from 'context'
 import 'components/Table.scss'
-import { userHome } from 'utils'
 import { usePageTitle } from 'hooks'
-import {ProblemRepository, SubmissionRepository} from 'api'
+import React, { useContext, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { Popup, Table } from 'semantic-ui-react'
+import { userHome } from 'utils'
 
 const Problems = (): React.JSX.Element => {
   usePageTitle("Abacus | Blue Problems")
@@ -18,8 +18,8 @@ const Problems = (): React.JSX.Element => {
   const { user, settings } = useContext(AppContext)
   const [isMounted, setMounted] = useState(true)
   const [isLoading, setLoading] = useState(true)
-  const [problems, setProblems] = useState<Problem[]>()
-  const [submissions, setSubmissions] = useState<{ [key: string]: Submission[] }>()
+  const [problems, setProblems] = useState<IProblem[]>()
+  const [submissions, setSubmissions] = useState<{ [key: string]: ISubmission[] }>()
 
   useEffect(() => {
     loadProblems()
@@ -50,7 +50,7 @@ const Problems = (): React.JSX.Element => {
       if (!isMounted) return
 
       if (submissionResponse.ok) {
-        const submissions: { [key: string]: Submission[] } = {}
+        const submissions: { [key: string]: ISubmission[] } = {}
         for (const submission of submissionResponse.data) {
           if (submissions[submission.pid] == undefined) submissions[submission.pid] = []
           submissions[submission.pid].push(submission)
@@ -110,7 +110,7 @@ const Problems = (): React.JSX.Element => {
                 </Table.Cell>
               </Table.Row>
             ) : (
-              problems.map((problem: Problem) => (
+              problems.map((problem: IProblem) => (
                 <Table.Row key={problem.pid}>
                   <Table.HeaderCell collapsing textAlign="center">
                     {problem.id}

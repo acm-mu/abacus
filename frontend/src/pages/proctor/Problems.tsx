@@ -1,10 +1,10 @@
-import { Problem } from 'abacus'
-import React, { useState, useEffect } from 'react'
-import { Table } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
+import type { IProblem } from 'abacus'
+import { ProblemRepository } from 'api'
 import { Block, PageLoading } from 'components'
 import { usePageTitle } from 'hooks'
-import {ProblemRepository} from 'api'
+import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { Table } from 'semantic-ui-react'
 
 type SortKey = 'id' | 'name'
 type SortConfig = {
@@ -18,7 +18,7 @@ const Problems = (): React.JSX.Element => {
   const problemRepo = new ProblemRepository()
 
   const [isLoading, setLoading] = useState(true)
-  const [problems, setProblems] = useState<Problem[]>([])
+  const [problems, setProblems] = useState<IProblem[]>([])
   const [isMounted, setMounted] = useState(true)
 
   const [{ column, direction }, setSortConfig] = useState<SortConfig>({
@@ -26,13 +26,13 @@ const Problems = (): React.JSX.Element => {
     direction: 'ascending'
   })
 
-  const sort = (newColumn: SortKey, problem_list: Problem[] = problems) => {
+  const sort = (newColumn: SortKey, problem_list: IProblem[] = problems) => {
     const newDirection = column === newColumn && direction == 'ascending' ? 'descending' : 'ascending'
     setSortConfig({ column: newColumn, direction: newDirection })
 
     setProblems(
       problem_list.sort(
-        (p1: Problem, p2: Problem) =>
+        (p1: IProblem, p2: IProblem) =>
           (p1[newColumn] || 'ZZ').localeCompare(p2[newColumn] || 'ZZ') * (direction == 'ascending' ? 1 : -1)
       )
     )
@@ -91,7 +91,7 @@ const Problems = (): React.JSX.Element => {
                 </Table.Cell>
               </Table.Row>
             ) : (
-              problems.map((problem: Problem, index: number) => (
+              problems.map((problem: IProblem, index: number) => (
                 <Table.Row key={index}>
                   <Table.Cell>
                     <Link to={`/proctor/problems/${problem.pid}`}>{problem.id}</Link>

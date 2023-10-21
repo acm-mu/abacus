@@ -1,7 +1,7 @@
+import type { IUser } from 'abacus'
 import React, { ChangeEvent, FC } from 'react'
-import { Table } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
-import { User } from 'abacus'
+import { Table } from 'semantic-ui-react'
 import DivisionLabel from './../../components/DivisionLabel'
 
 type SortKey = 'uid' | 'display_name' | 'username' | 'role' | 'division' | 'school'
@@ -10,9 +10,10 @@ type SortConfig = {
   direction: 'ascending' | 'descending'
 }
 
-interface UserItem extends User {
+interface UserItem extends IUser {
   checked: boolean
 }
+
 type HeaderType = keyof UserItem
 
 interface CustomTableProps {

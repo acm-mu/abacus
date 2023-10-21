@@ -1,19 +1,19 @@
-import { Submission } from 'abacus'
-import React, { useContext, useEffect, useMemo, useState } from 'react'
-import { AppContext, SocketContext } from 'context'
+import type { ISubmission } from 'abacus'
+import { SubmissionRepository } from 'api'
 import { Block, PageLoading } from 'components'
-import moment from 'moment'
-import { Table } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
+import { AppContext, SocketContext } from 'context'
 import { usePageTitle } from 'hooks'
-import {SubmissionRepository} from "../../api";
+import moment from 'moment'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { Table } from 'semantic-ui-react'
 
 const Home = (): React.JSX.Element => {
   usePageTitle("Abacus | Admin")
 
   const socket = useContext(SocketContext)
   const [isLoading, setLoading] = useState(true)
-  const [submissions, setSubmissions] = useState<Submission[]>()
+  const [submissions, setSubmissions] = useState<ISubmission[]>()
   const [isMounted, setMounted] = useState(true)
 
   const { user, settings } = useContext(AppContext)

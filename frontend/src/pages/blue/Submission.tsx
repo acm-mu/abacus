@@ -1,18 +1,18 @@
-import { Submission as SubmissionType } from 'abacus'
-import React, { useContext, useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import type { ISubmission } from 'abacus'
+import { SubmissionRepository } from 'api'
 import { Block, Countdown, NotFound, PageLoading, SubmissionView, Unauthorized } from 'components'
-import { Breadcrumb } from 'semantic-ui-react'
 import { AppContext } from 'context'
 import { usePageTitle } from 'hooks'
-import {SubmissionRepository} from 'api'
+import React, { useContext, useEffect, useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
+import { Breadcrumb } from 'semantic-ui-react'
 
 const Submission = (): React.JSX.Element => {
   usePageTitle("Abacus | Blue Submission")
 
   const { sid } = useParams<{ sid: string }>()
   const { user } = useContext(AppContext)
-  const [submission, setSubmission] = useState<SubmissionType>()
+  const [submission, setSubmission] = useState<ISubmission>()
   const [isMounted, setMounted] = useState(true)
   const [isLoading, setLoading] = useState(true)
 

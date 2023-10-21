@@ -1,6 +1,6 @@
-import React from 'react'
-import { User } from 'abacus'
+import type { IUser } from 'abacus'
 import moment from 'moment'
+import React from 'react'
 
 // Convert's stored language values in to syntax highlighter friendly values
 export const syntax_lang = (language: string): string => {
@@ -12,7 +12,7 @@ export const syntax_lang = (language: string): string => {
   }
 }
 
-export const userHome = (user: User): string => {
+export const userHome = (user: IUser): string => {
   switch (user?.role) {
     case 'admin':
       return '/admin'
@@ -51,6 +51,7 @@ export interface Language {
   text: string
   file_extension: string
 }
+
 export const languages: Language[] = [
   { key: 'python', value: 'Python 3', text: 'Python 3', file_extension: '.py' },
   { key: 'java', value: 'Java', text: 'Java', file_extension: '.java' }

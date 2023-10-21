@@ -1,15 +1,15 @@
-import React from 'react'
-import { Container } from 'semantic-ui-react'
-import { Route, Routes } from 'react-router-dom'
 import { NotFound } from 'components'
-import JudgeNavigation from './JudgeNavigation'
+import React from 'react'
+import { Route, Routes } from 'react-router-dom'
+import { Container } from 'semantic-ui-react'
+import Clarifications from '../Clarifications'
 import Home from './Home'
-import Teams from './Users'
-import Problems from './Problems'
+import JudgeNavigation from './JudgeNavigation'
 import Problem from './Problem'
+import Problems from './Problems'
 import Submission from './Submission'
 import Submissions from './Submissions'
-import Clarifications from '../Clarifications'
+import Teams from './Users'
 
 const Judge = (): React.JSX.Element => (
   <>

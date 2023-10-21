@@ -1,19 +1,19 @@
-import { Problem as ProblemType } from 'abacus'
-import React, { useState, useEffect, useContext } from 'react'
-import { useParams } from 'react-router-dom'
-import { Divider } from 'semantic-ui-react'
 import MDEditor from '@uiw/react-md-editor'
+import type { IProblem } from 'abacus'
+import { ProblemRepository } from 'api'
 import { Block, Countdown, NotFound, PageLoading } from 'components'
 import { AppContext } from 'context'
 import './Problem.scss'
 import { usePageTitle } from 'hooks'
-import {ProblemRepository} from 'api'
+import React, { useContext, useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { Divider } from 'semantic-ui-react'
 
 const Problem = (): React.JSX.Element => {
   const problemRepository = new ProblemRepository()
   const { user } = useContext(AppContext)
   const [isLoading, setLoading] = useState(true)
-  const [problem, setProblem] = useState<ProblemType>()
+  const [problem, setProblem] = useState<IProblem>()
   const { pid } = useParams<{ pid: string }>()
 
   const [isMounted, setMounted] = useState(true)

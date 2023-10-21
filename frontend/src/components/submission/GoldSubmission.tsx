@@ -1,22 +1,22 @@
-import React, { useContext, useEffect, useState } from 'react'
-import {Submission} from "abacus"
 import MDEditor from '@uiw/react-md-editor'
+import type { ISubmission } from 'abacus'
+import { SubmissionRepository } from 'api'
 import { Block, ScratchViewer } from 'components'
+import { AppContext } from 'context'
+import React, { useContext, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { Form, Header, Rating, RatingProps, Segment, TextArea } from 'semantic-ui-react'
+import { userHome } from 'utils'
 import SubmissionContext from './SubmissionContext'
 import SubmissionDetail from './SubmissionDetail'
 import './Submission.scss'
-import { Form, Header, Rating, RatingProps, Segment, TextArea } from 'semantic-ui-react'
-import { AppContext } from 'context'
-import { userHome } from 'utils'
-import { Link } from 'react-router-dom'
-import {SubmissionRepository} from 'api'
 
 const GoldFeedback = (): React.JSX.Element => {
   const submissionRepository = new SubmissionRepository()
 
   const { user } = useContext(AppContext)
   const { submission, setSubmission } = useContext(SubmissionContext)
-  const [submissions, setSubmissions] = useState<Submission[]>()
+  const [submissions, setSubmissions] = useState<ISubmission[]>()
 
   useEffect(() => {
     loadSubmission()
@@ -29,7 +29,7 @@ const GoldFeedback = (): React.JSX.Element => {
         problemId: submission?.pid
       }
     })
-    if(response.ok) {
+    if (response.ok) {
       setSubmissions(response.data)
     }
   }
@@ -82,7 +82,7 @@ const GoldFeedback = (): React.JSX.Element => {
           )}
         </Form>
       </Segment>
-      {user && submissions?.length > 0 ? (
+      {user && submissions?.length ? (
         <Segment>
           <h3>Team&apos;s Other Submissions</h3>
           <ul>

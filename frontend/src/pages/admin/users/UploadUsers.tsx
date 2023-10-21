@@ -1,13 +1,13 @@
-import { User } from 'abacus'
-import React, { ChangeEvent, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Button, Label, Message, Table } from 'semantic-ui-react'
+import type { IUser } from 'abacus'
+import { ApiResponse, UserRepository } from 'api'
 import { Block, FileDialog } from 'components'
 import sha256 from 'crypto-js/sha256'
 import { usePageTitle } from 'hooks'
-import {UserRepository} from 'api'
+import React, { ChangeEvent, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { Button, Label, Message, Table } from 'semantic-ui-react'
 
-interface UserItem extends User {
+interface UserItem extends IUser {
   checked: boolean
 }
 
@@ -17,7 +17,7 @@ const UploadUsers = (): React.JSX.Element => {
   const userRepository = new UserRepository()
   const navigate = useNavigate()
   const [file, setFile] = useState<File>()
-  const [existingUsers, setExistingUsers] = useState<{ [key: string]: User }>()
+  const [existingUsers, setExistingUsers] = useState<IUser[]>()
   const [newUsers, setNewUsers] = useState<UserItem[]>()
   const [isMounted, setMounted] = useState(true)
 
@@ -29,7 +29,7 @@ const UploadUsers = (): React.JSX.Element => {
     reader.onload = async ({ target }: ProgressEvent<FileReader>) => {
       const text = target?.result as string
       if (text) {
-        let users: UserItem[] = JSON.parse(text).map((user: User) => ({ ...user, checked: true }))
+        let users: UserItem[] = JSON.parse(text).map((user: IUser) => ({ ...user, checked: true }))
 
         if (existingUsers) users = users.filter((user: UserItem) => filterUser(user, existingUsers[user.uid]))
 
@@ -55,7 +55,7 @@ const UploadUsers = (): React.JSX.Element => {
     return () => setMounted(false)
   }, [])
 
-  const filterUser = (user1: User, u2: User) => {
+  const filterUser = (user1: IUser, u2: IUser) => {
     if (!u2) return true
     const { ...user2 } = u2
     if (user1.password) user1.password = sha256(user1.password).toString()
@@ -71,7 +71,7 @@ const UploadUsers = (): React.JSX.Element => {
   const handleSubmit = async () => {
     if (newUsers) {
       for (const user of newUsers.filter((u) => u.checked)) {
-        let response: ApiResponse<User>
+        let response: ApiResponse<IUser>
 
         if (Object.keys(existingUsers || {}).includes(user.uid)) {
           response = await userRepository.update(user.uid, user)

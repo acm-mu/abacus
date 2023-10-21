@@ -1,22 +1,22 @@
-import React, { useEffect, useState } from 'react'
-import { Problem, Submission } from 'abacus'
-import { Link, useParams } from 'react-router-dom'
-import { Breadcrumb, Button, Table } from 'semantic-ui-react'
 import MDEditor from '@uiw/react-md-editor'
+import type { IProblem, ISubmission } from 'abacus'
 
 import { Block, Countdown, NotFound, PageLoading } from 'components'
-import Moment from 'react-moment'
-import '../Problem.scss'
 import { saveAs } from 'file-saver'
 import { usePageTitle } from 'hooks'
+import React, { useEffect, useState } from 'react'
+import Moment from 'react-moment'
+import '../Problem.scss'
+import { Link, useParams } from 'react-router-dom'
+import { Breadcrumb, Button, Table } from 'semantic-ui-react'
 
 interface PracticeProblemProps {
-  submissions: Submission[]
+  submissions: ISubmission[]
 }
 
 const PracticeProblem = ({ submissions }: PracticeProblemProps): React.JSX.Element => {
   const { id } = useParams<{ id: string }>()
-  const [problem, setProblem] = useState<Problem>()
+  const [problem, setProblem] = useState<IProblem>()
   const [isLoading, setLoading] = useState(true)
 
   usePageTitle(`Abacus | ${problem?.name ?? ""}`)
@@ -68,7 +68,7 @@ const PracticeProblem = ({ submissions }: PracticeProblemProps): React.JSX.Eleme
             <Table.Body>
               {submissions
                 .sort((s1, s2) => s2.date - s1.date)
-                .map((submission: Submission, index: number) => (
+                .map((submission: ISubmission, index: number) => (
                   <Table.Row key={index}>
                     <Table.Cell>
                       <Link to={`/blue/practice/${submission.sid}`}> {submission.sid.substring(0, 7)} </Link>

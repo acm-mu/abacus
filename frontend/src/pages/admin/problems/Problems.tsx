@@ -1,15 +1,16 @@
-import { Problem, Submission } from 'abacus'
-import React, { ChangeEvent, useState, useEffect, useMemo } from 'react'
-import { Table, Button, Menu, MenuItemProps, Grid } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
+import type { IProblem, ISubmission } from 'abacus'
+import { ProblemRepository, SubmissionRepository } from 'api'
 import { Block, DivisionLabel, PageLoading } from 'components'
 import { saveAs } from 'file-saver'
-import {ProblemRepository, SubmissionRepository} from 'api'
 import { usePageTitle } from 'hooks'
+import React, { ChangeEvent, useEffect, useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { Button, Grid, Menu, MenuItemProps, Table } from 'semantic-ui-react'
 
-interface ProblemItem extends Problem {
+interface ProblemItem extends IProblem {
   checked: boolean
 }
+
 type SortKey = 'id' | 'name'
 type SortConfig = {
   column: SortKey
@@ -24,7 +25,7 @@ const Problems = (): React.JSX.Element => {
 
   const [isLoading, setLoading] = useState(true)
   const [problems, setProblems] = useState<ProblemItem[]>([])
-  const [submissions, setSubmissions] = useState<{ [key: string]: Submission[] }>()
+  const [submissions, setSubmissions] = useState<{ [key: string]: ISubmission[] }>()
   const [isMounted, setMounted] = useState(true)
   const [isDeleting, setDeleting] = useState(false)
   const [activeDivision, setActiveDivision] = useState('blue')
@@ -44,7 +45,7 @@ const Problems = (): React.JSX.Element => {
 
     setProblems(
       problem_list.sort(
-        (p1: Problem, p2: Problem) =>
+        (p1: IProblem, p2: IProblem) =>
           (p1[newColumn] || 'ZZ').localeCompare(p2[newColumn] || 'ZZ') * (direction == 'ascending' ? 1 : -1)
       )
     )
@@ -58,7 +59,7 @@ const Problems = (): React.JSX.Element => {
   }, [])
 
   const loadProblems = async () => {
-    const response = await problemRepo.getMany({sortBy: 'id'})
+    const response = await problemRepo.getMany({ sortBy: 'id' })
 
     if (response.ok) {
       if (!isMounted) return
@@ -72,8 +73,8 @@ const Problems = (): React.JSX.Element => {
 
       if (!isMounted) return
 
-      const subs: { [key: string]: Submission[] } = {}
-      submissionResponse.data?.forEach((sub: Submission) => {
+      const subs: { [key: string]: ISubmission[] } = {}
+      submissionResponse.data?.forEach((sub: ISubmission) => {
         const { pid } = sub
         if (!(pid in subs)) subs[pid] = []
         subs[pid].push(sub)

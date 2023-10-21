@@ -1,13 +1,13 @@
-import { Submission } from 'abacus'
-import React, { useContext, useEffect, useState } from 'react'
-import Moment from 'react-moment'
-import { Link } from 'react-router-dom'
-import { Table } from 'semantic-ui-react'
+import type { ISubmission } from 'abacus'
+import { SubmissionRepository } from 'api'
 import { Block, Countdown, PageLoading, Unauthorized } from 'components'
 import { AppContext } from 'context'
 import 'components/Icons.scss'
 import { usePageTitle } from 'hooks'
-import {SubmissionRepository} from 'api'
+import React, { useContext, useEffect, useState } from 'react'
+import Moment from 'react-moment'
+import { Link } from 'react-router-dom'
+import { Table } from 'semantic-ui-react'
 
 const Submissions = (): React.JSX.Element => {
   usePageTitle("Abacus | Gold Submissions")
@@ -17,7 +17,7 @@ const Submissions = (): React.JSX.Element => {
   const { user } = useContext(AppContext)
   const [isMounted, setMounted] = useState(true)
   const [isLoading, setLoading] = useState(true)
-  const [submissions, setSubmissions] = useState<Submission[]>()
+  const [submissions, setSubmissions] = useState<ISubmission[]>()
 
   useEffect(() => {
     loadSubmissions()
@@ -60,10 +60,10 @@ const Submissions = (): React.JSX.Element => {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {submissions?.length != 0 ? (
+            {submissions?.length ? (
               submissions
                 ?.sort((s1, s2) => s2.date - s1.date)
-                .map((submission: Submission, index: number) => (
+                .map((submission: ISubmission, index: number) => (
                   <Table.Row key={index}>
                     <Table.Cell>
                       <Link to={`/gold/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link>

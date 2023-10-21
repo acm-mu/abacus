@@ -1,17 +1,16 @@
-import { Clarification, Submission } from 'abacus'
-import { AppContext } from 'context'
+import type { IClarification, ISubmission } from 'abacus'
+import { ClarificationRepository, SubmissionRepository } from "api"
+import './Clarification.scss'
 import { Block, DivisionLabel, NotFound, PageLoading } from 'components'
+import { AppContext } from 'context'
+import { usePageTitle } from 'hooks'
 import React, { useContext, useEffect, useState } from 'react'
 import Moment from 'react-moment'
-import { useNavigate, useParams } from 'react-router-dom'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Button, ButtonProps, Comment, Divider, Form, Label, Message, Table } from 'semantic-ui-react'
-import {ClarificationRepository, SubmissionRepository} from "api"
-import './Clarification.scss'
-import { usePageTitle } from 'hooks'
 
 interface ClarificationProps {
-  clarification: Clarification
+  clarification: IClarification
 }
 
 const ClarificationPage = (): React.JSX.Element => {
@@ -21,8 +20,8 @@ const ClarificationPage = (): React.JSX.Element => {
   const navigate = useNavigate()
   const { user } = useContext(AppContext)
   const { cid } = useParams<{ cid: string }>()
-  const [clarification, setClarification] = useState<Clarification>()
-  const [submissions, setSubmissions] = useState<Submission[]>([])
+  const [clarification, setClarification] = useState<IClarification>()
+  const [submissions, setSubmissions] = useState<ISubmission[]>([])
   const [body, setBody] = useState('')
   const [isLoading, setLoading] = useState(true)
   const [isMounted, setMounted] = useState(true)
@@ -50,7 +49,7 @@ const ClarificationPage = (): React.JSX.Element => {
 
     if (!isMounted) return
 
-    setSubmissions(response.data?.map((submission) => ({...submission, checked: false})) ?? [])
+    setSubmissions(response.data?.map((submission) => ({ ...submission, checked: false })) ?? [])
     setLoading(false)
   }
 
@@ -69,7 +68,7 @@ const ClarificationPage = (): React.JSX.Element => {
     }
 
     setReplying(true)
-    const response = await clarificationRepo.create({parent: clarification.cid, body})
+    const response = await clarificationRepo.create({ parent: clarification.cid, body })
 
     if (response.ok) {
       await loadClarification()
@@ -87,7 +86,7 @@ const ClarificationPage = (): React.JSX.Element => {
     }
 
     setChangingState(true)
-    const response = await clarificationRepo.update(clarification.cid, {open})
+    const response = await clarificationRepo.update(clarification.cid, { open })
 
     if (response.ok) {
       loadClarification()
@@ -226,7 +225,7 @@ const ClarificationPage = (): React.JSX.Element => {
                 </Table.Cell>
               </Table.Row>
             ) : (
-              submissions.map((submission: Submission) => (
+              submissions.map((submission: ISubmission) => (
                 <Table.Row key={submission.sid}>
                   <Table.Cell>
                     <Link to={`/admin/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link>

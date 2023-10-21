@@ -1,10 +1,10 @@
-import { Settings, User } from 'abacus'
+import type { ISettings, IUser } from 'abacus'
 import { createContext, Dispatch, SetStateAction } from 'react'
 
 export interface AppContextType {
-  user?: User
-  setUser: Dispatch<SetStateAction<User | undefined>>
-  settings?: Settings
+  user?: IUser
+  setUser: Dispatch<SetStateAction<IUser | undefined>>
+  settings?: ISettings
 }
 
 const AppContext = createContext<AppContextType>({

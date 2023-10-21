@@ -1,26 +1,26 @@
-import { Context, Notification } from 'abacus'
+import type { IContext, INotification } from 'abacus'
+import { AppContext, SocketContext } from 'context'
 import React, { useContext, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import { Message } from 'semantic-ui-react'
-import { v4 as uuidv4 } from 'uuid'
-import { Link } from 'react-router-dom'
 import { userHome } from 'utils'
-import { SocketContext, AppContext } from 'context'
+import { v4 as uuidv4 } from 'uuid'
 import './Notifications.scss'
 
 declare global {
   interface Window {
-    notifications: Notification[]
-    sendNotification: (notification: Notification) => void
+    notifications: INotification[]
+    sendNotification: (notification: INotification) => void
   }
 }
 
 const Notifications = (): React.JSX.Element => {
-  const [notifications, setNotifications] = useState<Notification[]>(window.notifications || [])
+  const [notifications, setNotifications] = useState<INotification[]>(window.notifications || [])
   const { user } = useContext(AppContext)
   const socket = useContext(SocketContext)
 
-  window.sendNotification = (notification: Notification) => {
+  window.sendNotification = (notification: INotification) => {
     if (!notification.id) notification.id = uuidv4()
     setNotifications((notifications) => notifications.concat(notification))
 
@@ -30,12 +30,12 @@ const Notifications = (): React.JSX.Element => {
   }
 
   useEffect(() => {
-    socket?.on('notification', (notification: Notification) => {
+    socket?.on('notification', (notification: INotification) => {
       if (forMe(notification)) window.sendNotification(notification)
     })
   }, [user])
 
-  const forMe = ({ to }: Notification) => {
+  const forMe = ({ to }: INotification) => {
     if (!to || to == 'public') return true
     for (const query of to.split('&')) {
       const [type, id] = query.split(':')
@@ -59,7 +59,7 @@ const Notifications = (): React.JSX.Element => {
     }
   }
 
-  const contextLink = (context?: Context): string => {
+  const contextLink = (context?: IContext): string => {
     if (!context || !user) return ''
     switch (context.type) {
       case 'cid':

@@ -1,13 +1,13 @@
-import { Problem as ProblemType, Submission } from 'abacus'
-import React, { useState, useEffect, useContext, useMemo } from 'react'
+import MDEditor from '@uiw/react-md-editor'
+import type { IProblem, ISubmission } from 'abacus'
+import { ProblemRepository, SubmissionRepository } from 'api'
+import { Block, ClarificationModal, Countdown, NotFound, PageLoading, Unauthorized } from 'components'
+import { AppContext } from 'context'
+import { usePageTitle } from 'hooks'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Breadcrumb, Button, Message } from 'semantic-ui-react'
-import MDEditor from '@uiw/react-md-editor'
-import { Block, Countdown, NotFound, ClarificationModal, PageLoading, Unauthorized } from 'components'
-import { AppContext } from 'context'
 import { userHome } from 'utils'
-import { usePageTitle } from 'hooks'
-import {ProblemRepository, SubmissionRepository} from 'api'
 
 const Problem = (): React.JSX.Element => {
   const problemRepository = new ProblemRepository()
@@ -15,10 +15,10 @@ const Problem = (): React.JSX.Element => {
 
   const { user, settings } = useContext(AppContext)
   const [isLoading, setLoading] = useState(true)
-  const [problem, setProblem] = useState<ProblemType>()
+  const [problem, setProblem] = useState<IProblem>()
   const { pid } = useParams<{ pid: string }>()
 
-  const [submissions, setSubmissions] = useState<Submission[]>()
+  const [submissions, setSubmissions] = useState<ISubmission[]>()
   const latestSubmission = useMemo(() => {
     if (!submissions?.length || !user) return <></>
     const { sid } = submissions[submissions.length - 1]

@@ -1,18 +1,18 @@
-import { Problem, Submission } from 'abacus'
+import type { IProblem, ISubmission } from 'abacus'
 import { Block, Countdown, FileDialog, NotFound, PageLoading } from 'components'
+import { usePageTitle } from 'hooks'
 import React, { ChangeEvent, useEffect, useState } from 'react'
-import { useNavigate, useParams, Link } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Breadcrumb, Button, Form } from 'semantic-ui-react'
 import { Language, languages } from 'utils'
 import { v4 as uuidv4 } from 'uuid'
-import { usePageTitle } from 'hooks'
 
 const SubmitPractice = (): React.JSX.Element => {
   const { id } = useParams<{ id: string }>()
   const [isLoading, setLoading] = useState(false)
   const [isPageLoading, setPageLoading] = useState(true)
-  const submissions: Submission[] = []
-  const [problem, setProblem] = useState<Problem>()
+  const submissions: ISubmission[] = []
+  const [problem, setProblem] = useState<IProblem>()
 
   const [language, setLanguage] = useState<Language>()
   const [file, setFile] = useState<File>()
@@ -29,7 +29,7 @@ const SubmitPractice = (): React.JSX.Element => {
       })
   }, [])
 
-  const testSubmission = async (submission: Submission): Promise<Submission> => {
+  const testSubmission = async (submission: ISubmission): Promise<ISubmission> => {
     let runtime = -1
     let status = 'accepted'
     //GET  https://emkc.org/api/v2/piston/runtimes
@@ -76,7 +76,7 @@ const SubmitPractice = (): React.JSX.Element => {
     const { name: filename, size: filesize } = file
     const fileReader = new FileReader()
 
-    let submissions: { [key: string]: Submission } = {}
+    let submissions: { [key: string]: ISubmission } = {}
     if (localStorage.submissions != undefined) {
       submissions = JSON.parse(localStorage.submissions)
     }

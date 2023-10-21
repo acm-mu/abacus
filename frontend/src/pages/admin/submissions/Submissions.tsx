@@ -1,18 +1,19 @@
-import { Submission } from 'abacus'
+import type { ISubmission } from 'abacus'
+import { SubmissionRepository } from 'api'
 import { Block, DivisionLabel, PageLoading } from 'components'
 import { SocketContext } from 'context'
+import { saveAs } from 'file-saver'
+import { usePageTitle } from 'hooks'
 import React, { ChangeEvent, useContext, useEffect, useMemo, useState } from 'react'
 import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
 import { Button, Checkbox, Grid, Label, Menu, MenuItemProps, Table } from 'semantic-ui-react'
 import { compare } from 'utils'
-import { saveAs } from 'file-saver'
-import { usePageTitle } from 'hooks'
-import {SubmissionRepository} from 'api'
 
-interface SubmissionItem extends Submission {
+interface ISubmissionItem extends ISubmission {
   checked: boolean
 }
+
 type SortKey = 'date' | 'sid' | 'sub_no' | 'language' | 'status' | 'runtime' | 'score'
 type SortConfig = {
   column: SortKey
@@ -26,7 +27,7 @@ const Submissions = (): React.JSX.Element => {
 
   const socket = useContext(SocketContext)
   const [isLoading, setLoading] = useState(true)
-  const [submissions, setSubmissions] = useState<SubmissionItem[]>([])
+  const [submissions, setSubmissions] = useState<ISubmissionItem[]>([])
   const [isDeleting, setDeleting] = useState(false)
   const [showReleased, setShowReleased] = useState(false)
   const [activeDivision, setActiveDivision] = useState('blue')
@@ -36,13 +37,13 @@ const Submissions = (): React.JSX.Element => {
     direction: 'ascending'
   })
 
-  const sort = (newColumn: SortKey, submission_list: SubmissionItem[] = submissions) => {
+  const sort = (newColumn: SortKey, submission_list: ISubmissionItem[] = submissions) => {
     const newDirection = column === newColumn ? 'descending' : 'ascending'
     setSortConfig({ column: newColumn, direction: newDirection })
 
     setSubmissions(
       submission_list.sort(
-        (s1: Submission, s2: Submission) =>
+        (s1: ISubmissionItem, s2: ISubmissionItem) =>
           compare(s1[newColumn] || 'ZZ', s2[newColumn] || 'ZZ') * (direction == 'ascending' ? 1 : -1)
       )
     )
@@ -60,8 +61,8 @@ const Submissions = (): React.JSX.Element => {
   */
   const loadSubmissions = async () => {
     const response = await submissionRepository.getMany()
-    if(response.ok) {
-      setSubmissions(response.data?.map((submission) => ({...submission, checked: false})))
+    if (response.ok) {
+      setSubmissions(response.data?.map((submission) => ({ ...submission, checked: false })))
     }
   }
 

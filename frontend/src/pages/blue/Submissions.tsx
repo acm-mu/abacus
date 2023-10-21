@@ -1,12 +1,12 @@
-import { Submission } from 'abacus'
+import type { ISubmission } from 'abacus'
+import { SubmissionRepository } from 'api'
+import { Block, Countdown, PageLoading, Unauthorized } from 'components'
+import { AppContext } from 'context'
+import { usePageTitle } from 'hooks'
 import React, { useContext, useEffect, useState } from 'react'
 import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
-import { Block, Countdown, PageLoading, Unauthorized } from 'components'
-import { AppContext } from 'context'
-import { usePageTitle } from 'hooks'
-import {SubmissionRepository} from 'api'
 
 const Submissions = (): React.JSX.Element => {
   usePageTitle("Abacus | Blue Submissions")
@@ -16,7 +16,7 @@ const Submissions = (): React.JSX.Element => {
   const { user } = useContext(AppContext)
   const [isMounted, setMounted] = useState(true)
   const [isLoading, setLoading] = useState(true)
-  const [submissions, setSubmissions] = useState<Submission[]>()
+  const [submissions, setSubmissions] = useState<ISubmission[]>()
 
   useEffect(() => {
     loadSubmissions()
@@ -64,7 +64,7 @@ const Submissions = (): React.JSX.Element => {
             {submissions?.length ? (
               submissions
                 .sort((s1, s2) => s2.date - s1.date)
-                .map((submission: Submission, index: number) => (
+                .map((submission: ISubmission, index: number) => (
                   <Table.Row key={index}>
                     <Table.Cell>
                       <Link to={`/blue/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link>

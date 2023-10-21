@@ -1,12 +1,12 @@
-import { Problem } from 'abacus'
+import type { IProblem } from 'abacus'
+import { ProblemRepository } from 'api'
+import { Block, FileDialog } from 'components'
+import { usePageTitle } from 'hooks'
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button, Label, Message, Table } from 'semantic-ui-react'
-import { Block, FileDialog } from 'components'
-import { usePageTitle } from 'hooks'
-import {ProblemRepository} from 'api'
 
-interface ProblemItem extends Problem {
+interface ProblemItem extends IProblem {
   checked: boolean
 }
 
@@ -17,7 +17,7 @@ const UploadProblems = (): React.JSX.Element => {
 
   const navigate = useNavigate()
   const [file, setFile] = useState<File>()
-  const [existingProblems, setExistingProblems] = useState<Problem[]>()
+  const [existingProblems, setExistingProblems] = useState<IProblem[]>()
   const [newProblems, setNewProblems] = useState<ProblemItem[]>()
   const [isMounted, setMounted] = useState(true)
 
@@ -29,10 +29,11 @@ const UploadProblems = (): React.JSX.Element => {
     reader.onload = async ({ target }: ProgressEvent<FileReader>) => {
       const text = target?.result as string
       if (text) {
-        let problems: ProblemItem[] = JSON.parse(text).map((problem: Problem) => ({ ...problem, checked: true }))
+        let problems: ProblemItem[] = JSON.parse(text).map((problem: IProblem) => ({ ...problem, checked: true }))
 
-        if (existingProblems)
+        if (existingProblems) {
           problems = problems.filter((problem: ProblemItem) => filterProblem(problem, existingProblems[problem.pid]))
+        }
 
         setNewProblems(problems)
       }
@@ -58,7 +59,7 @@ const UploadProblems = (): React.JSX.Element => {
     return () => setMounted(false)
   }, [])
 
-  const filterProblem = (problem1: Problem, p2: Problem) => {
+  const filterProblem = (problem1: IProblem, p2: IProblem) => {
     if (!p2) return true
     const { ...problem2 } = p2
 

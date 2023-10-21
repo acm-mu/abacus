@@ -1,19 +1,18 @@
-import { Problem as ProblemType } from 'abacus'
-import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
-import { Divider, Menu, MenuItemProps } from 'semantic-ui-react'
 import MDEditor from '@uiw/react-md-editor'
+import type { IProblem } from 'abacus'
+import { ProblemRepository } from 'api'
 import { Block, Countdown, NotFound, PageLoading } from 'components'
 import SolutionsEditor from 'components/editor/SolutionsEditor'
 import TestDataEditor from 'components/editor/TestDataEditor'
 import { usePageTitle } from 'hooks'
-import {ProblemRepository} from 'api'
-import './Problem.scss'
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { Divider, Menu, MenuItemProps } from 'semantic-ui-react'
 
 const Problem = (): React.JSX.Element => {
   const problemRepo = new ProblemRepository()
   const [isLoading, setLoading] = useState(true)
-  const [problem, setProblem] = useState<ProblemType>()
+  const [problem, setProblem] = useState<IProblem>()
   const { pid } = useParams<{ pid: string }>()
 
   usePageTitle(`Abacus | Proctor ${problem?.name ?? ""}`)

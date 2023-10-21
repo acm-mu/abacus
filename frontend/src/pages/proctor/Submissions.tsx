@@ -1,12 +1,12 @@
-import { Submission } from 'abacus'
-import React, { useState, useEffect, useMemo, useContext } from 'react'
-import { Checkbox, Label, Table } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
-import { compare } from 'utils'
+import type { ISubmission } from 'abacus'
+import { SubmissionRepository } from 'api'
 import { PageLoading } from 'components'
 import { AppContext, SocketContext } from 'context'
 import { usePageTitle } from 'hooks'
-import {SubmissionRepository} from 'api'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { Checkbox, Label, Table } from 'semantic-ui-react'
+import { compare } from 'utils'
 
 type SortKey = 'date' | 'sid' | 'sub_no' | 'language'
 type SortConfig = {
@@ -19,7 +19,7 @@ const Submissions = (): React.JSX.Element => {
 
   const socket = useContext(SocketContext)
   const [isLoading, setLoading] = useState(true)
-  const [submissions, setSubmissions] = useState<Submission[]>([])
+  const [submissions, setSubmissions] = useState<ISubmission[]>([])
   const [isMounted, setMounted] = useState(true)
   const [showViewed, setShowViewed] = useState(false)
 
@@ -30,13 +30,13 @@ const Submissions = (): React.JSX.Element => {
     direction: 'ascending'
   })
 
-  const sort = (newColumn: SortKey, submission_list: Submission[] = submissions) => {
+  const sort = (newColumn: SortKey, submission_list: ISubmission[] = submissions) => {
     const newDirection = column === newColumn && direction == 'ascending' ? 'descending' : 'ascending'
     setSortConfig({ column: newColumn, direction: newDirection })
 
     setSubmissions(
       submission_list.sort(
-        (s1: Submission, s2: Submission) =>
+        (s1: ISubmission, s2: ISubmission) =>
           compare(s1[newColumn] || 'ZZ', s2[newColumn] || 'ZZ') * (direction == 'ascending' ? 1 : -1)
       )
     )
@@ -51,11 +51,11 @@ const Submissions = (): React.JSX.Element => {
 
   const loadSubmissions = async () => {
     const submissions = new SubmissionRepository()
-    const response = await submissions.getMany({filterBy: {division: 'blue'}})
+    const response = await submissions.getMany({ filterBy: { division: 'blue' } })
 
     if (!isMounted) return
 
-    setSubmissions(response.data?.map((submission) => ({...submission, checked: false})))
+    setSubmissions(response.data?.map((submission) => ({ ...submission, checked: false })))
   }
 
   const onFilterChange = () => setShowViewed(!showViewed)
@@ -91,7 +91,7 @@ const Submissions = (): React.JSX.Element => {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {filteredSubmissions.length == 0 ? (
+          {!filteredSubmissions.length ? (
             <Table.Row>
               <Table.Cell colSpan={'100%'}>No Submissions</Table.Cell>
             </Table.Row>

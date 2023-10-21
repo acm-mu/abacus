@@ -1,12 +1,12 @@
-import { Submission as SubmissionType } from 'abacus'
-import React, { useState, useEffect, useContext } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import type { ISubmission } from 'abacus'
+import { SubmissionRepository } from 'api'
 import { NotFound, PageLoading, SubmissionView } from 'components'
-import { Button, Grid } from 'semantic-ui-react'
 import { AppContext } from 'context'
 import { saveAs } from 'file-saver'
 import { usePageTitle } from 'hooks'
-import {SubmissionRepository} from 'api'
+import React, { useContext, useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { Button, Grid } from 'semantic-ui-react'
 
 const Submission = (): React.JSX.Element => {
   usePageTitle("Abacus | Admin Submission")
@@ -14,7 +14,7 @@ const Submission = (): React.JSX.Element => {
   const submissionRepository = new SubmissionRepository()
 
   const { sid } = useParams<{ sid: string }>()
-  const [submission, setSubmission] = useState<SubmissionType>()
+  const [submission, setSubmission] = useState<ISubmission>()
   const [isLoading, setLoading] = useState(true)
   const [isMounted, setMounted] = useState(true)
   const [isRerunning, setRerunning] = useState(false)
@@ -29,6 +29,7 @@ const Submission = (): React.JSX.Element => {
   const navigate = useNavigate()
 
   const loadSubmission = async () => {
+    if (!sid) return
     const response = await submissionRepository.get(sid)
 
     if (!isMounted) return
@@ -74,7 +75,7 @@ const Submission = (): React.JSX.Element => {
     setRerunning(true)
     const response = await submissionRepository.rerun(submission.sid)
     if (response.ok) {
-      setSubmission({team: submission?.team, problem: submission?.problem, ...response.data})
+      setSubmission({ team: submission?.team, problem: submission?.problem, ...response.data })
     }
     setRerunning(false)
   }
@@ -107,7 +108,7 @@ const Submission = (): React.JSX.Element => {
   const flag = async () => {
     if (!sid) return
     setFlagging({ ...isFlagging, [sid]: true })
-    const response = await submissionRepository.update(sid, {viewed: true, flagged: user})
+    const response = await submissionRepository.update(sid, { viewed: true, flagged: user })
 
     if (response.ok) {
       setSubmission({ ...submission, viewed: true, flagged: user })
@@ -119,7 +120,7 @@ const Submission = (): React.JSX.Element => {
   const unflag = async () => {
     if (!sid) return
     setUnFlagging({ ...isUnFlagging, [sid]: true })
-    const response = await submissionRepository.update(sid, {flagged: undefined})
+    const response = await submissionRepository.update(sid, { flagged: undefined })
 
     if (response.ok) {
       setSubmission({ ...submission, flagged: undefined })

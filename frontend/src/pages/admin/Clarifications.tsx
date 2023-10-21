@@ -1,14 +1,14 @@
-import { Clarification } from 'abacus'
+import type { IClarification } from 'abacus'
+import { ClarificationRepository } from 'api'
 import { Block, ClarificationModal, DivisionLabel, PageLoading } from 'components'
+import { usePageTitle } from 'hooks'
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
 import { Button, Checkbox, CheckboxProps, Label, Table } from 'semantic-ui-react'
 import { compare } from 'utils'
-import { usePageTitle } from 'hooks'
-import {ClarificationRepository} from 'api'
 
-interface ClarificationItem extends Clarification {
+interface ClarificationItem extends IClarification {
   checked: boolean
 }
 
@@ -41,7 +41,7 @@ const Clarifications = (): React.JSX.Element => {
 
   const loadClarifications = async () => {
     //include page as query, so that API can fetch it.
-    const response = await clarificationRepo.getMany({sortBy: 'date'})
+    const response = await clarificationRepo.getMany({ sortBy: 'date' })
 
     if (response.ok && response.data) {
       setClarifications(response.data.map((clarification) => ({ ...clarification, checked: false })))
@@ -57,7 +57,7 @@ const Clarifications = (): React.JSX.Element => {
     setSortConfig({ column: newColumn, direction: newDirection })
     setClarifications(
       clarification_list.sort(
-        (c1: Clarification, c2: Clarification) =>
+        (c1: IClarification, c2: IClarification) =>
           compare(c1[newColumn] || 'ZZ', c2[newColumn] || 'ZZ') * (direction == 'ascending' ? 1 : -1)
       )
     )
@@ -147,7 +147,7 @@ const Clarifications = (): React.JSX.Element => {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {clarifications.length == 0 ? (
+            {!clarifications.length ? (
               <Table.Row>
                 <Table.Cell colSpan={'100%'}>No Clarifications</Table.Cell>
               </Table.Row>

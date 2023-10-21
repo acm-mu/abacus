@@ -1,11 +1,11 @@
-import { Problem } from 'abacus'
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import type { IProblem } from 'abacus'
+import { ProblemRepository } from 'api'
 import { StatusMessage } from 'components'
 import { ProblemEditor } from 'components/editor'
 import { StatusMessageType } from 'components/StatusMessage'
 import { usePageTitle } from 'hooks'
-import {ProblemRepository} from 'api'
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const NewProblem = (): React.JSX.Element => {
   usePageTitle("Abacus | Admin New Problem")
@@ -13,14 +13,14 @@ const NewProblem = (): React.JSX.Element => {
   const navigate = useNavigate()
   const [message, setMessage] = useState<StatusMessageType>()
 
-  const handleSubmit = async (problem: Problem) => {
+  const handleSubmit = async (problem: IProblem) => {
     const problems = new ProblemRepository()
     const response = await problems.create(problem)
 
     if (response.ok) {
       navigate(`/admin/problems`)
     } else {
-      setMessage({ type: 'error', message: response.errors})
+      setMessage({ type: 'error', message: response.errors })
     }
   }
 

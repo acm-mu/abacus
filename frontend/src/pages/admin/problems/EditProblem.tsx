@@ -1,11 +1,11 @@
-import { Problem } from 'abacus'
-import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
-import { ProblemEditor } from 'components/editor'
+import type { IProblem } from 'abacus'
+import { ProblemRepository } from 'api'
 import { PageLoading, StatusMessage } from 'components'
+import { ProblemEditor } from 'components/editor'
 import { StatusMessageType } from 'components/StatusMessage'
 import { usePageTitle } from 'hooks'
-import {ProblemRepository} from 'api'
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
 
 const EditProblems = (): React.JSX.Element => {
   usePageTitle("Abacus | Admin Edit Problem")
@@ -13,7 +13,7 @@ const EditProblems = (): React.JSX.Element => {
   const problemRepo = new ProblemRepository()
 
   const { pid } = useParams<{ pid: string }>()
-  const [problem, setProblem] = useState<Problem>()
+  const [problem, setProblem] = useState<IProblem>()
 
   const [message, setMessage] = useState<StatusMessageType>()
   const [isMounted, setMounted] = useState(true)
@@ -27,6 +27,7 @@ const EditProblems = (): React.JSX.Element => {
   }, [])
 
   const loadProblem = async () => {
+    if (!pid) return
 
     const response = await problemRepo.get(pid)
 
@@ -41,7 +42,7 @@ const EditProblems = (): React.JSX.Element => {
     setTimeout(() => setMessage(undefined), 5 * 1000)
   }
 
-  const handleSubmit = async (problem: Problem) => {
+  const handleSubmit = async (problem: IProblem) => {
     const response = await problemRepo.update(problem.pid, problem)
 
     if (response.ok) {

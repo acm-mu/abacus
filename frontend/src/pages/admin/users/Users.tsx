@@ -1,16 +1,16 @@
-import { User } from 'abacus'
+import type { IUser } from 'abacus'
+import { UserRepository } from 'api'
 import { PageLoading, StatusMessage } from 'components'
 import CustomTable from 'components/CustomTable'
 import { AppContext } from 'context'
 import { saveAs } from 'file-saver'
+import { usePageTitle } from 'hooks'
 import React, { ChangeEvent, useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Grid } from 'semantic-ui-react'
 import CreateUser from './CreateUser'
-import { usePageTitle } from 'hooks'
-import {UserRepository} from 'api'
 
-interface UserItem extends User {
+interface UserItem extends IUser {
   checked: boolean
 }
 
@@ -54,7 +54,7 @@ type SortConfig = {
 
 const Users = (): React.JSX.Element => {
   usePageTitle("Abacus | Users")
-  
+
   const userRepo = new UserRepository()
   const { user } = useContext(AppContext)
 
@@ -77,7 +77,7 @@ const Users = (): React.JSX.Element => {
 
     setUsers(
       users_list.sort(
-        (u1: User, u2: User) =>
+        (u1: IUser, u2: IUser) =>
           (u1[newColumn] || 'ZZ').localeCompare(u2[newColumn] || 'ZZ') * (direction == 'ascending' ? 1 : -1)
       )
     )
@@ -107,7 +107,7 @@ const Users = (): React.JSX.Element => {
   }
 
   const downloadUsers = () => {
-    const sanitized = JSON.stringify(users as User[], null, '\t')
+    const sanitized = JSON.stringify(users as IUser[], null, '\t')
     saveAs(new File([sanitized], 'users.json', { type: 'text/json;charset=utf-8' }))
   }
 
@@ -130,7 +130,7 @@ const Users = (): React.JSX.Element => {
 
         const username = 'team' + i
 
-        const response =await  userRepo.create({
+        const response = await userRepo.create({
           division: team.division,
           display_name: team.team_name,
           school: team.school,

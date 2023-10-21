@@ -1,8 +1,8 @@
+import type { IScratchProject } from 'abacus'
+import { ScratchService } from 'api'
 import React, { useEffect, useState } from 'react'
-import {ScratchProject} from "abacus"
-import { Grid, Header, Icon, Label, Segment } from 'semantic-ui-react'
 import Moment from 'react-moment'
-import {ScratchService} from 'api'
+import { Grid, Header, Icon, Label, Segment } from 'semantic-ui-react'
 import './ScratchViewer.scss'
 
 interface ScratchViewerProps {
@@ -12,7 +12,7 @@ interface ScratchViewerProps {
 
 const ScratchViewer = ({ project_id, content = <></> }: ScratchViewerProps): JSX.Element => {
   const scratchService = new ScratchService()
-  const [project, setProject] = useState<ScratchProject>()
+  const [project, setProject] = useState<IScratchProject>()
 
   useEffect(() => {
     loadProject()

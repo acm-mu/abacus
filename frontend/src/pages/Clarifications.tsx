@@ -1,4 +1,4 @@
-import { Clarification } from 'abacus'
+import type { IClarification } from 'abacus'
 import { ClarificationRepository } from 'api'
 import './Clarifications.scss'
 import { Block, PageLoading, Unauthorized } from 'components'
@@ -32,7 +32,7 @@ const Clarifications = (): React.JSX.Element => {
 
   const { user } = useContext(AppContext)
   const [isLoading, setLoading] = useState(true)
-  const [clarifications, setClarifications] = useState<{ [key: string]: Clarification }>()
+  const [clarifications, setClarifications] = useState<IClarification[]>()
   const { cid } = useParams<{ cid: string }>()
   const [activeItem, setActiveItem] = useState<string>(cid || '')
   const [showClosed, setShowClosed] = useState(false)
@@ -55,7 +55,7 @@ const Clarifications = (): React.JSX.Element => {
 
   if (!user || user.role === 'proctor') return <Unauthorized />
 
-  const ClarificationsMenu = ({ clarifications }: { clarifications: Clarification[] }) => {
+  const ClarificationsMenu = ({ clarifications }: { clarifications: IClarification[] }) => {
     const onFilterChange = (_event: FormEvent<HTMLInputElement>, { checked }: CheckboxProps) =>
       setShowClosed(checked || false)
     const handleItemClick = (_e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, { name }: MenuItemProps) =>
@@ -68,7 +68,7 @@ const Clarifications = (): React.JSX.Element => {
           {Object.values(clarifications)
             .filter((c1) => showClosed || c1.open)
             .sort((c1, c2) => c2.date - c1.date)
-            .map((clarification: Clarification) => (
+            .map((clarification: IClarification) => (
               <Menu.Item
                 name={clarification.cid}
                 onClick={handleItemClick}
@@ -96,7 +96,7 @@ const Clarifications = (): React.JSX.Element => {
     )
   }
 
-  const ClarificationComment = ({ clarification }: { clarification: Clarification }) => {
+  const ClarificationComment = ({ clarification }: { clarification: IClarification }) => {
     // Admins can delete any clarification, Judge's can delete their own
     const canDelete = user?.role == 'admin' || (user?.role == 'judge' && clarification.user.uid == user?.uid)
 
@@ -128,7 +128,7 @@ const Clarifications = (): React.JSX.Element => {
     )
   }
 
-  const ClarificationView = ({ clarification }: { clarification?: Clarification }) => {
+  const ClarificationView = ({ clarification }: { clarification?: IClarification }) => {
     const [body, setBody] = useState('')
     const [replyLoading, setReplyLoading] = useState(false)
 

@@ -1,18 +1,18 @@
-import React, { useContext, useEffect, useState } from 'react'
+import MDEditor from '@uiw/react-md-editor'
+import type { IProblem } from 'abacus'
+import { ProblemRepository } from 'api'
 import { Block, Countdown, PageLoading, Unauthorized } from 'components'
 import { AppContext } from 'context'
-import { Divider } from 'semantic-ui-react'
-import { Problem } from 'abacus'
-import MDEditor from '@uiw/react-md-editor'
 import { usePageTitle } from 'hooks'
-import ProblemRepository from "../../api/problem.repository";
+import React, { useContext, useEffect, useState } from 'react'
+import { Divider } from 'semantic-ui-react'
 
 const Home = (): React.JSX.Element => {
   usePageTitle("Abacus | Eagle Problem")
 
   const { user, settings } = useContext(AppContext)
   const [isLoading, setLoading] = useState(true)
-  const [problem, setProblem] = useState<Problem>()
+  const [problem, setProblem] = useState<IProblem>()
   const [isMounted, setMounted] = useState(true)
 
   useEffect(() => {

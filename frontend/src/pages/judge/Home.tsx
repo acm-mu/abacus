@@ -1,11 +1,11 @@
+import type { ISubmission } from 'abacus'
+import { SubmissionRepository } from 'api'
 import { Block, PageLoading, Unauthorized } from 'components'
 import { AppContext, SocketContext } from 'context'
-import React, { useContext, useEffect, useMemo, useState } from 'react'
-import { Table } from 'semantic-ui-react'
-import { Submission } from 'abacus'
-import { Link } from 'react-router-dom'
 import { usePageTitle } from 'hooks'
-import {SubmissionRepository} from 'api'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { Table } from 'semantic-ui-react'
 
 const Home = (): React.JSX.Element => {
   usePageTitle("Abacus | Judging Dashboard")
@@ -15,7 +15,7 @@ const Home = (): React.JSX.Element => {
   const socket = useContext(SocketContext)
   const [isLoading, setLoading] = useState(true)
   const [isMounted, setMounted] = useState(true)
-  const [submissions, setSubmissions] = useState<Submission[]>()
+  const [submissions, setSubmissions] = useState<ISubmission[]>()
 
   const claimedSubmissions = useMemo(
     () =>
@@ -41,8 +41,9 @@ const Home = (): React.JSX.Element => {
   )
 
   const loadData = async () => {
-    const response = await submissionRepository.getMany({filterBy: {
-      }})
+    const response = await submissionRepository.getMany({
+      filterBy: {}
+    })
 
     if (!isMounted) return
 

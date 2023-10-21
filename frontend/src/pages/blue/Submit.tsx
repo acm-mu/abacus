@@ -1,13 +1,12 @@
-import { Problem, Submission } from 'abacus'
-import React, { ChangeEvent, useContext, useEffect, useState } from 'react'
-import { Form, Button, Breadcrumb } from 'semantic-ui-react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import type { IProblem, ISubmission } from 'abacus'
+import { ProblemRepository, SubmissionRepository } from 'api'
 import { Block, Countdown, FileDialog, NotFound, PageLoading, StatusMessage, Unauthorized } from 'components'
 import { AppContext } from 'context'
-import { Language, languages } from 'utils'
-import { Helmet } from 'react-helmet'
-import {ProblemRepository, SubmissionRepository} from 'api'
 import { usePageTitle } from 'hooks'
+import React, { ChangeEvent, useContext, useEffect, useState } from 'react'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Breadcrumb, Button, Form } from 'semantic-ui-react'
+import { Language, languages } from 'utils'
 
 const Submit = (): React.JSX.Element => {
   usePageTitle("Abacus | Blue Submit")
@@ -16,8 +15,8 @@ const Submit = (): React.JSX.Element => {
   const submissionRepo = new SubmissionRepository()
 
   const { user } = useContext(AppContext)
-  const [submissions, setSubmissions] = useState<Submission[]>()
-  const [problem, setProblem] = useState<Problem>()
+  const [submissions, setSubmissions] = useState<ISubmission[]>()
+  const [problem, setProblem] = useState<IProblem>()
   const [isLoading, setLoading] = useState(true)
   const [language, setLanguage] = useState<Language>()
   const [file, setFile] = useState<File>()
@@ -37,7 +36,7 @@ const Submit = (): React.JSX.Element => {
   }, [])
 
   const loadProblem = async () => {
-    const response = await problemRepo.getMany({filterBy: {division: 'blue', id: pid}})
+    const response = await problemRepo.getMany({ filterBy: { division: 'blue', id: pid } })
 
     if (!isMounted) return
 
@@ -46,7 +45,7 @@ const Submit = (): React.JSX.Element => {
 
       setProblem(problem)
       if (problem) {
-        const submissionResponse = await submissionRepo .getMany ({
+        const submissionResponse = await submissionRepo.getMany({
           filterBy: {
             teamId: user?.uid,
             problemId: problem.pid

@@ -1,18 +1,19 @@
-import { Submission } from 'abacus'
-import React, { ChangeEvent, useState, useEffect, useMemo, useContext } from 'react'
-import { Button, Checkbox, Label, Table } from 'semantic-ui-react'
-import Moment from 'react-moment'
-import { Link } from 'react-router-dom'
-import { compare } from 'utils'
+import type { ISubmission } from 'abacus'
+import { SubmissionRepository } from 'api'
 import { PageLoading } from 'components'
 import { AppContext, SocketContext } from 'context'
 import { saveAs } from 'file-saver'
 import { usePageTitle } from 'hooks'
-import {SubmissionRepository} from 'api'
+import React, { ChangeEvent, useContext, useEffect, useMemo, useState } from 'react'
+import Moment from 'react-moment'
+import { Link } from 'react-router-dom'
+import { Button, Checkbox, Label, Table } from 'semantic-ui-react'
+import { compare } from 'utils'
 
-interface SubmissionItem extends Submission {
+interface SubmissionItem extends ISubmission {
   checked: boolean
 }
+
 type SortKey = 'date' | 'sid' | 'sub_no' | 'language' | 'status' | 'runtime' | 'score'
 type SortConfig = {
   column: SortKey
@@ -46,7 +47,7 @@ const Submissions = (): React.JSX.Element => {
 
     setSubmissions(
       submission_list.sort(
-        (s1: Submission, s2: Submission) =>
+        (s1: ISubmission, s2: ISubmission) =>
           compare(s1[newColumn] || 'ZZ', s2[newColumn] || 'ZZ') * (direction == 'ascending' ? 1 : -1)
       )
     )
@@ -72,7 +73,7 @@ const Submissions = (): React.JSX.Element => {
       setSubmissions(
         response.data
           .filter((submission) => !submission.team.disabled)
-          .map((submission) => ({...submission, checked: false})))
+          .map((submission) => ({ ...submission, checked: false })))
     }
   }
 
@@ -103,7 +104,7 @@ const Submissions = (): React.JSX.Element => {
     setClaiming({ ...isClaiming, [sid]: true })
 
     const submissionRepo = new SubmissionRepository()
-    const response = await submissionRepo.update(sid, {claimed: user?.uid})
+    const response = await submissionRepo.update(sid, { claimed: user?.uid })
 
     if (response.ok) {
       setSubmissions(submissions.map((sub) => (sub.sid == sid ? { ...sub, claimed: user } : sub)))
@@ -114,7 +115,7 @@ const Submissions = (): React.JSX.Element => {
 
   const unclaim = async (sid: string) => {
     setClaiming({ ...isClaiming, [sid]: true })
-    const response = await submissionRepo.update(sid, {claimed: null})
+    const response = await submissionRepo.update(sid, { claimed: null })
 
     if (response.ok) {
       setSubmissions(submissions.map((sub) => (sub.sid == sid ? { ...sub, claimed: undefined } : sub)))
@@ -123,7 +124,7 @@ const Submissions = (): React.JSX.Element => {
     setClaiming({ ...isClaiming, [sid]: false })
   }
 
-  const urlFilter = ({ claimed }: Submission) => {
+  const urlFilter = ({ claimed }: ISubmission) => {
     switch (filter) {
       case 'my_claimed':
         return !showReleased && claimed?.uid == user?.uid

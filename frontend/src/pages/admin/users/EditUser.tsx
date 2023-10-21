@@ -1,20 +1,20 @@
-import { User } from 'abacus'
+import type { IUser } from 'abacus'
+import { UserRepository } from 'api'
+import { Block, NotFound, PageLoading } from 'components'
+import StatusMessage, { StatusMessageType } from 'components/StatusMessage'
+import { usePageTitle } from 'hooks'
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Button, Checkbox, CheckboxProps, Form, Input, Label, Menu, Select } from 'semantic-ui-react'
-import { Block, NotFound, PageLoading } from 'components'
 import { divisions, roles } from 'utils'
-import StatusMessage, { StatusMessageType } from 'components/StatusMessage'
-import {UserRepository} from 'api'
-import { usePageTitle } from 'hooks'
 
 const EditUser = (): React.JSX.Element => {
   usePageTitle("Abacus | Edit User")
 
   const userRepo = new UserRepository()
 
-  const [user, setUser] = useState<User>()
-  const [formUser, setFormUser] = useState<User>({
+  const [user, setUser] = useState<IUser>()
+  const [formUser, setFormUser] = useState<IUser>({
     uid: '',
     username: '',
     role: '',
@@ -36,8 +36,9 @@ const EditUser = (): React.JSX.Element => {
   const handleSelectChange = (_: never, { name, value }: HTMLInputElement) =>
     setFormUser({ ...formUser, [name]: value })
   const handleCheckboxChange = async (_event: React.FormEvent<HTMLInputElement>, { checked }: CheckboxProps) => {
+    if (!uid) return
     setSaving(true)
-    const response = await userRepo.update(uid, {disabled: checked})
+    const response = await userRepo.update(uid, { disabled: checked })
 
     if (response.ok) {
       await loadUser()
@@ -67,12 +68,13 @@ const EditUser = (): React.JSX.Element => {
   }
 
   const loadUser = async () => {
+    if (!uid) return
     const response = await userRepo.get(uid)
     if (!isMounted) return
 
-    if(response.ok && response.data) {
+    if (response.ok && response.data) {
       setUser(response.data)
-      setFormUser({...response.data, password: ''})
+      setFormUser({ ...response.data, password: '' })
     }
 
     setLoading(false)

@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import type { ISubmission } from 'abacus'
 import { Block, Countdown } from 'components'
-import { Breadcrumb, Button, Label, Loader, Table } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
-import { Problem } from '.'
-import { Submission } from 'abacus'
 import { usePageTitle } from 'hooks'
+import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { Breadcrumb, Button, Label, Loader, Table } from 'semantic-ui-react'
+import { Problem } from '.'
 
 const PracticeProblems = (): React.JSX.Element => {
   usePageTitle("Abacus | Practice Problems")
@@ -13,7 +13,7 @@ const PracticeProblems = (): React.JSX.Element => {
   const [isLoading, setLoading] = useState(true)
 
   const [problems, setProblems] = useState<Problem[]>([])
-  const submissions: { [key: string]: Submission } = localStorage.submissions
+  const submissions: { [key: string]: ISubmission } = localStorage.submissions
     ? JSON.parse(localStorage.submissions)
     : {}
 

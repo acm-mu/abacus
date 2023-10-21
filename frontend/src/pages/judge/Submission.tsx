@@ -1,12 +1,12 @@
-import { Submission as SubmissionType } from 'abacus'
-import React, { useState, useEffect, useContext } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import type { ISubmission } from 'abacus'
+import { SubmissionRepository } from 'api'
 import { NotFound, PageLoading, StatusMessage, SubmissionView } from 'components'
-import { Button } from 'semantic-ui-react'
 import { AppContext, SocketContext } from 'context'
 import { saveAs } from 'file-saver'
 import { usePageTitle } from 'hooks'
-import {SubmissionRepository} from 'api'
+import React, { useContext, useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { Button } from 'semantic-ui-react'
 
 const Submission = (): React.JSX.Element => {
   usePageTitle("Abacus | Judge Submission")
@@ -15,7 +15,7 @@ const Submission = (): React.JSX.Element => {
 
   const socket = useContext(SocketContext)
   const { sid } = useParams<{ sid: string }>()
-  const [submission, setSubmission] = useState<SubmissionType>()
+  const [submission, setSubmission] = useState<ISubmission>()
   const [isLoading, setLoading] = useState(true)
   const [isRerunning, setRerunning] = useState(false)
   const [isReleasing, setReleasing] = useState(false)
@@ -73,7 +73,7 @@ const Submission = (): React.JSX.Element => {
     if (response.ok) {
       const result = response.data
       if (result)
-        setSubmission({...submission, released: result.released, claimed: undefined })
+        setSubmission({ ...submission, released: result.released, claimed: undefined })
     } else {
       try {
         setError(response.errors)
@@ -87,7 +87,7 @@ const Submission = (): React.JSX.Element => {
   const claim = async (sid: string) => {
     setClaiming({ ...isClaiming, [sid]: true })
 
-    const response = await submissionRepository.update(sid, {claimed: user?.uid})
+    const response = await submissionRepository.update(sid, { claimed: user?.uid })
 
     if (response.ok) {
       setSubmission({ ...submission, claimed: user })
@@ -104,7 +104,7 @@ const Submission = (): React.JSX.Element => {
 
   const unclaim = async (sid: string) => {
     setClaiming({ ...isClaiming, [sid]: true })
-    const response = await submissionRepository.update(sid, {claimed: null})
+    const response = await submissionRepository.update(sid, { claimed: null })
 
     if (response.ok) {
       setSubmission({ ...submission, claimed: undefined })

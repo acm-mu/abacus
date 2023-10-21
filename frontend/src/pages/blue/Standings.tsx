@@ -1,13 +1,13 @@
-import { Problem, StandingsUser } from 'abacus'
-import React, { useContext, useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Table } from 'semantic-ui-react'
+import type { IProblem, IStandingsUser } from 'abacus'
+import { StandingsService } from 'api'
 import { Block, Countdown, PageLoading, StatusMessage } from 'components'
 import '../Standings.scss'
 import { AppContext, SocketContext } from 'context'
-import { isThirtyMinutesBefore } from 'utils'
 import { usePageTitle } from 'hooks'
-import {StandingsService} from 'api'
+import React, { useContext, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { Table } from 'semantic-ui-react'
+import { isThirtyMinutesBefore } from 'utils'
 
 const Standings = (): React.JSX.Element => {
   usePageTitle("Abacus | Blue Standings")
@@ -16,8 +16,8 @@ const Standings = (): React.JSX.Element => {
 
   const { user, settings } = useContext(AppContext)
   const socket = useContext(SocketContext)
-  const [problems, setProblems] = useState<Problem[]>()
-  const [standings, setStandings] = useState<StandingsUser[]>()
+  const [problems, setProblems] = useState<IProblem[]>()
+  const [standings, setStandings] = useState<IStandingsUser[]>()
   const [isLoading, setLoading] = useState(true)
   const [isMounted, setMounted] = useState(true)
 
@@ -26,11 +26,11 @@ const Standings = (): React.JSX.Element => {
 
     if (!isMounted) return
 
-    if(response.ok) {
+    if (response.ok) {
       setStandings(response.data.standings)
 
       if (data.problems) {
-        const problems = Object.values(data.problems) as Problem[]
+        const problems = Object.values(data.problems) as IProblem[]
         setProblems(problems.sort((p1, p2) => p1.id.localeCompare(p2.id)))
       }
     }

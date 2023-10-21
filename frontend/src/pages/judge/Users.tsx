@@ -1,10 +1,10 @@
-import { User } from 'abacus'
-import React, { useState, useEffect, useContext } from 'react'
-import { Table } from 'semantic-ui-react'
-import { AppContext } from 'context'
+import type { IUser } from 'abacus'
+import { UserRepository } from 'api'
 import { PageLoading, StatusMessage } from 'components'
-import {UserRepository} from 'api'
+import { AppContext } from 'context'
 import { usePageTitle } from 'hooks'
+import React, { useContext, useEffect, useState } from 'react'
+import { Table } from 'semantic-ui-react'
 
 type SortKey = 'uid' | 'display_name' | 'username' | 'role' | 'division' | 'school'
 type SortConfig = {
@@ -18,7 +18,7 @@ const Teams = (): React.JSX.Element => {
   const userRepository = new UserRepository()
   const { user } = useContext(AppContext)
 
-  const [users, setUsers] = useState<User[]>([])
+  const [users, setUsers] = useState<IUser[]>([])
   const [isLoading, setLoading] = useState(true)
   const [error, setError] = useState<string>()
 
@@ -28,13 +28,13 @@ const Teams = (): React.JSX.Element => {
     direction: 'ascending'
   })
 
-  const sort = (newColumn: SortKey, users_list: User[] = users) => {
+  const sort = (newColumn: SortKey, users_list: IUser[] = users) => {
     const newDirection = column === newColumn && direction === 'ascending' ? 'descending' : 'ascending'
     setSortConfig({ column: newColumn, direction: newDirection })
 
     setUsers(
       users_list.sort(
-        (u1: User, u2: User) =>
+        (u1: IUser, u2: IUser) =>
           (u1[newColumn] || 'ZZ').localeCompare(u2[newColumn] || 'ZZ') * (direction == 'ascending' ? 1 : -1)
       )
     )
@@ -87,7 +87,7 @@ const Teams = (): React.JSX.Element => {
       </Table.Row>
     </Table.Header>
     <Table.Body>
-      {users.map((team: User) => {
+      {users.map((team: IUser) => {
         return (
           <Table.Row key={team.uid} uuid={`${team.uid}`}>
             <Table.Cell>{team.username}</Table.Cell>
