@@ -1,11 +1,11 @@
 import { User } from 'abacus'
+import { Block, FileDialog } from 'components'
+import sha256 from 'crypto-js/sha256'
+import config from 'environment'
+import { useIsMounted, usePageTitle } from 'hooks'
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button, Label, Message, Table } from 'semantic-ui-react'
-import { Block, FileDialog } from 'components'
-import config from 'environment'
-import sha256 from 'crypto-js/sha256'
-import { usePageTitle } from 'hooks'
 
 interface UserItem extends User {
   checked: boolean
@@ -13,12 +13,12 @@ interface UserItem extends User {
 
 const UploadUsers = (): React.JSX.Element => {
   usePageTitle("Abacus | Admin Upload Users")
+  const isMounted = useIsMounted()
 
   const navigate = useNavigate()
   const [file, setFile] = useState<File>()
   const [existingUsers, setExistingUsers] = useState<{ [key: string]: User }>()
   const [newUsers, setNewUsers] = useState<UserItem[]>()
-  const [isMounted, setMounted] = useState(true)
 
   const uploadChange = ({ target: { files } }: ChangeEvent<HTMLInputElement>) => {
     if (!files?.length) return
@@ -45,15 +45,13 @@ const UploadUsers = (): React.JSX.Element => {
       headers: { Authorization: `Bearer ${localStorage.accessToken}` }
     })
 
-    if (!response.ok || !isMounted) return
+    if (!response.ok || !isMounted()) return
 
     setExistingUsers(await response.json())
   }
 
   useEffect(() => {
     loadExistingUsers()
-
-    return () => setMounted(false)
   }, [])
 
   const filterUser = (user1: User, u2: User) => {

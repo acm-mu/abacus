@@ -1,29 +1,26 @@
-import { Problem as ProblemType } from 'abacus'
-import React, { useState, useEffect, useContext } from 'react'
-import { useParams } from 'react-router-dom'
-import { Divider } from 'semantic-ui-react'
 import MDEditor from '@uiw/react-md-editor'
+import { Problem as ProblemType } from 'abacus'
 import { Block, Countdown, NotFound, PageLoading } from 'components'
-import config from 'environment'
 import { AppContext } from 'context'
 import './Problem.scss'
-import { usePageTitle } from 'hooks'
+import config from 'environment'
+import { useIsMounted, usePageTitle } from 'hooks'
+import React, { useContext, useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { Divider } from 'semantic-ui-react'
 
 const Problem = (): React.JSX.Element => {
+  const isMounted = useIsMounted()
+
   const { user } = useContext(AppContext)
   const [isLoading, setLoading] = useState(true)
   const [problem, setProblem] = useState<ProblemType>()
   const { pid } = useParams<{ pid: string }>()
 
-  const [isMounted, setMounted] = useState(true)
-
   usePageTitle(`Abacus | ${problem?.name ?? ""}`)
 
   useEffect(() => {
     loadProblem()
-    return () => {
-      setMounted(false)
-    }
   }, [])
 
   const loadProblem = async () => {
@@ -36,7 +33,7 @@ const Problem = (): React.JSX.Element => {
       }
     )
 
-    if (!isMounted) return
+    if (!isMounted()) return
 
     if (response.ok) {
       const problem = Object.values(await response.json())[0] as ProblemType

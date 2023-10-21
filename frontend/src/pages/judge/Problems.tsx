@@ -1,11 +1,11 @@
 import { Problem, Submission } from 'abacus'
-import React, { useState, useEffect, useContext } from 'react'
-import { Table } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
-import config from 'environment'
 import { Block, PageLoading } from 'components'
 import { AppContext } from 'context'
-import { usePageTitle } from 'hooks'
+import config from 'environment'
+import { useIsMounted, usePageTitle } from 'hooks'
+import React, { useContext, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { Table } from 'semantic-ui-react'
 
 type SortKey = 'id' | 'name'
 type SortConfig = {
@@ -15,11 +15,11 @@ type SortConfig = {
 
 const Problems = (): React.JSX.Element => {
   usePageTitle("Abacus | Judge Problems")
+  const isMounted = useIsMounted()
 
   const [isLoading, setLoading] = useState(true)
   const [problems, setProblems] = useState<Problem[]>([])
   const [submissions, setSubmissions] = useState<{ [key: string]: Submission[] }>()
-  const [isMounted, setMounted] = useState(true)
   const { user } = useContext(AppContext)
 
   const [{ column, direction }, setSortConfig] = useState<SortConfig>({
@@ -41,9 +41,6 @@ const Problems = (): React.JSX.Element => {
 
   useEffect(() => {
     loadProblems()
-    return () => {
-      setMounted(false)
-    }
   }, [])
 
   const loadProblems = async () => {
@@ -56,7 +53,7 @@ const Problems = (): React.JSX.Element => {
     if (response.ok) {
       const problems = Object.values(await response.json()) as Problem[]
 
-      if (!isMounted) return
+      if (!isMounted()) return
 
       sort('id', problems)
 
@@ -66,7 +63,7 @@ const Problems = (): React.JSX.Element => {
         }
       })
 
-      if (!isMounted) return
+      if (!isMounted()) return
 
       const submissions = Object.values(await response.json()) as Submission[]
       const subs: { [key: string]: Submission[] } = {}

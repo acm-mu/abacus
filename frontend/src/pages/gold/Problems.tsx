@@ -1,27 +1,24 @@
 import { Problem, Submission } from 'abacus'
-import React, { useState, useEffect, useContext } from 'react'
-import { Table } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
 import { Block, Countdown, PageLoading, Unauthorized } from 'components'
-import config from 'environment'
 import { AppContext } from 'context'
+import config from 'environment'
+import { useIsMounted, usePageTitle } from 'hooks'
+import React, { useContext, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { Table } from 'semantic-ui-react'
 import { userHome } from 'utils'
-import { usePageTitle } from 'hooks'
 
 const Problems = (): React.JSX.Element => {
   usePageTitle("Abacus | Gold Problems")
+  const isMounted = useIsMounted()
 
   const { user, settings } = useContext(AppContext)
-  const [isMounted, setMounted] = useState(true)
   const [isLoading, setLoading] = useState(true)
   const [problems, setProblems] = useState<Problem[]>()
   const [submissions, setSubmissions] = useState<{ [key: string]: Submission[] }>()
 
   useEffect(() => {
     loadProblems()
-    return () => {
-      setMounted(false)
-    }
   }, [])
 
   const loadProblems = async () => {
@@ -31,7 +28,7 @@ const Problems = (): React.JSX.Element => {
       }
     })
 
-    if (!isMounted) return
+    if (!isMounted()) return
 
     if (response.ok) {
       const problems = Object.values(await response.json()) as Problem[]
@@ -43,7 +40,7 @@ const Problems = (): React.JSX.Element => {
         }
       })
 
-      if (!isMounted) return
+      if (!isMounted()) return
 
       if (response.ok) {
         const submissions: { [key: string]: Submission[] } = {}

@@ -1,25 +1,22 @@
-import React, { useContext, useEffect, useState } from 'react'
+import MDEditor from '@uiw/react-md-editor'
+import { Problem } from 'abacus'
 import { Block, Countdown, PageLoading, Unauthorized } from 'components'
 import { AppContext } from 'context'
-import { Divider } from 'semantic-ui-react'
-import { Problem } from 'abacus'
 import config from 'environment'
-import MDEditor from '@uiw/react-md-editor'
-import { usePageTitle } from 'hooks'
+import { useIsMounted, usePageTitle } from 'hooks'
+import React, { useContext, useEffect, useState } from 'react'
+import { Divider } from 'semantic-ui-react'
 
 const Home = (): React.JSX.Element => {
   usePageTitle("Abacus | Eagle Problem")
+  const isMounted = useIsMounted()
 
   const { user, settings } = useContext(AppContext)
   const [isLoading, setLoading] = useState(true)
   const [problem, setProblem] = useState<Problem>()
-  const [isMounted, setMounted] = useState(true)
 
   useEffect(() => {
     loadProblem()
-    return () => {
-      setMounted(false)
-    }
   }, [])
 
   const loadProblem = async () => {
@@ -29,7 +26,7 @@ const Home = (): React.JSX.Element => {
       }
     })
 
-    if (!isMounted) return
+    if (!isMounted()) return
 
     if (response.ok) {
       const problem = Object.values(await response.json())[0] as Problem

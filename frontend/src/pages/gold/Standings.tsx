@@ -7,7 +7,7 @@ import { Table } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import '../Standings.scss'
 import { isThirtyMinutesBefore } from 'utils'
-import { usePageTitle } from 'hooks'
+import { useIsMounted, usePageTitle } from 'hooks'
 
 interface GoldStandingsUser {
   uid: string
@@ -24,20 +24,20 @@ interface GoldStandingsUser {
 
 const Standings = (): React.JSX.Element => {
   usePageTitle("Abacus | Gold Standings")
+  const isMounted = useIsMounted()
 
   const { user, settings } = useContext(AppContext)
   const socket = useContext(SocketContext)
   const [problems, setProblems] = useState<Problem[]>()
   const [standings, setStandings] = useState<[]>()
   const [isLoading, setLoading] = useState(true)
-  const [isMounted, setMounted] = useState(true)
 
   const loadData = async () => {
     const response = await fetch(`${config.API_URL}/standings?division=gold`)
 
     const data = await response.json()
 
-    if (!isMounted) return
+    if (!isMounted()) return
 
     setStandings(data.standings)
 
@@ -64,9 +64,6 @@ const Standings = (): React.JSX.Element => {
 
   useEffect(() => {
     loadData()
-    return () => {
-      setMounted(false)
-    }
   }, [])
 
   if ((!settings || new Date() < settings.start_date) && settings && new Date() > settings?.practice_end_date)

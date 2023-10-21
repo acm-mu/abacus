@@ -1,28 +1,27 @@
-import React, { useState, useContext, useEffect } from 'react'
-import { Loader } from 'semantic-ui-react'
-import Moment from 'react-moment'
 import { Block, FlipClock } from 'components'
 import { AppContext } from 'context'
-
 import './Countdown.scss'
+import { useIsMounted } from 'hooks'
+import React, { useContext, useEffect, useState } from 'react'
+import Moment from 'react-moment'
+import { Loader } from 'semantic-ui-react'
 
 const Countdown = (): React.JSX.Element => {
+  const isMounted = useIsMounted()
+
   const { settings } = useContext(AppContext)
   const [time, setTime] = useState<Date>(new Date())
-  const [isMounted, setMounted] = useState(true)
-
   const diff = (date1: Date, date2: Date) => date1.getTime() - date2.getTime()
 
   useEffect(() => {
     const updateInterval = setInterval(() => {
-      if (isMounted) {
+      if (isMounted()) {
         setTime(new Date())
       }
     }, 200)
 
     return () => {
       clearInterval(updateInterval)
-      setMounted(false)
     }
   }, [])
 

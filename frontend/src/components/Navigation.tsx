@@ -1,11 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { Container, Dropdown, Menu } from 'semantic-ui-react'
-import { AppContext } from 'context'
 import fulllogoy from 'assets/fulllogoy.png'
 import { LoginModal } from 'components'
-import { userHome } from 'utils'
+import { AppContext } from 'context'
 import config from 'environment'
+import { useIsMounted } from 'hooks'
+import React, { useContext } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { Container, Dropdown, Menu } from 'semantic-ui-react'
+import { userHome } from 'utils'
 
 type Props = {
   children: React.ReactNode
@@ -13,12 +14,13 @@ type Props = {
 }
 
 const Navigation = (props: Props): React.JSX.Element => {
+  const isMounted = useIsMounted()
+
   const navigate = useNavigate()
   const { user, setUser } = useContext(AppContext)
-  const [isMounted, setMounted] = useState(false)
 
   const handleLogout = () => {
-    if (isMounted) {
+    if (isMounted()) {
       localStorage.removeItem('accessToken')
       // When clicking the logout button, the username onClick fires and redirects to user home.
       // Redirect to homepage 20ms later
@@ -29,49 +31,42 @@ const Navigation = (props: Props): React.JSX.Element => {
     }
   }
 
-  useEffect(() => {
-    setMounted(true)
-    return () => {
-      setMounted(false)
-    }
-  })
-
   return (
     <>
-      <Menu className={`fixed ${props.className}`} inverted>
+    <Menu className={`fixed ${props.className}`} inverted>
         {config.isLocal && (
           <Menu.Item style={{ fontWeight: 'bold', position: 'fixed' }} content={config.environmentText} />
         )}
-        <Container>
-          <Menu.Item as={Link} to="/" header>
-            <img className="logo" src={fulllogoy} alt="Abacus" />
-          </Menu.Item>
+      <Container>
+        <Menu.Item as={Link} to="/" header>
+          <img className="logo" src={fulllogoy} alt="Abacus" />
+        </Menu.Item>
 
-          {props.children}
+        {props.children}
 
           {
-            <Menu.Menu position="right">
+        <Menu.Menu position="right">
               {user ? (
                 <>
-                  <Dropdown
-                    item
-                    simple
-                    text={user.display_name}
-                    onClick={() => {
-                      navigate(userHome(user))
-                    }}>
-                    <Dropdown.Menu>
-                      <Dropdown.Item onClick={handleLogout} text="Log out" />
-                    </Dropdown.Menu>
+            <Dropdown
+              item
+              simple
+              text={user.display_name}
+              onClick={() => {
+                navigate(userHome(user))
+              }}>
+              <Dropdown.Menu>
+                <Dropdown.Item onClick={handleLogout} text="Log out" />
+              </Dropdown.Menu>
                   </Dropdown>
                 </>
               ) : (
                 <LoginModal trigger={<Menu.Item content="Log in" />} />
               )}
-            </Menu.Menu>
+        </Menu.Menu>
           }
-        </Container>
-      </Menu>
+      </Container>
+    </Menu>
     </>
   )
 }

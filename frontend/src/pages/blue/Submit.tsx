@@ -1,15 +1,16 @@
 import { Problem, Submission } from 'abacus'
-import React, { ChangeEvent, useContext, useEffect, useState } from 'react'
-import { Form, Button, Breadcrumb } from 'semantic-ui-react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Block, Countdown, FileDialog, NotFound, PageLoading, StatusMessage, Unauthorized } from 'components'
-import config from 'environment'
 import { AppContext } from 'context'
+import config from 'environment'
+import { useIsMounted, usePageTitle } from 'hooks'
+import React, { ChangeEvent, useContext, useEffect, useState } from 'react'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Breadcrumb, Button, Form } from 'semantic-ui-react'
 import { Language, languages } from 'utils'
-import { usePageTitle } from 'hooks'
 
 const Submit = (): React.JSX.Element => {
   usePageTitle("Abacus | Blue Submit")
+  const isMounted = useIsMounted()
 
   const { user } = useContext(AppContext)
   const [submissions, setSubmissions] = useState<Submission[]>()
@@ -21,15 +22,10 @@ const Submit = (): React.JSX.Element => {
   const [error, setError] = useState<string>()
   const navigate = useNavigate()
 
-  const [isMounted, setMounted] = useState(true)
-
   const { pid } = useParams<{ pid: string }>()
 
   useEffect(() => {
     loadProblem()
-    return () => {
-      setMounted(false)
-    }
   }, [])
 
   const loadProblem = async () => {
@@ -39,7 +35,7 @@ const Submit = (): React.JSX.Element => {
       }
     })
 
-    if (!isMounted) return
+    if (!isMounted()) return
 
     if (response.ok) {
       const problem = Object.values(await response.json())[0] as Problem
@@ -52,7 +48,7 @@ const Submit = (): React.JSX.Element => {
           }
         })
 
-        if (!isMounted) return
+        if (!isMounted()) return
 
         if (response.ok) {
           setSubmissions(Object.values(await response.json()))
