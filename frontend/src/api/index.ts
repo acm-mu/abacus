@@ -1,15 +1,22 @@
-import axios, {AxiosInstance, AxiosResponse} from 'axios'
+import axios, { AxiosInstance, AxiosResponse } from 'axios'
 import environment from 'environment'
 
-export const transform = (response: AxiosResponse): Promise<ApiResponse<any>> => {
-  return new Promise((resolve, reject) => {
-    const result: ApiResponse<any> = {
-      data: response.data,
+export function transform<T>(response: AxiosResponse): Promise<ApiResponse<T>> {
+  return transformAndApply<T>(resp => resp)(response)
+}
+
+
+type TransformFunction<T> = (response: AxiosResponse) => Promise<ApiResponse<T>>;
+type ApplyFunction<T> = (data: any) => Promise<T>;
+
+export function transformAndApply<T>(secondFunc?: ApplyFunction<T>): TransformFunction<T> {
+  return async (response: AxiosResponse): Promise<ApiResponse<T>> => {
+    return {
+      data: secondFunc ? await secondFunc(response.data) : secondFunc,
       ok: response.status === 200,
-      errors: response.data.errors,
+      errors: response.data.errors
     }
-    resolve(result)
-  })
+  }
 }
 
 export class ApiResponse<T> {
@@ -41,10 +48,10 @@ export abstract class HttpClient {
     })
   }
 
-  private handleResponse = ({data}: AxiosResponse) => data
+  private handleResponse = ({ data }: AxiosResponse) => data
 
   private handleError = (error: any) => Promise.reject(error)
 }
 
-export {AuthService, ContestService, ScratchService, StandingsService} from './services'
-export {ClarificationRepository, ProblemRepository, SubmissionRepository, UserRepository} from './repository'
+export { AuthService, ContestService, ScratchService, StandingsService } from './services'
+export { ClarificationRepository, ProblemRepository, SubmissionRepository, UserRepository } from './repository'

@@ -1,54 +1,38 @@
-import { User, Notification } from 'abacus'
+import type { Notification, Settings, User } from 'abacus'
+import { AuthService, ContestService } from 'api'
+import { Footer, Notifications } from 'components'
+import { AppContext, AppContextType, SocketContext } from 'context'
+import config from 'environment'
+import { Admin, Blue, Eagle, Gold, Index, Judge, Proctor } from 'pages'
 import React, { useEffect, useState } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { Index, Admin, Blue, Gold, Judge, Eagle, Proctor } from 'pages'
-import config from 'environment'
-import { Footer, Notifications } from 'components'
-import { v4 as uuidv4 } from 'uuid'
-import { AppContext, AppContextType, SocketContext } from 'context'
 import io from 'socket.io-client'
+import { v4 as uuidv4 } from 'uuid'
 import './App.scss'
 
 const App = (): React.JSX.Element => {
+  const contestService = new ContestService()
+  const authService = new AuthService()
+
   const [user, setUser] = useState<User>()
-  const [settings, setSettings] = useState()
+  const [settings, setSettings] = useState<Settings>()
   const [isLoading, setLoading] = useState(true)
 
   const error_id = uuidv4()
 
   const socket = io(config.API_URL, { transports: ['websocket'] })
 
-  const checkAuth = async () => {
-    const response = await authService.checkAuth()
-    if(response.ok) {
-      setUser(response.data)
-      return true
-    } else {
-      return false
-    }
-  }
-
-  const loadSettings = async (): Promise<boolean> => {
-    const response = await contestService.getContest()
-    if (response.ok) {
-      const data = await response.json()
-
-      setSettings({
-        ...data,
-        start_date: new Date(parseInt(data.start_date) * 1000),
-        end_date: new Date(parseInt(data.end_date) * 1000),
-        practice_start_date: new Date(parseInt(data.practice_start_date) * 1000),
-        practice_end_date: new Date(parseInt(data.practice_end_date) * 1000)
-      })
-      return true
-    }
-    return false
-  }
-
   const loadApp = async () => {
     try {
-      await loadSettings()
-      await checkAuth()
+      const authResponse = await authService.checkAuth()
+      if (authResponse.ok) {
+        setUser(authResponse.data)
+      }
+
+      const settingsResponse = await contestService.getSettings()
+      if (settingsResponse.ok) {
+        setSettings(settingsResponse.data)
+      }
     } catch (err) {
       setTimeout(() => loadApp(), 15 * 1000)
     }
@@ -58,20 +42,20 @@ const App = (): React.JSX.Element => {
     loadApp().then(() => setLoading(false))
 
     const pingInterval = setInterval(async () => {
-      try {
-        await fetch(config.API_URL)
-      } catch (err) {
-        const notification: Notification = {
+    try {
+      await fetch(config.API_URL)
+    } catch (err) {
+      const notification: Notification = {
           id: error_id,
-          type: 'error',
-          header: 'Uh oh!',
-          content: 'We are having issues communicating with our servers. Trying again in 15 seconds'
-        }
-        if (window.sendNotification) window.sendNotification(notification)
-        else window.notifications = [notification]
-
-        loadApp()
+        type: 'error',
+        header: 'Uh oh!',
+        content: 'We are having issues communicating with our servers. Trying again in 15 seconds'
       }
+      if (window.sendNotification) window.sendNotification(notification)
+      else window.notifications = [notification]
+
+      loadApp()
+    }
     }, 15 * 1000)
 
     return () => {
