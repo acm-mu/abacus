@@ -1,18 +1,13 @@
 import { Clarification, Submission } from 'abacus'
-import { AppContext } from 'context'
 import { Block, DivisionLabel, NotFound, PageLoading } from 'components'
-import React, { useContext, useEffect, useState } from 'react'
-import Moment from 'react-moment'
-import { useNavigate, useParams } from 'react-router-dom'
-import { Link } from 'react-router-dom'
-import { Button, ButtonProps, Comment, Divider, Form, Label, Message, Table } from 'semantic-ui-react'
-import config from '../../environment'
+import { ClarificationComment } from 'components/clarification'
+import { AppContext, ClarificationContext } from 'context'
+import config from 'environment'
 import './Clarification.scss'
 import { usePageTitle } from 'hooks'
-
-interface ClarificationProps {
-  clarification: Clarification
-}
+import React, { useContext, useEffect, useState } from 'react'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Button, ButtonProps, Comment, Divider, Form, Label, Message, Table } from 'semantic-ui-react'
 
 const ClarificationPage = (): React.JSX.Element => {
   const navigate = useNavigate()
@@ -109,41 +104,6 @@ const ClarificationPage = (): React.JSX.Element => {
     setChangingState(false)
   }
 
-  const ClarificationComment = ({ clarification }: ClarificationProps) => {
-    const deleteClarification = () => {
-      fetch(`${config.API_URL}/clarifications`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.accessToken}`,
-          'Content-Type': 'application/json'
-        },
-        method: 'DELETE',
-        body: JSON.stringify({ cid: clarification.cid })
-      }).then((response) => {
-        if (response.ok) {
-          if (clarification.cid == cid) navigate('/admin/clarifications')
-          else loadClarification()
-        }
-      })
-    }
-
-    return (
-      <Comment>
-        <Comment.Content>
-          <Comment.Author as="a">{clarification.user.display_name}</Comment.Author>
-          <Comment.Metadata>
-            <div>
-              <Moment fromNow date={clarification.date * 1000} />
-            </div>
-            <a href="#" onClick={deleteClarification}>
-              Delete
-            </a>
-          </Comment.Metadata>
-          <Comment.Text>{clarification.body}</Comment.Text>
-        </Comment.Content>
-      </Comment>
-    )
-  }
-
   const goBack = () => {
     navigate('/admin/clarifications')
   }
@@ -152,7 +112,12 @@ const ClarificationPage = (): React.JSX.Element => {
   if (!clarification) return <NotFound />
 
   return (
-    <>
+    <ClarificationContext.Provider value={{
+      reloadClarifications: loadClarification,
+      onSelectedItemChanged: () => {
+        return
+      }
+    }}>
       <h1 style={{ display: 'inline' }}>
         {clarification.title}{' '}
         {!clarification.open ? (
@@ -265,7 +230,7 @@ const ClarificationPage = (): React.JSX.Element => {
           </Table.Body>
         </Table>
       </Block>
-    </>
+    </ClarificationContext.Provider>
   )
 }
 
