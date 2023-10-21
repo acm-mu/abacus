@@ -1,11 +1,11 @@
-import React from 'react'
-import { Container } from 'semantic-ui-react'
-import { Route, Routes } from 'react-router-dom'
 import { NotFound } from 'components'
-import EagleNavigation from './EagleNavigation'
+import { EagleNavigation } from 'components/navigation'
+import React from 'react'
+import { Route, Routes } from 'react-router-dom'
+import { Container } from 'semantic-ui-react'
+import Clarifications from '../Clarifications'
 import Home from './Home'
 import Problem from './Problem'
-import Clarifications from '../Clarifications'
 
 const Eagle = (): React.JSX.Element => (
   <>

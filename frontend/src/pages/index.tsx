@@ -1,28 +1,25 @@
-import React from 'react'
-import { Container } from 'semantic-ui-react'
-import { Route, Routes } from 'react-router-dom'
-
-import Home from './Home'
-import About from './About'
-import Help from './Help'
-import DefaultNavigation from './DefaultNavigation'
 import { NotFound } from 'components'
+import { DefaultNavigation } from 'components/navigation'
+import React from 'react'
+import { Route, Routes } from 'react-router-dom'
+import { Container } from 'semantic-ui-react'
+import About from './About'
 import Clarifications from './Clarifications'
+import Help from './Help'
+import Home from './Home'
 
-export const Index = (): React.JSX.Element => (
-  <>
-    <DefaultNavigation />
-    <Container text className="main">
-      <Routes>
-        <Route path="" element={<Home />} />
-        <Route path="about" element={<About />} />
-        <Route path="help" element={<Help />} />
-        <Route path="clarifications/*" element={<Clarifications />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </Container>
-  </>
-)
+export const Index = (): React.JSX.Element => <>
+  <DefaultNavigation />
+  <Container text className="main">
+    <Routes>
+      <Route path="" element={<Home />} />
+      <Route path="about" element={<About />} />
+      <Route path="help" element={<Help />} />
+      <Route path="clarifications/*" element={<Clarifications />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  </Container>
+</>
 
 export { default as Gold } from './gold'
 export { default as Blue } from './blue'

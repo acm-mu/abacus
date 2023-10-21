@@ -1,40 +1,35 @@
+import { LoginModal, NotFound, Unauthorized } from 'components'
+import { AdminNavigation, DefaultNavigation } from 'components/navigation'
+import { AppContext } from 'context'
 import React, { useContext } from 'react'
-import { Route, Routes } from 'react-router-dom'
+import { Outlet, Route, Routes } from 'react-router-dom'
 import { Container } from 'semantic-ui-react'
-
+import ClarificationPage from './Clarification'
+import Clarifications from './Clarifications'
 import Home from './Home'
-import Problems from './problems/Problems'
-import Users from './users/Users'
-import AdminNavigation from './AdminNavigation'
-import Submissions from './submissions/Submissions'
-import Submission from './submissions/Submission'
 import EditProblem from './problems/EditProblem'
 import NewProblem from './problems/NewProblem'
+import Problems from './problems/Problems'
+import UploadProblems from './problems/UploadProblems'
 import Settings from './Settings'
-import { NotFound, Unauthorized } from 'components'
+import Submission from './submissions/Submission'
+import Submissions from './submissions/Submissions'
 import EditUser from './users/EditUser'
 import UploadUsers from './users/UploadUsers'
-import UploadProblems from './problems/UploadProblems'
-import LoginModal from 'components/Login'
-import { AppContext } from 'context'
-import DefaultNavigation from 'pages/DefaultNavigation'
-import Clarifications from './Clarifications'
-import ClarificationPage from './Clarification'
-import { Outlet } from 'react-router-dom'
+import Users from './users/Users'
 
 const Admin = (): React.JSX.Element => {
   const { user } = useContext(AppContext)
 
   if (!user)
-    return (
-      <>
-        <DefaultNavigation />
-        <Container text className="main">
-          <LoginModal open={true} />
-          <Unauthorized />
-        </Container>
-      </>
-    )
+    return <>
+      <DefaultNavigation />
+      <Container text className="main">
+        <LoginModal open={true} />
+        <Unauthorized />
+      </Container>
+    </>
+
 
   return (
     <>
@@ -54,7 +49,7 @@ const Admin = (): React.JSX.Element => {
             <Route path=":uid" element={<EditUser />} />
             <Route path="" element={<Users />} />
           </Route>
-          <Route path="submissions" element={<Outlet />} >
+          <Route path="submissions" element={<Outlet />}>
             <Route path=":sid" element={<Submission />} />
             <Route path="" element={<Submissions />} />
           </Route>

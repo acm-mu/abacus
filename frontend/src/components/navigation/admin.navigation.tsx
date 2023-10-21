@@ -1,9 +1,9 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import { Menu } from 'semantic-ui-react'
-import { Navigation } from 'components'
+import Navigation from './base.navigation'
 
-const AdminNavigation = (): React.JSX.Element => (
+const AdminNavigation = (): React.JSX.Element =>
   <Navigation className="admin-div">
     <Menu.Item as={NavLink} end to="/admin/" content="Home" />
     <Menu.Item as={NavLink} to="/admin/users" content="Users" />
@@ -12,6 +12,5 @@ const AdminNavigation = (): React.JSX.Element => (
     <Menu.Item as={NavLink} to="/admin/clarifications" content="Clarifications" />
     <Menu.Item as={NavLink} to="/admin/settings" content="Settings" />
   </Navigation>
-)
 
 export default AdminNavigation
