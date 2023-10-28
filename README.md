@@ -1,4 +1,4 @@
-# MU ACM Contest Software
+# 🧮 Abacus
 
 ## Overview
 
@@ -31,10 +31,45 @@ This Open Source competition judging software is designed for the [Marquette ACM
 - [Docker Compose](https://docs.docker.com/compose/install/) 
 
 #### Installation
-- Clone this repo 
-- Run sudo docker-compose up
-- After docker-compose from the terminal, open a new web browser window to `localhost:3000`
+- Clone Abacus repo.
 
+  `git clone https://github.com/acm-mu/abacus`
+
+- Pull submodules ([piston](https://github.com/acm-mu/piston))
+
+  `git submodule update --init`
+
+- Startup docker containers
+
+  `docker-compose up -d`
+
+- Open a new web browser and go to [localhost:3000](http://localhost:3000)
+
+Piston will take a couple of minutes to install language dependencies
+You can watch the logs with `docker logs --follow piston` to wait for the setup to complete. (~10 minutes).
+
+You can use Abacus while this is happening, but Piston will not work.
+
+### Setting up Piston without Docker
+
+Since v3 of Piston, the runtimes for piston are not installed by default. To install Python and Java, the docker
+entrypoint bash script runs two POST requests to install Java and Python. These will need to be completed
+manually to properly setup.
+
+Python 3.9.4
+```bash
+curl -X POST \
+  -H "Content-Type: application/json" \
+  -d "{\"language\":\"python\", \"version\": \"3.9.4\"}" \
+  localhost:2000/api/v2/packages
+```
+Java 15.0.2
+```bash
+curl -X POST \
+  -H "Content-Type: application/json" \
+  -d "{\"language\":\"java\", \"version\": \"15.0.2\"}" \
+  localhost:2000/api/v2/packages
+```
 ### Creating a new branch
 - in your terminal/powershell, cd to the root of your abacus clone
 - git checkout master

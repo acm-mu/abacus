@@ -10,7 +10,18 @@ services:
     volumes:
       - ./mongo-volume:/data/db
     ports:
-      - 27017:27017
+      - "27017:27017"
+  piston:
+    container_name: piston
+    build:
+      context: .docker
+      dockerfile: Dockerfile.piston
+    volumes:
+      - './piston-volume:/piston'
+    tmpfs:
+      - '/piston/jobs:exec'
+    ports:
+      - "2000:2000"
   server:
     container_name: server
     restart: unless-stopped
