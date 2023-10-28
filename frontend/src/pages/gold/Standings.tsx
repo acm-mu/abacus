@@ -129,7 +129,7 @@ const Standings = (): React.JSX.Element => {
               {problems.map((problem) => (
                 <Table.HeaderCell key={problem.id} collapsing>
                   {user?.division === 'blue' || user?.role === 'admin' ? (
-                    <Link to={`/blue/problems/${problem.id}`}>{problem.id}</Link>
+                    <Link to={`/gold/problems/${problem.id}`}>{problem.id}</Link>
                   ) : (
                     problem.id
                   )}
