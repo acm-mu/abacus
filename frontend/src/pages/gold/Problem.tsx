@@ -1,15 +1,17 @@
+import MDEditor from '@uiw/react-md-editor'
 import { Problem as ProblemType, Submission } from 'abacus'
-import React, { useState, useEffect, useContext, useMemo } from 'react'
+import { Block, ClarificationModal, Countdown, NotFound, PageLoading, Unauthorized } from 'components'
+import { AppContext } from 'context'
+import config from 'environment'
+import { useIsMounted, usePageTitle } from 'hooks'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Breadcrumb, Button, Message } from 'semantic-ui-react'
-import MDEditor from '@uiw/react-md-editor'
-import { Block, Countdown, NotFound, ClarificationModal, PageLoading, Unauthorized } from 'components'
-import config from 'environment'
-import { AppContext } from 'context'
 import { userHome } from 'utils'
-import { usePageTitle } from 'hooks'
 
 const Problem = (): React.JSX.Element => {
+  const isMounted = useIsMounted()
+
   const { user, settings } = useContext(AppContext)
   const [isLoading, setLoading] = useState(true)
   const [problem, setProblem] = useState<ProblemType>()
@@ -26,17 +28,12 @@ const Problem = (): React.JSX.Element => {
     )
   }, [submissions])
 
-  const [isMounted, setMounted] = useState(true)
-
   usePageTitle(`Abacus | ${problem?.name ?? ""}`)
 
   useEffect(() => {
     loadProblem().then(() => {
       setLoading(false)
     })
-    return () => {
-      setMounted(false)
-    }
   }, [])
 
   const loadProblem = async () => {
@@ -49,7 +46,7 @@ const Problem = (): React.JSX.Element => {
       }
     )
 
-    if (!isMounted) return
+    if (!isMounted()) return
 
     if (response.ok) {
       const problem = Object.values(await response.json())[0] as ProblemType
@@ -61,7 +58,7 @@ const Problem = (): React.JSX.Element => {
         }
       })
 
-      if (!isMounted) return
+      if (!isMounted()) return
 
       if (response.ok) {
         setSubmissions(Object.values(await response.json()))

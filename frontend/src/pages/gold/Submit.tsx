@@ -6,10 +6,11 @@ import config from 'environment'
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import MDEditor from '@uiw/react-md-editor'
 import { AppContext } from 'context'
-import { usePageTitle } from 'hooks'
+import { useIsMounted, usePageTitle } from 'hooks'
 
 const Submit = (): React.JSX.Element => {
   usePageTitle( "Abacus | Gold Submit")
+  const isMounted = useIsMounted()
 
   const { pid: problem_id } = useParams<{ pid: string }>()
   const [problems, setProblems] = useState<{ [key: string]: Problem }>({})
@@ -20,7 +21,6 @@ const Submit = (): React.JSX.Element => {
   const [description, setDescription] = useState<string>()
 
   const [isLoading, setLoading] = useState(true)
-  const [isMounted, setMounted] = useState(true)
   const [isSubmitting, setSubmitting] = useState(false)
 
   const [error, setError] = useState<string>()
@@ -37,9 +37,6 @@ const Submit = (): React.JSX.Element => {
 
   useEffect(() => {
     loadProblems()
-    return () => {
-      setMounted(false)
-    }
   }, [])
 
   const loadProblems = async () => {
@@ -48,7 +45,7 @@ const Submit = (): React.JSX.Element => {
         Authorization: `Bearer ${localStorage.accessToken}`
       }
     })
-    if (response.ok && isMounted) {
+    if (response.ok && isMounted()) {
       const problems: { [key: string]: Problem } = await response.json()
       for (const prob of Object.values(problems)) if (prob.id == problem_id) setProblem(prob)
 

@@ -1,9 +1,9 @@
+import { Block, PageLoading, StatusMessage } from 'components'
+import { StatusMessageType } from 'components/StatusMessage'
+import config from 'environment'
+import { useIsMounted, usePageTitle } from 'hooks'
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import { Button, Form, Input } from 'semantic-ui-react'
-import { Block, PageLoading, StatusMessage } from 'components'
-import config from 'environment'
-import { StatusMessageType } from 'components/StatusMessage'
-import { usePageTitle } from 'hooks'
 
 const timezoneOffset = () => new Date().getTimezoneOffset() * 60 * 1000
 
@@ -14,6 +14,7 @@ const toLocalTimeString = (date: number): string => toLocal(date).toISOString().
 
 const Settings = (): React.JSX.Element => {
   usePageTitle("Abacus | Admin Settings")
+  const isMounted = useIsMounted()
 
   const [settings, setSettings] = useState<{ [key: string]: string }>({
     competition_name: '',
@@ -31,16 +32,12 @@ const Settings = (): React.JSX.Element => {
     points_per_compilation_error: '0',
     points_per_minute: '0'
   })
-  const [isMounted, setMounted] = useState(true)
   const [isLoading, setLoading] = useState(true)
   const [isSaving, setSaving] = useState(false)
   const [message, setMessage] = useState<StatusMessageType>()
 
   useEffect(() => {
     loadSettings()
-    return () => {
-      setMounted(false)
-    }
   }, [])
 
   const handleChange = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>) =>
@@ -49,7 +46,7 @@ const Settings = (): React.JSX.Element => {
   const loadSettings = async () => {
     const response = await fetch(`${config.API_URL}/contest`)
     const data = await response.json()
-    if (!isMounted) return
+    if (!isMounted()) return
 
     setSettings({
       ...data,
@@ -107,7 +104,7 @@ const Settings = (): React.JSX.Element => {
   if (isLoading) return <PageLoading />
 
   return <Block center size="xs-6">
-    <StatusMessage message={message} onDismiss={() => setMessage(undefined)}/>
+    <StatusMessage message={message} onDismiss={() => setMessage(undefined)} />
     <Form onSubmit={handleSubmit}>
       <h1>Settings</h1>
       <hr />

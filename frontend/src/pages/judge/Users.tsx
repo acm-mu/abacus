@@ -1,10 +1,10 @@
 import { User } from 'abacus'
-import React, { useState, useEffect, useContext } from 'react'
-import { Table } from 'semantic-ui-react'
-import config from 'environment'
-import { AppContext } from 'context'
 import { PageLoading, StatusMessage } from 'components'
-import { usePageTitle } from 'hooks'
+import { AppContext } from 'context'
+import config from 'environment'
+import { useIsMounted, usePageTitle } from 'hooks'
+import React, { useContext, useEffect, useState } from 'react'
+import { Table } from 'semantic-ui-react'
 
 type SortKey = 'uid' | 'display_name' | 'username' | 'role' | 'division' | 'school'
 type SortConfig = {
@@ -14,6 +14,7 @@ type SortConfig = {
 
 const Teams = (): React.JSX.Element => {
   usePageTitle("Abacus | Users")
+  const isMounted = useIsMounted()
 
   const { user } = useContext(AppContext)
 
@@ -21,7 +22,6 @@ const Teams = (): React.JSX.Element => {
   const [isLoading, setLoading] = useState(true)
   const [error, setError] = useState<string>()
 
-  const [isMounted, setMounted] = useState(true)
   const [{ column, direction }, setSortConfig] = useState<SortConfig>({
     column: 'username',
     direction: 'ascending'
@@ -41,9 +41,6 @@ const Teams = (): React.JSX.Element => {
 
   useEffect(() => {
     loadUsers()
-    return () => {
-      setMounted(false)
-    }
   }, [])
 
   const loadUsers = async () => {
@@ -53,7 +50,7 @@ const Teams = (): React.JSX.Element => {
           Authorization: `Bearer ${localStorage.accessToken}`
         }
       })
-      if (isMounted) {
+      if (isMounted()) {
         const data = Object.values(await response.json()) as User[]
         sort('username', data)
         setLoading(false)

@@ -1,16 +1,16 @@
 import { Problem, Submission } from 'abacus'
 import { NotFound } from 'components'
+import { useIsMounted, usePageTitle } from 'hooks'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Loader } from 'semantic-ui-react'
 import PracticeProblem from './Problem'
 import PracticeSubmission from './Submission'
-import { usePageTitle } from 'hooks'
 
 const ProblemOrSubmission = (): React.JSX.Element => {
   usePageTitle("Abacus | Practice")
+  const isMounted = useIsMounted()
 
-  const [isMounted, setMounted] = useState(true)
   const [isLoading, setLoading] = useState(true)
   const [problems, setProblems] = useState<Problem[]>([])
   const submissions: { [key: string]: Submission } = localStorage.submissions
@@ -21,16 +21,13 @@ const ProblemOrSubmission = (): React.JSX.Element => {
 
   const loadProblems = async () => {
     const response = await fetch('/problems/index.json')
-    if (!isMounted) return
+    if (!isMounted()) return
     setProblems(await response.json())
     setLoading(false)
   }
 
   useEffect(() => {
     loadProblems()
-    return () => {
-      setMounted(false)
-    }
   }, [])
 
   const subsForId = (id: string) => Object.values(submissions).filter((submission) => submission.pid == id)

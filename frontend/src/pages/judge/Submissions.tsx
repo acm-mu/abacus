@@ -1,18 +1,19 @@
 import { Submission } from 'abacus'
-import React, { ChangeEvent, useState, useEffect, useMemo, useContext } from 'react'
-import { Button, Checkbox, Label, Table } from 'semantic-ui-react'
-import Moment from 'react-moment'
-import { Link } from 'react-router-dom'
-import config from 'environment'
-import { compare } from 'utils'
 import { PageLoading } from 'components'
 import { AppContext, SocketContext } from 'context'
+import config from 'environment'
 import { saveAs } from 'file-saver'
-import { usePageTitle } from 'hooks'
+import { useIsMounted, usePageTitle } from 'hooks'
+import React, { ChangeEvent, useContext, useEffect, useMemo, useState } from 'react'
+import Moment from 'react-moment'
+import { Link } from 'react-router-dom'
+import { Button, Checkbox, Label, Table } from 'semantic-ui-react'
+import { compare } from 'utils'
 
 interface SubmissionItem extends Submission {
   checked: boolean
 }
+
 type SortKey = 'date' | 'sid' | 'sub_no' | 'language' | 'status' | 'runtime' | 'score'
 type SortConfig = {
   column: SortKey
@@ -21,11 +22,11 @@ type SortConfig = {
 
 const Submissions = (): React.JSX.Element => {
   usePageTitle("Abacus | Judge Submissions")
+  const isMounted = useIsMounted()
 
   const socket = useContext(SocketContext)
   const [isLoading, setLoading] = useState(true)
   const [submissions, setSubmissions] = useState<SubmissionItem[]>([])
-  const [isMounted, setMounted] = useState(true)
   const [isDeleting, setDeleting] = useState(false)
   const [isClaiming, setClaiming] = useState<{ [key: string]: boolean }>({})
   const [showReleased, setShowReleased] = useState(false)
@@ -54,7 +55,6 @@ const Submissions = (): React.JSX.Element => {
     loadSubmissions().then(() => setLoading(false))
     socket?.on('new_submission', loadSubmissions)
     socket?.on('update_submission', loadSubmissions)
-    return () => setMounted(false)
   }, [])
 
   const loadSubmissions = async () => {
@@ -65,7 +65,7 @@ const Submissions = (): React.JSX.Element => {
     })
     const submissions = Object.values(await response.json()) as SubmissionItem[]
 
-    if (!isMounted) return
+    if (!isMounted()) return
 
     setSubmissions(
       submissions

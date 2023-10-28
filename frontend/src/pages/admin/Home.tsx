@@ -1,20 +1,20 @@
 import { Submission } from 'abacus'
-import React, { useContext, useEffect, useMemo, useState } from 'react'
-import { AppContext, SocketContext } from 'context'
 import { Block, PageLoading } from 'components'
+import { AppContext, SocketContext } from 'context'
 import config from 'environment'
+import { useIsMounted, usePageTitle } from 'hooks'
 import moment from 'moment'
-import { Table } from 'semantic-ui-react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { usePageTitle } from 'hooks'
+import { Table } from 'semantic-ui-react'
 
 const Home = (): React.JSX.Element => {
   usePageTitle("Abacus | Admin")
+  const isMounted = useIsMounted()
 
   const socket = useContext(SocketContext)
   const [isLoading, setLoading] = useState(true)
   const [submissions, setSubmissions] = useState<Submission[]>()
-  const [isMounted, setMounted] = useState(true)
 
   const { user, settings } = useContext(AppContext)
 
@@ -23,7 +23,7 @@ const Home = (): React.JSX.Element => {
       headers: { Authorization: `Bearer ${localStorage.accessToken}` }
     })
 
-    if (!isMounted) return
+    if (!isMounted()) return
 
     const subs: Submission[] = Object.values(await getSubmissions.json())
     setSubmissions(
@@ -43,7 +43,6 @@ const Home = (): React.JSX.Element => {
     socket?.on('new_submission', loadSubmissions)
     socket?.on('update_submission', loadSubmissions)
     socket?.on('delete_submission', loadSubmissions)
-    return () => setMounted(false)
   }, [])
 
   const flaggedSubmissions = useMemo(() => submissions?.filter(({ flagged }) => flagged !== undefined), [submissions])

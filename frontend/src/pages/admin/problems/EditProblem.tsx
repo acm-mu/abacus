@@ -1,27 +1,24 @@
 import { Problem } from 'abacus'
-import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
-import config from 'environment'
-import { ProblemEditor } from 'components/editor'
 import { PageLoading, StatusMessage } from 'components'
+import { ProblemEditor } from 'components/editor'
 import { StatusMessageType } from 'components/StatusMessage'
-import { usePageTitle } from 'hooks'
+import config from 'environment'
+import { useIsMounted, usePageTitle } from 'hooks'
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
 
 const EditProblems = (): React.JSX.Element => {
   usePageTitle("Abacus | Admin Edit Problem")
+  const isMounted = useIsMounted()
 
   const { pid } = useParams<{ pid: string }>()
   const [problem, setProblem] = useState<Problem>()
 
   const [message, setMessage] = useState<StatusMessageType>()
-  const [isMounted, setMounted] = useState(true)
   const [isLoading, setLoading] = useState(true)
 
   useEffect(() => {
     loadProblem()
-    return () => {
-      setMounted(false)
-    }
   }, [])
 
   const loadProblem = async () => {
@@ -33,7 +30,7 @@ const EditProblems = (): React.JSX.Element => {
         }
       }
     )
-    if (!isMounted) return
+    if (!isMounted()) return
     const problem = Object.values(await response.json())[0] as Problem
 
     setProblem(problem)

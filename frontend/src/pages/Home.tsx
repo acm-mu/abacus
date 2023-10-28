@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react'
-import { Table, Loader, Message, Icon } from 'semantic-ui-react'
-import { Countdown, Block, DivisionLabel } from 'components'
+import { Block, Countdown, DivisionLabel } from 'components'
+import { useIsMounted } from 'hooks'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { Icon, Loader, Message, Table } from 'semantic-ui-react'
 
 type TeamType = {
   division: string
@@ -12,19 +13,19 @@ type TeamType = {
 }
 
 const Home = (): React.JSX.Element => {
+  const isMounted = useIsMounted()
+
   const [isLoading, setLoading] = useState(true)
   const [teams, setTeams] = useState<TeamType[]>([])
-  const [isMounted, setMounted] = useState(true)
 
-  const loadTeams = () => {
-    fetch('https://mu.acm.org/api/registered_teams')
-      .then((res) => res.json())
-      .then((data) => {
-        if (isMounted) {
-          setTeams(Object.values(data))
-          setLoading(false)
-        }
-      })
+  const loadTeams = async () => {
+    const res = await fetch('https://mu.acm.org/api/registered_teams')
+    const data = await res.json()
+
+    if (!isMounted()) return
+
+    setTeams(Object.values(data))
+    setLoading(false)
   }
 
   useEffect(() => {
@@ -32,7 +33,6 @@ const Home = (): React.JSX.Element => {
     const teamFetchInterval = setInterval(loadTeams, 5 * 60 * 1000)
     return () => {
       clearInterval(teamFetchInterval)
-      setMounted(false)
     }
   })
 
@@ -43,7 +43,7 @@ const Home = (): React.JSX.Element => {
         <Message.Content>
           <Message.Header>Final Standings</Message.Header>
           Thank you to everyone who participated and congratulations to the winners! View the full standings for the Blue division <Link to={'/blue/standings'} className='banner-link'>here</Link> and the Gold division <Link to={'/gold/standings'} className='banner-link'>here</Link>.
-          </Message.Content>
+        </Message.Content>
       </Message>
       <Countdown />
       <Block size="xs-12">

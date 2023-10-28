@@ -1,10 +1,10 @@
 import { Problem } from 'abacus'
-import React, { useState, useEffect } from 'react'
-import { Table } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
-import config from 'environment'
 import { Block, PageLoading } from 'components'
-import { usePageTitle } from 'hooks'
+import config from 'environment'
+import { useIsMounted, usePageTitle } from 'hooks'
+import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { Table } from 'semantic-ui-react'
 
 type SortKey = 'id' | 'name'
 type SortConfig = {
@@ -14,10 +14,10 @@ type SortConfig = {
 
 const Problems = (): React.JSX.Element => {
   usePageTitle("Abacus | Proctor Problems")
+  const isMounted = useIsMounted()
 
   const [isLoading, setLoading] = useState(true)
   const [problems, setProblems] = useState<Problem[]>([])
-  const [isMounted, setMounted] = useState(true)
 
   const [{ column, direction }, setSortConfig] = useState<SortConfig>({
     column: 'id',
@@ -38,9 +38,6 @@ const Problems = (): React.JSX.Element => {
 
   useEffect(() => {
     loadProblems()
-    return () => {
-      setMounted(false)
-    }
   }, [])
 
   const loadProblems = async () => {
@@ -53,7 +50,7 @@ const Problems = (): React.JSX.Element => {
     if (response.ok) {
       const problems = Object.values(await response.json()) as Problem[]
 
-      if (!isMounted) return
+      if (!isMounted()) return
 
       sort('id', problems)
     } else {

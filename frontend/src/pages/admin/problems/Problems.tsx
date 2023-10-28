@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import config from 'environment'
 import { Block, DivisionLabel, PageLoading } from 'components'
 import { saveAs } from 'file-saver'
-import { usePageTitle } from 'hooks'
+import { useIsMounted, usePageTitle } from 'hooks'
 
 interface ProblemItem extends Problem {
   checked: boolean
@@ -18,11 +18,11 @@ type SortConfig = {
 
 const Problems = (): React.JSX.Element => {
   usePageTitle("Abacus | Admin Problems")
+  const isMounted = useIsMounted()
 
   const [isLoading, setLoading] = useState(true)
   const [problems, setProblems] = useState<ProblemItem[]>([])
   const [submissions, setSubmissions] = useState<{ [key: string]: Submission[] }>()
-  const [isMounted, setMounted] = useState(true)
   const [isDeleting, setDeleting] = useState(false)
   const [activeDivision, setActiveDivision] = useState('blue')
   const activeProblems = useMemo(
@@ -49,9 +49,6 @@ const Problems = (): React.JSX.Element => {
 
   useEffect(() => {
     loadProblems()
-    return () => {
-      setMounted(false)
-    }
   }, [])
 
   const loadProblems = async () => {
@@ -64,7 +61,7 @@ const Problems = (): React.JSX.Element => {
     if (response.ok) {
       const problems = Object.values(await response.json()) as ProblemItem[]
 
-      if (!isMounted) return
+      if (!isMounted()) return
 
       sort(
         'id',
@@ -77,7 +74,7 @@ const Problems = (): React.JSX.Element => {
         }
       })
 
-      if (!isMounted) return
+      if (!isMounted()) return
 
       const submissions = Object.values(await response.json()) as Submission[]
       const subs: { [key: string]: Submission[] } = {}

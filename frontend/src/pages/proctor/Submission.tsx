@@ -1,20 +1,20 @@
 import { Submission as SubmissionType } from 'abacus'
-import React, { useState, useEffect, useContext } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
 import { NotFound, PageLoading, SubmissionView } from 'components'
-import config from 'environment'
-import { Button } from 'semantic-ui-react'
 import { AppContext, SocketContext } from 'context'
-import { usePageTitle } from 'hooks'
+import config from 'environment'
+import { useIsMounted, usePageTitle } from 'hooks'
+import React, { useContext, useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { Button } from 'semantic-ui-react'
 
 const Submission = (): React.JSX.Element => {
   usePageTitle("Abacus | Judge Submission")
+  const isMounted = useIsMounted()
 
   const socket = useContext(SocketContext)
   const { sid } = useParams<{ sid: string }>()
   const [submission, setSubmission] = useState<SubmissionType>()
   const [isLoading, setLoading] = useState(true)
-  const [isMounted, setMounted] = useState(true)
   const [isViewing, setViewing] = useState(false)
   const [isFlagging, setFlagging] = useState<{ [key: string]: boolean }>({})
   const [isUnFlagging, setUnFlagging] = useState<{ [key: string]: boolean }>({})
@@ -28,7 +28,7 @@ const Submission = (): React.JSX.Element => {
       headers: { Authorization: `Bearer ${localStorage.accessToken}` }
     })
 
-    if (!isMounted) return
+    if (!isMounted()) return
 
     if (response.ok) {
       setSubmission(Object.values(await response.json())[0] as SubmissionType)
@@ -39,9 +39,6 @@ const Submission = (): React.JSX.Element => {
   useEffect(() => {
     loadSubmission().then(() => setLoading(false))
     socket?.on('update_submission', loadSubmission)
-    return () => {
-      setMounted(false)
-    }
   }, [])
 
   if (isLoading) return <PageLoading />

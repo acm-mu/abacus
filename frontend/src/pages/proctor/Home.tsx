@@ -1,19 +1,19 @@
+import { Submission } from 'abacus'
 import { Block, PageLoading, Unauthorized } from 'components'
 import { AppContext, SocketContext } from 'context'
-import React, { useContext, useEffect, useMemo, useState } from 'react'
-import { Label, Table } from 'semantic-ui-react'
 import config from 'environment'
-import { Submission } from 'abacus'
+import { useIsMounted, usePageTitle } from 'hooks'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { usePageTitle } from 'hooks'
+import { Label, Table } from 'semantic-ui-react'
 
 const Home = (): React.JSX.Element => {
   usePageTitle("Abacus | Proctor Dashboard")
+  const isMounted = useIsMounted()
 
   const { user } = useContext(AppContext)
   const socket = useContext(SocketContext)
   const [isLoading, setLoading] = useState(true)
-  const [isMounted, setMounted] = useState(true)
   const [submissions, setSubmissions] = useState<Submission[]>()
 
   const flaggedSubmissions = useMemo(
@@ -27,7 +27,7 @@ const Home = (): React.JSX.Element => {
       headers: { Authorization: `Bearer ${localStorage.accessToken}` }
     })
 
-    if (!isMounted) return
+    if (!isMounted()) return
 
     if (response.ok) {
       const data = await response.json()
@@ -39,9 +39,6 @@ const Home = (): React.JSX.Element => {
     loadData().then(() => setLoading(false))
     socket?.on('new_submission', loadData)
     socket?.on('update_submission', loadData)
-    return () => {
-      setMounted(false)
-    }
   }, [])
 
   if (isLoading) return <PageLoading />
