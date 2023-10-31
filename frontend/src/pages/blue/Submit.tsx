@@ -1,4 +1,4 @@
-import type { IProblem, ISubmission } from 'abacus'
+import type { IBlueProblem, IBlueSubmission } from 'abacus'
 import { ProblemRepository, SubmissionRepository } from 'api'
 import { Block, Countdown, FileDialog, NotFound, PageLoading, StatusMessage, Unauthorized } from 'components'
 import { AppContext } from 'context'
@@ -15,8 +15,8 @@ const Submit = (): React.JSX.Element => {
   const submissionRepo = new SubmissionRepository()
 
   const { user } = useContext(AppContext)
-  const [submissions, setSubmissions] = useState<ISubmission[]>()
-  const [problem, setProblem] = useState<IProblem>()
+  const [submissions, setSubmissions] = useState<IBlueSubmission[]>()
+  const [problem, setProblem] = useState<IBlueProblem>()
   const [isLoading, setLoading] = useState(true)
   const [language, setLanguage] = useState<Language>()
   const [file, setFile] = useState<File>()
@@ -29,7 +29,7 @@ const Submit = (): React.JSX.Element => {
   const { pid } = useParams<{ pid: string }>()
 
   useEffect(() => {
-    loadProblem()
+    loadProblem().catch(console.error)
     return () => {
       setMounted(false)
     }
@@ -40,10 +40,10 @@ const Submit = (): React.JSX.Element => {
 
     if (!isMounted) return
 
-    if (response.ok) {
-      const problem = response.data[0]
+    if (response.ok && response.data) {
+      const problem = response.data.items[0]
 
-      setProblem(problem)
+      setProblem(problem as IBlueProblem)
       if (problem) {
         const submissionResponse = await submissionRepo.getMany({
           filterBy: {
@@ -54,8 +54,8 @@ const Submit = (): React.JSX.Element => {
 
         if (!isMounted) return
 
-        if (response.ok) {
-          setSubmissions(submissionResponse.data)
+        if (response.ok && submissionResponse.data) {
+          setSubmissions(Object.values(submissionResponse.data) as IBlueSubmission[])
         }
       }
     }
@@ -65,23 +65,26 @@ const Submit = (): React.JSX.Element => {
   const handleSubmit = async () => {
     if (!(language && file && problem && user)) return
     setSubmitting(true)
-    const formData = new FormData()
-    formData.set('pid', problem.pid)
-    formData.set('source', file, file.name)
-    formData.set('language', language.key)
-    user.division && formData.set('division', user.division)
 
-    const response = await submissionRepo.create(formData)
+    // const newSubmission = {
+    //   pid: problem.pid,
+    //   source: [file, file.name],
+    //   language: language.key,
+    //   division: user.division
+    // }
 
-    if (response.ok) {
-      setError(response.errors)
-      setSubmitting(false)
-      return
-    }
+    // const response = await submissionRepo.create(newSubmission)
+    throw new Error("This method has not been fully implemented")
 
-    setSubmitting(false)
-
-    navigate(`/blue/submissions/${response.data?.sid}`)
+    // if (response.ok) {
+    //   setError(response.errors)
+    //   setSubmitting(false)
+    //   return
+    // }
+    //
+    // setSubmitting(false)
+    //
+    // navigate(`/blue/submissions/${response.data?.sid}`)
   }
 
   const uploadChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -179,7 +182,6 @@ const Submit = (): React.JSX.Element => {
                 <>
                   <h3>Your upload will include the following files:</h3>
                   <ul>
-                    {' '}
                     <li>{file.name}</li>
                   </ul>
                 </>

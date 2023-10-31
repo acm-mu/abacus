@@ -13,7 +13,7 @@ export const schema: Record<string, ParamSchema> = {
 const deleteSubmissionsForProblem = async (pid: string) => {
   try {
     const submissions = (await contest.get_submissions({ pid })) || []
-    for (const { sid } of submissions) {
+    for (const { sid } of submissions.items) {
       await contest
         .delete_submission(sid)
         .then(() => console.log(`Deleted submission ${sid}`))

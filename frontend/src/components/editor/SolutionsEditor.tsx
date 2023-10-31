@@ -1,27 +1,36 @@
 import Editor from '@monaco-editor/react'
-import React, { MouseEvent, useState } from 'react'
+import type { IBlueProblem, IGoldProblem, IProblem } from "abacus"
+import React, { MouseEvent, useMemo, useState } from 'react'
 import SyntaxHighlighter from 'react-syntax-highlighter'
 import { Input, InputOnChangeData, Menu, MenuItemProps } from 'semantic-ui-react'
 import { syntax_lang } from 'utils'
-import { ProblemStateProps } from '.'
 
-const SolutionsEditor = ({ problem, setProblem }: ProblemStateProps): React.JSX.Element => {
-  const [activeSolution, setActiveSolution] = useState('python')
+interface SolutionEditorProps {
+  problem: IBlueProblem,
+  setProblem?: React.Dispatch<React.SetStateAction<IGoldProblem | IProblem | IBlueProblem>>
+}
+
+const SolutionsEditor = ({ problem, setProblem }: SolutionEditorProps): React.JSX.Element => {
+  const [activeLanguage, setActiveLanguage] = useState('python')
 
   if (!problem) return <></>
 
-  const handleSolutionClick = (_event: MouseEvent, data: MenuItemProps) => setActiveSolution(data.tab)
+  const activeSolution = useMemo(() => {
+    return problem.solutions?.find(s => s.language == activeLanguage)
+  }, [activeLanguage, problem])
 
-  const handleSolutionChange = (language: string, value?: string) => {
-    if (setProblem !== undefined) {
+  const handleSolutionClick = (_event: MouseEvent, data: MenuItemProps) => setActiveLanguage(data.tab)
+
+  const handleSolutionChange = (language?: string, value?: string) => {
+    if (language && setProblem !== undefined) {
       setProblem({
         ...problem,
         solutions: problem.solutions?.map((solution) =>
           language == solution.language
             ? {
-                ...solution,
-                source: value || ''
-              }
+              ...solution,
+              source: value || ''
+            }
             : solution
         )
       })
@@ -33,7 +42,7 @@ const SolutionsEditor = ({ problem, setProblem }: ProblemStateProps): React.JSX.
       setProblem({
         ...problem,
         solutions: problem.solutions?.map((solution) =>
-          activeSolution == solution.language ? { ...solution, file_name: value || '' } : solution
+          activeLanguage == solution.language ? { ...solution, file_name: value || '' } : solution
         )
       })
     }
@@ -42,56 +51,42 @@ const SolutionsEditor = ({ problem, setProblem }: ProblemStateProps): React.JSX.
   return (
     <>
       <Menu>
-        {problem?.solutions?.map((solution, index) => (
+        {problem?.solutions?.map(solution => (
           <Menu.Item
-            key={`skeleton-${index}`}
+            key={`skeleton-${solution}`}
             name={solution.language}
             tab={solution.language}
-            active={activeSolution == solution.language}
+            active={activeSolution?.language == solution.language}
             onClick={handleSolutionClick}
           />
         ))}
-        {setProblem && (
+        {setProblem &&
           <Menu.Item position="right">
-            {problem.solutions?.map((solution, index) =>
-              solution.language == activeSolution ? (
-                <Input
-                  key={`skeleton-input-${index}`}
-                  label="Filename"
-                  size="small"
-                  name="filename"
-                  value={solution.file_name}
-                  onChange={handleChange}
-                />
-              ) : (
-                <></>
-              )
-            )}
-          </Menu.Item>
-        )}
+            <Input
+              label="Filename"
+              size="small"
+              name="filename"
+              value={activeSolution?.file_name}
+              onChange={handleChange}
+            />
+          </Menu.Item>}
       </Menu>
 
-      {problem?.solutions?.map((solution, index) => (
-        <div key={`solution-${index}`}>
-          {solution.language == activeSolution ? (
-            setProblem ? (
-              <Editor
-                language={solution.language}
-                width="100%"
-                height="500px"
-                theme="vs"
-                value={solution.source}
-                options={{ minimap: { enabled: false } }}
-                onChange={(value?: string) => handleSolutionChange(solution.language, value)}
-              />
-            ) : (
-              <SyntaxHighlighter language={syntax_lang(solution.language)}>{solution.source}</SyntaxHighlighter>
-            )
-          ) : (
-            <></>
-          )}
-        </div>
-      ))}
+      <div>
+        {activeSolution && <>
+          {setProblem ?
+            <Editor
+              language={activeSolution.language}
+              width="100%"
+              height="500px"
+              theme="vs"
+              value={activeSolution.source}
+              options={{ minimap: { enabled: false } }}
+              onChange={(value?: string) => handleSolutionChange(activeSolution.language, value)}
+            /> :
+            <SyntaxHighlighter language={syntax_lang(activeSolution.language)}>{activeSolution.source}</SyntaxHighlighter>}
+        </>}
+      </div>
     </>
   )
 }

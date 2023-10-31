@@ -11,9 +11,9 @@ declare module 'abacus' {
   export interface IBlueProblem extends IProblem {
     cpu_time_limit: number
     memory_limit: number
-    tests: ITest[]
-    skeleton: ISkeleton[]
-    solutions: ISolution[]
+    tests?: ITest[]
+    skeletons?: ISkeleton[]
+    solutions?: ISolution[]
   }
 
   export interface IGoldProblem extends IProblem {

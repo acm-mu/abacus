@@ -29,11 +29,12 @@ const UploadUsers = (): React.JSX.Element => {
     reader.onload = async ({ target }: ProgressEvent<FileReader>) => {
       const text = target?.result as string
       if (text) {
-        let users: UserItem[] = JSON.parse(text).map((user: IUser) => ({ ...user, checked: true }))
+        // let users: UserItem[] = JSON.parse(text).map((user: IUser) => ({ ...user, checked: true }))
 
-        if (existingUsers) users = users.filter((user: UserItem) => filterUser(user, existingUsers[user.uid]))
+        throw new Error("This is not implemented right now")
+        // if (existingUsers) users = users.filter((user: UserItem) => filterUser(user, existingUsers[user.uid]))
 
-        setNewUsers(users)
+        // setNewUsers(users)
       }
     }
 
@@ -44,13 +45,13 @@ const UploadUsers = (): React.JSX.Element => {
   const loadExistingUsers = async () => {
     const response = await userRepository.getMany()
 
-    if (!response.ok || !isMounted) return
+    if (!response.data || !isMounted) return
 
-    setExistingUsers(response.data)
+    setExistingUsers(Object.values(response.data))
   }
 
   useEffect(() => {
-    loadExistingUsers()
+    loadExistingUsers().catch(console.error)
 
     return () => setMounted(false)
   }, [])

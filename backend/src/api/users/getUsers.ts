@@ -103,30 +103,44 @@ export const schema: Record<string, ParamSchema> = {
  *         description: A server error occurred while trying to complete request.
  */
 export const getUsers = async (req: Request, res: Response): Promise<void> => {
-  const page = req.query.page
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })
     return
   }
-  const params = matchedData(req)
+  const query = matchedData(req)
 
   //const newPage = page ? page  : null;
-  if (req.user?.role == 'team') params.uid = req.user?.uid
+  if (req.user?.role == 'team') query.uid = req.user?.uid
   if (req.user?.role == 'judge') {
-    params.role = 'team'
-    params.division = req.user.division
+    query.role = 'team'
+    query.division = req.user.division
   }
 
   try {
-    const newPage = page ? parseInt(page as string) : 0
-    const users = await contest.get_users(params, undefined, newPage)
+    const pageSize = req.query.limit? parseInt(req.query.limit as string) : 25
+    
+    const options = {
+      skip: req.query.skip ? parseInt(req.query.skip as string) : 0,
+      limit: pageSize,
+      sortBy: req.query.sortBy as string,
+      sortDirection: req.query.sortDirection as string
+    }
+    
+    const userItems = await contest.get_users(query, undefined, options)
+    let users = userItems.items
+    
     users?.map((user: any) => {
       const { password, ...returnUser } = user
 
       return returnUser
     })
-    res.send(transpose(users, 'uid'))
+    
+    res.send({
+      totalItems: userItems.totalItems,
+      totalPages: Math.floor(userItems.totalItems / pageSize),
+      items: transpose(users, 'uid')
+    })
   } catch (err) {
     res.sendStatus(500)
   }

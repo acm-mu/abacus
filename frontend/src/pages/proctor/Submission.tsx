@@ -24,6 +24,11 @@ const Submission = (): React.JSX.Element => {
   const navigate = useNavigate()
 
   const loadSubmission = async () => {
+    if (!sid) {
+      setLoading(false)
+      return
+    }
+
     const submissionRepo = new SubmissionRepository()
     const response = await submissionRepo.get(sid)
 
@@ -47,6 +52,7 @@ const Submission = (): React.JSX.Element => {
   if (!submission) return <NotFound />
 
   const view = async () => {
+    if (!sid) return
     setViewing(true)
 
     const submissionsRepo = new SubmissionRepository()

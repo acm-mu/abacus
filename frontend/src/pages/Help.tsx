@@ -6,7 +6,7 @@ import { Accordion, AccordionTitleProps, Icon } from 'semantic-ui-react'
 const Help = (): React.JSX.Element => {
   const [activeIndex, setActiveIndex] = useState<number | string | undefined>(0)
 
-  const handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, { index }: AccordionTitleProps) =>
+  const handleClick = (_e: React.MouseEvent<HTMLDivElement, MouseEvent>, { index }: AccordionTitleProps) =>
     setActiveIndex(activeIndex === index ? -1 : index)
 
   return (

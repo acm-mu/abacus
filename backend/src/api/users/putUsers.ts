@@ -115,7 +115,7 @@ export const putUsers = async (req: Request, res: Response): Promise<void> => {
 
   try {
     if (item.username) {
-      let users = await contest.get_users({ username: item.username })
+      let users = (await contest.get_users({ username: item.username })).items
       users = users.filter((user) => user.uid != item.uid)
       if (users.length > 0) {
         res.status(400).json({ message: 'Username is taken!' })

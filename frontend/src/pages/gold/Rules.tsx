@@ -1,9 +1,9 @@
-import React, { useContext } from 'react'
 import { Block } from 'components'
-import { Divider } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
 import { AppContext } from 'context'
 import { usePageTitle } from 'hooks'
+import React, { useContext } from 'react'
+import { Link } from 'react-router-dom'
+import { Divider } from 'semantic-ui-react'
 
 const Rules = (): React.JSX.Element => {
   usePageTitle("Abacus | Gold Rules")
@@ -37,30 +37,24 @@ const Rules = (): React.JSX.Element => {
             other materials for your project.
           </li>
           <li>
-            You{' '}
-            <b>
-              may <em>not</em>
-            </b>{' '}
-            take code from public projects on the Scratch website, or projects you have worked on outside of the
+            You <b>
+            may <em>not</em>
+          </b> take code from public projects on the Scratch website, or projects you have worked on outside of the
             competition.
           </li>
           <li>
-            You{' '}
-            <b>
-              may <em>not</em>
-            </b>{' '}
-            collaborate with other teams, even teams from your own school; sharing materials or discussing the problems
-            with other teams is strictly prohibited.
+            You <b>may <em>not</em></b> collaborate with other teams, even teams from your own school; sharing materials
+            or discussing the problems with other teams is strictly prohibited.
           </li>
           <li>
-            Only virtual teams <b>may</b> use online communication software like email, Zoom, Teams, Skype, Discord, etc. for
+            Only virtual teams <b>may</b> use online communication software like email, Zoom, Teams, Skype, Discord,
+            etc. for
             communication solely between you and your teammates.
           </li>
           <li>There are no restrictions on the number of computers or devices you can use.</li>
         </ul>
         <p>
-          If you are unsure if a specific outside source is permitted, do not hesitate to submit a{' '}
-          {hasAccessTo() ? <Link to={'/gold/clarifications'}>Clarification</Link> : 'Clarification'} to the judges.
+          If you are unsure if a specific outside source is permitted, do not hesitate to submit a {hasAccessTo() ? <Link to={'/gold/clarifications'}>Clarification</Link> : 'Clarification'} to the judges.
           Judges may also request that you stop using a specific website or device if they suspect it is being used to
           break the rules of the competition.
         </p>
@@ -137,8 +131,7 @@ const Rules = (): React.JSX.Element => {
         </ul>
 
         <p>
-          For issues with technology, feel free to reach out to our tech support staff online using{' '}
-          {isBeforeCompetition() ? (
+          For issues with technology, feel free to reach out to our tech support staff online using {isBeforeCompetition() ? (
             <a href="https://meet.google.com/ifq-fcwf-unr" target="_blank" rel="noreferrer">
               Google Meet
             </a>

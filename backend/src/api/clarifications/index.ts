@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { checkSchema } from 'express-validator'
 import { hasRole, isAuthenticated } from '../../abacus/authlib'
 import { deleteClarifications, schema as deleteSchema } from './deleteClarifications'
+import { getClarification } from "./getClarification";
 import { getClarifications, schema as getSchema } from './getClarifications'
 import { postClarifications, schema as postSchema } from './postClarifications'
 import { putClarifications, schema as putSchema } from './putClarifications'
@@ -17,5 +18,6 @@ clarifications.get('/clarifications', isAuthenticated, checkSchema(getSchema), g
 clarifications.post('/clarifications', isAuthenticated, checkSchema(postSchema), postClarifications)
 clarifications.put('/clarifications', hasRole('judge'), checkSchema(putSchema), putClarifications)
 clarifications.delete('/clarifications', hasRole('admin'), checkSchema(deleteSchema), deleteClarifications)
+clarifications.get('/clarifications/:cid', hasRole('admin'), getClarification)
 
 export default clarifications

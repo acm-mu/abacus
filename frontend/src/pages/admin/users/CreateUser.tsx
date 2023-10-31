@@ -1,38 +1,37 @@
-import React, { ChangeEvent, useState } from 'react'
-import { Modal, Form, Input, Select, Button } from 'semantic-ui-react'
-import { divisions, roles } from 'utils'
+import type { IUser, IUserReq, NullablePartial } from "abacus"
+import { ApiResponse, UserRepository } from 'api'
 import { StatusMessage } from 'components'
-import {UserRepository} from 'api'
+import React, { ChangeEvent, useState } from 'react'
+import { Button, Form, Input, Modal, Select } from 'semantic-ui-react'
+import { divisions, roles } from 'utils'
 
 type CreateUserProps = {
   trigger: React.JSX.Element
-  callback?: (res: Response) => void
+  callback?: (res: ApiResponse<any>) => void
 }
 
 const CreateUser = ({ trigger, callback }: CreateUserProps): React.JSX.Element => {
   const userRepo = new UserRepository()
 
-  const empty = {
-    username: '',
-    role: '',
-    division: '',
-    school: '',
-    display_name: '',
-    password: ''
-  }
-
   const [open, setOpen] = useState(false)
   const [error, setError] = useState<string>()
-  const [user, setUser] = useState(empty)
+  const [user, setUser] = useState<IUserReq>()
   const [isCreating, setCreating] = useState(false)
 
-  const handleChange = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>) =>
-    setUser({ ...user, [name]: value })
-  const handleSelectChange = (_: never, { name, value }: HTMLInputElement) => setUser({ ...user, [name]: value })
+  const handleChange = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>) => {
+    setUser({ ...user, [name]: value } as IUserReq)
+  }
+  const handleSelectChange = (_: never, { name, value }: HTMLInputElement) => {
+    setUser({ ...user, [name]: value } as IUserReq)
+  }
 
   const handleSubmit = async () => {
+    if (!user) return
+
     setCreating(true)
-    const response = await userRepo.create({ ...user, school: user.role == 'team' ? user.school : '' })
+
+    const response = await userRepo.create(user)
+
     callback && callback(response)
 
     if (response.ok) {
@@ -50,7 +49,7 @@ const CreateUser = ({ trigger, callback }: CreateUserProps): React.JSX.Element =
       onClose={() => setOpen(false)}
       onOpen={() => {
         setError(undefined)
-        setUser(empty)
+        setUser(undefined)
         setOpen(true)
       }}
       open={open}
@@ -65,7 +64,7 @@ const CreateUser = ({ trigger, callback }: CreateUserProps): React.JSX.Element =
               onChange={handleChange}
               label="Username"
               name="username"
-              value={user.username}
+              value={user?.username}
               placeholder="User Name"
               required
             />
@@ -75,29 +74,29 @@ const CreateUser = ({ trigger, callback }: CreateUserProps): React.JSX.Element =
               label="User Role"
               name="role"
               options={roles}
-              value={user.role}
+              value={user?.role}
               placeholder="User Role"
               required
             />
-            {user.role == 'team' && (
+            {user?.role == 'team' && (
               <Form.Field
                 control={Input}
                 onChange={handleChange}
                 label="School"
                 name="school"
-                value={user.school}
+                value={user?.school}
                 placeholder="School"
                 required
               />
             )}
-            {['team', 'judge'].includes(user.role) && (
+            {user?.role && ['team', 'judge'].includes(user.role) && (
               <Form.Field
                 control={Select}
                 onChange={handleSelectChange}
                 label="Division"
                 name="division"
                 options={divisions}
-                value={user.division}
+                value={user?.division}
                 placeholder="Division"
                 required
               />
@@ -107,7 +106,7 @@ const CreateUser = ({ trigger, callback }: CreateUserProps): React.JSX.Element =
               onChange={handleChange}
               label="Display Name"
               name="display_name"
-              value={user.display_name}
+              value={user?.display_name}
               placeholder="Display Name"
               required
             />
@@ -116,7 +115,7 @@ const CreateUser = ({ trigger, callback }: CreateUserProps): React.JSX.Element =
               onChange={handleChange}
               name="password"
               label="Password"
-              value={user.password}
+              value={user?.password}
               type="password"
               placeholder="Password"
               required

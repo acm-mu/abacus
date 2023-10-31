@@ -1,17 +1,13 @@
 import type { IClarification, ISubmission } from 'abacus'
 import { ClarificationRepository, SubmissionRepository } from "api"
-import './Clarification.scss'
 import { Block, DivisionLabel, NotFound, PageLoading } from 'components'
+import { ClarificationComment } from "components/clarification"
 import { AppContext } from 'context'
 import { usePageTitle } from 'hooks'
 import React, { useContext, useEffect, useState } from 'react'
-import Moment from 'react-moment'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Button, ButtonProps, Comment, Divider, Form, Label, Message, Table } from 'semantic-ui-react'
-
-interface ClarificationProps {
-  clarification: IClarification
-}
+import './Clarification.scss'
 
 const ClarificationPage = (): React.JSX.Element => {
   const submissionRepo = new SubmissionRepository()
@@ -49,13 +45,16 @@ const ClarificationPage = (): React.JSX.Element => {
 
     if (!isMounted) return
 
-    setSubmissions(response.data?.map((submission) => ({ ...submission, checked: false })) ?? [])
+    if (response.data) {
+      setSubmissions(Object.values(response.data).map(submission => ({ ...submission, checked: false })) ?? [])
+    }
+
     setLoading(false)
   }
 
   useEffect(() => {
-    loadClarification()
-    if (clarification) loadSubmissions()
+    loadClarification().catch(console.error)
+    if (clarification) loadSubmissions().catch(console.error)
     return () => {
       setMounted(false)
     }
@@ -79,7 +78,7 @@ const ClarificationPage = (): React.JSX.Element => {
 
   const handleChange = ({ target: { value } }: React.ChangeEvent<HTMLTextAreaElement>) => setBody(value)
 
-  const handleLock = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, { value: open }: ButtonProps) => {
+  const handleLock = async (_e: React.MouseEvent<HTMLButtonElement, MouseEvent>, { value: open }: ButtonProps) => {
     if (!clarification) {
       alert('Invalid clarification!')
       return
@@ -89,37 +88,9 @@ const ClarificationPage = (): React.JSX.Element => {
     const response = await clarificationRepo.update(clarification.cid, { open })
 
     if (response.ok) {
-      loadClarification()
+      await loadClarification()
     }
     setChangingState(false)
-  }
-
-  const ClarificationComment = ({ clarification }: ClarificationProps) => {
-    const deleteClarification = async () => {
-      const response = await clarificationRepo.delete(clarification.cid)
-
-      if (response.ok) {
-        if (clarification.cid === cid) navigate('/admin/clarifications')
-        else loadClarification()
-      }
-    }
-
-    return (
-      <Comment>
-        <Comment.Content>
-          <Comment.Author as="a">{clarification.user.display_name}</Comment.Author>
-          <Comment.Metadata>
-            <div>
-              <Moment fromNow date={clarification.date * 1000} />
-            </div>
-            <a href="#" onClick={deleteClarification}>
-              Delete
-            </a>
-          </Comment.Metadata>
-          <Comment.Text>{clarification.body}</Comment.Text>
-        </Comment.Content>
-      </Comment>
-    )
   }
 
   const goBack = () => {
@@ -132,12 +103,11 @@ const ClarificationPage = (): React.JSX.Element => {
   return (
     <>
       <h1 style={{ display: 'inline' }}>
-        {clarification.title}{' '}
-        {!clarification.open ? (
-          <Label color="red" content="Closed" className="closed" />
-        ) : (
-          <Label color="green" content="Active" className="active" />
-        )}
+        {clarification.title} {!clarification.open ? (
+        <Label color="red" content="Closed" className="closed" />
+      ) : (
+        <Label color="green" content="Active" className="active" />
+      )}
       </h1>
       <Block transparent size="xs-12">
         <Button content="Back" icon="arrow left" labelPosition="left" onClick={goBack} />
@@ -171,13 +141,11 @@ const ClarificationPage = (): React.JSX.Element => {
       <Block size="xs-6">
         <Comment.Group>
           <ClarificationComment clarification={clarification} />
-          {clarification.children.length > 0 ? (
+          {clarification.children?.length ? (
             <Comment.Group>
               {clarification.children
                 .sort(({ date: d1 }, { date: d2 }) => d1 - d2)
-                .map((child) => (
-                  <ClarificationComment key={child.cid} clarification={child} />
-                ))}
+                .map((child) => <ClarificationComment key={child.cid} clarification={child} />)}
             </Comment.Group>
           ) : (
             <></>
@@ -202,8 +170,8 @@ const ClarificationPage = (): React.JSX.Element => {
       </Block>
       <Block size="xs-6">
         <h2 style={{ display: 'inline' }}>
-          <Link to={`/admin/users/${clarification.user.uid}`}>{clarification.user.display_name}</Link>{' '}
-          <DivisionLabel division={clarification.division} />
+          <Link to={`/admin/users/${clarification.user.uid}`}>{clarification.user.display_name}</Link> <DivisionLabel
+          division={clarification.division} />
         </h2>
         <h4>School: {clarification.user.school}</h4>
         <Divider />

@@ -24,15 +24,15 @@ const Home = (): React.JSX.Element => {
 
     if (!isMounted) return
 
-    setSubmissions(
-      response.data?.filter(
+    if (response.data) {
+      setSubmissions(Object.values(response.data).filter(
         ({ team, date }) =>
           team &&
           !team.disabled &&
           date * 1000 > Number(settings?.start_date) &&
           date * 1000 < Number(settings?.end_date)
-      )
-    )
+      ))
+    }
     setLoading(false)
   }
 
@@ -129,7 +129,7 @@ const Home = (): React.JSX.Element => {
                     <Link to={`/${user?.role}/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link>
                   </Table.Cell>
                   <Table.Cell>
-                    <Link to={`/${user?.role}/teams/${submission.tid}`}>{submission.team.display_name}</Link>
+                    <Link to={`/${user?.role}/teams/${submission.tid}`}>{submission.team?.display_name}</Link>
                   </Table.Cell>
                   <Table.Cell>
                     <Link to={`/${user?.role}/problems/${submission.pid}`}>{submission.problem.name}</Link>

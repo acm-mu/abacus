@@ -1,9 +1,9 @@
-import React, { useContext } from 'react'
 import { Block } from 'components'
-import { Divider } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
 import { AppContext } from 'context'
 import { usePageTitle } from 'hooks'
+import React, { useContext } from 'react'
+import { Link } from 'react-router-dom'
+import { Divider } from 'semantic-ui-react'
 
 const Rules = (): React.JSX.Element => {
   usePageTitle("Abacus | Blue Rules")
@@ -31,20 +31,16 @@ const Rules = (): React.JSX.Element => {
     <p>The following is a list of permitted materials for use within the time of the competition.</p>
     <ul>
       <li>
-        The{' '}
-        <a href="https://docs.oracle.com/javase/7/docs/api/" target="_blank" rel="noreferrer">
-          Java API Documentation
-        </a>{' '}
-        and{' '}
-        <a href="https://docs.python.org/3/library/" target="_blank" rel="noreferrer">
-          Python API Documentation
-        </a>
+        The <a href="https://docs.oracle.com/javase/7/docs/api/" target="_blank" rel="noreferrer">
+        Java API Documentation
+      </a> and <a href="https://docs.python.org/3/library/" target="_blank" rel="noreferrer">
+        Python API Documentation
+      </a>
       </li>
       <li>
-        Our competition website,{' '}
-        <a href="https://codeabac.us" target="_blank" rel="noreferrer">
-          Abacus
-        </a>
+        Our competition website, <a href="https://codeabac.us" target="_blank" rel="noreferrer">
+        Abacus
+      </a>
       </li>
       <li>Your IDE&apos;s documentation</li>
       <li>Blank paper and writing utensils</li>
@@ -56,8 +52,7 @@ const Rules = (): React.JSX.Element => {
       <b>Non</b>-Permitted Materials
     </h2>
     <p>
-      The following is a list of{' '}
-      <em>
+      The following is a list of <em>
         <b>non</b>
       </em>
       -permitted materials. <b>This list is not comprehensive.</b>
@@ -113,9 +108,12 @@ const Rules = (): React.JSX.Element => {
     <h2>Competition Guidelines</h2>
     <p>Here are some other general guidelines that you might find useful:</p>
     <ul>
-      <li>For virtual teams, there are no restrictions on the number of computers or devices you can use.  In-person teams are limited to two devices per team.</li>
+      <li>For virtual teams, there are no restrictions on the number of computers or devices you can use. In-person
+        teams are limited to two devices per team.
+      </li>
       <li>
-        Only virtual teams <b>may</b> use online communication software like email, Zoom, Teams, Skype, Discord, etc. for
+        Only virtual teams <b>may</b> use online communication software like email, Zoom, Teams, Skype, Discord, etc.
+        for
         communication <b>solely between</b> you and your teammates.
       </li>
       <li>
@@ -129,20 +127,16 @@ const Rules = (): React.JSX.Element => {
         <li>Questions regarding any confusing parts of the competition problems</li>
       </ul>
       <p>
-        These questions can be asked through the{' '}
-        {hasAccessTo() ? <Link to={'/blue/clarifications'}>Clarifications</Link> : 'Clarifications'} tab.
+        These questions can be asked through the {hasAccessTo() ? <Link to={'/blue/clarifications'}>Clarifications</Link> : 'Clarifications'} tab.
       </p>
       <li>
-        For issues with technology, feel free to reach out to our tech support staff online using{' '}
-        {isBeforeCompetition() ? (
+        For issues with technology, feel free to reach out to our tech support staff online using {isBeforeCompetition() ? (
           <a href="https://meet.google.com/ifq-fcwf-unr" target="_blank" rel="noreferrer">
             Google Meet
           </a>
         ) : (
           <a href="#">Google Meet</a>
-        )}{' '}
-        or, if your internet is not working, by phone at{' '}
-        <a href={isBeforeCompetition() ? 'tel:2628643449' : '#'}>(262) 864-3449</a>.
+        )} or, if your internet is not working, by phone at <a href={isBeforeCompetition() ? 'tel:2628643449' : '#'}>(262) 864-3449</a>.
       </li>
     </ul>
 
@@ -164,8 +158,7 @@ const Rules = (): React.JSX.Element => {
         </li>
       </ul>
       <li>
-        Submit your source code file (<code>.java</code> or <code>.py</code>). <b>Do not</b> submit{' '}
-        <code>.class</code> or <code>.pyc</code> files.
+        Submit your source code file (<code>.java</code> or <code>.py</code>). <b>Do not</b> submit <code>.class</code> or <code>.pyc</code> files.
       </li>
       <li>
         If writing your submission in Java, do not use packages. Remove any <code>package...</code> statements from

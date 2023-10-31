@@ -1,4 +1,4 @@
-import type { IProblem, ISubmission } from 'abacus'
+import type { IBlueProblem, IGoldProblem, IProblem, ISubmission, SortConfig } from 'abacus'
 import { ProblemRepository, SubmissionRepository } from 'api'
 import { Block, DivisionLabel, PageLoading } from 'components'
 import { saveAs } from 'file-saver'
@@ -11,12 +11,6 @@ interface ProblemItem extends IProblem {
   checked: boolean
 }
 
-type SortKey = 'id' | 'name'
-type SortConfig = {
-  column: SortKey
-  direction: 'ascending' | 'descending'
-}
-
 const Problems = (): React.JSX.Element => {
   usePageTitle("Abacus | Admin Problems")
 
@@ -24,66 +18,51 @@ const Problems = (): React.JSX.Element => {
   const submissionRepo = new SubmissionRepository()
 
   const [isLoading, setLoading] = useState(true)
-  const [problems, setProblems] = useState<ProblemItem[]>([])
+  const [problems, setProblems] = useState<ProblemItem[]>()
   const [submissions, setSubmissions] = useState<{ [key: string]: ISubmission[] }>()
-  const [isMounted, setMounted] = useState(true)
   const [isDeleting, setDeleting] = useState(false)
   const [activeDivision, setActiveDivision] = useState('blue')
+
   const activeProblems = useMemo(
-    () => problems.filter((problem) => problem.division == activeDivision),
+    () => problems?.filter((problem) => problem.division == activeDivision),
     [problems, activeDivision]
   )
 
-  const [{ column, direction }, setSortConfig] = useState<SortConfig>({
-    column: 'id',
-    direction: 'ascending'
+  const [{ sortBy, sortDirection }, setSortConfig] = useState<SortConfig<IProblem>>({
+    sortBy: 'id',
+    sortDirection: 'ascending'
   })
 
-  const sort = (newColumn: SortKey, problem_list: ProblemItem[] = problems) => {
-    const newDirection = column === newColumn && direction == 'ascending' ? 'descending' : 'ascending'
-    setSortConfig({ column: newColumn, direction: newDirection })
-
-    setProblems(
-      problem_list.sort(
-        (p1: IProblem, p2: IProblem) =>
-          (p1[newColumn] || 'ZZ').localeCompare(p2[newColumn] || 'ZZ') * (direction == 'ascending' ? 1 : -1)
-      )
-    )
+  const sort = (newColumn: keyof IProblem) => {
+    setSortConfig({
+      sortBy: newColumn,
+      sortDirection: sortBy === newColumn && sortDirection == 'ascending' ? 'descending' : 'ascending'
+    })
   }
 
   useEffect(() => {
-    loadProblems()
-    return () => {
-      setMounted(false)
-    }
-  }, [])
+    loadProblems().catch(console.error)
+  }, [sortBy, sortDirection])
 
   const loadProblems = async () => {
     const response = await problemRepo.getMany({ sortBy: 'id' })
 
-    if (response.ok) {
-      if (!isMounted) return
-
-      sort(
-        'id',
-        problems.map((problem) => ({ ...problem, checked: false }))
-      )
+    if (response.ok && response.data) {
+      setProblems(Object.values(response.data) as ProblemItem[])
 
       const submissionResponse = await submissionRepo.getMany()
 
-      if (!isMounted) return
-
       const subs: { [key: string]: ISubmission[] } = {}
-      submissionResponse.data?.forEach((sub: ISubmission) => {
-        const { pid } = sub
-        if (!(pid in subs)) subs[pid] = []
-        subs[pid].push(sub)
-      })
+      if (submissionResponse.data) {
+        Object.values(submissionResponse.data).forEach((sub: ISubmission) => {
+          const { pid } = sub
+          if (!(pid in subs)) subs[pid] = []
+          subs[pid].push(sub)
+        })
+      }
       setSubmissions(subs)
-    } else {
-      setProblems([])
-      setSubmissions({})
     }
+
     setLoading(false)
   }
 
@@ -96,20 +75,27 @@ const Problems = (): React.JSX.Element => {
     }
   }
 
-  const handleChange = ({ target: { id, checked } }: ChangeEvent<HTMLInputElement>) =>
-    setProblems(problems.map((problem) => (problem.pid == id ? { ...problem, checked } : problem)))
+  const handleChange = ({ target: { id, checked } }: ChangeEvent<HTMLInputElement>) => {
+    setProblems(problems?.map((problem) => (problem.pid == id ? { ...problem, checked } : problem)))
+  }
 
-  const checkAll = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) =>
-    setProblems(problems.map((problem) => (problem.division == activeDivision ? { ...problem, checked } : problem)))
+  const checkAll = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => {
+    setProblems(problems?.map((problem) => (problem.division == activeDivision ? { ...problem, checked } : problem)))
+  }
 
   const deleteSelected = async () => {
     if (window.confirm('Are you sure you want to delete these problems?')) {
       //if the user selects ok, then the code below runs, otherwise nothing occurs
+      const problemsToDelete = activeProblems?.map((problem) => problem.pid)
+      if (!problemsToDelete) {
+        return
+      }
+
       setDeleting(true)
-      const problemsToDelete = activeProblems.filter((problem) => problem.checked).map((problem) => problem.pid)
+
       const response = await problemRepo.delete(problemsToDelete)
       if (response.ok) {
-        setProblems(problems.filter((problem) => !problemsToDelete.includes(problem.pid)))
+        setProblems(problems?.filter((problem) => !problemsToDelete.includes(problem.pid)))
         const id = problemsToDelete.join()
         window.sendNotification({
           id,
@@ -122,7 +108,7 @@ const Problems = (): React.JSX.Element => {
     }
   }
 
-  const handleItemClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, { name }: MenuItemProps) =>
+  const handleItemClick = (_event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, { name }: MenuItemProps) =>
     name && setActiveDivision(name)
 
   if (isLoading) return <PageLoading />
@@ -135,7 +121,7 @@ const Problems = (): React.JSX.Element => {
       </Link>
 
       <Button content="Download Problems" onClick={downloadProblems} />
-      {problems.filter((problem) => problem.division == activeDivision && problem.checked).length ? (
+      {problems?.filter((problem) => problem.division == activeDivision && problem.checked).length ? (
         <Button
           content="Delete Selected"
           negative
@@ -164,20 +150,18 @@ const Problems = (): React.JSX.Element => {
               <Table.HeaderCell collapsing>
                 <input
                   type="checkbox"
-                  checked={
-                    activeProblems.length > 0 && activeProblems.filter((problem) => !problem.checked).length == 0
-                  }
+                  checked={activeProblems && !activeProblems?.filter((problem) => !problem.checked).length}
                   onChange={checkAll}
                 />
               </Table.HeaderCell>
               <Table.HeaderCell
-                sorted={column === 'id' ? direction : undefined}
+                sorted={sortBy === 'id' ? sortDirection : undefined}
                 onClick={() => sort('id')}
                 content="ID"
               />
               <Table.HeaderCell>Division</Table.HeaderCell>
               <Table.HeaderCell
-                sorted={column === 'name' ? direction : undefined}
+                sorted={sortBy === 'name' ? sortDirection : undefined}
                 onClick={() => sort('name')}
                 content="Problem Name"
               />
@@ -187,40 +171,38 @@ const Problems = (): React.JSX.Element => {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {problems.length == 0 ? (
+            {!problems?.length ? (
               <Table.Row>
                 <Table.Cell colSpan={'100%'} style={{ textAlign: 'center' }}>
                   No Problems
                 </Table.Cell>
               </Table.Row>
             ) : (
-              activeProblems.map((problem: ProblemItem, index: number) => {
-                return (
-                  <Table.Row key={index}>
-                    <Table.Cell>
-                      <input type="checkbox" checked={problem.checked} id={problem.pid} onChange={handleChange} />
-                    </Table.Cell>
-                    <Table.Cell>
-                      <Link to={`/admin/problems/${problem.pid}`}>{problem.id}</Link>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <DivisionLabel division={problem.division} />
-                    </Table.Cell>
-                    <Table.Cell>
-                      <Link to={`/admin/problems/${problem.pid}`}>{problem.name}</Link>
-                    </Table.Cell>
-                    <Table.Cell>{activeDivision == 'blue' ? problem.tests?.length : problem.max_points}</Table.Cell>
-                    {submissions && (
-                      <>
-                        <Table.Cell>
-                          {problem.pid in submissions ? submissions[problem.pid].filter((p) => p.score > 0).length : 0}
-                        </Table.Cell>
-                        <Table.Cell>{problem.pid in submissions ? submissions[problem.pid].length : 0}</Table.Cell>
-                      </>
-                    )}
-                  </Table.Row>
-                )
-              })
+              activeProblems?.map(problem =>
+                <Table.Row key={`problem-${problem.pid}`}>
+                  <Table.Cell>
+                    <input type="checkbox" checked={problem.checked} id={problem.pid} onChange={handleChange} />
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Link to={`/admin/problems/${problem.pid}`}>{problem.id}</Link>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <DivisionLabel division={problem.division} />
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Link to={`/admin/problems/${problem.pid}`}>{problem.name}</Link>
+                  </Table.Cell>
+                  <Table.Cell>{activeDivision == 'blue' ? (problem as IProblem as IBlueProblem).tests?.length : (problem as IProblem as IGoldProblem).max_points}</Table.Cell>
+                  {submissions && (
+                    <>
+                      <Table.Cell>
+                        {problem.pid in submissions ? submissions[problem.pid].filter((p) => p.score > 0).length : 0}
+                      </Table.Cell>
+                      <Table.Cell>{problem.pid in submissions ? submissions[problem.pid].length : 0}</Table.Cell>
+                    </>
+                  )}
+                </Table.Row>
+              )
             )}
           </Table.Body>
         </Table>

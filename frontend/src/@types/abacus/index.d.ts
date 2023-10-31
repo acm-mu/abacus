@@ -30,6 +30,11 @@ declare module 'abacus' {
     [key: string]: unknown
   }
 
+  export interface SortConfig<T> {
+    sortBy: keyof T
+    sortDirection: 'ascending' | 'descending' | undefined
+  }
+
   export type NullablePartial<
     T,
     NK extends keyof T = { [K in keyof T]: null extends T[K] ? K : never }[keyof T],

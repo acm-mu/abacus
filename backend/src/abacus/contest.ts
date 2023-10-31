@@ -1,5 +1,6 @@
-import { Args, Clarification, Item, Problem, ResolvedSubmission, Settings, Submission, User } from 'abacus'
-import { Lambda } from 'aws-sdk'
+import { Lambda } from "@aws-sdk/client-lambda";
+import { Args, Clarification, Item, Items, Problem, ResolvedSubmission, Settings, Submission, User } from 'abacus'
+import type { ApiOptions } from "../api";
 import { Database } from '../services'
 import { MongoDB } from '../services/db'
 import { transpose } from '../utils'
@@ -15,46 +16,42 @@ class ContestService {
 
   /* Users */
 
-  async create_user(item: Item): Promise<User> {
-    return this.db.put('user', item) as Promise<User>
+  async create_user(item: Item) {
+    return this.db.put('user', item)
   }
 
-  async get_user(uid: string): Promise<User> {
-    return this.db.get('user', { uid }) as Promise<User>
+  async get_user(uid: string) {
+    return await this.db.get('user', { uid }) as unknown as Promise<User | null>
   }
 
-  async get_users(args?: Args, columns?: string[], page?: number): Promise<User[]> {
-    return this.db.scan('user', { args, columns }, page) as Promise<User[]>
+  async get_users(args?: Args, columns?: string[], options?: ApiOptions) {
+    return await this.db.scan('user', { args, columns }, options) as unknown as Promise<Items<User>>
   }
 
-  async update_user(uid: string, item: Item): Promise<User> {
-    return this.db.update('user', { uid }, item) as Promise<User>
+  async update_user(uid: string, item: Item) {
+    return this.db.update('user', { uid }, item)
   }
 
   async delete_user(uid: string): Promise<void> {
     return this.db.delete('user', { uid })
   }
-  /* gets the size of a given table */
-  async get_table_size(table: string, args?: any): Promise<number> {
-    return this.db.count(table, { args }) as Promise<number>
-  }
 
   /* Clarifications */
 
   async create_clarification(item: Item): Promise<Clarification> {
-    return this.db.put('clarification', item) as Promise<Clarification>
+    return await this.db.put('clarification', item) as unknown as Promise<Clarification>
   }
 
   async get_clarification(cid: string): Promise<Clarification> {
-    return this.db.get('clarification', { cid }) as Promise<Clarification>
+    return await this.db.get('clarification', { cid }) as unknown as Promise<Clarification>
   }
 
-  async get_clarifications(args?: Args, page?: number): Promise<Clarification[]> {
-    return this.db.scan('clarification', { args }, page) as Promise<Clarification[]>
+  async get_clarifications(args?: Args, options?: ApiOptions): Promise<Items<Clarification>> {
+    return await this.db.scan('clarification', { args }, options) as unknown as Promise<Items<Clarification>>
   }
 
   async update_clarification(cid: string, item: Item): Promise<Clarification> {
-    return this.db.update('clarification', { cid }, item) as Promise<Clarification>
+    return await this.db.update('clarification', { cid }, item) as unknown as Promise<Clarification>
   }
 
   async delete_clarification(cid: string): Promise<void> {
@@ -64,42 +61,41 @@ class ContestService {
   /* Submissions */
 
   async create_submission(item: Item): Promise<Submission> {
-    return this.db.put('submission', item) as Promise<Submission>
+    return await this.db.put('submission', item) as unknown as Promise<Submission>
   }
 
   async get_submission(sid: string): Promise<Submission> {
-    return this.db.get('submission', { sid }) as Promise<Submission>
+    return await this.db.get('submission', { sid }) as unknown as Promise<Submission>
   }
 
-  async get_submissions(args: Args, page?: number): Promise<Submission[]> {
-    return this.db.scan('submission', { args }, page) as Promise<Submission[]>
+  async get_submissions(args: Args, options?: ApiOptions): Promise<Items<Submission>> {
+    return await this.db.scan('submission', { args }, options) as unknown as Promise<Items<Submission>>
   }
 
-  async get_resolved_submissions(args: Args, page?: number): Promise<ResolvedSubmission[]> {
+  async get_resolved_submissions(args: Args, options?: ApiOptions): Promise<Items<ResolvedSubmission>> {
     const user_columns = ['uid', 'username', 'disabled', 'display_name', 'division']
-    const users = transpose(await this.get_users({}, user_columns, undefined), 'uid')
+    const users = transpose((await this.get_users({}, user_columns, undefined)).items, 'uid')
 
-    const prob_columns = ['pid', 'division', 'id', 'name', 'max_points', 'capped_points', 'practice']
+    const prob_columns = ['pid', 'division', 'id', 'name', 'max_points', 'capped_points']
 
-    const problems = transpose(await this.get_problems({}, prob_columns, undefined), 'pid')
+    const problems = transpose((await this.get_problems({}, prob_columns, undefined)).items, 'pid')
 
-    const submissions = await this.get_submissions(args, page)
+    const submissions = await this.get_submissions(args, options)
 
-    return submissions
-      ? submissions.map((sub) => {
-          return {
-            ...sub,
-            problem: problems[sub.pid],
-            team: users[sub.tid],
-            claimed: sub.claimed ? users[sub.claimed] : undefined,
-            flagged: sub.flagged ? users[sub.flagged] : undefined
-          }
-        })
-      : []
+    return {
+      items: submissions.items.map(sub => ({
+        ...sub,
+        problem: problems[sub.pid],
+        team: users[sub.tid],
+        claimed: sub.claimed ? users[sub.claimed] : undefined,
+        flagged: sub.flagged ? users[sub.flagged] : undefined
+      })),
+      totalItems: submissions.totalItems
+    }
   }
 
   async update_submission(sid: string, item: Item): Promise<Submission> {
-    return this.db.update('submission', { sid }, item) as Promise<Submission>
+    return await this.db.update('submission', { sid }, item) as unknown as Promise<Submission>
   }
 
   async delete_submission(sid: string): Promise<void> {
@@ -108,20 +104,20 @@ class ContestService {
 
   /* Problems */
 
-  async create_problem(item: Item): Promise<Problem> {
-    return this.db.put('problem', item) as Promise<Problem>
+  async create_problem(item: Item) {
+    return await this.db.put('problem', item)
   }
 
   async get_problem(pid: string): Promise<Problem> {
-    return this.db.get('problem', { pid }) as Promise<Problem>
+    return await this.db.get('problem', { pid }) as unknown as Promise<Problem>
   }
 
-  async get_problems(args?: Args, columns?: string[], page?: number): Promise<Problem[]> {
-    return this.db.scan('problem', { args, columns }, page) as Promise<Problem[]>
+  async get_problems(args?: Args, columns?: string[], options?: ApiOptions): Promise<Items<Problem>> {
+    return await this.db.scan('problem', { args, columns }, options) as unknown as Promise<Items<Problem>>
   }
 
-  async update_problem(pid: string, item: Item): Promise<Problem> {
-    return this.db.update('problem', { pid }, item) as Promise<Problem>
+  async update_problem(pid: string, item: Item) {
+    return this.db.update('problem', { pid }, item)
   }
 
   async delete_problem(pid: string): Promise<void> {
@@ -134,13 +130,13 @@ class ContestService {
     return new Promise((resolve, reject) => {
       this.db
         .scan('setting')
-        .then((data) => resolve(data[0] as Settings))
+        .then((data) => resolve(data.items[0] as Settings))
         .catch((err) => reject(err))
     })
   }
 
-  save_settings(settings: Record<string, number | string>): Promise<Settings> {
-    return this.db.update('setting', {}, settings) as Promise<Settings>
+  save_settings(settings: Record<string, number | string>) {
+    return this.db.update('setting', {}, settings)
   }
 }
 

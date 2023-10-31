@@ -49,9 +49,8 @@ export const schema: Record<string, ParamSchema> = {
 
 const notify = async (clarification: Clarification) => {
   if (clarification.parent) {
-    const res = await contest.get_clarifications({ cid: clarification.parent })
-    if (!res) return
-    const parent = res[0]
+    const parent = await contest.get_clarification(clarification.parent )
+    if (!parent) return
 
     const to =
       parent.type == 'public' ? (parent.division ? `division:${parent.division}` : 'public') : `uid:${parent.uid}`
@@ -138,7 +137,7 @@ export const postClarifications = async (req: Request, res: Response): Promise<v
     // Response
     if (parent) {
       const clarifications = await contest.get_clarifications({ cid: parent })
-      if (!clarifications?.length) {
+      if (!clarifications?.totalItems) {
         res.status(400).json({ message: `Clarification ${parent} does not exist!` })
         return
       }

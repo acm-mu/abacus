@@ -1,5 +1,5 @@
-import type { IUser } from 'abacus'
-import { UserRepository } from 'api'
+import type { IUser, SortConfig } from 'abacus'
+import { ApiResponse, UserRepository } from 'api'
 import { PageLoading, StatusMessage } from 'components'
 import CustomTable from 'components/CustomTable'
 import { AppContext } from 'context'
@@ -10,17 +10,6 @@ import { Link } from 'react-router-dom'
 import { Button, Grid } from 'semantic-ui-react'
 import CreateUser from './CreateUser'
 
-interface UserItem extends IUser {
-  checked: boolean
-}
-
-const sortKeys = ['uid', 'display_name', 'username', 'role', 'division', 'school'] as const
-type SortKey = typeof sortKeys[number]
-
-type SortConfig = {
-  column: SortKey
-  direction: 'ascending' | 'descending'
-}
 /*
  <Table sortable>
         <Table.Header>
@@ -52,40 +41,40 @@ type SortConfig = {
       </Table>
 */
 
+interface UserItem extends IUser {
+  checked: boolean
+}
+
 const Users = (): React.JSX.Element => {
   usePageTitle("Abacus | Users")
 
-  const userRepo = new UserRepository()
+  const userRepository = new UserRepository()
+
   const { user } = useContext(AppContext)
 
-  const [users, setUsers] = useState<UserItem[]>([])
+  const [users, setUsers] = useState<UserItem[]>()
   const [isLoading, setLoading] = useState(true)
   const [isDeleting, setDeleting] = useState(false)
   const [isImporting, setImporting] = useState(false)
   const [error, setError] = useState<string>()
-  const [{ column, direction }, setSortConfig] = useState<SortConfig>({
-    column: 'username',
-    direction: 'ascending'
+  const [{ sortBy, sortDirection }, setSortConfig] = useState<SortConfig<UserItem>>({
+    sortBy: 'username',
+    sortDirection: 'ascending'
   })
 
-  const sort = (maybeColumn: string, users_list: UserItem[] = users) => {
-    const newColumn: SortKey | undefined = sortKeys.find(value => value == maybeColumn)
-    if (!newColumn) return
+  const [page, setPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(0)
 
-    const newDirection = column === newColumn && direction === 'ascending' ? 'descending' : 'ascending'
-    setSortConfig({ column: newColumn, direction: newDirection })
-
-    setUsers(
-      users_list.sort(
-        (u1: IUser, u2: IUser) =>
-          (u1[newColumn] || 'ZZ').localeCompare(u2[newColumn] || 'ZZ') * (direction == 'ascending' ? 1 : -1)
-      )
-    )
+  const sort = (newColumn: keyof UserItem) => {
+    setSortConfig({
+      sortBy: newColumn,
+      sortDirection: sortBy === newColumn && sortDirection === 'ascending' ? 'descending' : 'ascending'
+    })
   }
 
   useEffect(() => {
-    loadUsers()
-  }, [])
+    loadUsers().catch(console.error)
+  }, [sortBy, sortDirection, page])
 
   /*
   @param page - page to query when paginating
@@ -94,12 +83,13 @@ const Users = (): React.JSX.Element => {
   const loadUsers = async () => {
     try {
       //include page as query, so that API can fetch it.
-      const userRepository = new UserRepository()
-      const response = await userRepository.getMany()
-      sort(
-        'username',
-        response.data?.map((user) => ({ ...user, checked: false }))
-      )
+      const response = await userRepository.getMany({ skip: (page-1) * 25, sortBy, sortDirection })
+
+      if (response.ok && response.data) {
+        setUsers(Object.values(response.data.items).map(u => ({ ...u, checked: false })))
+        setTotalPages(response.data.totalPages)
+      }
+
       setLoading(false)
     } catch (err) {
       setError(err as string)
@@ -130,7 +120,7 @@ const Users = (): React.JSX.Element => {
 
         const username = 'team' + i
 
-        const response = await userRepo.create({
+        const response = await userRepository.create({
           division: team.division,
           display_name: team.team_name,
           school: team.school,
@@ -147,7 +137,8 @@ const Users = (): React.JSX.Element => {
             division: team.division,
             password
           })
-          setUsers((users) => users.concat(response.data))
+          const userItem: UserItem = { ...response.data, checked: false }
+          setUsers((users) => users?.concat(userItem))
         }
         i++
       }
@@ -163,37 +154,42 @@ const Users = (): React.JSX.Element => {
     setImporting(false)
   }
 
-  const handleChange = ({ target: { id, checked } }: ChangeEvent<HTMLInputElement>) =>
-    setUsers(users.map((user) => (user.uid == id ? { ...user, checked } : user)))
-  const checkAll = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) =>
-    setUsers(users.map((user) => ({ ...user, checked })))
+  const handleChange = ({ target: { id, checked } }: ChangeEvent<HTMLInputElement>) => {
+    setUsers(users?.map((user) => (user.uid == id ? { ...user, checked } : user)))
+  }
 
-  const createUserCallback = (response: Response) => {
+  const checkAll = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => {
+    setUsers(users?.map((user) => ({ ...user, checked })))
+  }
+
+  const createUserCallback = (response: ApiResponse<any>) => {
     if (response.ok) loadUsers()
   }
 
   const deleteSelected = async () => {
     if (window.confirm('are you sure you want to delete these users?')) {
       //if the user selects ok, then the code below runs, otherwise nothing occurs
-      if (users.filter((u) => u.checked && u.uid == user?.uid).length > 0) {
+      if (users?.filter((u) => u.checked && u.uid == user?.uid).length) {
         alert('Cannot delete currently logged in user!')
         return
       }
 
       setDeleting(true)
 
-      const usersToDelete = users.filter((user) => user.checked).map((user) => user.uid)
-      const response = await userRepo.delete(usersToDelete)
+      const usersToDelete = users?.filter((user) => user.checked).map((user) => user.uid)
+      if (usersToDelete) {
+        const response = await userRepository.delete(usersToDelete)
 
-      if (response.ok) {
-        loadUsers()
-        const id = usersToDelete.join()
-        window.sendNotification({
-          id,
-          type: 'success',
-          header: 'Success!',
-          content: 'We deleted the users you selected!'
-        })
+        if (response.ok) {
+          await loadUsers()
+          const id = usersToDelete.join()
+          window.sendNotification({
+            id,
+            type: 'success',
+            header: 'Success!',
+            content: 'We deleted the users you selected!'
+          })
+        }
       }
 
       setDeleting(false)
@@ -209,7 +205,7 @@ const Users = (): React.JSX.Element => {
       <Button as={Link} to={'/admin/users/upload'} content="Upload Users" />
       <Button loading={isImporting} disabled={isImporting} content="Import Users" onClick={importUsers} />
       <Button content="Download Users" onClick={downloadUsers} />
-      {users.filter((user) => user.checked).length ? (
+      {users?.filter((user) => user.checked).length ? (
         <Button
           loading={isDeleting}
           disabled={isDeleting}
@@ -220,14 +216,18 @@ const Users = (): React.JSX.Element => {
       ) : (
         <></>
       )}
-      <CustomTable
+      <CustomTable<UserItem>
         id={'uid'}
         header={['username', 'role', 'division', 'school', 'display_name']}
         body={users}
+        totalPages={totalPages}
         onCheckItem={handleChange}
-        sort={{ column, direction }}
-        onClickHeaderItem={(item: string) => sort(item)}
+        sort={{ sortBy, sortDirection }}
+        onClickHeaderItem={item => sort(item)}
         onCheckAll={checkAll}
+        onPageChange={({ activePage }) => {
+          if (typeof (activePage) == 'number') setPage(activePage)
+        }}
       />
     </Grid>
   )

@@ -1,4 +1,6 @@
-import { Router, Request, Response } from 'express'
+import { Request, Response, Router } from 'express'
+import swaggerJsdoc from 'swagger-jsdoc'
+import swaggerUi from 'swagger-ui-express'
 import auth from './auth'
 import clarifications from './clarifications'
 import contest from './contest'
@@ -7,10 +9,16 @@ import scratch from './scratch'
 import standings from './standings'
 import submissions from './submissions'
 import users from './users'
-import swaggerJsdoc from 'swagger-jsdoc'
-import swaggerUi from 'swagger-ui-express'
 
 const api = Router()
+
+export interface ApiOptions {
+  filterBy?: { [key: string]: any },
+  skip?: number
+  limit?: number
+  sortBy?: string,
+  sortDirection?: string
+}
 
 // Only show swagger docs on local environment
 if (process.env.NODE_ENV == 'development') {

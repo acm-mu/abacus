@@ -1,6 +1,6 @@
-import {BaseRepository} from "./base.repository"
-import {User} from "abacus"
+import type { IUser, IUserReq } from "abacus"
+import { BaseRepository } from "./base.repository"
 
-export default class UserRepository extends BaseRepository<User> {
-  collection = 'user'
+export default class UserRepository extends BaseRepository<IUserReq, IUser> {
+  collection = 'users'
 }

@@ -1,7 +1,7 @@
-import type { ISubmission } from 'abacus'
+import type { IBlueSubmission, IGoldSubmission, ISubmission } from 'abacus'
 import React from 'react'
-import { BlueSubmission, GoldSubmission } from '.'
-import SubmissionContext from './SubmissionContext'
+import { BlueSubmission, BlueSubmissionContext } from "./blue"
+import { GoldSubmission, GoldSubmissionContext } from "./gold"
 
 interface SubmissionProps {
   submission: ISubmission
@@ -9,11 +9,23 @@ interface SubmissionProps {
   rerunning?: boolean
 }
 
-const SubmissionView = ({ submission, setSubmission, rerunning }: SubmissionProps): React.JSX.Element => (
-  <SubmissionContext.Provider value={{ submission, setSubmission, rerunning }}>
-    {submission.division == 'blue' && <BlueSubmission />}
-    {submission.division == 'gold' && <GoldSubmission />}
-  </SubmissionContext.Provider>
-)
+const SubmissionView = ({ submission, setSubmission, rerunning }: SubmissionProps): React.JSX.Element => {
+
+  if (submission.division == 'blue') {
+    return <BlueSubmissionContext.Provider
+      value={{ submission: submission as IBlueSubmission, setSubmission, rerunning }}>
+      <BlueSubmission />
+    </BlueSubmissionContext.Provider>
+  }
+
+  if (submission.division == 'gold') {
+    return <GoldSubmissionContext.Provider
+      value={{ submission: submission as IGoldSubmission, setSubmission, rerunning }}>
+      <GoldSubmission />
+    </GoldSubmissionContext.Provider>
+  }
+
+  return <p>Error loading submission!</p>
+}
 
 export default SubmissionView

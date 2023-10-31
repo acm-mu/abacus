@@ -1,4 +1,4 @@
-import type { IProblem, ISubmission } from 'abacus'
+import type { IBlueProblem, IBlueSubmission, ITestResult } from 'abacus'
 import { Block, Countdown, FileDialog, NotFound, PageLoading } from 'components'
 import { usePageTitle } from 'hooks'
 import React, { ChangeEvent, useEffect, useState } from 'react'
@@ -11,8 +11,8 @@ const SubmitPractice = (): React.JSX.Element => {
   const { id } = useParams<{ id: string }>()
   const [isLoading, setLoading] = useState(false)
   const [isPageLoading, setPageLoading] = useState(true)
-  const submissions: ISubmission[] = []
-  const [problem, setProblem] = useState<IProblem>()
+  const submissions: IBlueSubmission[] = []
+  const [problem, setProblem] = useState<IBlueProblem>()
 
   const [language, setLanguage] = useState<Language>()
   const [file, setFile] = useState<File>()
@@ -29,13 +29,15 @@ const SubmitPractice = (): React.JSX.Element => {
       })
   }, [])
 
-  const testSubmission = async (submission: ISubmission): Promise<ISubmission> => {
+  const testSubmission = async (submission: IBlueSubmission): Promise<IBlueSubmission> => {
     let runtime = -1
     let status = 'accepted'
     //GET  https://emkc.org/api/v2/piston/runtimes
     //POST https://emkc.org/api/v2/piston/execute
     if (submission.tests) {
-      for (const test of submission.tests) {
+      for (const t of submission.tests) {
+        const test = t as ITestResult
+
         // Await response from piston execution
         const res = await fetch('https://piston.codeabac.us/execute', {
           method: 'POST',
@@ -76,7 +78,7 @@ const SubmitPractice = (): React.JSX.Element => {
     const { name: filename, size: filesize } = file
     const fileReader = new FileReader()
 
-    let submissions: { [key: string]: ISubmission } = {}
+    let submissions: { [key: string]: IBlueSubmission } = {}
     if (localStorage.submissions != undefined) {
       submissions = JSON.parse(localStorage.submissions)
     }
@@ -102,7 +104,7 @@ const SubmitPractice = (): React.JSX.Element => {
         status: 'pending',
         score: 0,
         date: Date.now() / 1000,
-        tests: problem.tests,
+        tests: problem.tests ?? [],
         runtime: 0,
         source: data.toString()
       })

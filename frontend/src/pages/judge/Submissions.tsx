@@ -1,4 +1,4 @@
-import type { ISubmission } from 'abacus'
+import type { ISubmission, SortConfig } from 'abacus'
 import { SubmissionRepository } from 'api'
 import { PageLoading } from 'components'
 import { AppContext, SocketContext } from 'context'
@@ -8,16 +8,9 @@ import React, { ChangeEvent, useContext, useEffect, useMemo, useState } from 're
 import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
 import { Button, Checkbox, Label, Table } from 'semantic-ui-react'
-import { compare } from 'utils'
 
 interface SubmissionItem extends ISubmission {
   checked: boolean
-}
-
-type SortKey = 'date' | 'sid' | 'sub_no' | 'language' | 'status' | 'runtime' | 'score'
-type SortConfig = {
-  column: SortKey
-  direction: 'ascending' | 'descending'
 }
 
 const Submissions = (): React.JSX.Element => {
@@ -27,8 +20,7 @@ const Submissions = (): React.JSX.Element => {
 
   const socket = useContext(SocketContext)
   const [isLoading, setLoading] = useState(true)
-  const [submissions, setSubmissions] = useState<SubmissionItem[]>([])
-  const [isMounted, setMounted] = useState(true)
+  const [submissions, setSubmissions] = useState<SubmissionItem[]>()
   const [isDeleting, setDeleting] = useState(false)
   const [isClaiming, setClaiming] = useState<{ [key: string]: boolean }>({})
   const [showReleased, setShowReleased] = useState(false)
@@ -36,67 +28,74 @@ const Submissions = (): React.JSX.Element => {
 
   const { user } = useContext(AppContext)
 
-  const [{ column, direction }, setSortConfig] = useState<SortConfig>({
-    column: 'date',
-    direction: 'ascending'
+  const [{ sortBy, sortDirection }, setSortConfig] = useState<SortConfig<ISubmission>>({
+    sortBy: 'date',
+    sortDirection: 'ascending'
   })
 
-  const sort = (newColumn: SortKey, submission_list: SubmissionItem[] = submissions) => {
-    const newDirection = column === newColumn && direction == 'ascending' ? 'descending' : 'ascending'
-    setSortConfig({ column: newColumn, direction: newDirection })
-
-    setSubmissions(
-      submission_list.sort(
-        (s1: ISubmission, s2: ISubmission) =>
-          compare(s1[newColumn] || 'ZZ', s2[newColumn] || 'ZZ') * (direction == 'ascending' ? 1 : -1)
-      )
-    )
+  const sort = (newColumn: keyof ISubmission) => {
+    setSortConfig({
+      sortBy: newColumn,
+      sortDirection: sortBy === newColumn && sortDirection == 'ascending' ? 'descending' : 'ascending'
+    })
   }
 
   useEffect(() => {
-    loadSubmissions().then(() => setLoading(false))
     socket?.on('new_submission', loadSubmissions)
     socket?.on('update_submission', loadSubmissions)
-    return () => setMounted(false)
   }, [])
 
+  useEffect(() => {
+    loadSubmissions().catch(console.error)
+  }, [sortBy, sortDirection])
+
   const loadSubmissions = async () => {
+    setLoading(true)
+
     const response = await submissionRepo.getMany({
       filterBy: {
         division: user?.division
-      }
+      },
+      sortBy, sortDirection
     })
-
-    if (!isMounted) return
 
     if (response.ok && response.data) {
       setSubmissions(
-        response.data
-          .filter((submission) => !submission.team.disabled)
+        Object.values(response.data)
+          .filter((submission) => !submission.team?.disabled)
           .map((submission) => ({ ...submission, checked: false })))
     }
+
+    setLoading(false)
   }
 
   const onFilterChange = () => setShowReleased(!showReleased)
 
-  const downloadSubmissions = () =>
+  const downloadSubmissions = () => {
     saveAs(new File([JSON.stringify(submissions, null, '\t')], 'submissions.json', { type: 'text/json;charset=utf-8' }))
-  const handleChange = ({ target: { id, checked } }: ChangeEvent<HTMLInputElement>) =>
-    setSubmissions(submissions.map((submission) => (submission.sid == id ? { ...submission, checked } : submission)))
-  const checkAll = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) =>
-    setSubmissions(submissions.map((submission) => ({ ...submission, checked })))
+  }
+
+  const handleChange = ({ target: { id, checked } }: ChangeEvent<HTMLInputElement>) => {
+    setSubmissions(submissions?.map((submission) => (submission.sid == id ? { ...submission, checked } : submission)))
+  }
+
+  const checkAll = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => {
+    setSubmissions(submissions?.map((submission) => ({ ...submission, checked })))
+  }
 
   const deleteSelected = async () => {
     setDeleting(true)
-    const submissionsToDelete = submissions
-      .filter((submission) => submission.checked)
-      .map((submission) => submission.sid)
 
-    const response = await submissionRepo.delete(submissionsToDelete)
+    const submissionsToDelete = submissions?.filter((submission) => submission.checked).map((submission) => submission.sid)
 
-    if (response.ok) {
-      loadSubmissions()
+    if (submissionsToDelete) {
+      const response = await submissionRepo.delete(submissionsToDelete)
+
+      if (response.ok) {
+        await loadSubmissions()
+      }
     }
+
     setDeleting(false)
   }
 
@@ -107,7 +106,7 @@ const Submissions = (): React.JSX.Element => {
     const response = await submissionRepo.update(sid, { claimed: user?.uid })
 
     if (response.ok) {
-      setSubmissions(submissions.map((sub) => (sub.sid == sid ? { ...sub, claimed: user } : sub)))
+      setSubmissions(submissions?.map((sub) => (sub.sid == sid ? { ...sub, claimed: user } : sub)))
     }
 
     setClaiming({ ...isClaiming, [sid]: false })
@@ -115,10 +114,10 @@ const Submissions = (): React.JSX.Element => {
 
   const unclaim = async (sid: string) => {
     setClaiming({ ...isClaiming, [sid]: true })
-    const response = await submissionRepo.update(sid, { claimed: null })
+    const response = await submissionRepo.update(sid, { claimed: undefined })
 
     if (response.ok) {
-      setSubmissions(submissions.map((sub) => (sub.sid == sid ? { ...sub, claimed: undefined } : sub)))
+      setSubmissions(submissions?.map((sub) => (sub.sid == sid ? { ...sub, claimed: undefined } : sub)))
     }
 
     setClaiming({ ...isClaiming, [sid]: false })
@@ -139,17 +138,16 @@ const Submissions = (): React.JSX.Element => {
     }
   }
 
-  const filteredSubmissions = useMemo(
-    () => submissions.filter((submission) => showReleased || (!submission.released && urlFilter(submission))),
-    [submissions, showReleased, filter]
-  )
+  const filteredSubmissions = useMemo(() => {
+    return submissions?.filter((submission) => showReleased || (!submission.released && urlFilter(submission)))
+  }, [submissions, showReleased, filter])
 
   if (isLoading) return <PageLoading />
 
   return (
     <>
       <Button content="Download Submissions" onClick={downloadSubmissions} />
-      {submissions.filter((submission) => submission.checked).length ? (
+      {submissions?.filter((submission) => submission.checked).length ? (
         <Button
           content="Delete Selected"
           negative
@@ -176,7 +174,7 @@ const Submissions = (): React.JSX.Element => {
             <Table.HeaderCell
               className="sortable"
               onClick={() => sort('sid')}
-              sorted={column == 'sid' ? direction : undefined}>
+              sorted={sortBy == 'sid' ? sortDirection : undefined}>
               Submission ID
             </Table.HeaderCell>
             <Table.HeaderCell>Problem</Table.HeaderCell>
@@ -184,13 +182,13 @@ const Submissions = (): React.JSX.Element => {
             <Table.HeaderCell
               className="sortable"
               onClick={() => sort('language')}
-              sorted={column == 'language' ? direction : undefined}>
+              sorted={sortBy == 'language' ? sortDirection : undefined}>
               Language
             </Table.HeaderCell>
             <Table.HeaderCell
               className="sortable"
               onClick={() => sort('status')}
-              sorted={column == 'status' ? direction : undefined}>
+              sorted={sortBy == 'status' ? sortDirection : undefined}>
               Status
             </Table.HeaderCell>
             <Table.HeaderCell>Claimed</Table.HeaderCell>
@@ -198,19 +196,19 @@ const Submissions = (): React.JSX.Element => {
             <Table.HeaderCell
               className="sortable"
               onClick={() => sort('date')}
-              sorted={column == 'date' ? direction : undefined}>
+              sorted={sortBy == 'date' ? sortDirection : undefined}>
               Time
             </Table.HeaderCell>
             <Table.HeaderCell
               className="sortable"
               onClick={() => sort('score')}
-              sorted={column == 'score' ? direction : undefined}>
+              sorted={sortBy == 'score' ? sortDirection : undefined}>
               Score
             </Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {filteredSubmissions.length == 0 ? (
+          {!filteredSubmissions?.length ? (
             <Table.Row>
               <Table.Cell colSpan={'100%'}>No Submissions</Table.Cell>
             </Table.Row>
@@ -228,7 +226,7 @@ const Submissions = (): React.JSX.Element => {
                     <Link to={`/${user?.role}/problems/${submission.pid}`}>{submission.problem?.name} </Link>
                   </Table.Cell>
                   <Table.Cell>
-                    <Link to={`/${user?.role}/teams`}>{submission.team.display_name}</Link>
+                    <Link to={`/${user?.role}/teams`}>{submission.team?.display_name}</Link>
                   </Table.Cell>
                   <Table.Cell>{submission.language}</Table.Cell>
                   <Table.Cell>
@@ -267,7 +265,7 @@ const Submissions = (): React.JSX.Element => {
                     )}
                   </Table.Cell>
                   <Table.Cell>
-                    <Moment fromNow date={submission.date * 1000} />{' '}
+                    <Moment fromNow date={submission.date * 1000} />
                   </Table.Cell>
                   <Table.Cell>{submission.score}</Table.Cell>
                 </Table.Row>

@@ -1,21 +1,16 @@
-import type { IClarification } from 'abacus'
+import type { IClarification, SortConfig } from 'abacus'
 import { ClarificationRepository } from 'api'
-import { Block, ClarificationModal, DivisionLabel, PageLoading } from 'components'
+import { Block, DivisionLabel, PageLoading } from 'components'
+import { ClarificationModal } from "components/clarification"
 import { usePageTitle } from 'hooks'
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
 import { Button, Checkbox, CheckboxProps, Label, Table } from 'semantic-ui-react'
-import { compare } from 'utils'
+
 
 interface ClarificationItem extends IClarification {
   checked: boolean
-}
-
-type SortKey = 'title' | 'date' | 'cid' | 'type' | 'division'
-type SortConfig = {
-  column: SortKey
-  direction: 'ascending' | 'descending'
 }
 
 const Clarifications = (): React.JSX.Element => {
@@ -25,74 +20,68 @@ const Clarifications = (): React.JSX.Element => {
 
   const [isLoading, setLoading] = useState(true)
   const [isDeleting, setDeleting] = useState(false)
-  const [clarifications, setClarifications] = useState<ClarificationItem[]>([])
+  const [clarifications, setClarifications] = useState<ClarificationItem[]>()
   const [showClosed, setShowClosed] = useState(false)
-  const [{ column, direction }, setSortConfig] = useState<SortConfig>({
-    column: 'date',
-    direction: 'ascending'
+  const [{ sortBy, sortDirection }, setSortConfig] = useState<SortConfig<IClarification>>({
+    sortBy: 'date',
+    sortDirection: 'ascending'
   })
 
-  const onFilterChange = (event: React.FormEvent<HTMLInputElement>, { checked }: CheckboxProps) =>
+  const onFilterChange = (_event: React.FormEvent<HTMLInputElement>, { checked }: CheckboxProps) =>
     setShowClosed(checked || false)
   /*
   @param page - page to query when paginating
   updates the new page of clarifications
   */
 
+  const sort = (newColumn: keyof IClarification) => {
+    setSortConfig({
+      sortBy: newColumn,
+      sortDirection: sortBy === newColumn && sortDirection == 'ascending' ? 'descending' : 'ascending'
+    })
+  }
+
+  useEffect(() => {
+    loadClarifications().catch(console.error)
+  }, [sortBy, sortDirection])
+
   const loadClarifications = async () => {
     //include page as query, so that API can fetch it.
-    const response = await clarificationRepo.getMany({ sortBy: 'date' })
+    const response = await clarificationRepo.getMany({ sortBy, sortDirection })
 
     if (response.ok && response.data) {
-      setClarifications(response.data.map((clarification) => ({ ...clarification, checked: false })))
-    } else {
-      setClarifications([])
+      setClarifications(Object.values(response.data.items).map((clarification) => ({ ...clarification, checked: false })))
     }
 
     setLoading(false)
   }
 
-  const sort = (newColumn: SortKey, clarification_list: ClarificationItem[] = clarifications) => {
-    const newDirection = column === newColumn && direction == 'ascending' ? 'descending' : 'ascending'
-    setSortConfig({ column: newColumn, direction: newDirection })
-    setClarifications(
-      clarification_list.sort(
-        (c1: IClarification, c2: IClarification) =>
-          compare(c1[newColumn] || 'ZZ', c2[newColumn] || 'ZZ') * (direction == 'ascending' ? 1 : -1)
-      )
-    )
-  }
-
   const handleChange = ({ target: { id, checked } }: ChangeEvent<HTMLInputElement>) =>
     setClarifications(
-      clarifications.map((clarification) => (clarification.cid == id ? { ...clarification, checked } : clarification))
+      clarifications?.map((clarification) => (clarification.cid == id ? { ...clarification, checked } : clarification))
     )
 
   const checkAll = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) =>
-    setClarifications(clarifications.map((clarification) => ({ ...clarification, checked })))
+    setClarifications(clarifications?.map((clarification) => ({ ...clarification, checked })))
 
   const deleteSelected = async () => {
     setDeleting(true)
-    const clarificationsToDelete = clarifications
-      .filter((clarification) => clarification.checked)
-      .map((clarification) => clarification.cid)
+    const clarificationsToDelete = clarifications?.filter((clarification) => clarification.checked).map((clarification) => clarification.cid)
 
-    await clarificationRepo.delete(clarificationsToDelete)
+    if (clarificationsToDelete) {
+      await clarificationRepo.delete(clarificationsToDelete)
+    }
 
     setDeleting(false)
-    loadClarifications()
+    await loadClarifications()
   }
-
-  useEffect(() => {
-    loadClarifications()
-  }, [])
 
   if (isLoading) return <PageLoading />
 
   return (
     <>
       <ClarificationModal trigger={<Button content="Create Clarification" />} />
-      {clarifications.filter((clarification) => clarification.checked).length ? (
+      {clarifications?.filter((clarification) => clarification.checked).length ? (
         <Button
           content="Delete Selected"
           negative
@@ -115,25 +104,25 @@ const Clarifications = (): React.JSX.Element => {
               <Table.HeaderCell
                 className="sortable"
                 onClick={() => sort('cid')}
-                sorted={column == 'cid' ? direction : undefined}>
+                sorted={sortBy == 'cid' ? sortDirection : undefined}>
                 Clarification ID
               </Table.HeaderCell>
               <Table.HeaderCell
                 className="sortable"
                 onClick={() => sort('type')}
-                sorted={column == 'type' ? direction : undefined}>
+                sorted={sortBy == 'type' ? sortDirection : undefined}>
                 Type
               </Table.HeaderCell>
               <Table.HeaderCell
                 className="sortable"
                 onClick={() => sort('division')}
-                sorted={column == 'division' ? direction : undefined}>
+                sorted={sortBy == 'division' ? sortDirection : undefined}>
                 Division
               </Table.HeaderCell>
               <Table.HeaderCell
                 className="sortable"
                 onClick={() => sort('title')}
-                sorted={column == 'title' ? direction : undefined}>
+                sorted={sortBy == 'title' ? sortDirection : undefined}>
                 Title
               </Table.HeaderCell>
               <Table.HeaderCell>User</Table.HeaderCell>
@@ -141,13 +130,13 @@ const Clarifications = (): React.JSX.Element => {
               <Table.HeaderCell
                 className="sortable"
                 onClick={() => sort('date')}
-                sorted={column == 'date' ? direction : undefined}>
+                sorted={sortBy == 'date' ? sortDirection : undefined}>
                 Date
               </Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {!clarifications.length ? (
+            {!clarifications?.length ? (
               <Table.Row>
                 <Table.Cell colSpan={'100%'}>No Clarifications</Table.Cell>
               </Table.Row>
@@ -175,7 +164,7 @@ const Clarifications = (): React.JSX.Element => {
                     <Table.Cell>{clarification.title}</Table.Cell>
                     <Table.Cell>{clarification.user?.display_name}</Table.Cell>
                     <Table.Cell>
-                      <Link to={`/admin/clarifications/${clarification.cid}`}>{clarification.children.length}</Link>
+                      <Link to={`/admin/clarifications/${clarification.cid}`}>{clarification.children?.length}</Link>
                     </Table.Cell>
                     <Table.Cell>
                       <Moment date={clarification.date * 1000} fromNow />

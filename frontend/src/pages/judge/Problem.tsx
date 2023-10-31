@@ -1,5 +1,5 @@
 import MDEditor from '@uiw/react-md-editor'
-import type { IProblem } from 'abacus'
+import type { IBlueProblem, IProblem } from 'abacus'
 import { ProblemRepository } from 'api'
 import { Block, Countdown, NotFound, PageLoading } from 'components'
 import { AppContext } from 'context'
@@ -21,7 +21,7 @@ const Problem = (): React.JSX.Element => {
   usePageTitle(`Abacus | ${problem?.name ?? ""}`)
 
   useEffect(() => {
-    loadProblem()
+    loadProblem().catch(console.error)
     return () => {
       setMounted(false)
     }
@@ -37,8 +37,8 @@ const Problem = (): React.JSX.Element => {
 
     if (!isMounted) return
 
-    if (response.ok) {
-      setProblem(response.data[0])
+    if (response.ok && response.data) {
+      setProblem(response.data.items[0])
     }
 
     setLoading(false)
@@ -65,16 +65,16 @@ const Problem = (): React.JSX.Element => {
         <p>
           <b>Problem Name:</b> {problem.name}
         </p>
-        {problem.cpu_time_limit ? (
+        {'cpu_time_limit' in problem ? (
           <p>
-            <b>CPU Time limit:</b> {problem.cpu_time_limit}
+            <b>CPU Time limit:</b> {(problem as IBlueProblem).cpu_time_limit}
           </p>
         ) : (
           <></>
         )}
-        {problem.memory_limit ? (
+        {'memory_limit' in problem ? (
           <p>
-            <b>Memory limit:</b> {problem.memory_limit}
+            <b>Memory limit:</b> {(problem as IBlueProblem).memory_limit}
           </p>
         ) : (
           <></>

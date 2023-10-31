@@ -1,7 +1,8 @@
 import MDEditor from '@uiw/react-md-editor'
-import type { IProblem, ISubmission } from 'abacus'
+import type { IBlueProblem, ISubmission } from 'abacus'
 import { ProblemRepository, SubmissionRepository } from 'api'
-import { Block, ClarificationModal, Countdown, NotFound, PageLoading, Unauthorized } from 'components'
+import { Block, Countdown, NotFound, PageLoading, Unauthorized } from 'components'
+import { ClarificationModal } from "components/clarification"
 import { AppContext } from 'context'
 import './Problem.scss'
 import config from 'environment'
@@ -17,7 +18,7 @@ const Problem = (): React.JSX.Element => {
 
   const { user, settings } = useContext(AppContext)
   const [isLoading, setLoading] = useState(true)
-  const [problem, setProblem] = useState<IProblem>()
+  const [problem, setProblem] = useState<IBlueProblem>()
   const { pid } = useParams<{ pid: string }>()
 
   const [submissions, setSubmissions] = useState<ISubmission[]>()
@@ -36,7 +37,7 @@ const Problem = (): React.JSX.Element => {
   usePageTitle(`Abacus | ${problem?.name ?? ""}`)
 
   useEffect(() => {
-    loadProblem()
+    loadProblem().catch(console.error)
     return () => {
       setMounted(false)
     }
@@ -47,8 +48,8 @@ const Problem = (): React.JSX.Element => {
 
     if (!isMounted) return
 
-    if (problemResponse.ok) {
-      setProblem(problemResponse.data[0])
+    if (problemResponse.ok && problemResponse.data) {
+      setProblem(problemResponse.data.items[0] as IBlueProblem)
 
       const submissionResponse = await submissionRepository.getMany({
         filterBy: {
@@ -59,8 +60,8 @@ const Problem = (): React.JSX.Element => {
 
       if (!isMounted) return
 
-      if (submissionResponse.ok) {
-        setSubmissions(submissionResponse.data)
+      if (submissionResponse.ok && submissionResponse.data) {
+        setSubmissions(Object.values(submissionResponse.data))
       }
     }
 
@@ -125,14 +126,14 @@ const Problem = (): React.JSX.Element => {
         </p>
         {problem.cpu_time_limit ? (
           <p>
-            <b>CPU Time limit:</b> {problem.cpu_time_limit}
+            <b>CPU Time limit:</b> {(problem as IBlueProblem).cpu_time_limit}
           </p>
         ) : (
           <></>
         )}
         {problem.memory_limit ? (
           <p>
-            <b>Memory limit:</b> {problem.memory_limit}
+            <b>Memory limit:</b> {(problem as IBlueProblem).memory_limit}
           </p>
         ) : (
           <></>

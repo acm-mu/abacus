@@ -1,5 +1,5 @@
 import MDEditor from '@uiw/react-md-editor'
-import type { IProblem, ISubmission } from 'abacus'
+import type { IBlueProblem, ISubmission } from 'abacus'
 
 import { Block, Countdown, NotFound, PageLoading } from 'components'
 import { saveAs } from 'file-saver'
@@ -16,7 +16,7 @@ interface PracticeProblemProps {
 
 const PracticeProblem = ({ submissions }: PracticeProblemProps): React.JSX.Element => {
   const { id } = useParams<{ id: string }>()
-  const [problem, setProblem] = useState<IProblem>()
+  const [problem, setProblem] = useState<IBlueProblem>()
   const [isLoading, setLoading] = useState(true)
 
   usePageTitle(`Abacus | ${problem?.name ?? ""}`)
@@ -51,48 +51,42 @@ const PracticeProblem = ({ submissions }: PracticeProblemProps): React.JSX.Eleme
           <Breadcrumb.Section active content={problem.name} />
         </Breadcrumb>
       </Block>
-      {submissions?.length ? (
-        <Block transparent size="xs-12">
-          <Table>
-            <Table.Header>
-              <Table.Row>
-                <Table.HeaderCell>Submission ID</Table.HeaderCell>
-                <Table.HeaderCell>Problem</Table.HeaderCell>
-                <Table.HeaderCell>Submission #</Table.HeaderCell>
-                <Table.HeaderCell>Language</Table.HeaderCell>
-                <Table.HeaderCell>Status</Table.HeaderCell>
-                <Table.HeaderCell>Time</Table.HeaderCell>
-                <Table.HeaderCell>Score</Table.HeaderCell>
-              </Table.Row>
-            </Table.Header>
-            <Table.Body>
-              {submissions
-                .sort((s1, s2) => s2.date - s1.date)
-                .map((submission: ISubmission, index: number) => (
-                  <Table.Row key={index}>
-                    <Table.Cell>
-                      <Link to={`/blue/practice/${submission.sid}`}> {submission.sid.substring(0, 7)} </Link>
-                    </Table.Cell>
-                    <Table.Cell> {submission.problem?.name} </Table.Cell>
-                    <Table.Cell> {submission.sub_no + 1} </Table.Cell>
-                    <Table.Cell> {submission.language} </Table.Cell>
-                    <Table.Cell>
-                      {' '}
-                      <span className={`status icn ${submission.status}`} />{' '}
-                    </Table.Cell>
-                    <Table.Cell>
-                      {' '}
-                      <Moment fromNow>{submission.date * 1000}</Moment>{' '}
-                    </Table.Cell>
-                    <Table.Cell> {submission.score} </Table.Cell>
-                  </Table.Row>
-                ))}
-            </Table.Body>
-          </Table>
-        </Block>
-      ) : (
-        <></>
-      )}
+      <Block transparent size="xs-12">
+        <Table>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell>Submission ID</Table.HeaderCell>
+              <Table.HeaderCell>Problem</Table.HeaderCell>
+              <Table.HeaderCell>Submission #</Table.HeaderCell>
+              <Table.HeaderCell>Language</Table.HeaderCell>
+              <Table.HeaderCell>Status</Table.HeaderCell>
+              <Table.HeaderCell>Time</Table.HeaderCell>
+              <Table.HeaderCell>Score</Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {submissions
+              .sort((s1, s2) => s2.date - s1.date)
+              .map((submission: ISubmission, index: number) => (
+                <Table.Row key={index}>
+                  <Table.Cell>
+                    <Link to={`/blue/practice/${submission.sid}`}> {submission.sid.substring(0, 7)} </Link>
+                  </Table.Cell>
+                  <Table.Cell> {submission.problem?.name} </Table.Cell>
+                  <Table.Cell> {submission.sub_no + 1} </Table.Cell>
+                  <Table.Cell> {submission.language} </Table.Cell>
+                  <Table.Cell>
+                    <span className={`status icn ${submission.status}`} />
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Moment fromNow>{submission.date * 1000}</Moment>
+                  </Table.Cell>
+                  <Table.Cell> {submission.score} </Table.Cell>
+                </Table.Row>
+              ))}
+          </Table.Body>
+        </Table>
+      </Block>
 
       <Block size="xs-9" className="problem">
         <MDEditor.Markdown source={problem.description} />

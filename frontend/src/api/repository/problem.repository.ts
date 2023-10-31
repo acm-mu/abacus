@@ -1,6 +1,6 @@
-import {BaseRepository} from "./base.repository"
-import {Problem} from "abacus"
+import type { IProblem } from "abacus"
+import { BaseRepository } from "./base.repository"
 
-export default class ProblemRepository extends BaseRepository<Problem> {
-  collection = 'problem'
+export default class ProblemRepository extends BaseRepository<IProblem, IProblem> {
+  collection = 'problems'
 }

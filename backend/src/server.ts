@@ -1,15 +1,15 @@
 import { Notification } from 'abacus'
 import cors from 'cors'
+import * as dotenv from 'dotenv'
 import express from 'express'
 import fileUpload from 'express-fileupload'
 import { createServer } from 'http'
 import morgan from 'morgan'
+import { createAdapter } from "@socket.io/redis-adapter";
+import { createClient } from "redis";
 import { Server, Socket } from 'socket.io'
-import { createAdapter } from 'socket.io-redis'
-import { RedisClient } from 'redis'
 import { v4 as uuidv4 } from 'uuid'
 import api from './api'
-import * as dotenv from 'dotenv'
 
 dotenv.config()
 
@@ -28,10 +28,10 @@ export const io = new Server(server, {
 if (process.env.REDIS_HOST) {
   const { REDIS_HOST: host, REDIS_PASS: auth_pass } = process.env
 
-  const pubClient = new RedisClient({ host, port: 6379, auth_pass })
+  const pubClient = createClient({ url: `rediss://:${auth_pass}@${host}}` })
   const subClient = pubClient.duplicate()
 
-  io.adapter(createAdapter({ pubClient, subClient }))
+  io.adapter(createAdapter(pubClient, subClient))
 }
 
 app.use(cors()) // Enables CORS on all endpoints

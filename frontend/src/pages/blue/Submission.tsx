@@ -17,13 +17,17 @@ const Submission = (): React.JSX.Element => {
   const [isLoading, setLoading] = useState(true)
 
   useEffect(() => {
-    loadSubmission()
+    loadSubmission().catch(console.error)
     return () => {
       setMounted(false)
     }
   }, [])
 
   const loadSubmission = async () => {
+    if(!sid) {
+      console.error("Cannot load submission because sid is not defined!")
+      return
+    }
     const submissions = new SubmissionRepository()
     const response = await submissions.get(sid)
 

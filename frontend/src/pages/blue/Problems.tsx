@@ -22,7 +22,7 @@ const Problems = (): React.JSX.Element => {
   const [submissions, setSubmissions] = useState<{ [key: string]: ISubmission[] }>()
 
   useEffect(() => {
-    loadProblems()
+    loadProblems().catch(console.error)
     return () => {
       setMounted(false)
     }
@@ -38,8 +38,8 @@ const Problems = (): React.JSX.Element => {
 
     if (!isMounted) return
 
-    if (problemResponse.ok) {
-      setProblems(problemResponse.data)
+    if (problemResponse.ok && problemResponse.data) {
+      setProblems(Object.values(problemResponse.data))
 
       const submissionResponse = await submissionRepository.getMany({
         filterBy: {
@@ -49,9 +49,9 @@ const Problems = (): React.JSX.Element => {
 
       if (!isMounted) return
 
-      if (submissionResponse.ok) {
+      if (submissionResponse.ok && submissionResponse.data) {
         const submissions: { [key: string]: ISubmission[] } = {}
-        for (const submission of submissionResponse.data) {
+        for (const submission of Object.values(submissionResponse.data)) {
           if (submissions[submission.pid] == undefined) submissions[submission.pid] = []
           submissions[submission.pid].push(submission)
         }

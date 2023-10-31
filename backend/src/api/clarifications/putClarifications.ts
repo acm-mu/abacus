@@ -95,7 +95,7 @@ export const putClarifications = async (req: Request, res: Response): Promise<vo
       return
     }
 
-    const clarifications = transpose(await contest.get_clarifications(), 'cid') as Record<string, Clarification>
+    const clarifications = transpose((await contest.get_clarifications()).items, 'cid') as Record<string, Clarification>
 
     if (!(item.cid in clarifications)) {
       res.status(400).json({ message: 'Clarification does not exist!' })

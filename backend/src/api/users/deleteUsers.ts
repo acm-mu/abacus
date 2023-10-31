@@ -14,9 +14,9 @@ const deleteSubmissionsForUser = async (tid: string) => {
   try {
     const submissions = await contest.get_submissions({ tid })
     if (!submissions) return
-    for (const { sid } of submissions) {
+    for (const { sid } of submissions.items) {
       try {
-        contest.delete_submission(sid)
+        await contest.delete_submission(sid)
         console.log(`Deleted submission ${sid}`)
       } catch (err) {
         console.log(`Error deleting submission ${sid}`)
@@ -31,9 +31,9 @@ const deleteClarificationsForUser = async (tid: string) => {
   try {
     const clarifications = await contest.get_clarifications({ uid: tid })
     if (!clarifications) return
-    for (const { cid } of clarifications) {
+    for (const { cid } of clarifications.items) {
       try {
-        contest.delete_clarification(cid)
+        await contest.delete_clarification(cid)
         console.log(`Deleted clarification ${cid}`)
       } catch (err) {
         console.log(`Error deleting clarification ${cid}`)
@@ -96,7 +96,7 @@ export const deleteUsers = async (req: Request, res: Response): Promise<void> =>
     await deleteSubmissionsForUser(req.body.uid)
     await deleteClarificationsForUser(req.body.uid)
     try {
-      contest.delete_user(req.body.uid)
+      await contest.delete_user(req.body.uid)
       res.json({ message: 'User deleted successfully!' })
     } catch (err) {
       res.sendStatus(500)

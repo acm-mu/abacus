@@ -1,8 +1,8 @@
+import { render, screen } from '@testing-library/react'
+import type { IUser } from "abacus"
 import React from 'react'
+import { BrowserRouter } from 'react-router-dom'
 import CustomTable from '.'
-import {cleanup, fireEvent, render, screen} from '@testing-library/react';
-import { User } from 'abacus'
-import { BrowserRouter } from 'react-router-dom';
 
 
 // Note: running cleanup afterEach is done automatically for you in @testing-library/react@9.0.0 or higher
@@ -18,22 +18,23 @@ uid: string
     division?: string
     school?: string
 */
-interface UserItem extends User {
+interface UserItem extends IUser {
   checked: boolean
 }
 
 it('text renders', () => {
-  const {getByText} = render(
+  const { getByText } = render(
     <BrowserRouter>
-    <CustomTable
+    <CustomTable<UserItem>
     id={'uid'}
     header={['username', 'role', 'division', 'school', 'display_name']}
     body={[{uid: "12345", role: "team", username: "kevin", display_name: "Greatest team ever", password: "1234", checked: false, division: "blue", school: "Marquette High School"}] as UserItem[]}
+    totalPages={2}
     onCheckItem={() => console.log("check item!")}
-    sort={{  column: 'username',
-    direction: 'ascending' }}
+    sort={{  sortBy: 'username', sortDirection: 'ascending' }}
     onClickHeaderItem={(item) => {console.log(item)}}
     onCheckAll={()=> console.log('clicked all!')}
+    onPageChange={() => console.log('page changed')}
   />
   </BrowserRouter>
   )

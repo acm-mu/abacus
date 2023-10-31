@@ -128,32 +128,20 @@ export const postSubmissions = async (req: Request, res: Response): Promise<void
     const {
       start_date,
       end_date,
-      practice_start_date,
-      practice_end_date,
       points_per_yes,
       points_per_minute,
       points_per_no
     } = await contest.get_settings()
     const now = Date.now()
-    if (problem.practice) {
-      if (now < practice_start_date * 1000) {
-        res.status(403).send({ message: 'The practice period has not yet begun!' })
-        return
-      } else if (now > practice_end_date * 1000) {
-        res.status(403).send({ message: 'Cannot submit after the practice period has finished!' })
-        return
-      }
-    } else {
-      if (now < start_date * 1000) {
-        res.status(403).send({ message: 'The competition has not yet begun!' })
-        return
-      } else if (now > end_date * 1000) {
-        res.status(403).send({ message: 'Cannot submit after the competition has finished!' })
-        return
-      }
+    if (now < start_date * 1000) {
+      res.status(403).send({ message: 'The competition has not yet begun!' })
+      return
+    } else if (now > end_date * 1000) {
+      res.status(403).send({ message: 'Cannot submit after the competition has finished!' })
+      return
     }
 
-    const submissions = (await contest.get_submissions({ tid: req.user?.uid, pid: item.pid })) as Submission[]
+    const submissions = (await contest.get_submissions({ tid: req.user?.uid, pid: item.pid })).items as Submission[]
 
     if (submissions) {
       for (const submission of submissions) {
@@ -253,12 +241,7 @@ export const postSubmissions = async (req: Request, res: Response): Promise<void
       submission.status = status
       // Calculate Score
       if (status == 'accepted') {
-        let minutes = 0
-        if (problem.practice) {
-          minutes = ((submission.date as any) - practice_start_date) / 60
-        } else {
-          minutes = ((submission.date as any) - start_date) / 60
-        }
+        let minutes = ((submission.date as any) - start_date) / 60
         submission.score = Math.floor(
           minutes * points_per_minute + points_per_no * (submission.sub_no as any) + points_per_yes
         )

@@ -1,15 +1,14 @@
 import React from 'react'
 import './Block.scss'
 
-type BlockProps = {
+type BlockProps = React.PropsWithChildren<{
   size: string
   center?: boolean
   transparent?: boolean
-  children?: React.JSX.Element | React.JSX.Element[]
   className?: string
   menuAttached?: string
   style?: React.CSSProperties
-}
+}>
 
 const Block = ({ size, center, transparent, children, className, menuAttached, style }: BlockProps): React.JSX.Element => {
   let classList = `block ${size} ${className || ''}`
@@ -20,8 +19,7 @@ const Block = ({ size, center, transparent, children, className, menuAttached, s
 
   return (
     <div style={style} className={classList}>
-      {' '}
-      {children}{' '}
+      {children}
     </div>
   )
 }

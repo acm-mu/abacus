@@ -47,8 +47,8 @@ const Home = (): React.JSX.Element => {
 
     if (!isMounted) return
 
-    if (response.ok) {
-      setSubmissions(response.data?.filter((submission) => !submission.team.disabled))
+    if (response.ok && response.data) {
+      setSubmissions(Object.values(response.data).filter((submission) => !submission.team?.disabled))
     }
   }
 
@@ -89,7 +89,7 @@ const Home = (): React.JSX.Element => {
                       <Link to={`/judge/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link>
                     </Table.Cell>
                     <Table.Cell>
-                      <Link to={`/judge/teams/${submission.tid}`}>{submission.team.display_name}</Link>
+                      <Link to={`/judge/teams/${submission.tid}`}>{submission.team?.display_name}</Link>
                     </Table.Cell>
                     <Table.Cell>
                       <Link to={`/judge/problems/${submission.pid}`}>{submission.problem.name}</Link>
@@ -131,7 +131,7 @@ const Home = (): React.JSX.Element => {
                       <Link to={`/judge/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link>
                     </Table.Cell>
                     <Table.Cell>
-                      <Link to={`/judge/teams/${submission.tid}`}>{submission.team.display_name}</Link>
+                      <Link to={`/judge/teams/${submission.tid}`}>{submission.team?.display_name}</Link>
                     </Table.Cell>
                     <Table.Cell>
                       <Link to={`/judge/problems/${submission.pid}`}>{submission.problem.name}</Link>
@@ -173,7 +173,7 @@ const Home = (): React.JSX.Element => {
                       <Link to={`/judge/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link>
                     </Table.Cell>
                     <Table.Cell>
-                      <Link to={`/judge/teams/${submission.tid}`}>{submission.team.display_name}</Link>
+                      <Link to={`/judge/teams/${submission.tid}`}>{submission.team?.display_name}</Link>
                     </Table.Cell>
                     <Table.Cell>
                       <Link to={`/judge/problems/${submission.pid}`}>{submission.problem.name}</Link>
@@ -216,7 +216,7 @@ const Home = (): React.JSX.Element => {
                       <Link to={`/judge/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link>
                     </Table.Cell>
                     <Table.Cell>
-                      <Link to={`/judge/teams/${submission.tid}`}>{submission.team.display_name}</Link>
+                      <Link to={`/judge/teams/${submission.tid}`}>{submission.team?.display_name}</Link>
                     </Table.Cell>
                     <Table.Cell>
                       <Link to={`/judge/problems/${submission.pid}`}>{submission.problem.name}</Link>

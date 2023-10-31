@@ -66,11 +66,11 @@ export const postAuth = async (req: Request, res: Response): Promise<void> => {
 
   try {
     const users = await contest.get_users(bodyData)
-    if (!users?.length) {
+    if (!users?.totalItems) {
       res.status(400).send({ message: "Hmmm... We can't find a user with that username and password!" })
       return
     }
-    const user = users[0]
+    const user = users.items[0]
 
     const accessToken = jwt.sign(
       {

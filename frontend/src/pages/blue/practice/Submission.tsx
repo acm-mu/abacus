@@ -1,4 +1,4 @@
-import type { ISubmission, ITest } from 'abacus'
+import type { IBlueSubmission, ITest, ITestResult } from 'abacus'
 import { Block, Countdown } from 'components'
 import React, { MouseEvent, useState } from 'react'
 import Moment from 'react-moment'
@@ -8,15 +8,15 @@ import { Breadcrumb, Label, Menu, MenuItemProps, Message, Table } from 'semantic
 import { capitalize, format_text, syntax_lang } from 'utils'
 
 interface PracticeSubmissionProps {
-  submission: ISubmission
+  submission: IBlueSubmission
 }
 
 const PracticeSubmission = ({ submission }: PracticeSubmissionProps): React.JSX.Element => {
   const [activeItem, setActiveItem] = useState('source-code')
   const [activeTestItem, setActiveTestItem] = useState(0)
 
-  const handleItemClick = (event: MouseEvent, data: MenuItemProps) => setActiveItem(data.tab)
-  const handleTestItemClick = (event: MouseEvent, data: MenuItemProps) => setActiveTestItem(data.tab)
+  const handleItemClick = (_e: MouseEvent, data: MenuItemProps) => setActiveItem(data.tab)
+  const handleTestItemClick = (_e: MouseEvent, data: MenuItemProps) => setActiveTestItem(data.tab)
 
   return (
     <>
@@ -61,14 +61,14 @@ const PracticeSubmission = ({ submission }: PracticeSubmissionProps): React.JSX.
                 <span className={`icn status ${submission.status}`} />
               </Table.Cell>
               <Table.Cell>
-                {submission?.tests?.map((test: ITest, index: number) => {
-                  switch (test.result) {
+                {submission?.tests?.map((test: ITest) => {
+                  switch ((test as ITestResult).result) {
                     case 'accepted':
-                      return <span key={`test-${index}`} className="result icn accepted" />
+                      return <span key={`blue-practice-test-${test}`} className="result icn accepted" />
                     case 'rejected':
-                      return <span key={`test-${index}`} className="result icn rejected" />
+                      return <span key={`blue-practice-test-${test}`} className="result icn rejected" />
                     default:
-                      return <span key={`test-${index}`} className="result icn" />
+                      return <span key={`blue-practice-test-${test}`} className="result icn" />
                   }
                 })}
               </Table.Cell>
@@ -149,7 +149,7 @@ const PracticeSubmission = ({ submission }: PracticeSubmissionProps): React.JSX.
                 ))}
               </Menu>
 
-              {submission.tests?.map((test: ITest, index: number) => (
+              {submission.tests?.map(t => t as ITestResult).map((test: ITestResult, index: number) => (
                 <React.Fragment key={`test-result-${index}`}>
                   {index == activeTestItem ? (
                     <div className="testRun">

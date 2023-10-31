@@ -1,7 +1,6 @@
-import { Problem, Settings, Test, User } from 'abacus'
+import { Test } from 'abacus'
 import { Request, Response } from 'express'
 import { matchedData, ParamSchema, validationResult } from 'express-validator'
-import { userHasRole } from '../../abacus/authlib'
 import contest from '../../abacus/contest'
 import { transpose } from '../../utils'
 
@@ -78,18 +77,6 @@ export const schema: Record<string, ParamSchema> = {
   }
 }
 
-const showToUser = (user: User | undefined, problem: Problem, settings: Settings): boolean => {
-  const now = Date.now() / 1000
-
-  if (userHasRole(user, 'admin')) return true
-  if (user !== undefined) {
-    if (problem.practice) return now > settings.practice_start_date && now < settings.practice_end_date
-    else return now > settings.start_date && now < settings.end_date
-  }
-  if (now > settings.end_date) return true
-  return false
-}
-
 /**
  * @swagger
  * /submissions
@@ -161,30 +148,36 @@ const showToUser = (user: User | undefined, problem: Problem, settings: Settings
  *         description: A server error occurred while trying to complete request.
  */
 export const getSubmissions = async (req: Request, res: Response): Promise<void> => {
-  const page = req.query.page
-  //page comes in as string due to being a query
-  const newPage = page ? parseInt(page as string) : 0
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })
     return
   }
 
-  const settings = await contest.get_settings()
-
   try {
-    const item = matchedData(req)
+    const query = matchedData(req)
 
     if (req?.user?.role == 'judge') {
-      item.division = req.user.division
+      query.division = req.user.division
     } else if (req?.user?.role == 'team') {
-      item.tid = req.user.uid
+      query.tid = req.user.uid
+    }
+    
+    const pageSize = req.query.limit? parseInt(req.query.limit as string) : 25
+
+    const options = {
+      skip: req.query.skip ? parseInt(req.query.skip as string) : 0,
+      limit: pageSize,
+      sortBy: req.query.sortBy as string,
+      sortDirection: req.query.sortDirection as string
     }
 
-    let submissions = await contest.get_resolved_submissions(item, newPage)
+    const submissionItems = (await contest.get_resolved_submissions(query, options))
+
+    let submissions = submissionItems.items
 
     // Obfuscate submission details to teams if not yet released.
-    if (submissions !== []) {
+    if (submissionItems.totalItems) {
       submissions = submissions
         .map((submission) => {
           if (req.user?.role == 'team' && !submission.released) {
@@ -194,9 +187,12 @@ export const getSubmissions = async (req: Request, res: Response): Promise<void>
           }
           return submission
         })
-        .filter((submission) => showToUser(req.user, submission.problem, settings))
     }
-    submissions !== [] ? res.send(transpose(submissions, 'sid')) : res.send([])
+
+    res.send({
+      items: transpose(submissions, 'sid'),
+      totalItems: submissionItems.totalItems
+    })
   } catch (err) {
     console.error(err)
     res.sendStatus(500)

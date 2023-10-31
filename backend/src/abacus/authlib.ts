@@ -18,9 +18,9 @@ export const authenticate = (req: Request): Promise<User | undefined> =>
       try {
         const { username, password } = data as Record<string, unknown>
         const users = await contest.get_users({ username, password })
-        if (users.length) {
-          req.user = users[0]
-          return resolve(users[0])
+        if (users.totalItems) {
+          req.user = users.items[0]
+          return resolve(users.items[0])
         }
       } catch (err) {
         reject()
@@ -38,6 +38,7 @@ export const isAuthenticated = async (req: Request, res: Response, next: NextFun
     }
     res.sendStatus(403)
   } catch (err) {
+    console.error(err)
     res.sendStatus(500)
   }
 }

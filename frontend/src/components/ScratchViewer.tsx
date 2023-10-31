@@ -1,35 +1,16 @@
-import type { IScratchProject } from 'abacus'
-import { ScratchService } from 'api'
-import React, { useEffect, useState } from 'react'
+import type { IScratchProject } from "abacus"
+import React from 'react'
 import Moment from 'react-moment'
 import { Grid, Header, Icon, Label, Segment } from 'semantic-ui-react'
 import './ScratchViewer.scss'
 
 interface ScratchViewerProps {
-  project_id?: string
+  project_id: string
+  project?: IScratchProject
   content?: React.JSX.Element
 }
 
-const ScratchViewer = ({ project_id, content = <></> }: ScratchViewerProps): JSX.Element => {
-  const scratchService = new ScratchService()
-  const [project, setProject] = useState<IScratchProject>()
-
-  useEffect(() => {
-    loadProject()
-  }, [project_id])
-
-  const loadProject = async () => {
-    if (!project_id) return
-
-    const response = await scratchService.getProject(project_id)
-    if (response.ok) {
-      setProject(response.data)
-    } else {
-      setProject(undefined)
-    }
-  }
-
-  if (project_id == undefined) return <></>
+const ScratchViewer = ({ project_id, project, content = <></> }: ScratchViewerProps): JSX.Element => {
 
   if (!project) {
     return (
@@ -58,15 +39,14 @@ const ScratchViewer = ({ project_id, content = <></> }: ScratchViewerProps): JSX
         </Grid.Column>
 
         <Grid.Column>
-          {project ? (
-            <Segment className="scratch-info">
-              <div>
-                <a target="_blank" rel="noreferrer" href={`https://scratch.mit.edu/projects/${project_id}`}>
-                  <h2>{project.title}</h2> {project.author.username}
-                </a>
-                <p>{project.description}</p>
+          <Segment className="scratch-info">
+            <div>
+              <a target="_blank" rel="noreferrer" href={`https://scratch.mit.edu/projects/${project_id}`}>
+                <h2>{project.title}</h2> {project.author.username}
+              </a>
+              <p>{project.description}</p>
 
-                <div className="history">
+              <div className="history">
                   <span>
                     Created
                     <br />{' '}
@@ -74,26 +54,23 @@ const ScratchViewer = ({ project_id, content = <></> }: ScratchViewerProps): JSX
                       <Moment fromNow date={Date.parse(project.history.created)} />
                     </Label>
                   </span>
-                  <span>
+                <span>
                     Modified
                     <br />{' '}
-                    <Label>
+                  <Label>
                       <Moment fromNow date={Date.parse(project.history.modified)} />
                     </Label>
                   </span>
-                  <span>
+                <span>
                     Shared
                     <br />{' '}
-                    <Label>
+                  <Label>
                       <Moment fromNow date={Date.parse(project.history.shared)} />
                     </Label>
                   </span>
-                </div>
               </div>
-            </Segment>
-          ) : (
-            <></>
-          )}
+            </div>
+          </Segment>
           {content}
         </Grid.Column>
       </Grid.Row>

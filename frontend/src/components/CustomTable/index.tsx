@@ -1,75 +1,72 @@
-import type { IUser } from 'abacus'
-import React, { ChangeEvent, FC } from 'react'
+import type { SortConfig } from "abacus"
+import { DivisionLabel } from 'components'
+import React, { ChangeEvent } from 'react'
 import { Link } from 'react-router-dom'
-import { Table } from 'semantic-ui-react'
-import DivisionLabel from './../../components/DivisionLabel'
+import { Pagination, PaginationProps, Table } from 'semantic-ui-react'
 
-type SortKey = 'uid' | 'display_name' | 'username' | 'role' | 'division' | 'school'
-type SortConfig = {
-  column: SortKey
-  direction: 'ascending' | 'descending'
-}
-
-interface UserItem extends IUser {
-  checked: boolean
-}
-
-type HeaderType = keyof UserItem
-
-interface CustomTableProps {
-  header: HeaderType[]
-  body: UserItem[]
-  id: SortKey
-  sort: SortConfig
-  onClickHeaderItem: (item: string) => void
+interface CustomTableProps<T extends Record<string, unknown>> {
+  header: (keyof T)[]
+  body: T[] | undefined
+  totalPages: number
+  id: keyof T
+  sort: SortConfig<T>
+  onClickHeaderItem: (item: keyof T) => void
   onCheckAll: (item: ChangeEvent<HTMLInputElement>) => void
   onCheckItem: (item: ChangeEvent<HTMLInputElement>) => void
+  onPageChange: (data: PaginationProps) => void
 }
 
 /*
 body -> 
 */
 
-const CustomTable: FC<CustomTableProps> = ({
+const CustomTable = <T extends Record<string, unknown>, >({
   header,
   body,
+  totalPages,
   id,
   sort,
   onClickHeaderItem,
   onCheckAll,
-  onCheckItem
-}): React.JSX.Element => {
-  const renderRow = (cellid: string | undefined, property: HeaderType, items: UserItem) => {
+  onCheckItem,
+  onPageChange
+}: CustomTableProps<T>): React.JSX.Element => {
+
+  type HeaderType = keyof T
+  const renderRow = (cellid: T[keyof T], property: HeaderType, items: T) => {
     if (property === 'division') {
       return (
         <Table.Cell>
-          <DivisionLabel division={items[property]} />{' '}
+          <DivisionLabel division={items[property] as string} />{' '}
         </Table.Cell>
       )
     } else if (property === 'username') {
       return (
         <Table.Cell>
-          <Link to={`/admin/users/${cellid}`}>{items[property]}</Link>
+          <Link to={`/admin/users/${cellid}`}>{`${items[property]}`}</Link>
         </Table.Cell>
       )
     }
-    return <Table.Cell>{items[property]}</Table.Cell>
+    return <Table.Cell>{`${items[property] ?? ''}`}</Table.Cell>
   }
-  return (
+  return <>
     <Table sortable>
       <Table.Header>
         <Table.Row>
           <Table.HeaderCell collapsing>
             <input type="checkbox" onChange={onCheckAll} />
           </Table.HeaderCell>
-          {header.map((item: string, i: number) => (
-            <Table.HeaderCell
+          {header.map((item, i) => {
+            let headerName = item as string
+            headerName = headerName[0].toUpperCase() + headerName.slice(1)
+
+            return <Table.HeaderCell
               key={i}
-              sorted={sort.column === item ? sort.direction : undefined}
+              sorted={sort.sortBy === item ? sort.sortDirection : undefined}
               onClick={() => onClickHeaderItem(item)}
-              content={(item[0].toUpperCase() + item.slice(1)).replace('_', ' ')}
+              content={headerName.replace('_', ' ')}
             />
-          ))}
+          })}
         </Table.Row>
       </Table.Header>
       <Table.Body>
@@ -77,14 +74,15 @@ const CustomTable: FC<CustomTableProps> = ({
         {body &&
           body.map((bodyItem) => {
             return (
-              <Table.Row key={bodyItem[`${id}`]} uuid={bodyItem[`${id}`]}>
+              <Table.Row key={`${bodyItem[id]}`} uuid={bodyItem[id]}>
                 <Table.Cell>
-                  <input
-                    type="checkbox"
-                    checked={bodyItem['checked']}
-                    id={bodyItem[`${id}`]}
-                    onChange={(item) => onCheckItem(item)}
-                  />
+                  {'checked' in bodyItem ?
+                    <input
+                      type="checkbox"
+                      checked={bodyItem['checked'] as boolean}
+                      id={`${bodyItem[id]}`}
+                      onChange={(item) => onCheckItem(item)}
+                    /> : <>a</>}
                 </Table.Cell>
                 {bodyItem &&
                   header
@@ -97,7 +95,8 @@ const CustomTable: FC<CustomTableProps> = ({
           })}
       </Table.Body>
     </Table>
-  )
+    <Pagination defaultActivePage={1} totalPages={totalPages} onPageChange={(_e, data) => onPageChange(data)}/>
+  </>
 }
 
 export default CustomTable

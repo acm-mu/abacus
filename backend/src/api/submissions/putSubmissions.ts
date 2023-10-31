@@ -81,7 +81,7 @@ export const schema: Record<string, ParamSchema> = {
 }
 
 const notifyTeam = async (item: Record<string, unknown>) => {
-  const res = await contest.get_submissions({ sid: item.sid })
+  const res = (await contest.get_submissions({ sid: item.sid })).items
   if (!res) return
 
   sendNotification({

@@ -1,9 +1,14 @@
+import type { IBlueProblem, IGoldProblem, IProblem } from "abacus"
 import { ScratchViewer } from 'components'
 import React, { ChangeEvent } from 'react'
 import { Form, InputOnChangeData } from 'semantic-ui-react'
-import { ProblemStateProps } from '.'
 
-const TemplateEditor = ({ problem, setProblem }: ProblemStateProps): React.JSX.Element => {
+interface TemplateEditorProps {
+  problem: IGoldProblem
+  setProblem: React.Dispatch<React.SetStateAction<IGoldProblem | IProblem | IBlueProblem>>
+}
+
+const TemplateEditor = ({ problem, setProblem }: TemplateEditorProps): React.JSX.Element => {
   if (!problem || !setProblem) return <></>
 
   const handleChange = (_event: ChangeEvent<HTMLInputElement>, { value }: InputOnChangeData) =>

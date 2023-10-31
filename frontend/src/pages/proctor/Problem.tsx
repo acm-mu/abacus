@@ -1,43 +1,38 @@
 import MDEditor from '@uiw/react-md-editor'
-import type { IProblem } from 'abacus'
+import type { IBlueProblem, IProblem } from 'abacus'
 import { ProblemRepository } from 'api'
 import { Block, Countdown, NotFound, PageLoading } from 'components'
 import SolutionsEditor from 'components/editor/SolutionsEditor'
 import TestDataEditor from 'components/editor/TestDataEditor'
 import { usePageTitle } from 'hooks'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Divider, Menu, MenuItemProps } from 'semantic-ui-react'
 
 const Problem = (): React.JSX.Element => {
-  const problemRepo = new ProblemRepository()
+  const problemRepository = new ProblemRepository()
+
   const [isLoading, setLoading] = useState(true)
   const [problem, setProblem] = useState<IProblem>()
   const { pid } = useParams<{ pid: string }>()
 
   usePageTitle(`Abacus | Proctor ${problem?.name ?? ""}`)
 
-  const [isMounted, setMounted] = useState(true)
-
   useEffect(() => {
     loadProblem()
-    return () => {
-      setMounted(false)
-    }
+      .catch(console.error)
   }, [])
 
   const loadProblem = async () => {
-    const response = await problemRepo.getMany({
+    const response = await problemRepository.getMany({
       filterBy: {
         division: 'blue',
         problemId: pid
       }
     })
 
-    if (!isMounted) return
-
-    if (response.ok && response.data) {
-      setProblem(response.data[0])
+    if (response.ok) {
+      setProblem(response.data ? response.data.items[0] : undefined)
     }
 
     setLoading(false)
@@ -50,42 +45,37 @@ const Problem = (): React.JSX.Element => {
   if (isLoading) return <PageLoading />
   if (!problem) return <NotFound />
 
+  const activeView = useMemo(() => {
+    switch (activeItem) {
+      case'problem':
+        return <>
+          <h1>
+            Problem {problem.id}: {problem.name}
+          </h1>
+          <Divider />
+          <MDEditor.Markdown source={problem.description || ''} />
+        </>
+      case'solution':
+        return <SolutionsEditor problem={problem as IBlueProblem} />
+      case'test-data':
+        return <TestDataEditor problem={problem as IBlueProblem} />
+      default:
+        return <></>
+    }
+  }, [activeItem, problem])
+
   return (
     <>
       <Countdown />
 
       <Menu attached="top" tabular>
-        <Menu.Item
-          name="Problem Description"
-          tab="problem"
-          active={activeItem === 'problem'}
-          onClick={handleItemClick}
-        />
+        <Menu.Item name="Problem Description" tab="problem" active={activeItem === 'problem'} onClick={handleItemClick} />
         <Menu.Item name="Solution" tab="solution" active={activeItem === 'solution'} onClick={handleItemClick} />
         <Menu.Item name="Test Data" tab="test-data" active={activeItem === 'test-data'} onClick={handleItemClick} />
       </Menu>
 
       <Block size="xs-12" menuAttached="top" className="problem">
-        {(() => {
-          switch (activeItem) {
-            case 'problem':
-              return (
-                <>
-                  <h1>
-                    Problem {problem.id}: {problem.name}
-                  </h1>
-                  <Divider />
-                  <MDEditor.Markdown source={problem.description || ''} />
-                </>
-              )
-            case 'solution':
-              return <SolutionsEditor problem={problem} />
-            case 'test-data':
-              return <TestDataEditor problem={problem} />
-            default:
-              return <></>
-          }
-        })()}
+        {activeView}
       </Block>
     </>
   )

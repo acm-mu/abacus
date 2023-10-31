@@ -33,7 +33,7 @@ const Home = (): React.JSX.Element => {
       <Block size="xs-12">
         <h1>Gold Division (Scratch)</h1>
         <div style={{ display: 'flex', justifyContent: 'space-evenly', padding: '15px' }}>
-          <img height="175px" src={scratch} />
+          <img alt="Scratch" height="175px" src={scratch} />
         </div>
 
         <p>

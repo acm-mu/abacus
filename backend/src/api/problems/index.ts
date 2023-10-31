@@ -3,6 +3,7 @@ import { checkSchema } from 'express-validator'
 import { hasRole } from '../../abacus/authlib'
 import { deleteProblems, schema as deleteSchema } from './deleteProblems'
 import { downloadFiles, schema as downloadSchema } from './downloadFiles'
+import { getProblem } from "./getProblem";
 import { getProblems, schema as getSchema } from './getProblems'
 import { postProblems, schema as postSchema } from './postProblems'
 import { putProblems, schema as putSchema } from './putProblems'
@@ -15,6 +16,7 @@ import { putProblems, schema as putSchema } from './putProblems'
 const problems = Router()
 
 problems.get('/problems', checkSchema(getSchema), getProblems)
+problems.get('/problems/:pid', getProblem)
 problems.get('/sample_files', checkSchema(downloadSchema), downloadFiles)
 
 problems.post('/problems', hasRole('admin'), checkSchema(postSchema), postProblems)

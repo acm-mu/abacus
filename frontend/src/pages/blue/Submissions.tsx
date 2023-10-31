@@ -19,7 +19,7 @@ const Submissions = (): React.JSX.Element => {
   const [submissions, setSubmissions] = useState<ISubmission[]>()
 
   useEffect(() => {
-    loadSubmissions()
+    loadSubmissions().catch(console.error)
     return () => {
       setMounted(false)
     }
@@ -34,8 +34,8 @@ const Submissions = (): React.JSX.Element => {
     })
 
     if (!isMounted) return
-    if (response.ok) {
-      setSubmissions(response.data)
+    if (response.ok && response.data) {
+      setSubmissions(Object.values(response.data.items))
     }
     setLoading(false)
   }

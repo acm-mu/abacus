@@ -78,11 +78,6 @@ export const schema: Record<string, ParamSchema> = {
     in: 'body',
     isBoolean: true,
     optional: true
-  },
-  practice: {
-    in: 'body',
-    isBoolean: true,
-    optional: true
   }
 }
 
@@ -131,7 +126,7 @@ export const putProblems = async (req: Request, res: Response): Promise<void> =>
   }
 
   if (item.id) {
-    const problems = Object.values(await contest.get_problems({ id: item.id, division: item.division })) as Problem[]
+    const problems = Object.values((await contest.get_problems({ id: item.id, division: item.division })).items) as Problem[]
     if (problems.length > 0 && problems[0].pid != item.pid) {
       res.status(400).json({ message: 'Problem id is taken!' })
       return

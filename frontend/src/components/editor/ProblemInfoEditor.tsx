@@ -1,3 +1,4 @@
+import type { IGoldProblem } from "abacus"
 import React, { ChangeEvent, FormEvent } from 'react'
 import { CheckboxProps, Form, Input, Select } from 'semantic-ui-react'
 import { divisions } from 'utils'
@@ -76,19 +77,19 @@ const ProblemInfoEditor = ({ problem, setProblem }: ProblemStateProps): React.JS
             name="max_points"
             control={Input}
             onChange={handleChange}
-            value={problem?.max_points}
+            value={(problem as IGoldProblem)?.max_points}
           />
           <Form.Checkbox
             label="Capped Points"
             name="capped_points"
             onChange={handleCheckChange}
-            checked={problem?.capped_points}
+            checked={(problem as IGoldProblem)?.capped_points}
           />
           <Form.Checkbox
             label="Design Document"
             name="design_document"
             onChange={handleCheckChange}
-            checked={problem.design_document}
+            checked={(problem as IGoldProblem).design_document}
           />
         </Form.Group>
       ) : (

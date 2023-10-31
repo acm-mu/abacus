@@ -1,4 +1,4 @@
-import type { ISubmission } from 'abacus'
+import type { ISubmission, SortConfig } from 'abacus'
 import { SubmissionRepository } from 'api'
 import { Block, DivisionLabel, PageLoading } from 'components'
 import { SocketContext } from 'context'
@@ -8,16 +8,9 @@ import React, { ChangeEvent, useContext, useEffect, useMemo, useState } from 're
 import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
 import { Button, Checkbox, Grid, Label, Menu, MenuItemProps, Table } from 'semantic-ui-react'
-import { compare } from 'utils'
 
-interface ISubmissionItem extends ISubmission {
+interface SubmissionItem extends ISubmission {
   checked: boolean
-}
-
-type SortKey = 'date' | 'sid' | 'sub_no' | 'language' | 'status' | 'runtime' | 'score'
-type SortConfig = {
-  column: SortKey
-  direction: 'ascending' | 'descending'
 }
 
 const Submissions = (): React.JSX.Element => {
@@ -27,93 +20,102 @@ const Submissions = (): React.JSX.Element => {
 
   const socket = useContext(SocketContext)
   const [isLoading, setLoading] = useState(true)
-  const [submissions, setSubmissions] = useState<ISubmissionItem[]>([])
+  const [submissions, setSubmissions] = useState<SubmissionItem[]>()
   const [isDeleting, setDeleting] = useState(false)
   const [showReleased, setShowReleased] = useState(false)
   const [activeDivision, setActiveDivision] = useState('blue')
 
-  const [{ column, direction }, setSortConfig] = useState<SortConfig>({
-    column: 'date',
-    direction: 'ascending'
+  const [{ sortBy, sortDirection }, setSortConfig] = useState<SortConfig<ISubmission>>({
+    sortBy: 'date',
+    sortDirection: 'ascending'
   })
 
-  const sort = (newColumn: SortKey, submission_list: ISubmissionItem[] = submissions) => {
-    const newDirection = column === newColumn ? 'descending' : 'ascending'
-    setSortConfig({ column: newColumn, direction: newDirection })
-
-    setSubmissions(
-      submission_list.sort(
-        (s1: ISubmissionItem, s2: ISubmissionItem) =>
-          compare(s1[newColumn] || 'ZZ', s2[newColumn] || 'ZZ') * (direction == 'ascending' ? 1 : -1)
-      )
-    )
+  const sort = (newColumn: keyof ISubmission) => {
+    setSortConfig({
+      sortBy: newColumn,
+      sortDirection: sortBy === newColumn && sortDirection == 'ascending' ? 'descending' : 'ascending'
+    })
   }
 
   useEffect(() => {
-    loadSubmissions().then(() => setLoading(false))
     socket?.on('new_submission', () => loadSubmissions())
     socket?.on('update_submission', () => loadSubmissions())
   }, [])
+
+  useEffect(() => {
+    loadSubmissions().catch(console.error)
+  }, [sortBy, sortDirection])
 
   /*
   @param page - page to query when paginating
   updates the new page of submissions
   */
   const loadSubmissions = async () => {
+    setLoading(true)
+
     const response = await submissionRepository.getMany()
-    if (response.ok) {
-      setSubmissions(response.data?.map((submission) => ({ ...submission, checked: false })))
+
+    if (response.ok && response.data) {
+      setSubmissions(Object.values(response.data.items) as SubmissionItem[])
     }
+
+    setLoading(false)
   }
 
-  const onReleaseChange = () => setShowReleased(!showReleased)
+  const onReleaseChange = () => {
+    setShowReleased(!showReleased)
+  }
 
   const downloadSubmissions = () =>
     saveAs(new File([JSON.stringify(submissions, null, '\t')], 'submissions.json', { type: 'text/json;charset=utf-8' }))
 
-  const handleChange = ({ target: { id, checked } }: ChangeEvent<HTMLInputElement>) =>
-    setSubmissions(submissions.map((submission) => (submission.sid == id ? { ...submission, checked } : submission)))
+  const handleChange = ({ target: { id, checked } }: ChangeEvent<HTMLInputElement>) => {
+    setSubmissions(submissions?.map((submission) => (submission.sid == id ? { ...submission, checked } : submission)))
+  }
 
-  const checkAll = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) =>
+  const checkAll = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => {
     setSubmissions(
-      submissions.map((submission) =>
+      submissions?.map((submission) =>
         (!submission.released || showReleased) && submission.division == activeDivision
           ? { ...submission, checked }
           : submission
       )
     )
+  }
 
   const deleteSelected = async () => {
     if (window.confirm('are you sure you want to delete these submissions?')) {
       //if the user selects ok, then the code below runs, otherwise nothing occurs
       setDeleting(true)
-      const submissionsToDelete = submissions
-        .filter((submission) => submission.checked && (!submission.released || showReleased))
+      const submissionsToDelete = submissions?.filter((submission) => submission.checked && (!submission.released || showReleased))
         .map((submission) => submission.sid)
 
-      const response = await submissionRepository.delete(submissionsToDelete)
+      if (submissionsToDelete) {
+        const response = await submissionRepository.delete(submissionsToDelete)
 
-      if (response.ok) {
-        //tells the toast container below to display a message saying 'Deleted selected submissions'
-        const id = submissionsToDelete.join()
-        window.sendNotification({
-          id,
-          type: 'success',
-          header: 'Success!',
-          content: 'We deleted the submissions you selected!'
-        })
+        if (response.ok) {
+          //tells the toast container below to display a message saying 'Deleted selected submissions'
+          const id = submissionsToDelete.join()
+          window.sendNotification({
+            id,
+            type: 'success',
+            header: 'Success!',
+            content: 'We deleted the submissions you selected!'
+          })
+        }
+        await loadSubmissions()
       }
-      loadSubmissions()
+
       setDeleting(false)
     }
   }
 
-  const handleItemClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, { name }: MenuItemProps) =>
+  const handleItemClick = (_e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, { name }: MenuItemProps) =>
     name && setActiveDivision(name)
 
   const filteredSubmissions = useMemo(
     () =>
-      submissions.filter(
+      submissions?.filter(
         (submission) => (!submission.released || showReleased) && submission.division == activeDivision
       ),
     [submissions, showReleased, activeDivision]
@@ -124,7 +126,7 @@ const Submissions = (): React.JSX.Element => {
   return (
     <Grid>
       <Button content="Download Submissions" onClick={downloadSubmissions} />
-      {submissions.filter((submission) => submission.checked && submission.division == activeDivision).length ? (
+      {submissions?.filter((submission) => submission.checked && submission.division == activeDivision).length ? (
         <Button
           content="Delete Selected"
           negative
@@ -173,12 +175,12 @@ const Submissions = (): React.JSX.Element => {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {filteredSubmissions.length == 0 ? (
+            {filteredSubmissions?.length == 0 ? (
               <Table.Row>
                 <Table.Cell colSpan={'100%'}>No Submissions</Table.Cell>
               </Table.Row>
             ) : (
-              filteredSubmissions.map((submission) => (
+              filteredSubmissions?.map((submission) => (
                 <Table.Row key={submission.sid}>
                   <Table.Cell>
                     <input type="checkbox" checked={submission.checked} id={submission.sid} onChange={handleChange} />
@@ -193,7 +195,7 @@ const Submissions = (): React.JSX.Element => {
                     <DivisionLabel division={submission.division} />
                   </Table.Cell>
                   <Table.Cell>
-                    <Link to={`/admin/users/${submission.team.uid}`}>{submission.team.display_name}</Link>
+                    <Link to={`/admin/users/${submission.team?.uid}`}>{submission.team?.display_name}</Link>
                   </Table.Cell>
                   <Table.Cell>
                     <span className={`status icn ${submission.status}`} />

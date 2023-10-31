@@ -10,44 +10,50 @@ import { Label, Table } from 'semantic-ui-react'
 const Home = (): React.JSX.Element => {
   usePageTitle("Abacus | Proctor Dashboard")
 
+  const submissionRepository = new SubmissionRepository()
+
   const { user } = useContext(AppContext)
+  if (user?.role != 'proctor') return <Unauthorized />
+  
   const socket = useContext(SocketContext)
+
   const [isLoading, setLoading] = useState(true)
-  const [isMounted, setMounted] = useState(true)
   const [submissions, setSubmissions] = useState<ISubmission[]>()
 
-  const flaggedSubmissions = useMemo(
-    () => submissions?.filter(({ flagged }) => flagged).sort(({ date: date1 }, { date: date2 }) => date2 - date1),
-    [submissions]
-  )
-  const unviewedSubmission = useMemo(() => submissions?.filter(({ viewed }) => !viewed), [submissions])
+  const flaggedSubmissions = useMemo(() => {
+    return submissions?.filter(({ flagged }) => flagged)
+      .sort((s1, s2) => s2.date - s1.date)
+  }, [submissions])
+
+  const unviewedSubmission = useMemo(() => {
+    return submissions?.filter(s => !s.viewed)
+  }, [submissions])
 
   const loadData = async () => {
-    const submissions = new SubmissionRepository()
-    const response = await submissions.getMany({
+    const response = await submissionRepository.getMany({
       filterBy: {
         division: 'blue'
       }
     })
 
-    if (!isMounted) return
-
-    if (response.ok) {
-      setSubmissions(response.data)
+    if (response.ok && response.data) {
+      setSubmissions(Object.values(response.data))
     }
+
+    setLoading(false)
   }
 
   useEffect(() => {
-    loadData().then(() => setLoading(false))
-    socket?.on('new_submission', loadData)
-    socket?.on('update_submission', loadData)
-    return () => {
-      setMounted(false)
-    }
+    loadData()
+      .catch(console.error)
   }, [])
 
+  useEffect(() => {
+    socket?.on('new_submission', loadData)
+    socket?.on('update_submission', loadData)
+  }, [socket])
+
   if (isLoading) return <PageLoading />
-  if (user?.role != 'proctor') return <Unauthorized />
 
   return (
     <>
@@ -63,8 +69,13 @@ const Home = (): React.JSX.Element => {
           </Table.Header>
 
           <Table.Body>
-            {unviewedSubmission && unviewedSubmission.length > 0 ? (
-              unviewedSubmission.map((submission) => (
+            {!unviewedSubmission?.length ?
+              <>
+                <Table.Row>
+                  <Table.Cell colSpan={'100%'}>There are no submissions that match this description.</Table.Cell>
+                </Table.Row>
+              </> :
+              unviewedSubmission.map(submission =>
                 <Table.Row key={`viewed-${submission.sid}`}>
                   <Table.Cell>
                     <Link to={`/proctor/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link>
@@ -74,12 +85,8 @@ const Home = (): React.JSX.Element => {
                   </Table.Cell>
                   <Table.Cell>{submission.language}</Table.Cell>
                 </Table.Row>
-              ))
-            ) : (
-              <Table.Row>
-                <Table.Cell colSpan={'100%'}>There are no submissions that match this description.</Table.Cell>
-              </Table.Row>
-            )}
+              )
+            }
           </Table.Body>
         </Table>
       </Block>
@@ -98,8 +105,13 @@ const Home = (): React.JSX.Element => {
           </Table.Header>
 
           <Table.Body>
-            {flaggedSubmissions && flaggedSubmissions.length > 0 ? (
-              flaggedSubmissions.map((submission) => (
+            {!flaggedSubmissions?.length ?
+              <>
+                <Table.Row>
+                  <Table.Cell colSpan={'100%'}>There are no submissions that match this description.</Table.Cell>
+                </Table.Row>
+              </> :
+              flaggedSubmissions?.map(submission =>
                 <Table.Row key={`recent-${submission.sid}`}>
                   <Table.Cell>
                     <Link to={`/proctor/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link>
@@ -116,12 +128,8 @@ const Home = (): React.JSX.Element => {
                     )}
                   </Table.Cell>
                 </Table.Row>
-              ))
-            ) : (
-              <Table.Row>
-                <Table.Cell colSpan={'100%'}>There are no submissions that match this description.</Table.Cell>
-              </Table.Row>
-            )}
+              )
+            }
           </Table.Body>
         </Table>
       </Block>

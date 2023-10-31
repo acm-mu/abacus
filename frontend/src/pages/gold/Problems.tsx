@@ -15,16 +15,12 @@ const Problems = (): React.JSX.Element => {
   const submissionRepository = new SubmissionRepository()
 
   const { user, settings } = useContext(AppContext)
-  const [isMounted, setMounted] = useState(true)
   const [isLoading, setLoading] = useState(true)
   const [problems, setProblems] = useState<IProblem[]>()
   const [submissions, setSubmissions] = useState<{ [key: string]: ISubmission[] }>()
 
   useEffect(() => {
-    loadProblems()
-    return () => {
-      setMounted(false)
-    }
+    loadProblems().catch(console.error)
   }, [])
 
   const loadProblems = async () => {
@@ -35,10 +31,8 @@ const Problems = (): React.JSX.Element => {
       sortBy: 'id'
     })
 
-    if (!isMounted) return
-
-    if (problemResponse.ok) {
-      setProblems(problemResponse.data)
+    if (problemResponse.ok && problemResponse.data) {
+      setProblems(Object.values(problemResponse.data))
 
       const submissionResponse = await submissionRepository.getMany({
         filterBy: {
@@ -46,11 +40,9 @@ const Problems = (): React.JSX.Element => {
         }
       })
 
-      if (!isMounted) return
-
-      if (submissionResponse.ok) {
+      if (submissionResponse.ok && submissionResponse.data) {
         const submissions: { [key: string]: ISubmission[] } = {}
-        for (const submission of submissionResponse.data) {
+        for (const submission of Object.values(submissionResponse.data)) {
           if (submissions[submission.pid] == undefined) submissions[submission.pid] = []
           submissions[submission.pid].push(submission)
         }
@@ -98,23 +90,21 @@ const Problems = (): React.JSX.Element => {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {!problems?.length ? (
+            {!problems?.length ?
               <Table.Row>
                 <Table.Cell colSpan={'100%'}>
                   We can&apos;t find any problems. If you believe this is an error please contact us.
                 </Table.Cell>
-              </Table.Row>
-            ) : (
-              problems.map((problem: IProblem, index: number) => (
-                <Table.Row key={index}>
+              </Table.Row> :
+              problems.map(problem =>
+                <Table.Row key={`gold-problem-table-${problem.pid}`}>
                   <Table.HeaderCell collapsing>{problem.id}</Table.HeaderCell>
                   <Table.Cell>
                     <Link to={`/gold/problems/${problem.id}`}>{problem.name}</Link>
                   </Table.Cell>
                   <Table.Cell>{latestSubmission(problem.pid)}</Table.Cell>
                 </Table.Row>
-              ))
-            )}
+              )}
           </Table.Body>
         </Table>
       </Block>

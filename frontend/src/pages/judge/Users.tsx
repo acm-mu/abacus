@@ -1,16 +1,10 @@
-import type { IUser } from 'abacus'
+import type { IUser, SortConfig } from 'abacus'
 import { UserRepository } from 'api'
 import { PageLoading, StatusMessage } from 'components'
 import { AppContext } from 'context'
 import { usePageTitle } from 'hooks'
 import React, { useContext, useEffect, useState } from 'react'
 import { Table } from 'semantic-ui-react'
-
-type SortKey = 'uid' | 'display_name' | 'username' | 'role' | 'division' | 'school'
-type SortConfig = {
-  column: SortKey
-  direction: 'ascending' | 'descending'
-}
 
 const Teams = (): React.JSX.Element => {
   usePageTitle("Abacus | Users")
@@ -22,45 +16,40 @@ const Teams = (): React.JSX.Element => {
   const [isLoading, setLoading] = useState(true)
   const [error, setError] = useState<string>()
 
-  const [isMounted, setMounted] = useState(true)
-  const [{ column, direction }, setSortConfig] = useState<SortConfig>({
-    column: 'username',
-    direction: 'ascending'
+  const [{ sortBy, sortDirection }, setSortConfig] = useState<SortConfig<IUser>>({
+    sortBy: 'username',
+    sortDirection: 'ascending'
   })
 
-  const sort = (newColumn: SortKey, users_list: IUser[] = users) => {
-    const newDirection = column === newColumn && direction === 'ascending' ? 'descending' : 'ascending'
-    setSortConfig({ column: newColumn, direction: newDirection })
-
-    setUsers(
-      users_list.sort(
-        (u1: IUser, u2: IUser) =>
-          (u1[newColumn] || 'ZZ').localeCompare(u2[newColumn] || 'ZZ') * (direction == 'ascending' ? 1 : -1)
-      )
-    )
+  const sort = (newColumn: keyof IUser) => {
+    setSortConfig({
+      sortBy: newColumn,
+      sortDirection: sortBy === newColumn && sortDirection === 'ascending' ? 'descending' : 'ascending'
+    })
   }
 
   useEffect(() => {
-    loadUsers()
-    return () => {
-      setMounted(false)
-    }
-  }, [])
+    loadUsers().catch(console.error)
+  }, [sortBy, sortDirection])
 
   const loadUsers = async () => {
     const response = await userRepository.getMany({
       filterBy: {
         division: user?.division,
         role: 'team'
-      }
+      },
+      sortBy, sortDirection
     })
 
-    if (isMounted && response.ok) {
-      sort('username', response.data)
-      setLoading(false)
-    } else {
+    if (response.errors) {
       setError(response.errors)
     }
+
+    if (response.ok && response.data) {
+      setUsers(Object.values(response.data))
+    }
+
+    setLoading(false)
   }
 
   if (isLoading) return <PageLoading />
@@ -70,17 +59,17 @@ const Teams = (): React.JSX.Element => {
     <Table.Header>
       <Table.Row>
         <Table.HeaderCell
-          sorted={column === 'username' ? direction : undefined}
+          sorted={sortBy === 'username' ? sortDirection : undefined}
           onClick={() => sort('username')}
           content="Username"
         />
         <Table.HeaderCell
-          sorted={column === 'display_name' ? direction : undefined}
+          sorted={sortBy === 'display_name' ? sortDirection : undefined}
           onClick={() => sort('display_name')}
           content="Display Name"
         />
         <Table.HeaderCell
-          sorted={column === 'school' ? direction : undefined}
+          sorted={sortBy === 'school' ? sortDirection : undefined}
           onClick={() => sort('school')}
           content="School"
         />

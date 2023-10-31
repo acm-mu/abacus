@@ -43,25 +43,25 @@ export const schema: Record<string, ParamSchema> = {
   }
 }
 
-const filterQuery = (clarification: Clarification, query: { [key: string]: string | boolean }) => {
-  if (query.cid && clarification.cid !== query.cid) return false
-  if (query.uid && clarification.uid !== query.uid) return false
-  if (query.type && clarification.type !== query.type) return false
-  if (query.parent && clarification.parent != query.parent) return false
-  if (query.division && clarification.division != query.division) return false
-  if (query.open && clarification.open != query.open) return false
-  return true
-}
+// const filterQuery = (clarification: Clarification, query: { [key: string]: string | boolean }) => {
+//   if (query.cid && clarification.cid !== query.cid) return false
+//   if (query.uid && clarification.uid !== query.uid) return false
+//   if (query.type && clarification.type !== query.type) return false
+//   if (query.parent && clarification.parent != query.parent) return false
+//   if (query.division && clarification.division != query.division) return false
+//   if (query.open && clarification.open != query.open) return false
+//   return true
+// }
 
-const hasAccessTo = ({ type, division, uid }: Clarification, user?: User) => {
-  if (type == 'public') {
-    if (user?.role == 'team' || user?.role == 'judge')
-      if (division !== 'public' && user?.division !== division) return false
-  } else if (type == 'private') {
-    if (user?.role == 'team' && user?.uid !== uid) return false
-  }
-  return true
-}
+// const hasAccessTo = ({ type, division, uid }: Clarification, user?: User) => {
+//   if (type == 'public') {
+//     if (user?.role == 'team' || user?.role == 'judge')
+//       if (division !== 'public' && user?.division !== division) return false
+//   } else if (type == 'private') {
+//     if (user?.role == 'team' && user?.uid !== uid) return false
+//   }
+//   return true
+// }
 
 /**
  * @swagger
@@ -110,25 +110,27 @@ const hasAccessTo = ({ type, division, uid }: Clarification, user?: User) => {
  *         description: Could not authenticate user.
  */
 export const getClarifications = async (req: Request, res: Response): Promise<void> => {
-  const page = req.query.page
-  //page comes in as string due to being a query
-  const newPage = page ? parseInt(page as string) : 0
   const errors = validationResult(req).array()
   if (errors.length > 0) {
     res.status(400).json({ message: errors[0].msg })
     return
   }
   const query = matchedData(req)
-  const users = transpose(await contest.get_users(), 'uid') as Record<string, User>
+  const users = transpose((await contest.get_users()).items, 'uid') as Record<string, User>
 
   try {
-    let clarifications = await contest.get_clarifications({}, newPage)
-    if (clarifications.length == 0) {
-      res.sendStatus(404)
-      return
+    const pageSize = req.query.limit ? parseInt(req.query.limit as string) : 25
+
+    const options = {
+      skip: req.query.skip ? parseInt(req.query.skip as string) : 0,
+      limit: pageSize,
+      sortBy: req.query.sortBy as string,
+      sortDirection: req.query.sortDirection as string
     }
 
-    clarifications = clarifications.map((clarification) => {
+    const clarificationItems = await contest.get_clarifications(query, options)
+
+    const clarifications = clarificationItems.items.map((clarification) => {
       const user = users[clarification.uid]
       return {
         ...clarification,
@@ -144,10 +146,8 @@ export const getClarifications = async (req: Request, res: Response): Promise<vo
     })
 
     const map = transpose(
-      clarifications.filter(
-        (clarification) =>
-          clarification.parent == undefined && hasAccessTo(clarification, req.user) && filterQuery(clarification, query)
-      ),
+      clarifications,
+      // .filter((clarification) => clarification.parent == undefined && hasAccessTo(clarification, req.user) && filterQuery(clarification, query)),
       'cid'
     ) as Record<string, Clarification>
 
@@ -155,7 +155,12 @@ export const getClarifications = async (req: Request, res: Response): Promise<vo
       if (clarification.parent !== undefined && clarification.parent in map)
         map[clarification.parent].children?.push(clarification)
 
-    res.send(map)
+    res.send({
+      totalItems: clarificationItems.totalItems,
+      totalPages: Math.floor(clarificationItems.totalItems / pageSize),
+      items: map
+    })
+
   } catch (err) {
     console.error(err)
     res.sendStatus(500)

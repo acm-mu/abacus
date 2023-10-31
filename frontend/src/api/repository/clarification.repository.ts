@@ -1,6 +1,6 @@
-import {Clarification} from 'abacus'
-import {BaseRepository} from "./base.repository"
+import type { IClarification, IClarificationReq } from 'abacus'
+import { BaseRepository } from "./base.repository"
 
-export default class ClarificationRepository extends BaseRepository<Clarification> {
-  collection = 'clarification'
+export default class ClarificationRepository extends BaseRepository<IClarificationReq, IClarification> {
+  collection = 'clarifications'
 }

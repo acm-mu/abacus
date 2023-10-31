@@ -1,4 +1,4 @@
-import type { IProblem, ISubmission } from 'abacus'
+import type { IBlueProblem, IProblem, ISubmission, SortConfig } from 'abacus'
 import { ProblemRepository, SubmissionRepository } from 'api'
 import { Block, PageLoading } from 'components'
 import { AppContext } from 'context'
@@ -7,12 +7,6 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
 
-type SortKey = 'id' | 'name'
-type SortConfig = {
-  column: SortKey
-  direction: 'ascending' | 'descending'
-}
-
 const Problems = (): React.JSX.Element => {
   usePageTitle("Abacus | Judge Problems")
 
@@ -20,62 +14,53 @@ const Problems = (): React.JSX.Element => {
   const problemRepo = new ProblemRepository()
 
   const [isLoading, setLoading] = useState(true)
-  const [problems, setProblems] = useState<IProblem[]>([])
+  const [problems, setProblems] = useState<IProblem[]>()
   const [submissions, setSubmissions] = useState<{ [key: string]: ISubmission[] }>()
-  const [isMounted, setMounted] = useState(true)
+
   const { user } = useContext(AppContext)
 
-  const [{ column, direction }, setSortConfig] = useState<SortConfig>({
-    column: 'id',
-    direction: 'ascending'
+  const [{ sortBy, sortDirection }, setSortConfig] = useState<SortConfig<IProblem>>({
+    sortBy: 'id',
+    sortDirection: 'ascending'
   })
 
-  const sort = (newColumn: SortKey, problem_list: IProblem[] = problems) => {
-    const newDirection = column === newColumn && direction == 'ascending' ? 'descending' : 'ascending'
-    setSortConfig({ column: newColumn, direction: newDirection })
-
-    setProblems(
-      problem_list.sort(
-        (p1: IProblem, p2: IProblem) =>
-          (p1[newColumn] || 'ZZ').localeCompare(p2[newColumn] || 'ZZ') * (direction == 'ascending' ? 1 : -1)
-      )
-    )
+  const sort = (newColumn: keyof IProblem) => {
+    setSortConfig({
+      sortBy: newColumn,
+      sortDirection: sortBy === newColumn && sortDirection == 'ascending' ? 'descending' : 'ascending'
+    })
   }
 
   useEffect(() => {
-    loadProblems()
-    return () => {
-      setMounted(false)
-    }
-  }, [])
+    loadProblems().catch(console.error)
+  }, [sortBy, sortDirection])
 
   const loadProblems = async () => {
     const response = await problemRepo.getMany({
       filterBy: {
         division: user?.division
-      }
+      },
+      sortBy, sortDirection
     })
 
-    if (response.ok) {
-      if (!isMounted) return
+    if (response.ok && response.data) {
+      setProblems(Object.values(response.data))
 
-      sort('id', response.data)
-
-      const submissionsReponse = await submissionRepo.getMany()
-
-      if (!isMounted) return
+      const submissionsResponse = await submissionRepo.getMany()
 
       const subs: { [key: string]: ISubmission[] } = {}
-      submissionsReponse.data?.forEach((sub: ISubmission) => {
-        const { pid } = sub
-        if (!(pid in subs)) subs[pid] = []
-        subs[pid].push(sub)
-      })
+
+      if (submissionsResponse.data) {
+        Object.values(submissionsResponse.data).forEach((sub: ISubmission) => {
+          const { pid } = sub
+          if (!(pid in subs)) subs[pid] = []
+          subs[pid].push(sub)
+        })
+      }
+
       setSubmissions(subs)
-    } else {
-      setProblems([])
-      setSubmissions({})
     }
+
     setLoading(false)
   }
 
@@ -86,12 +71,12 @@ const Problems = (): React.JSX.Element => {
       <Table.Header>
         <Table.Row>
           <Table.HeaderCell
-            sorted={column === 'id' ? direction : undefined}
+            sorted={sortBy === 'id' ? sortDirection : undefined}
             onClick={() => sort('id')}
             content="ID"
           />
           <Table.HeaderCell
-            sorted={column === 'name' ? direction : undefined}
+            sorted={sortBy === 'name' ? sortDirection : undefined}
             onClick={() => sort('name')}
             content="Problem Name"
           />
@@ -101,14 +86,14 @@ const Problems = (): React.JSX.Element => {
         </Table.Row>
       </Table.Header>
       <Table.Body>
-        {problems.length == 0 ? (
+        {problems?.length == 0 ? (
           <Table.Row>
             <Table.Cell colSpan={'100%'} style={{ textAlign: 'center' }}>
               No Problems
             </Table.Cell>
           </Table.Row>
         ) : (
-          problems.map((problem: IProblem, index: number) => {
+          problems?.map((problem: IProblem, index: number) => {
             return (
               <Table.Row key={index}>
                 <Table.Cell>
@@ -117,7 +102,7 @@ const Problems = (): React.JSX.Element => {
                 <Table.Cell>
                   <Link to={`/judge/problems/${problem.pid}`}>{problem.name}</Link>
                 </Table.Cell>
-                <Table.Cell>{problem.tests?.length}</Table.Cell>
+                <Table.Cell>{'test' in problem ? (problem as IBlueProblem).tests?.length : 0}</Table.Cell>
                 {submissions && (
                   <>
                     <Table.Cell>

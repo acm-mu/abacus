@@ -20,7 +20,7 @@ const EditProblems = (): React.JSX.Element => {
   const [isLoading, setLoading] = useState(true)
 
   useEffect(() => {
-    loadProblem()
+    loadProblem().catch(console.error)
     return () => {
       setMounted(false)
     }
@@ -58,7 +58,6 @@ const EditProblems = (): React.JSX.Element => {
     <>
       <h1>{problem?.name}</h1>
       <StatusMessage message={message} onDismiss={() => setMessage(undefined)} />
-
       <ProblemEditor problem={problem} handleSubmit={handleSubmit} />
     </>
   )

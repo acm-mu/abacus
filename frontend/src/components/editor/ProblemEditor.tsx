@@ -1,4 +1,4 @@
-import type { IProblem } from 'abacus'
+import type { IBlueProblem, IGoldProblem, IProblem } from 'abacus'
 import { Block } from 'components'
 import React, { MouseEvent, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -75,15 +75,15 @@ const ProblemEditor = ({ problem: defaultProblem, handleSubmit }: ProblemEditorP
             case 'problem-info':
               return <ProblemInfoEditor problem={problem} setProblem={setProblem} />
             case 'test-data':
-              return <TestDataEditor problem={problem} setProblem={setProblem} />
+              return <TestDataEditor problem={problem as IBlueProblem} setProblem={setProblem} />
             case 'description':
               return <DescriptionEditor problem={problem} setProblem={setProblem} />
             case 'skeletons':
-              return <SkeletonsEditor problem={problem} setProblem={setProblem} />
+              return <SkeletonsEditor problem={problem as IBlueProblem} setProblem={setProblem} />
             case 'solutions':
-              return <SolutionsEditor problem={problem} setProblem={setProblem} />
+              return <SolutionsEditor problem={problem as IBlueProblem} setProblem={setProblem} />
             case 'template':
-              return <TemplateEditor problem={problem} setProblem={setProblem} />
+              return <TemplateEditor problem={problem as IGoldProblem} setProblem={setProblem} />
             default:
               return <></>
           }

@@ -9,13 +9,11 @@ import { Problem } from '.'
 const PracticeProblems = (): React.JSX.Element => {
   usePageTitle("Abacus | Practice Problems")
 
-  const [isMounted, setMounted] = useState(true)
   const [isLoading, setLoading] = useState(true)
 
   const [problems, setProblems] = useState<Problem[]>([])
   const submissions: { [key: string]: ISubmission } = localStorage.submissions
-    ? JSON.parse(localStorage.submissions)
-    : {}
+    ? JSON.parse(localStorage.submissions) : {}
 
   const showClearButton = Object.values(submissions).length > 0
   const clearHistory = () => {
@@ -25,16 +23,13 @@ const PracticeProblems = (): React.JSX.Element => {
 
   const loadProblems = async () => {
     const response = await fetch('/problems/index.json')
-    if (!isMounted) return
     setProblems(await response.json())
     setLoading(false)
   }
 
   useEffect(() => {
     loadProblems()
-    return () => {
-      setMounted(false)
-    }
+      .catch(console.error)
   }, [])
 
   if (isLoading) {

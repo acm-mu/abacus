@@ -25,6 +25,8 @@ import { Outlet } from 'react-router-dom'
 const Admin = (): React.JSX.Element => {
   const { user } = useContext(AppContext)
 
+  console.log(user)
+  
   if (!user)
     return (
       <>

@@ -1,4 +1,4 @@
-import type { ISubmission } from 'abacus'
+import type { IBlueSubmission, ISubmission } from 'abacus'
 import { SubmissionRepository } from 'api'
 import { NotFound, PageLoading, StatusMessage, SubmissionView } from 'components'
 import { AppContext, SocketContext } from 'context'
@@ -27,6 +27,11 @@ const Submission = (): React.JSX.Element => {
   const navigate = useNavigate()
 
   const loadSubmission = async () => {
+    if (!sid) {
+      setLoading(true)
+      return
+    }
+
     const response = await submissionRepository.get(sid)
 
     if (response.ok) {
@@ -46,20 +51,19 @@ const Submission = (): React.JSX.Element => {
   const rerun = async () => {
     if (!setSubmission) return
     setRerunning(true)
+
     const response = await submissionRepository.rerun(submission.sid)
-    if (response.ok) {
-      const result = response.data
-      if (result.submissions && submission.sid in result.submissions) {
-        setSubmission({ team: submission?.team, problem: submission?.problem, ...result.submissions[submission.sid] })
-      }
+
+    if (response.ok && response.data) {
+      setSubmission(response.data.submissions.find(s => s.sid == submission.sid))
     } else {
       setError(response.errors)
     }
+
     setRerunning(false)
   }
   const release = async () => {
-    if (!setSubmission) return
-    if (!submission) return
+    if (!setSubmission || !submission || !sid) return
     setReleasing(true)
 
     const response = await submissionRepository.update(sid, {
@@ -104,7 +108,7 @@ const Submission = (): React.JSX.Element => {
 
   const unclaim = async (sid: string) => {
     setClaiming({ ...isClaiming, [sid]: true })
-    const response = await submissionRepository.update(sid, { claimed: null })
+    const response = await submissionRepository.update(sid, { claimed: undefined })
 
     if (response.ok) {
       setSubmission({ ...submission, claimed: undefined })
@@ -119,10 +123,12 @@ const Submission = (): React.JSX.Element => {
     setClaiming({ ...isClaiming, [sid]: false })
   }
 
-  const download = () =>
-    submission?.source &&
-    submission.filename &&
-    saveAs(new File([submission?.source], submission.filename, { type: 'text/plain;charset=utf-8' }))
+  const download = () => {
+    if ('source' in submission) {
+      const blueSubmission = submission as IBlueSubmission
+      saveAs(new File([blueSubmission?.source], blueSubmission.filename, { type: 'text/plain;charset=utf-8' }))
+    }
+  }
 
   return (
     <>

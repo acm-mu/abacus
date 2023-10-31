@@ -1,4 +1,4 @@
-import type { IProblem, ISubmission } from 'abacus'
+import type { IBlueProblem, IBlueSubmission } from 'abacus'
 import { NotFound } from 'components'
 import { usePageTitle } from 'hooks'
 import React, { useEffect, useState } from 'react'
@@ -10,10 +10,9 @@ import PracticeSubmission from './Submission'
 const ProblemOrSubmission = (): React.JSX.Element => {
   usePageTitle("Abacus | Practice")
 
-  const [isMounted, setMounted] = useState(true)
   const [isLoading, setLoading] = useState(true)
-  const [problems, setProblems] = useState<IProblem[]>([])
-  const submissions: { [key: string]: ISubmission } = localStorage.submissions
+  const [problems, setProblems] = useState<IBlueProblem[]>([])
+  const submissions: { [key: string]: IBlueSubmission } = localStorage.submissions
     ? JSON.parse(localStorage.submissions)
     : {}
 
@@ -21,16 +20,13 @@ const ProblemOrSubmission = (): React.JSX.Element => {
 
   const loadProblems = async () => {
     const response = await fetch('/problems/index.json')
-    if (!isMounted) return
     setProblems(await response.json())
     setLoading(false)
   }
 
   useEffect(() => {
     loadProblems()
-    return () => {
-      setMounted(false)
-    }
+      .catch(console.error)
   }, [])
 
   const subsForId = (id: string) => Object.values(submissions).filter((submission) => submission.pid == id)

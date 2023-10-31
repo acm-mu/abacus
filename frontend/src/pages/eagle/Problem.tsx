@@ -16,7 +16,7 @@ const Home = (): React.JSX.Element => {
   const [isMounted, setMounted] = useState(true)
 
   useEffect(() => {
-    loadProblem()
+    loadProblem().catch(console.error)
     return () => {
       setMounted(false)
     }
@@ -28,8 +28,8 @@ const Home = (): React.JSX.Element => {
 
     if (!isMounted) return
 
-    if (response.ok) {
-      setProblem(response.data)
+    if (response.ok && response.data) {
+      setProblem(response.data.items[0])
     }
 
     setLoading(false)

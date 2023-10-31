@@ -2,10 +2,10 @@ import React, { useContext } from 'react'
 import SyntaxHighlighter from 'react-syntax-highlighter/dist/esm/default-highlight'
 import { Table } from 'semantic-ui-react'
 import { syntax_lang } from 'utils'
-import SubmissionContext from './SubmissionContext'
+import BlueSubmissionContext from "./context"
 
 const SubmissionSource = (): React.JSX.Element => {
-  const { submission } = useContext(SubmissionContext)
+  const { submission } = useContext(BlueSubmissionContext)
 
   if (!submission) return <></>
 

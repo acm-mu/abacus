@@ -1,4 +1,4 @@
-import type { ISubmission } from 'abacus'
+import type { IGoldSubmission } from 'abacus'
 import { SubmissionRepository } from 'api'
 import { Block, Countdown, NotFound, PageLoading, SubmissionView, Unauthorized } from 'components'
 import { AppContext } from 'context'
@@ -14,24 +14,23 @@ const Submission = (): React.JSX.Element => {
 
   const { sid } = useParams<{ sid: string }>()
   const { user } = useContext(AppContext)
-  const [submission, setSubmission] = useState<ISubmission>()
-  const [isMounted, setMounted] = useState(true)
+  const [submission, setSubmission] = useState<IGoldSubmission>()
   const [isLoading, setLoading] = useState(true)
 
   useEffect(() => {
-    loadSubmission()
-    return () => {
-      setMounted(false)
-    }
-  }, [sid])
+    loadSubmission().catch(console.error)
+  }, [])
 
   const loadSubmission = async () => {
+    if (!sid) {
+      setLoading(false)
+      return
+    }
+
     const response = await submissionRepo.get(sid)
 
-    if (!isMounted) return
-
     if (response.ok) {
-      setSubmission(response.data)
+      setSubmission(response.data as IGoldSubmission)
     }
 
     setLoading(false)
@@ -41,19 +40,17 @@ const Submission = (): React.JSX.Element => {
   if (!submission) return <NotFound />
   if (user?.division != 'gold' && user?.role != 'admin') return <Unauthorized />
 
-  return (
-    <>
-      <Countdown />
-      <Block transparent size="xs-12">
-        <Breadcrumb>
-          <Breadcrumb.Section as={Link} to="/gold/submissions" content="Submissions" />
-          <Breadcrumb.Divider />
-          <Breadcrumb.Section active content={submission.sid.substring(0, 7)} />
-        </Breadcrumb>
-      </Block>
-      <SubmissionView submission={submission} />
-    </>
-  )
+  return <>
+    <Countdown />
+    <Block transparent size="xs-12">
+      <Breadcrumb>
+        <Breadcrumb.Section as={Link} to="/gold/submissions" content="Submissions" />
+        <Breadcrumb.Divider />
+        <Breadcrumb.Section active content={submission.sid.substring(0, 7)} />
+      </Breadcrumb>
+    </Block>
+    <SubmissionView submission={submission} />
+  </>
 }
 
 export default Submission

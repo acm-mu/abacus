@@ -47,7 +47,7 @@ export const rerunSubmission = async (req: Request, res: Response): Promise<void
     const submission = await contest.get_submission(item.sid)
     const problem = await contest.get_problem(submission.pid)
 
-    const { start_date, practice_start_date, points_per_yes, points_per_minute, points_per_no } =
+    const { start_date, points_per_yes, points_per_minute, points_per_no } =
       await contest.get_settings()
     if (submission) {
       let newSubmission = { ...submission }
@@ -94,12 +94,7 @@ export const rerunSubmission = async (req: Request, res: Response): Promise<void
       newSubmission.status = status
       // Calculate Score
       if (status == 'accepted') {
-        let minutes = 0
-        if (problem.practice) {
-          minutes = ((newSubmission.date as any) - practice_start_date) / 60
-        } else {
-          minutes = ((newSubmission.date as any) - start_date) / 60
-        }
+        let minutes = ((newSubmission.date as any) - start_date) / 60
         newSubmission.score = Math.floor(
           minutes * points_per_minute + points_per_no * (newSubmission.sub_no as any) + points_per_yes
         )

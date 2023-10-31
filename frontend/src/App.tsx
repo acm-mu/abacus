@@ -1,4 +1,4 @@
-import type { Notification, Settings, User } from 'abacus'
+import type { INotification, ISettings, IUser } from "abacus"
 import { AuthService, ContestService } from 'api'
 import { Footer, Notifications } from 'components'
 import { AppContext, AppContextType, SocketContext } from 'context'
@@ -14,11 +14,9 @@ const App = (): React.JSX.Element => {
   const contestService = new ContestService()
   const authService = new AuthService()
 
-  const [user, setUser] = useState<User>()
-  const [settings, setSettings] = useState<Settings>()
+  const [user, setUser] = useState<IUser>()
+  const [settings, setSettings] = useState<ISettings>()
   const [isLoading, setLoading] = useState(true)
-
-  const error_id = uuidv4()
 
   const socket = io(config.API_URL, { transports: ['websocket'] })
 
@@ -26,6 +24,7 @@ const App = (): React.JSX.Element => {
     try {
       const authResponse = await authService.checkAuth()
       if (authResponse.ok) {
+        console.log(authResponse)
         setUser(authResponse.data)
       }
 
@@ -38,15 +37,12 @@ const App = (): React.JSX.Element => {
     }
   }
 
-  useEffect(() => {
-    loadApp().then(() => setLoading(false))
-
-    const pingInterval = setInterval(async () => {
+  const pingFunc = async () => {
     try {
       await fetch(config.API_URL)
     } catch (err) {
-      const notification: Notification = {
-          id: error_id,
+      const notification: INotification = {
+        id: uuidv4(),
         type: 'error',
         header: 'Uh oh!',
         content: 'We are having issues communicating with our servers. Trying again in 15 seconds'
@@ -54,9 +50,14 @@ const App = (): React.JSX.Element => {
       if (window.sendNotification) window.sendNotification(notification)
       else window.notifications = [notification]
 
-      loadApp()
+      await loadApp()
     }
-    }, 15 * 1000)
+  }
+
+  useEffect(() => {
+    loadApp().then(() => setLoading(false)).catch(console.error)
+
+    const pingInterval = setInterval(pingFunc, 15 * 1000)
 
     return () => {
       clearInterval(pingInterval)
@@ -71,25 +72,23 @@ const App = (): React.JSX.Element => {
 
   if (isLoading) return <></>
 
-  return (
-    <AppContext.Provider value={appContext}>
-      <SocketContext.Provider value={socket}>
-        <BrowserRouter>
-          <Notifications />
-          <Routes>
-            <Route path="admin/*" element={<Admin />} />
-            <Route path="blue/*" element={<Blue />} />
-            <Route path="gold/*" element={<Gold />} />
-            <Route path="judge/*" element={<Judge />} />
-            <Route path="eagle/*" element={<Eagle />} />
-            <Route path="proctor/*" element={<Proctor />} />
-            <Route path="/*" element={<Index />} />
-          </Routes>
-          <Footer />
-        </BrowserRouter>
-      </SocketContext.Provider>
-    </AppContext.Provider>
-  )
+  return <AppContext.Provider value={appContext}>
+    <SocketContext.Provider value={socket}>
+      <BrowserRouter>
+        <Notifications />
+        <Routes>
+          <Route path="admin/*" element={<Admin />} />
+          <Route path="blue/*" element={<Blue />} />
+          <Route path="gold/*" element={<Gold />} />
+          <Route path="judge/*" element={<Judge />} />
+          <Route path="eagle/*" element={<Eagle />} />
+          <Route path="proctor/*" element={<Proctor />} />
+          <Route path="/*" element={<Index />} />
+        </Routes>
+        <Footer />
+      </BrowserRouter>
+    </SocketContext.Provider>
+  </AppContext.Provider>
 }
 
 export default App

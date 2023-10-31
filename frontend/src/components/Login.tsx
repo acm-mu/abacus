@@ -37,9 +37,9 @@ const LoginModal = ({ trigger, open }: LoginModalProps): React.JSX.Element => {
       setLoggingIn(true)
       const response = await authService.login(formData.username, formData.password)
 
-      if (response.ok) {
-        const {accessToken, ...user} = response.data
-        localStorage.setItem('accessToken', accessToken)
+      if (response.ok && response.data) {
+        const {accessToken, user} = response.data
+        localStorage.setItem('jwtToken', accessToken)
         setUser(user)
         navigate(userHome(user))
       } else {

@@ -49,7 +49,7 @@ export const deleteClarifications = async (req: Request, res: Response): Promise
     for (const cid of req.body.cid) {
       try {
         await contest.delete_clarification(cid)
-        for (const clarification of clarifications)
+        for (const clarification of clarifications.items)
           if (clarification.parent && clarification.parent == cid)
             await contest.delete_clarification(clarification.parent)
 
@@ -63,7 +63,7 @@ export const deleteClarifications = async (req: Request, res: Response): Promise
   } else {
     try {
       await contest.delete_clarification(req.body.cid)
-      for (const clarification of clarifications)
+      for (const clarification of clarifications.items)
         if (clarification.parent == req.body.cid) await contest.delete_clarification(clarification.cid)
       res.json({ message: 'Clarification successfully deleted' })
     } catch (err) {

@@ -1,9 +1,9 @@
-import { Problem, Settings, User } from 'abacus'
+import { User } from 'abacus'
 import { Request, Response } from 'express'
 import { matchedData, ParamSchema, validationResult } from 'express-validator'
 import { contest } from '../../abacus'
-import { transpose } from '../../utils'
 import { authenticate, userHasRole } from '../../abacus/authlib'
+import { transpose } from '../../utils'
 
 export const schema: Record<string, ParamSchema> = {
   pid: {
@@ -40,24 +40,7 @@ export const schema: Record<string, ParamSchema> = {
     in: ['body', 'query'],
     optional: true,
     isString: true
-  },
-  practice: {
-    in: 'body',
-    isBoolean: true,
-    optional: true
   }
-}
-
-const showToUser = (user: User | undefined, problem: Problem, settings: Settings): boolean => {
-  const now = Date.now() / 1000
-
-  if (userHasRole(user, 'admin')) return true
-  if (user !== undefined) {
-    if (problem.practice) return now > settings.practice_start_date && now < settings.practice_end_date
-    else return now > settings.start_date && now < settings.end_date
-  }
-  if (now > settings.end_date) return true
-  return false
 }
 
 /**
@@ -97,10 +80,6 @@ const showToUser = (user: User | undefined, problem: Problem, settings: Settings
  *         in: query
  *         schema:
  *           type: string
- *       - name: practice
- *         in: query
- *         schema:
- *           type: boolean
  *     responses:
  *       200:
  *         description: List of problems matching provided query.
@@ -123,14 +102,14 @@ export const getProblems = async (req: Request, res: Response): Promise<void> =>
   }
 
   const query = matchedData(req)
-  let user: User | undefined = undefined
+  let user: User | undefined
   try {
     user = await authenticate(req)
   } catch (err) {
     user = undefined
   }
 
-  let columns = ['pid', 'division', 'id', 'name', 'practice', 'max_points', 'capped_points'] // Default columns
+  let columns = ['pid', 'division', 'id', 'name', 'max_points', 'capped_points'] // Default columns
   /// IF OTHER COLUMNS AUTHENTICATE FOR JUDGE / ADMIN
   if (query.columns) {
     columns = columns.concat(query.columns.split(','))
@@ -147,11 +126,9 @@ export const getProblems = async (req: Request, res: Response): Promise<void> =>
   }
 
   try {
-    const settings = await contest.get_settings()
     const page = req.body.page ? req.body.page : null
     let problems = await contest.get_problems(query, columns, page)
-    problems = problems?.filter((problem) => showToUser(user, problem, settings))
-    res.send(transpose(problems, 'pid'))
+    res.send(transpose(problems.items, 'pid'))
   } catch (err) {
     console.error(err)
     res.sendStatus(500)

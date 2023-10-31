@@ -1,11 +1,11 @@
 import type { IClarification, IContext } from 'abacus'
 import { ClarificationRepository } from 'api'
+import { StatusMessage } from 'components'
 import { AppContext } from 'context'
 import React, { ChangeEvent, SyntheticEvent, useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button, DropdownProps, Form, Modal } from 'semantic-ui-react'
 import { divisions } from 'utils'
-import { StatusMessage } from '.'
 
 interface ClarificationModalProps {
   trigger: React.JSX.Element
@@ -30,7 +30,7 @@ const ClarificationModal = ({ trigger, title = '', context }: ClarificationModal
 
   const handleChange = ({ target: { name, value } }: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setClarification({ ...clarification, [name]: value })
-  const handleDropdownChange = (event: SyntheticEvent<HTMLElement, Event>, { name, value }: DropdownProps) =>
+  const handleDropdownChange = (_event: SyntheticEvent<HTMLElement, Event>, { name, value }: DropdownProps) =>
     setClarification({ ...clarification, [name]: value })
 
   const handleSubmit = async () => {

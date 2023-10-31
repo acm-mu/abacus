@@ -2,7 +2,6 @@ import type { ISubmission } from 'abacus'
 import { SubmissionRepository } from 'api'
 import { NotFound, PageLoading, SubmissionView } from 'components'
 import { AppContext } from 'context'
-import { saveAs } from 'file-saver'
 import { usePageTitle } from 'hooks'
 import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -75,7 +74,8 @@ const Submission = (): React.JSX.Element => {
     setRerunning(true)
     const response = await submissionRepository.rerun(submission.sid)
     if (response.ok) {
-      setSubmission({ team: submission?.team, problem: submission?.problem, ...response.data })
+      // setSubmission({ team: submission?.team, problem: submission?.problem, ...response.data })
+      throw new Error("This is not implemented right now")
     }
     setRerunning(false)
   }
@@ -100,21 +100,23 @@ const Submission = (): React.JSX.Element => {
   const save = async () => {
     setSaving(true)
 
-    await submissionRepository.update(submission.sid, submission)
+    // await submissionRepository.update(submission.sid, submission as ISubmission)
+    throw new Error("This is not implemented right now")
 
     setSaving(false)
   }
 
   const flag = async () => {
     if (!sid) return
-    setFlagging({ ...isFlagging, [sid]: true })
-    const response = await submissionRepository.update(sid, { viewed: true, flagged: user })
+    // setFlagging({ ...isFlagging, [sid]: true })
+    // const response = await submissionRepository.update(sid, { viewed: true, flagged: user })
+    throw new Error("This is not implemented right now")
 
-    if (response.ok) {
-      setSubmission({ ...submission, viewed: true, flagged: user })
-    }
+    // if (response.ok) {
+    //   setSubmission({ ...submission, viewed: true, flagged: user })
+    // }
 
-    setFlagging({ ...isFlagging, [sid]: false })
+    // setFlagging({ ...isFlagging, [sid]: false })
   }
 
   const unflag = async () => {
@@ -129,10 +131,12 @@ const Submission = (): React.JSX.Element => {
     setUnFlagging({ ...isUnFlagging, [sid]: false })
   }
 
-  const download = () =>
-    submission?.source &&
-    submission.filename &&
-    saveAs(new File([submission?.source], submission.filename, { type: 'text/plain;charset=utf-8' }))
+  const download = () => {
+    throw new Error("Download is not implemented right now")
+    // submission?.source &&
+    // submission.filename &&
+    // saveAs(new File([submission?.source], submission.filename, { type: 'text/plain;charset=utf-8' }))
+  }
 
   return (
     <Grid>

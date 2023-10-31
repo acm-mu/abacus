@@ -1,7 +1,8 @@
 import MDEditor from '@uiw/react-md-editor'
-import type { IProblem, ISubmission } from 'abacus'
+import type { IGoldProblem, ISubmission } from 'abacus'
 import { ProblemRepository, SubmissionRepository } from 'api'
-import { Block, ClarificationModal, Countdown, NotFound, PageLoading, Unauthorized } from 'components'
+import { Block, Countdown, NotFound, PageLoading, Unauthorized } from 'components'
+import { ClarificationModal } from "components/clarification"
 import { AppContext } from 'context'
 import { usePageTitle } from 'hooks'
 import React, { useContext, useEffect, useMemo, useState } from 'react'
@@ -15,31 +16,20 @@ const Problem = (): React.JSX.Element => {
 
   const { user, settings } = useContext(AppContext)
   const [isLoading, setLoading] = useState(true)
-  const [problem, setProblem] = useState<IProblem>()
+  const [problem, setProblem] = useState<IGoldProblem>()
   const { pid } = useParams<{ pid: string }>()
 
   const [submissions, setSubmissions] = useState<ISubmission[]>()
   const latestSubmission = useMemo(() => {
     if (!submissions?.length || !user) return <></>
     const { sid } = submissions[submissions.length - 1]
-    return (
-      <p>
-        <b>Last Submission:</b> <Link to={`${userHome(user)}/submissions/${sid}`}>{sid.substring(0, 7)}</Link>
-      </p>
-    )
+    return <p><b>Last Submission:</b> <Link to={`${userHome(user)}/submissions/${sid}`}>{sid.substring(0, 7)}</Link></p>
   }, [submissions])
-
-  const [isMounted, setMounted] = useState(true)
 
   usePageTitle(`Abacus | ${problem?.name ?? ""}`)
 
   useEffect(() => {
-    loadProblem().then(() => {
-      setLoading(false)
-    })
-    return () => {
-      setMounted(false)
-    }
+    loadProblem().catch(console.error)
   }, [])
 
   const loadProblem = async () => {
@@ -50,11 +40,8 @@ const Problem = (): React.JSX.Element => {
       }
     })
 
-
-    if (!isMounted) return
-
     if (problemResponse.ok && problemResponse.data) {
-      setProblem(problemResponse.data)
+      setProblem(problemResponse.data.items[0] as IGoldProblem)
 
       const submissionResponse = await submissionRepository.getMany({
         filterBy: {
@@ -63,12 +50,12 @@ const Problem = (): React.JSX.Element => {
         }
       })
 
-      if (!isMounted) return
-
-      if (submissionResponse.ok) {
-        setSubmissions(submissionResponse.data)
+      if (submissionResponse.ok && submissionResponse.data) {
+        setSubmissions(Object.values(submissionResponse.data))
       }
     }
+
+    setLoading(false)
   }
 
   if (!settings || new Date() < settings.start_date)
@@ -77,64 +64,62 @@ const Problem = (): React.JSX.Element => {
   if (isLoading) return <PageLoading />
   if (!problem) return <NotFound />
 
-  return (
-    <>
-      <Countdown />
-      <Block transparent size="xs-12">
-        <Breadcrumb>
-          <Breadcrumb.Section as={Link} to="/gold/problems" content="Problems" />
-          <Breadcrumb.Divider />
-          <Breadcrumb.Section active content={problem.name} />
-        </Breadcrumb>
-      </Block>
-      <Block size="xs-9" className="problem">
-        <h1>
-          Problem {problem?.id}: {problem?.name}
-        </h1>
-        <hr />
-        <MDEditor.Markdown source={problem?.description || ''} />
+  return <>
+    <Countdown />
+    <Block transparent size="xs-12">
+      <Breadcrumb>
+        <Breadcrumb.Section as={Link} to="/gold/problems" content="Problems" />
+        <Breadcrumb.Divider />
+        <Breadcrumb.Section active content={problem.name} />
+      </Breadcrumb>
+    </Block>
+    <Block size="xs-9" className="problem">
+      <h1>
+        Problem {problem?.id}: {problem?.name}
+      </h1>
+      <hr />
+      <MDEditor.Markdown source={problem?.description || ''} />
 
-        {problem.design_document == true ? (
-          <Message
-            icon="file text"
-            color="blue"
-            header="Design Document"
-            content="In addition to your Scratch project, submit a short description describing the features of your project. It doesn't have to be too formal or long - just list the primary ways your user can interact with the project and describe the features you're most proud of. Pretend you're selling your solution - make sure the judges know about all the features you spent your time on!"
+      {problem.design_document ? (
+        <Message
+          icon="file text"
+          color="blue"
+          header="Design Document"
+          content="In addition to your Scratch project, submit a short description describing the features of your project. It doesn't have to be too formal or long - just list the primary ways your user can interact with the project and describe the features you're most proud of. Pretend you're selling your solution - make sure the judges know about all the features you spent your time on!"
+        />
+      ) : (
+        <></>
+      )}
+    </Block>
+
+    <Block size="xs-3" className="problem-panel">
+      {settings && new Date() < settings?.end_date ? (
+        <>
+          <Button
+            disabled={submissions?.filter(({ status, released }) => status == 'pending' || !released).length !== 0}
+            as={Link}
+            to={`/gold/problems/${problem?.id}/submit`}
+            content="Submit"
+            icon="upload"
           />
-        ) : (
-          <></>
-        )}
-      </Block>
-
-      <Block size="xs-3" className="problem-panel">
-        {settings && new Date() < settings?.end_date ? (
-          <>
-            <Button
-              disabled={submissions?.filter(({ status, released }) => status == 'pending' || !released).length !== 0}
-              as={Link}
-              to={`/gold/problems/${problem?.id}/submit`}
-              content="Submit"
-              icon="upload"
-            />
-            <ClarificationModal
-              title={`${problem.name} | `}
-              context={{ type: 'pid', id: problem.pid }}
-              trigger={<Button content="Ask" icon="question" />}
-            />
-          </>
-        ) : problem.project_id ? (
-          <a rel="noreferrer" target="_blank" href={`https://scratch.mit.edu/projects/${problem?.project_id}`}>
-            <Button color="orange" content="Template" icon="linkify" />
-          </a>
-        ) : (
-          <Message warning>
-            <b>Note:</b> A project template is not provided for this problem.
-          </Message>
-        )}
-        {latestSubmission}
-      </Block>
-    </>
-  )
+          <ClarificationModal
+            title={`${problem.name} | `}
+            context={{ type: 'pid', id: problem.pid }}
+            trigger={<Button content="Ask" icon="question" />}
+          />
+        </>
+      ) : problem.project_id ? (
+        <a rel="noreferrer" target="_blank" href={`https://scratch.mit.edu/projects/${problem?.project_id}`}>
+          <Button color="orange" content="Template" icon="linkify" />
+        </a>
+      ) : (
+        <Message warning>
+          <b>Note:</b> A project template is not provided for this problem.
+        </Message>
+      )}
+      {latestSubmission}
+    </Block>
+  </>
 }
 
 export default Problem

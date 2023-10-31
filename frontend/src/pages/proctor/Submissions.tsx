@@ -1,4 +1,4 @@
-import type { ISubmission } from 'abacus'
+import type { ISubmission, SortConfig } from 'abacus'
 import { SubmissionRepository } from 'api'
 import { PageLoading } from 'components'
 import { AppContext, SocketContext } from 'context'
@@ -6,40 +6,30 @@ import { usePageTitle } from 'hooks'
 import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Checkbox, Label, Table } from 'semantic-ui-react'
-import { compare } from 'utils'
-
-type SortKey = 'date' | 'sid' | 'sub_no' | 'language'
-type SortConfig = {
-  column: SortKey
-  direction: 'ascending' | 'descending'
-}
 
 const Submissions = (): React.JSX.Element => {
   usePageTitle("Abacus | Proctor Submissions")
 
+  const submissionRepository = new SubmissionRepository()
+
   const socket = useContext(SocketContext)
   const [isLoading, setLoading] = useState(true)
-  const [submissions, setSubmissions] = useState<ISubmission[]>([])
+  const [submissions, setSubmissions] = useState<ISubmission[]>()
   const [isMounted, setMounted] = useState(true)
   const [showViewed, setShowViewed] = useState(false)
 
   const { user } = useContext(AppContext)
 
-  const [{ column, direction }, setSortConfig] = useState<SortConfig>({
-    column: 'date',
-    direction: 'ascending'
+  const [{ sortBy, sortDirection }, setSortConfig] = useState<SortConfig<ISubmission>>({
+    sortBy: 'date',
+    sortDirection: 'ascending'
   })
 
-  const sort = (newColumn: SortKey, submission_list: ISubmission[] = submissions) => {
-    const newDirection = column === newColumn && direction == 'ascending' ? 'descending' : 'ascending'
-    setSortConfig({ column: newColumn, direction: newDirection })
-
-    setSubmissions(
-      submission_list.sort(
-        (s1: ISubmission, s2: ISubmission) =>
-          compare(s1[newColumn] || 'ZZ', s2[newColumn] || 'ZZ') * (direction == 'ascending' ? 1 : -1)
-      )
-    )
+  const sort = (newColumn: keyof ISubmission) => {
+    setSortConfig({
+      sortBy: newColumn,
+      sortDirection: sortBy === newColumn && sortDirection == 'ascending' ? 'descending' : 'ascending'
+    })
   }
 
   useEffect(() => {
@@ -50,18 +40,27 @@ const Submissions = (): React.JSX.Element => {
   }, [])
 
   const loadSubmissions = async () => {
-    const submissions = new SubmissionRepository()
-    const response = await submissions.getMany({ filterBy: { division: 'blue' } })
+    const response = await submissionRepository.getMany({
+      filterBy: { division: 'blue' },
+      sortBy,
+      sortDirection
+    })
 
     if (!isMounted) return
 
-    setSubmissions(response.data?.map((submission) => ({ ...submission, checked: false })))
+    if (response.data) {
+      setSubmissions(Object.values(response.data))
+    }
   }
+
+  useEffect(() => {
+    loadSubmissions().catch(console.error)
+  }, [sortBy, sortDirection])
 
   const onFilterChange = () => setShowViewed(!showViewed)
 
   const filteredSubmissions = useMemo(
-    () => submissions.filter((submission) => showViewed || (!submission.viewed && !submission.flagged)),
+    () => submissions?.filter((submission) => showViewed || (!submission.viewed && !submission.flagged)),
     [submissions, showViewed]
   )
 
@@ -77,21 +76,21 @@ const Submissions = (): React.JSX.Element => {
             <Table.HeaderCell
               className="sortable"
               onClick={() => sort('sid')}
-              sorted={column == 'sid' ? direction : undefined}>
+              sorted={sortBy == 'sid' ? sortDirection : undefined}>
               Submission ID
             </Table.HeaderCell>
             <Table.HeaderCell>Problem</Table.HeaderCell>
             <Table.HeaderCell
               className="sortable"
               onClick={() => sort('language')}
-              sorted={column == 'language' ? direction : undefined}>
+              sorted={sortBy == 'language' ? sortDirection : undefined}>
               Language
             </Table.HeaderCell>
             <Table.HeaderCell>Status</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {!filteredSubmissions.length ? (
+          {!filteredSubmissions?.length ? (
             <Table.Row>
               <Table.Cell colSpan={'100%'}>No Submissions</Table.Cell>
             </Table.Row>

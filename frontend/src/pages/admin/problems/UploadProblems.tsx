@@ -29,13 +29,14 @@ const UploadProblems = (): React.JSX.Element => {
     reader.onload = async ({ target }: ProgressEvent<FileReader>) => {
       const text = target?.result as string
       if (text) {
-        let problems: ProblemItem[] = JSON.parse(text).map((problem: IProblem) => ({ ...problem, checked: true }))
+        // let problems: ProblemItem[] = JSON.parse(text).map((problem: IProblem) => ({ ...problem, checked: true }))
 
         if (existingProblems) {
-          problems = problems.filter((problem: ProblemItem) => filterProblem(problem, existingProblems[problem.pid]))
+          // problems = problems.filter((problem: ProblemItem) => filterProblem(problem, existingProblems[problem.pid]))
+          throw new Error("This is not implemented")
         }
 
-        setNewProblems(problems)
+        // setNewProblems(problems)
       }
     }
 
@@ -49,12 +50,12 @@ const UploadProblems = (): React.JSX.Element => {
     if (!isMounted) return
 
     if (response.ok && response.data) {
-      setExistingProblems(response.data)
+      setExistingProblems(Object.values(response.data))
     }
   }
 
   useEffect(() => {
-    loadExistingProblems()
+    loadExistingProblems().catch(console.error)
 
     return () => setMounted(false)
   }, [])

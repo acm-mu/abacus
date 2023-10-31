@@ -1,4 +1,4 @@
-import type { IUser } from 'abacus'
+import type { IUser, NullablePartial } from 'abacus'
 import { UserRepository } from 'api'
 import { Block, NotFound, PageLoading } from 'components'
 import StatusMessage, { StatusMessageType } from 'components/StatusMessage'
@@ -14,15 +14,7 @@ const EditUser = (): React.JSX.Element => {
   const userRepo = new UserRepository()
 
   const [user, setUser] = useState<IUser>()
-  const [formUser, setFormUser] = useState<IUser>({
-    uid: '',
-    username: '',
-    role: '',
-    division: '',
-    school: '',
-    display_name: '',
-    password: ''
-  })
+  const [formUser, setFormUser] = useState<NullablePartial<IUser>>()
   const [isLoading, setLoading] = useState(true)
   const [isMounted, setMounted] = useState(true)
   const [isSaving, setSaving] = useState(false)
@@ -31,12 +23,16 @@ const EditUser = (): React.JSX.Element => {
 
   const navigate = useNavigate()
 
-  const handleChange = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>) =>
-    setFormUser({ ...formUser, [name]: value })
-  const handleSelectChange = (_: never, { name, value }: HTMLInputElement) =>
-    setFormUser({ ...formUser, [name]: value })
+  const handleChange = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>) => {
+    setFormUser({ ...formUser, [name]: value } as IUser)
+  }
+
+  const handleSelectChange = (_: never, { name, value }: HTMLInputElement) => {
+    setFormUser({ ...formUser, [name]: value } as IUser)
+  }
+
   const handleCheckboxChange = async (_event: React.FormEvent<HTMLInputElement>, { checked }: CheckboxProps) => {
-    if (!uid) return
+    if (!uid || !formUser) return
     setSaving(true)
     const response = await userRepo.update(uid, { disabled: checked })
 
@@ -50,14 +46,16 @@ const EditUser = (): React.JSX.Element => {
   }
 
   const handleSubmit = async () => {
+    if (!formUser) return
+
     setSaving(true)
-    const response = await userRepo.update(formUser.uid,
+    const response = await userRepo.update(formUser.uid as string,
       {
         ...formUser,
-        school: formUser.role === 'team' ? formUser.school : ''
+        school: formUser.role === 'team' ? formUser.school as string : ''
       })
 
-    if (response.ok) {
+    if (response.ok && response.data) {
       setMessage({ type: 'success', message: 'User saved successfully!' })
       setUser(response.data)
       setFormUser({ ...response.data, password: '' })
@@ -81,7 +79,7 @@ const EditUser = (): React.JSX.Element => {
   }
 
   useEffect(() => {
-    loadUser()
+    loadUser().catch(console.error)
     return () => {
       setMounted(false)
     }
@@ -108,7 +106,7 @@ const EditUser = (): React.JSX.Element => {
             <Checkbox
               label="Disabled"
               name="disabled"
-              checked={formUser?.disabled}
+              checked={formUser?.disabled as boolean}
               onChange={handleCheckboxChange}
               toggle
             />
@@ -141,7 +139,7 @@ const EditUser = (): React.JSX.Element => {
             placeholder="User Role"
             required
           />
-          {formUser.role == 'team' && (
+          {formUser?.role == 'team' && (
             <Form.Field
               control={Input}
               onChange={handleChange}

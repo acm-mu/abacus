@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
-import { Block } from 'components'
 import java from 'assets/java.png'
 import python from 'assets/python.png'
-import { Icon, Message } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
+import { Block } from 'components'
 import { usePageTitle } from 'hooks'
+import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
+import { Icon, Message } from 'semantic-ui-react'
 
 const Home = (): React.JSX.Element => {
   usePageTitle("Abacus | Blue")
@@ -24,8 +24,8 @@ const Home = (): React.JSX.Element => {
           <Icon name="warning" />
           <Message.Content>
             <Message.Header>Read the Rules!</Message.Header>
-            Please read the rules before beginning the competition. You can find them on the{' '}
-            <Link to={'/blue/rules'}>Rules</Link> page.
+            Please read the rules before beginning the competition. You can find them on the <Link
+            to={'/blue/rules'}>Rules</Link> page.
           </Message.Content>
         </Message>
       ) : (
@@ -35,8 +35,8 @@ const Home = (): React.JSX.Element => {
         <h1>Blue Division (Java/Python)</h1>
 
         <div style={{ display: 'flex', justifyContent: 'space-evenly', padding: '15px' }}>
-          <img height="175px" src={java} />
-          <img height="175px" src={python} />
+          <img alt="Java" height="175px" src={java} />
+          <img alt="Python" height="175px" src={python} />
         </div>
 
         <p>

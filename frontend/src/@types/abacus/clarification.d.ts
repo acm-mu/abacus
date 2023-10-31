@@ -1,4 +1,15 @@
 declare module 'abacus' {
+
+  export interface IClarificationReq {
+    body: string
+    parent?: string
+    division?: string
+    type?: string
+    children?: IClarification[]
+    open?: boolean
+    context?: IContext
+  }
+
   export interface IClarification {
     cid: string
     body: string
@@ -8,22 +19,9 @@ declare module 'abacus' {
     division?: string
     type?: string
     title?: string
-    children: IClarification[]
+    children?: IClarification[]
     open?: boolean
     context?: IContext
   }
 
-  export interface IClarificationRequest {
-    cid: string
-    body: string
-    user: User
-    date: number
-    parent?: string
-    division?: string
-    type?: string
-    title?: string
-    children: IClarification[]
-    open?: boolean
-    context?: IContext
-  }
 }
