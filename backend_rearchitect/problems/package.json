@@ -1,0 +1,21 @@
+{
+  "name": "problems",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "archiver": "^5.3.1",
+    "aws-sdk": "^2.1388.0",
+    "axios": "^0.21.4",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.18.2",
+    "express-fileupload": "^1.4.0",
+    "express-validator": "^6.12.1",
+    "mongodb": "^4.1.2",
+    "morgan": "^1.10.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^4.6.3",
+    "uuid": "^8.3.2"
+  }
+}
