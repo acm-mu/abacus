@@ -1,7 +1,7 @@
 import archiver from 'archiver'
 import { Request, Response } from 'express'
 import { matchedData, ParamSchema, validationResult } from 'express-validator'
-import contest from '../../abacus/contest'
+import contest from '../contest'
 
 const stripFilename = (str: string) => str.replace(/ /g, '_').replace(/[!@#$%^&*()]/g, '')
 const fileExtension = (lang: string) => {
@@ -50,7 +50,7 @@ export const schema: Record<string, ParamSchema> = {
 export const downloadFiles = async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {
-    res.status(400).json({ message: errors[0].msg })
+    res.status(400).send(errors[0].msg)
     return
   }
   const { pid } = matchedData(req)

@@ -3,7 +3,7 @@ import { Request, Response } from 'express'
 import { matchedData, ParamSchema, validationResult } from 'express-validator'
 import { v4 as uuidv4 } from 'uuid'
 
-import contest from '../../abacus/contest'
+import contest from '../contest'
 
 export const schema: Record<string, ParamSchema> = {
   id: {
@@ -68,11 +68,6 @@ export const schema: Record<string, ParamSchema> = {
     in: 'body',
     isBoolean: true,
     optional: true
-  },
-  practice: {
-    in: 'body',
-    isBoolean: true,
-    optional: true
   }
 }
 
@@ -104,7 +99,7 @@ export const schema: Record<string, ParamSchema> = {
 export const postProblems = async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {
-    res.status(400).json({ message: errors[0].msg })
+    res.status(400).send(errors[0].msg)
     return
   }
 
@@ -121,7 +116,7 @@ export const postProblems = async (req: Request, res: Response): Promise<void> =
 
   const problems = await contest.get_problems({ id: item.id, division: item.division })
   if (Object.values(problems).length > 0) {
-    res.status(400).json({ message: 'Problem id is taken!' })
+    res.status(400).send('Problem id is taken!')
     return
   }
 
