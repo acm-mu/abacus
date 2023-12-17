@@ -2,7 +2,15 @@ import { body, query } from "express-validator"
 
 class Validation {
 
-  static searchProblems = [
+  static base = [
+    query('sortBy').isString().optional(),
+    query('sortDirection').isString().isIn(['ascending', 'descending']).optional(),
+    query('page').isNumeric().optional(),
+    query('pageSize').isNumeric().optional(),
+  ]
+
+  static getProblems = [
+    ...this.base,
     query('division').isString().optional(),
   ]
 
@@ -18,6 +26,10 @@ class Validation {
     body('max_points').optional().isNumeric().withMessage('Max points must be a numeric'),
     body('capped_points').optional().isNumeric().withMessage('Capped points must be a numeric'),
     body('project_id').optional().isString().withMessage('Project Id must be a string')
+  ]
+
+  static updateProblem = [
+    body('name').isString().notEmpty().withMessage('Name cannot be empty')
   ]
 }
 

@@ -1,30 +1,65 @@
-import { RequestHandler, Router } from "express";
-import Validation from "./validation";
-import ProblemController from "./controller";
+import { Router } from "express"
+import Validation from "./validation"
+import ProblemController from "./controller"
+import { validationMiddleware } from "./middleware"
+import swagger from "./swagger"
+
 
 /**
  * @swagger
  * tags:
  *   name: Problems
  */
-const router = Router()
+const api = Router()
 
-router.get('/problems', (async (req, res) => {
-  await ProblemController.getAllProblems(req, res)
-}) as RequestHandler)
+/**
+ * @swagger
+ * /problems:
+ *   get:
+ *     summary: Get all problems
+ *     description: Returns a list of problems.
+ *     tags: [Problems]
+ *     parameters:
+ *       - in: query
+ *         name: sortBy
+ *         schema: 
+ *           type: string
+ *         required: false
+ *         description: Field to sort results by.
+ *       - in: query
+ *         name: sortDirection
+ *         schema:
+ *           type: string
+ *           enum:
+ *             - ascending
+ *             - descending
+ *         required: false
+ *         description: The direction to sort by.
+ *     responses:
+ *       200:
+ *         description: List of problems.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Problem'
+ *       500:
+ *         description: A server error occured while trting to complete request.
+ */
 
-router.get('/problems/search', Validation.searchProblems, (async (req, res) => {
-  await ProblemController.searchProblems(req, res)
-}) as RequestHandler)
+api.get('/problems', Validation.getProblems, validationMiddleware, ProblemController.getAllProblems)
 
-router.post('/problems', Validation.createProblem, (async (req, res) => {
-  await ProblemController.createProblem(req, res)
-}) as RequestHandler)
+api.post('/problems', Validation.createProblem, validationMiddleware, ProblemController.createProblem)
 
-// router.get('/problem/:problemId', hasRole('admin'), checkSchema(postSchema), ProblemController.getProblemById)
-// router.put('/problem/:problemId', hasRole('admin'), checkSchema(putSchema), ProblemController.updateProblem)
-// router.delete('/problem/:problemId', hasRole('admin'), checkSchema(deleteSchema), ProblemController.deleteProblem)
-// Maybe also a patch
+api.get('/problem/:id', ProblemController.getProblemById)
 
+api.put('/problem/:id', Validation.updateProblem, validationMiddleware, ProblemController.updateProblem)
 
-export default router
+api.delete('/problem/:id', ProblemController.deleteProblem)
+
+const routes = Router()
+
+routes.use(api, swagger)
+
+export default routes

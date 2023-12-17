@@ -1,12 +1,21 @@
 import { Request, Response } from 'express'
+import { matchedData } from 'express-validator'
 import ProblemService from './service'
-import { matchedData, validationResult } from 'express-validator'
-import { ProblemModel } from 'abacus'
+import { Problem } from './models'
 
 class ProblemController {
-  static async getAllProblems(_req: Request, res: Response): Promise<void> {
+  static async getAllProblems(req: Request, res: Response): Promise<void> {
     try {
-      const users = await ProblemService.getAllProblems()
+      const { sortBy, sortDirection, page, pageSize, ...data } = matchedData(req)
+
+      const users = await ProblemService.getAllProblems({
+        sortBy,
+        sortDirection,
+        page,
+        pageSize,
+        filters: data
+      })
+
       res.status(200).json(users)
     } catch (error) {
       console.error(error)
@@ -16,13 +25,8 @@ class ProblemController {
 
   static async getProblemById(req: Request, res: Response): Promise<void> {
     try {
-      const errors = validationResult(req)
-      if (!errors.isEmpty()) {
-        res.status(400).json({ errors: errors.array() })
-        return
-      }
-
       const problemId = req.params.id
+      console.log(problemId)
       const problem = await ProblemService.getProblemById(problemId)
 
       if (problem) {
@@ -36,32 +40,10 @@ class ProblemController {
     }
   }
 
-  static async searchProblems(req: Request, res: Response): Promise<void> {
-    try {
-      const errors = validationResult(req)
-      if (!errors.isEmpty()) {
-        res.status(400).json({ errors: errors.array() })
-        return
-      }
-
-      const problems = await ProblemService.searchProblems()
-      res.status(200).json(problems)
-    } catch (error) {
-      console.error(error)
-      res.status(500).json({ error: "Internal server error" })
-    }
-  }
-
   static async createProblem(req: Request, res: Response): Promise<void> {
     try {
-      const errors = validationResult(req)
-      if (!errors.isEmpty()) {
-        res.status(400).json({ errors: errors.array() })
-        return
-      }
-
       const createProblem = matchedData(req)
-      const newProblem = await ProblemService.createProblem(createProblem as ProblemModel)
+      const newProblem = await ProblemService.createProblem(createProblem as Problem)
 
       res.status(201).json(newProblem)
     } catch (error) {
@@ -72,15 +54,10 @@ class ProblemController {
 
   static async updateProblem(req: Request, res: Response): Promise<void> {
     try {
-      const errors = validationResult(req)
-      if (!errors.isEmpty()) {
-        res.status(400).json({ errors: errors.array() })
-        return
-      }
-
       const problemId = req.params.id;
-      const updateProblem = matchedData(req)
-      const updatedProblem = await ProblemService.updateProblem(problemId, updateProblem as ProblemModel)
+      const { _id, ...updateProblem } = matchedData(req)
+
+      const updatedProblem = await ProblemService.updateProblem(problemId, updateProblem)
 
       if (updatedProblem) {
         res.status(200).json(updatedProblem)
@@ -95,12 +72,6 @@ class ProblemController {
 
   static async deleteProblem(req: Request, res: Response): Promise<void> {
     try {
-      const errors = validationResult(req)
-      if (!errors.isEmpty()) {
-        res.status(400).json({ errors: errors.array() })
-        return
-      }
-
       const problemId = req.params.id
       const deletedProblem = await ProblemService.deleteProblem(problemId)
 
