@@ -4,10 +4,10 @@ FROM node:21
 ENV CHOKIDAR_USEPOLLING true
 
 # Set the working directory in the container
-WORKDIR /app/Clarification
+WORKDIR /app/Clarifications
 
 # Copy the application files to the working directory
-COPY Clarification .
+COPY Clarifications .
 COPY Shared ../Shared
 
 # Install app dependencies
