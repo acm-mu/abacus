@@ -3,7 +3,7 @@ import { Submission, SubmissionModel } from "./models"
 
 class SubmissionService {
   static async getAllSubmissions(options?: ApiOptions): Promise<PagedResult<Submission>> {
-    var sortOption: {} | undefined
+    let sortOption: {} | undefined
     if (options?.sortBy) {
       sortOption = { [options?.sortBy]: options.sortDirection == 'ascending' ? 1 : -1 }
     }

@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
-import { matchedData } from "express-validator";
-import ClarificationService from "./service";
-import { Clarification } from "./models";
+import { Request, Response } from "express"
+import { matchedData } from "express-validator"
+import { Clarification } from "./models"
+import ClarificationService from "./service"
 
 class ClarificationController {
   static async getAllClarifications(req: Request, res: Response): Promise<void> {

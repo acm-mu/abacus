@@ -1,8 +1,8 @@
-import { Router } from "express";
-import swagger from "./swagger";
-import { validationMiddleware } from "./middleware";
-import UserController from "./controller";
-import Validation from "./validation";
+import { Router } from "express"
+import UserController from "./controller"
+import { validationMiddleware } from "./middleware"
+import swagger from "./swagger"
+import Validation from "./validation"
 
 const api = Router()
 

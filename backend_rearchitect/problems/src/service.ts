@@ -1,10 +1,10 @@
 import { ApiOptions, PagedResult } from 'abacus'
-import { ProblemModel, Problem } from './models'
+import { Problem, ProblemModel } from './models'
 
 
 class ProblemService {
   static async getAllProblems(options?: ApiOptions): Promise<PagedResult<Problem>> {
-    var sortOption: {} | undefined
+    let sortOption: {} | undefined
     if (options?.sortBy) {
       sortOption = { [options?.sortBy]: options.sortDirection == 'ascending' ? 1 : -1 }
     }
@@ -14,7 +14,7 @@ class ProblemService {
     const skip = (page - 1) * pageSize
 
     const totalItems = await ProblemModel.countDocuments({ ...options?.filters })
-    const totalPages = Math.ceil(totalItems / pageSize);
+    const totalPages = Math.ceil(totalItems / pageSize)
 
     return {
       totalItems,

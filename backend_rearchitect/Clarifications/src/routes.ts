@@ -1,13 +1,14 @@
-import { Router } from "express";
-import swagger from "./swagger";
-import { validationMiddleware } from "./middleware";
-import ClarificationController from "./controller";
+import { Router } from "express"
+import ClarificationController from "./controller"
+import { validationMiddleware } from "./middleware"
+import swagger from "./swagger"
+import Validation from "./validation"
 
 const api = Router()
 
 api.use(validationMiddleware)
 
-api.get('/clarifications', ClarificationController.getAllClarifications)
+api.get('/clarifications', Validation.base, ClarificationController.getAllClarifications)
 
 api.post('/clarifications', ClarificationController.createClarification)
 

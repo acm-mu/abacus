@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
-import UserService from "./service";
-import { User } from "./models";
-import { matchedData } from "express-validator";
+import { Request, Response } from "express"
+import { matchedData } from "express-validator"
+import { User } from "./models"
+import UserService from "./service"
 
 class UserController {
   static async getAllUsers(req: Request, res: Response): Promise<void> {

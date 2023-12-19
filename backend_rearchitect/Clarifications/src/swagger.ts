@@ -1,6 +1,6 @@
-import { Request, Response, Router } from "express";
-import swaggerJSDoc from "swagger-jsdoc";
-import swaggerUi from 'swagger-ui-express';
+import { Request, Response, Router } from "express"
+import swaggerJSDoc from "swagger-jsdoc"
+import swaggerUi from 'swagger-ui-express'
 
 const swagger = Router()
 

@@ -1,5 +1,5 @@
-import { SkeletonType } from "abacus";
-import { Schema } from "mongoose";
+import { SkeletonType } from "abacus"
+import { Schema } from "mongoose"
 
 /**
  * @swagger

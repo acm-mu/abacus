@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { matchedData } from 'express-validator'
-import ProblemService from './service'
 import { Problem } from './models'
+import ProblemService from './service'
 
 class ProblemController {
   static async getAllProblems(req: Request, res: Response): Promise<void> {
@@ -54,7 +54,7 @@ class ProblemController {
 
   static async updateProblem(req: Request, res: Response): Promise<void> {
     try {
-      const problemId = req.params.id;
+      const problemId = req.params.id
       const { _id, ...updateProblem } = matchedData(req)
 
       const updatedProblem = await ProblemService.updateProblem(problemId, updateProblem)

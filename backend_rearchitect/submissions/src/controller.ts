@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import { matchedData } from "express-validator"
-import SubmissionService from "./service"
 import { Submission } from "./models"
+import SubmissionService from "./service"
 
 class SubmissionController {
   static async getAllSubmissions(req: Request, res: Response): Promise<void> {

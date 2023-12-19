@@ -1,4 +1,4 @@
-import { query } from "express-validator";
+import { query } from "express-validator"
 
 class Validation {
   static base = [

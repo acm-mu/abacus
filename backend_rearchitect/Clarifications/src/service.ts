@@ -1,9 +1,9 @@
-import { ApiOptions, PagedResult } from "abacus";
-import { Clarification, ClarificationModel } from "./models";
+import { ApiOptions, PagedResult } from "abacus"
+import { Clarification, ClarificationModel } from "./models"
 
 class ClarificationService {
   static async getAllClarifications(options?: ApiOptions): Promise<PagedResult<Clarification>> {
-    var sortOption: {} | undefined
+    let sortOption: {} | undefined
     if (options?.sortBy) {
       sortOption = { [options?.sortBy]: options.sortDirection == 'ascending' ? 1 : -1 }
     }

@@ -3,7 +3,7 @@ import { User, UserModel } from "./models"
 
 class UserService {
   static async getAllUsers(options?: ApiOptions): Promise<PagedResult<User>> {
-    var sortOption: {} | undefined
+    let sortOption: {} | undefined
     if (options?.sortBy) {
       sortOption = { [options?.sortBy]: options.sortDirection == 'ascending' ? 1 : -1 }
     }

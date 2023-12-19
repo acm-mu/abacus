@@ -1,8 +1,8 @@
 import { Router } from "express"
-import Validation from "./validation"
 import ProblemController from "./controller"
 import { validationMiddleware } from "./middleware"
 import swagger from "./swagger"
+import Validation from "./validation"
 
 
 /**
@@ -22,7 +22,7 @@ const api = Router()
  *     parameters:
  *       - in: query
  *         name: sortBy
- *         schema: 
+ *         schema:
  *           type: string
  *         required: false
  *         description: Field to sort results by.
@@ -45,7 +45,7 @@ const api = Router()
  *               items:
  *                 $ref: '#/components/schemas/Problem'
  *       500:
- *         description: A server error occured while trting to complete request.
+ *         description: A server error occurred while trying to complete request.
  */
 
 api.use(validationMiddleware)
