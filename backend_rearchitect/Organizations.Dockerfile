@@ -4,10 +4,10 @@ FROM node:21
 ENV CHOKIDAR_USEPOLLING true
 
 # Set the working directory in the container
-WORKDIR /app/Organization
+WORKDIR /app/Organizations
 
 # Copy the application files to the working directory
-COPY Organization .
+COPY Organizations .
 COPY Shared ../Shared
 
 # Install app dependencies
