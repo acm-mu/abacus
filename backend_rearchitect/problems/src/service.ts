@@ -4,7 +4,7 @@ import { ProblemModel, Problem } from './models'
 
 class ProblemService {
   static async getAllProblems(options?: ApiOptions): Promise<PagedResult<Problem>> {
-    var sortOption: {} | undefined;
+    var sortOption: {} | undefined
     if (options?.sortBy) {
       sortOption = { [options?.sortBy]: options.sortDirection == 'ascending' ? 1 : -1 }
     }

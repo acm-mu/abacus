@@ -6,14 +6,14 @@ import { Problem } from './models'
 class ProblemController {
   static async getAllProblems(req: Request, res: Response): Promise<void> {
     try {
-      const { sortBy, sortDirection, page, pageSize, ...data } = matchedData(req)
+      const { sortBy, sortDirection, page, pageSize, ...filters } = matchedData(req)
 
       const problems = await ProblemService.getAllProblems({
         sortBy,
         sortDirection,
         page,
         pageSize,
-        filters: data
+        filters
       })
 
       res.status(200).json(problems)
