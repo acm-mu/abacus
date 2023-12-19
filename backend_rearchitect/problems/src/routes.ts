@@ -48,13 +48,15 @@ const api = Router()
  *         description: A server error occured while trting to complete request.
  */
 
-api.get('/problems', Validation.getProblems, validationMiddleware, ProblemController.getAllProblems)
+api.use(validationMiddleware)
 
-api.post('/problems', Validation.createProblem, validationMiddleware, ProblemController.createProblem)
+api.get('/problems', Validation.getProblems, ProblemController.getAllProblems)
+
+api.post('/problems', Validation.createProblem, ProblemController.createProblem)
 
 api.get('/problem/:id', ProblemController.getProblemById)
 
-api.put('/problem/:id', Validation.updateProblem, validationMiddleware, ProblemController.updateProblem)
+api.put('/problem/:id', Validation.updateProblem, ProblemController.updateProblem)
 
 api.delete('/problem/:id', ProblemController.deleteProblem)
 

@@ -19,7 +19,9 @@ app.use(cors()) // Enables CORS on all endpoints
 app.use(express.json()) // Middleware to parse body of requests as JSON
 app.use(fileUpload()) // Middleware for uploading files to express (accessible in req.files)
 
-mongoose.connect('mongodb://localhost:27017/abacus')
+const MONGO_URL = process.env.MONGO_URL ?? "mongodb://localhost:27017/abacus"
+
+mongoose.connect(MONGO_URL)
 
 if (process.env.NODE_ENV == 'development') {
   app.use(morgan('dev'))
@@ -28,5 +30,5 @@ if (process.env.NODE_ENV == 'development') {
 app.use('/v2', routes)
 
 server.listen(PORT, () => {
-  console.log(`🚀 Server is running at :${PORT}`)
+  console.log(`🚀  Server is running at :${PORT}`)
 })

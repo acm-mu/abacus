@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: problems
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: problems
+  template:
+    metadata:
+      labels:
+        app: problems
+    spec:
+      containers:
+        - name: problems
+          image: problems-node
+          ports:
+            - containerPort: 8080
+          env:
+            - name: MONGO_URL
+              value: mongodb://mongo:27017/dev
+          imagePullPolicy: Never

@@ -8,7 +8,7 @@ class ProblemController {
     try {
       const { sortBy, sortDirection, page, pageSize, ...data } = matchedData(req)
 
-      const users = await ProblemService.getAllProblems({
+      const problems = await ProblemService.getAllProblems({
         sortBy,
         sortDirection,
         page,
@@ -16,7 +16,7 @@ class ProblemController {
         filters: data
       })
 
-      res.status(200).json(users)
+      res.status(200).json(problems)
     } catch (error) {
       console.error(error)
       res.status(500).json({ error: "Internal server error" })

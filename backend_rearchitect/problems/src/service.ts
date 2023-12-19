@@ -1,4 +1,4 @@
-import { PagedResult } from 'abacus';
+import { ApiOptions, PagedResult } from 'abacus'
 import { ProblemModel, Problem } from './models'
 
 
@@ -41,14 +41,6 @@ class ProblemService {
   static async deleteProblem(problemId: string) {
     return ProblemModel.findByIdAndDelete(problemId)
   }
-}
-
-interface ApiOptions {
-  sortBy?: string,
-  sortDirection?: 'ascending' | 'descending',
-  page: number,
-  pageSize?: number,
-  filters?: { [key: string]: any }
 }
 
 export default ProblemService
