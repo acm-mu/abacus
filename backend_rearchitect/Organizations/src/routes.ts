@@ -2,12 +2,13 @@ import { Router } from "express";
 import swagger from "./swagger";
 import { validationMiddleware } from "./middleware";
 import UserController from "./controller";
+import Validation from "./validation";
 
 const api = Router()
 
 api.use(validationMiddleware)
 
-api.get('/users', UserController.getAllUsers)
+api.get('/users', Validation.base, UserController.getAllUsers)
 
 api.post('/users', UserController.createUser)
 

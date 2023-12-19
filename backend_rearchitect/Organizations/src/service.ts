@@ -18,7 +18,12 @@ class UserService {
     return {
       totalItems,
       totalPages,
-      items: await UserModel.find({ ...options?.filters }).sort(sortOption).skip(skip).limit(pageSize)
+      items: await UserModel
+        .find({ ...options?.filters })
+        .sort(sortOption)
+        .collation({ locale: 'en_US', numericOrdering: true })
+        .skip(skip)
+        .limit(pageSize)
     }
   }
 

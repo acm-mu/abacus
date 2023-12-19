@@ -2,12 +2,13 @@ import { Router } from "express"
 import SubmissionController from "./controller"
 import { validationMiddleware } from "./middleware"
 import swagger from "./swagger"
+import Validation from "./validation"
 
 const api = Router()
 
 api.use(validationMiddleware)
 
-api.get('/submissions', SubmissionController.getAllSubmissions)
+api.get('/submissions', Validation.base, SubmissionController.getAllSubmissions)
 
 api.post('/submissions', SubmissionController.createSubmission)
 
