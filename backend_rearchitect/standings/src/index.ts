@@ -1,0 +1,28 @@
+import cors from 'cors'
+import express from 'express'
+import { createServer } from 'http'
+import mongoose from 'mongoose'
+import morgan from 'morgan'
+import routes from './routes'
+
+const PORT = process.env.PORT ?? 8080
+
+const app = express()
+const server = createServer(app)
+
+app.use(cors()) // Enables CORS on all endpoints
+app.use(express.json()) // Middleware to parse body of requests as JSON
+
+const MONGO_URL = process.env.MONGO_URL ?? "mongodb://localhost:27017/abacus"
+
+mongoose.connect(MONGO_URL)
+
+if (process.env.NODE_ENV == 'development') {
+  app.use(morgan('dev'))
+}
+
+app.use('/v2', routes)
+
+server.listen(PORT, () => {
+  console.log(`🚀  Server is running at :${PORT}`)
+})
