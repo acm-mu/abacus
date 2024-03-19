@@ -220,13 +220,10 @@ const getGoldStandings = async (isPractice: boolean): Promise<Standings<GoldTeam
     'max_points',
     'capped_points'
   ])
-  console.log('problemsLift before', problemsList)
   problemsList = problemsList.filter(({ practice }) => {
     if (isPractice) return practice
     return practice == undefined || practice == false
   })
-
-  console.log('problemsLift after', problemsList)
 
   const problems = transpose(problemsList, 'pid')
 

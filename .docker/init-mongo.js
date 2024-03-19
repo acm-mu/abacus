@@ -4,9 +4,11 @@ db.createUser({
     user: "username",
     pwd: "password",
     roles: [{
-        role: "readWrite",
-        db: "abacus"
-    }]
+        role: "dbAdmin",
+        db: "abacus"},
+        {role: "readWrite",
+        db: "abacus"}
+    ]
 })
 
 db.createCollection('user')

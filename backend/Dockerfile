@@ -18,7 +18,7 @@ FROM build as production
 
 # add `/app/node_modules/.bin` to PATH
 ENV PATH /app/node_modules/.bin:$PATH
-
+ENV NODE_OPTIONS=--MAX-OLD-SPACE-SIZE=10240
 # build app
 RUN yarn build
 
@@ -26,6 +26,8 @@ EXPOSE 80
 
 # start app
 CMD ["node", "/app/build/server.js"]
+
+
 
 # build container: docker build -f Dockerfile.prod -t abacus-server:prod .
 # run container: docker run -it --rm -p 80:80 abacus-server:prod

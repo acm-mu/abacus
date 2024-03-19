@@ -7,6 +7,9 @@ services:
     build:
       context: .docker
       dockerfile: Dockerfile.mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=MUad
+      - MONGO_INITDB_ROOT_PASSWORD=ep16y11BPqP
     volumes:
       - ./mongo-volume:/data/db
     ports:
@@ -19,9 +22,17 @@ services:
       dockerfile: Dockerfile.prod
     environment:
       - MONGO_HOST=mongo:27017
-      - MONGO_USER=username
-      - MONGO_PASS=password
+      - MONGO_USER=MUad
+      - MONGO_PASS=ep16y11BPqP
       - MONGO_DBNAME=abacus
+    deploy:
+      resources: 
+        reservations:
+          cpus : '10'
+          memory: "12GB"
     ports:
       - "80:80"
+    depends_on:
+      - mongodb
+
 

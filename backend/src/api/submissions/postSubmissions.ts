@@ -224,11 +224,11 @@ export const postSubmissions = async (req: Request, res: Response): Promise<void
         // Await response from piston execution
         try {
           const res = await axios.post(
-            'https://piston.tabot.sh/api/v2/execute',
+            'http://scarif.cs.mu.edu:9000/api/v2/execute',
             {
-              language: item.language,
+              language: item.language as string,
+              version: '*',
               files: [file],
-              version: item.language === 'python' ? '3.9.4' : '15.0.2',
               stdin: test.in
             },
             {
@@ -238,7 +238,7 @@ export const postSubmissions = async (req: Request, res: Response): Promise<void
             }
           )
           test['stdout'] = res.data.run.code == 0 ? res.data.run.stdout : res.data.run.stderr
-          if ((res.data.run.output.trim() as string) == (test.out.trim() as string) && res.data.run.code === 0) {
+          if (((res.data.run.output.trim() as string) == (test.out.trim() as string)) && res.data.run.code === 0) {
             console.log('Result: ACCEPTED')
             test['result'] = 'accepted'
           } else {

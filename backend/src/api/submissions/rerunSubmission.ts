@@ -64,11 +64,11 @@ export const rerunSubmission = async (req: Request, res: Response): Promise<void
         // Await response from piston execution
         try {
           const res = await axios.post(
-            'https://piston.tabot.sh/api/v2/execute',
+            'http://scarif.cs.mu.edu:9000/api/v2/execute',
             {
-              language: item.language,
+              language: item.language as string,
+              version: '*',
               files: [file],
-              version: item.language === 'python' ? '3.9.4' : '15.0.2',
               stdin: test.in
             },
             {
