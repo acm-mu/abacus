@@ -44,8 +44,8 @@ export default class MongoDB extends Database {
           if (data) resolve(data)
         })
     })
-  }
 
+  }
   count(TableName: string, query?: ScanOptions): Promise<number> {
     return new Promise((resolve, reject) => {
       this.db

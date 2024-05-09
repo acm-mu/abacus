@@ -124,15 +124,15 @@ export const postSubmissions = async (req: Request, res: Response): Promise<void
       res.status(403).send({ message: 'You can not submit to problems in this division!' })
       return
     }
-
+    /*points_per_yes,
+      points_per_minute,
+      points_per_no*/
     const {
       start_date,
       end_date,
       practice_start_date,
       practice_end_date,
-      points_per_yes,
-      points_per_minute,
-      points_per_no
+      
     } = await contest.get_settings()
     const now = Date.now()
     if (problem.practice) {
@@ -215,7 +215,7 @@ export const postSubmissions = async (req: Request, res: Response): Promise<void
         source: data.toString('utf-8')
       }
       let status = 'accepted'
-      for (let test of problem.tests) {
+      /*for (let test of problem.tests) {
         // Copy tests from problem
         submission.tests = problem.tests
 
@@ -224,7 +224,8 @@ export const postSubmissions = async (req: Request, res: Response): Promise<void
         // Await response from piston execution
         try {
           const res = await axios.post(
-            'http://scarif.cs.mu.edu:9000/api/v2/execute',
+            //https://piston.tabot.sh/api/v2/execute
+            '',
             {
               language: item.language as string,
               version: '*',
@@ -237,6 +238,7 @@ export const postSubmissions = async (req: Request, res: Response): Promise<void
               }
             }
           )
+          //This is where we are getting our rejection error
           test['stdout'] = res.data.run.code == 0 ? res.data.run.stdout : res.data.run.stderr
           if (((res.data.run.output.trim() as string) == (test.out.trim() as string)) && res.data.run.code === 0) {
             console.log('Result: ACCEPTED')
@@ -249,10 +251,10 @@ export const postSubmissions = async (req: Request, res: Response): Promise<void
         } catch (e) {
           console.log(e)
         }
-      }
+      }*/
       submission.status = status
       // Calculate Score
-      if (status == 'accepted') {
+      /*if (status == 'accepted') {
         let minutes = 0
         if (problem.practice) {
           minutes = ((submission.date as any) - practice_start_date) / 60
@@ -265,7 +267,7 @@ export const postSubmissions = async (req: Request, res: Response): Promise<void
       } else {
         submission.score = 0
       }
-
+      */
       // Save submission to database
       await contest.update_submission(submission.sid as string, { ...submission, sid: submission.sid })
     } else if (req.user?.division == 'gold') {

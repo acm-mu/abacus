@@ -43,28 +43,29 @@ export const rerunSubmission = async (req: Request, res: Response): Promise<void
     return
   }
   const item = matchedData(req)
+
   try {
     const submission = await contest.get_submission(item.sid)
     const problem = await contest.get_problem(submission.pid)
+    
 
     const { start_date, practice_start_date, points_per_yes, points_per_minute, points_per_no } =
       await contest.get_settings()
     if (submission) {
-      let newSubmission = { ...submission }
-      newSubmission.tests = problem.tests;
+      submission.tests = problem.tests;
       // Update status to 'pending'
       // await updateItem('', { submission.sid }, { status: 'pending' });
       // Extract details and set defaults
       let status = 'accepted'
       for (let test of problem.tests) {
         // Copy tests from problem
-        newSubmission.tests = problem.tests
+        submission.tests = problem.tests
         // Run tests
-        const file = { name: newSubmission.filename as string, content: newSubmission['source'] as string }
+        const file = { name: submission.filename as string, content: submission['source'] as string }
         // Await response from piston execution
-        try {
+        /*try {
           const res = await axios.post(
-            'http://scarif.cs.mu.edu:9000/api/v2/execute',
+            'https://piston.tabot.sh/api/v2/execute',
             {
               language: item.language as string,
               version: '*',
@@ -91,24 +92,91 @@ export const rerunSubmission = async (req: Request, res: Response): Promise<void
         }
       }
 
-      newSubmission.status = status
+      submission.status = status
       // Calculate Score
       if (status == 'accepted') {
         let minutes = 0
         if (problem.practice) {
-          minutes = ((newSubmission.date as any) - practice_start_date) / 60
+          minutes = ((submission.date as any) - practice_start_date) / 60
         } else {
-          minutes = ((newSubmission.date as any) - start_date) / 60
+          minutes = ((submission.date as any) - start_date) / 60
         }
-        newSubmission.score = Math.floor(
-          minutes * points_per_minute + points_per_no * (newSubmission.sub_no as any) + points_per_yes
+        submission.score = Math.floor(
+          minutes * points_per_minute + points_per_no * (submission.sub_no as any) + points_per_yes
         )
       } else {
-        newSubmission.score = 0
+        submission.score = 0
       }
       // update submission
-      await contest.update_submission(newSubmission.sid as string, { ...newSubmission, sid: newSubmission.sid })
-      res.send(newSubmission)
+      await contest.update_submission(submission.sid as string, { ...submission, sid: submission.sid })*/
+      try {
+        //console.log(item.language);
+        const res = await axios.post(
+          'https://piston.tabot.sh/api/v2/execute',
+          {
+            //item.language as string
+            language: submission.language as string,
+            version: '*',
+            files: [file],
+            stdin: test.in
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }
+        )
+        //This is where we are getting our rejection error
+        //console.log(res.data);
+        test['stdout'] = res.data.run.code == 0 ? res.data.run.stdout : res.data.run.stderr
+        //console.log('Ours: ' + res.data.run.output.trim());
+        //console.log('theirs: ' + test.out.trim());
+        //console.log(res.data);
+        //&& res.data.run.code === 0
+        //console.log(res.data);
+        if (((res.data.run.stdout.trim() as string) == (test.out.trim() as string))) {
+          console.log('Result: ACCEPTED')
+          test['result'] = 'accepted'
+        } else {
+          console.log('Result: REJECTED')
+          status = 'rejected'
+          test['result'] = 'rejected'
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    }
+    submission.status = status
+    // Calculate Score
+    //const base_time_score = 180;
+    if (status == 'accepted') {
+      let minutes = 0
+      if (problem.practice) {
+        minutes = ((submission.date as any) - practice_start_date) / 60
+      } else {
+        minutes = ((submission.date as any) - start_date) / 60
+      }
+      /*console.log(base_time_score)
+      console.log(points_per_yes)
+      console.log(Number(base_time_score) + Number(points_per_yes) - (minutes * points_per_minute + points_per_no * (submission.sub_no as any)));
+      console.log(Number(base_time_score) + Number(points_per_yes));
+      console.log((minutes * points_per_minute + points_per_no * (submission.sub_no as any)))
+      console.log(minutes * points_per_minute)
+      console.log(points_per_no * (submission.sub_no as any));*/
+      submission.score = Math.floor(
+        minutes * points_per_minute + points_per_no * (submission.sub_no as any) + points_per_yes
+      )
+      //Number(base_time_score) + Number(points_per_yes) - (minutes * points_per_minute + points_per_no * (submission.sub_no as any))
+      //console.log(submission);
+      //minutes * points_per_minute + points_per_no * (submission.sub_no as any) + points_per_yes
+    } else {
+      submission.score = 0
+    }
+
+    // Save submission to database
+    await contest.update_submission(submission.sid as string, { ...submission, sid: submission.sid })
+    //await contest.update_submission(submission.sid as string, { ...submission, sid: submission.sid })
+      res.send(submission)
     }
   } catch (err) {
     console.error(err)

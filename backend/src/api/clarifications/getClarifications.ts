@@ -157,7 +157,7 @@ export const getClarifications = async (req: Request, res: Response): Promise<vo
 
     res.send(map)
   } catch (err) {
-    console.error(err)
+    //console.error(err)
     res.sendStatus(500)
   }
 }

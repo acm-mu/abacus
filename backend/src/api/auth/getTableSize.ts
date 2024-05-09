@@ -61,7 +61,7 @@ export const getTableSize = async (req: Request, res: Response) => {
       const tableSize = await contest.get_table_size(tableName, params)
       //divides by the number of items per page.
 
-      const pages = tableSize ? tableSize / 25 : 0
+      const pages = tableSize ? tableSize : 0
       //send response back.
       res.send({ tableSize: pages })
     } else {
