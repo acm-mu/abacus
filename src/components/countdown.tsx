@@ -1,107 +1,126 @@
-import React from 'react'
+"use client"
+
+import React, { useEffect, useState } from 'react'
+import { Competition } from '@/payload-types'
 import { Loader } from 'semantic-ui-react'
-// import Moment from 'react-moment'
-import moment from 'moment'
+import { Temporal } from '@js-temporal/polyfill'
 import Block from './block'
-import { getPayloadHMR } from '@payloadcms/next/utilities'
-import configPromise from '@payload-config'
-
+import FlipClock from './flipclock'
 import './countdown.scss'
-import FlipClock from './flipclock';
 
-export default async function Countdown(): Promise<React.JSX.Element> {
+const { Instant } = Temporal
 
-  const payload = await getPayloadHMR({ config: configPromise })
-  const settings = await payload.findGlobal({
-    slug: 'competition'
-  })
+function isBefore(a: Temporal.Instant, b: Temporal.Instant): boolean {
+  return Instant.compare(a, b) < 0
+}
 
-  // TODO: Make this dynamic
+function humanizeDuration(duration: Temporal.Duration): string {
+  const parts: string[] = [];
 
-  // const [time, setTime] = useState<Date>(new Date())
-  // const [isMounted, setMounted] = useState(true)
+  return duration.days.toString()
 
-  const diff = (date1: Date, date2: Date) => date1.getTime() - date2.getTime()
+  // if (duration.years > 0) parts.push(`${duration.years} year${duration.years > 1 ? 's' : ''}`);
+  // if (duration.months > 0) parts.push(`${duration.months} month${duration.months > 1 ? 's' : ''}`);
+  // if (duration.days > 0) parts.push(`${duration.days} day${duration.days > 1 ? 's' : ''}`);
+  // if (duration.hours > 0) parts.push(`${duration.hours} hour${duration.hours > 1 ? 's' : ''}`);
+  // if (duration.minutes > 0) parts.push(`${duration.minutes} minute${duration.minutes > 1 ? 's' : ''}`);
+  // if (duration.seconds > 0) parts.push(`${duration.seconds} second${duration.seconds > 1 ? 's' : ''}`);
 
-  // useEffect(() => {
-  //   const updateInterval = setInterval(() => {
-  //     if (isMounted) {
-  //       setTime(new Date()) q
-  //     }
-  //   }, 200)
+  // return parts.length > 0 ? parts.join(', ') : '0 seconds';
+}
 
-  //   return () => {
-  //     clearInterval(updateInterval)
-  //     setMounted(false)
-  //   }
-  // }, [])
+export default function Countdown(
+  {
+    settings,
+  }: Readonly<{
+    settings: Competition,
+  }>
+): React.JSX.Element {
 
-  if (!settings) return <Loader active inline="centered" content="Loading" />
+  const [now, setNow] = useState(Temporal.Now.instant())
 
-  const DATE_FORMAT = "MM/DD/YYYY, hh:mm:ss A"
+  useEffect(() => {
+    let updateInterval;
 
-  const now = moment()
+    if (settings) {
+      updateInterval = setInterval(() => {
+        setNow(Temporal.Now.instant())
+      }, 200)
+    }
 
-  const pstart = moment(settings.practiceStartDate)
-  const pend = moment(settings.practiceEndDate)
-  const start = moment(settings.startDate)
-  const end = moment(settings.endDate)
+    return () => {
+      clearInterval(updateInterval)
+    }
+  }, [settings])
 
-  const inPractice = now.isBetween(pstart, pend)
-  const inCompetition = now.isBetween(start, end)
-  const isCountingDown = !inPractice && !inCompetition && now.isBefore(end)
+  if (!settings) {
+    return (
+      <Loader active inline="centered" content="Loading" />
+    )
+  }
 
-  const competition_name = inPractice ? settings.practiceName : settings?.name
+
+  const pstart = Instant.from(settings.practiceStartDate)
+
+  if (isBefore(now, pstart)) {
+    return (
+      <Block size='xs-12'>
+        <h1>{settings.practiceName}</h1>
+        <FlipClock now={now} countTo={pstart} />
+      </Block>
+    )
+  }
+
+  const pend = Instant.from(settings.practiceEndDate)
+  const start = Instant.from(settings.startDate)
+  const end = Instant.from(settings.endDate)
+
+  // Now is between pstart and pend
+  const inPractice = isBefore(pstart, now) && isBefore(now, pend)
+
   const startDate = inPractice ? pstart : start
   const endDate = inPractice ? pend : end
 
+  const totalDuration = endDate.since(startDate).total({ unit: 'milliseconds' })
+  const elapsedDuration = now.since(startDate).total({ unit: 'milliseconds' })
+
+  const progress = Math.min(elapsedDuration / totalDuration, 1) * 100
+
   return (
     <Block size="xs-12">
-      {isCountingDown ? (
-        <>
-          <h1>{competition_name}</h1>
-          <FlipClock count_to={settings.practiceStartDate} />
-        </>
-      ) : (
-        <>
-          <div className="upper">
-            <p>
-              <b>Start</b> {startDate.format(DATE_FORMAT)}
-            </p>
-            <h1>{competition_name}</h1>
-            <p>
-              <b>End</b> {endDate.format(DATE_FORMAT)}
-            </p>
-          </div>
+      <div className="upper">
+        <p>
+          <b>Start</b> {startDate.toLocaleString()}
+        </p>
+        <h1>{inPractice ? settings.practiceName : settings?.name}</h1>
+        <p>
+          <b>End</b> {endDate.toLocaleString()}
+        </p>
+      </div>
 
-          <div className="countdown">
-            <div
-              className="progress_bar"
-              style={{
-                width: `${Math.min(diff(now.toDate(), startDate.toDate()) / diff(endDate.toDate(), startDate.toDate()), 1) * 100}%`
-              }}
-            />
-          </div>
+      <div className="countdown">
+        <div
+          className="progress_bar"
+          style={{
+            width: `${progress}%`,
+          }}
+        />
+      </div>
 
-          <div className="lower">
-            <p>
-              <b>Time elapsed </b>
-              {endDate.isAfter(now) ? (
-                // <Moment format="H:mm:ss" date={startDate} durationFromNow />
-                moment.duration(now.diff(startDate)).humanize()
-              ) : (
-                moment.duration(now.diff(startDate)).humanize()
-                // moment(endDate).from(startDate) 
-                // <Moment format="H:mm:ss" duration={startDate} date={endDate} />
-              )}
-            </p>
-            <p>
-              <b>Time remaining </b>
-              {now.isBefore(endDate) ? endDate.fromNow() : 'Finished'}
-            </p>
-          </div>
-        </>
-      )}
+      <div className="lower">
+        <p>
+          <b>Time elapsed </b>
+          {isBefore(now, endDate) ? (
+            humanizeDuration(now.since(startDate))
+          ) : (
+            humanizeDuration(now.until(endDate))
+          )}
+        </p>
+        <p>
+          <b>Time remaining </b>
+          {isBefore(now, endDate) ? humanizeDuration(now.until(endDate)) : 'Finished'}
+        </p>
+      </div>
     </Block>
   )
 }

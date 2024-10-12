@@ -9,6 +9,10 @@ import Block from '@/components/block'
 const Page = async (): Promise<React.JSX.Element> => {
   const payload = await getPayloadHMR({ config: configPromise })
 
+  const settings = await payload.findGlobal({
+    slug: 'competition'
+  })
+
   const pages = await payload.find({
     collection: 'pages',
     limit: 5,
@@ -32,7 +36,7 @@ const Page = async (): Promise<React.JSX.Element> => {
           </MessageContent>
         </Message>
 
-        <Countdown />
+        <Countdown settings={settings} />
 
         <Block size='xs-12'>
           <h1>Welcome to Abacus</h1>
@@ -40,7 +44,7 @@ const Page = async (): Promise<React.JSX.Element> => {
             Abacus is a remote code execution application similar to AlgoExpert. It is developed by students at Marquette
             University.
           </p>
-          </Block>
+        </Block>
       </Container>
     </>
   )

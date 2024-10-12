@@ -9,6 +9,11 @@ import Countdown from "@/components/countdown";
 export default async function BlueProblemsPage() {
 
   const payload = await getPayloadHMR({ config: configPromise })
+
+  const settings = await payload.findGlobal({
+    slug: 'competition'
+  })
+
   const problems = await payload.find({
     collection: 'blue-problems',
     limit: 10,
@@ -17,7 +22,7 @@ export default async function BlueProblemsPage() {
 
   return (
     <>
-      <Countdown />
+      <Countdown settings={settings} />
       <Block size="xs-12" transparent>
         <Table celled>
           <TableHeader>

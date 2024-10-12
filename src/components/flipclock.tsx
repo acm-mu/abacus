@@ -1,22 +1,27 @@
 "use client";
 
 import React, { useState } from 'react'
-import moment from 'moment';
 import './flipclock.scss'
+import { Temporal } from '@js-temporal/polyfill';
 
-const FlipClock = ({ count_to }: { count_to: string }): React.JSX.Element => {
+const FlipClock = ({
+  countTo,
+  now
+}: {
+  countTo: Temporal.Instant,
+  now: Temporal.Instant
+}): React.JSX.Element => {
   const [flip, setFlip] = useState('')
 
-  const now = moment()
-  const duration = moment.duration(moment(count_to).diff(now))
+  const duration = countTo.since(now)
 
   const timeRemaining = {
-    Total: duration.asMilliseconds(),
-    Months: duration.months(),
-    Days: duration.days(),
-    Hours: duration.hours(),
-    Minutes: duration.minutes(),
-    Seconds: duration.seconds()
+    Total: duration,
+    Months: duration.months,
+    Days: duration.days,
+    Hours: duration.hours,
+    Minutes: duration.minutes,
+    Seconds: duration.seconds
   }
 
   return (
