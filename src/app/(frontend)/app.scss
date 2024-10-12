@@ -1,0 +1,160 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+
+@font-face {
+  font-family: 'Icons';
+  src: url('https://semantic-ui.com/dist/themes/default/assets/fonts/icons.woff2');
+}
+
+:root {
+  --bg-color: #eee;
+  --gold: #ffca08;
+  --blue: #1b3665;
+  --teal: #00b5ad;
+  --sky-blue: #00b1bc;
+  --light-green: #aae2ab;
+  --dark-green: #4aae4b;
+  --green: #52bb50;
+  --red: #f20707;
+  --light-red: #f67b51;
+}
+
+html {
+  height: 100%;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+  outline: none;
+}
+
+body.abacus {
+  background: var(--bg-color);
+  color: #555;
+  font-family: 'Open Sans', sans-serif;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+div#root {
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 95fr 1fr;
+}
+
+footer {
+  background: #222;
+  margin-top: 15px;
+  padding: 20px 10px;
+  color: #eee;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Open Sans', sans-serif;
+  color: #2a353a;
+  font-weight: normal;
+}
+
+/* header */
+
+.ui.fixed.menu.inverted {
+  border-bottom: 6px solid var(--bg-color);
+}
+
+.ui.fixed.menu.inverted.blue-div {
+  border-bottom-color: var(--blue);
+}
+
+.ui.fixed.menu.inverted.gold-div {
+  border-bottom-color: var(--gold);
+}
+
+.ui.fixed.menu.inverted.eagle-div {
+  border-bottom-color: var(--teal);
+}
+
+.ui.fixed.menu.inverted.proctor-div {
+  border-bottom-color: var(--sky-blue);
+}
+
+.ui.fixed.menu.inverted.admin-div {
+  border-bottom-color: #aaa;
+}
+
+.header.item img.logo {
+  width: 70px !important;
+  height: 20px;
+}
+
+/* Block System */
+
+.ui.main.text.container {
+  /* account for header */
+  margin-top: 4em;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+}
+
+/* Stretch the navigation container, and the main container */
+
+.ui.text.container,
+.ui.container,
+.ui.text.container.main {
+  max-width: none !important;
+  width: 75vw !important;
+}
+
+form#loginForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Button */
+
+a.button {
+  padding: 10px 12px;
+  font-size: 12px;
+  border-radius: 3px;
+  color: #fff;
+  margin-bottom: 1em;
+  text-align: center;
+  cursor: pointer;
+  border: none;
+}
+
+.ui.table {
+  thead th.sortable {
+    cursor: pointer;
+  }
+  td[colspan='100%'] {
+    text-align: center;
+  }
+}
+
+.ui.checkbox {
+  display: flex;
+  align-items: center;
+}
+
+.justify-center {
+  display: flex;
+  align-items: center;
+}
+
+.space-between {
+  display: flex;
+  justify-content: space-between;
+}
+
+a.banner-link {
+  font-weight: bold;
+  color: #1aa62a;
+}

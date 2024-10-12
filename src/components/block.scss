@@ -1,0 +1,41 @@
+.block {
+  background: white;
+  padding: 20px 30px;
+  /* Creating a border around the block the same color as the 
+     background creates a pseudo-margin. The border unlike the 
+     margin will resize the block proportionally */
+  border: 0.5rem solid var(--bg-color);
+  height: max-content;
+}
+
+.center {
+  margin: 0 auto;
+}
+
+.transparent.block {
+  background: transparent;
+  padding: 0;
+}
+
+.xs-3 {
+  width: 25%;
+}
+
+.xs-6 {
+  width: 50%;
+}
+
+.xs-9 {
+  width: 75%;
+}
+
+.xs-12 {
+  width: 100%;
+}
+
+.block.menu-attached-top {
+  padding: 20px;
+  background: white;
+  border: 1px solid #d4d4d5;
+  border-top: none;
+}

@@ -1,0 +1,48 @@
+.lower,
+.upper {
+  display: flex;
+  justify-content: space-between;
+
+  p,
+  h1 {
+    margin: 0;
+  }
+}
+
+.countdown {
+  --strip-size: 40px;
+  --color1: #1d5fa1;
+  --color2: #3a79b8;
+  --duration: 1s;
+
+  margin: 13px 0;
+  background-color: #dcdcdc;
+  border-radius: 4px;
+  height: 30px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+
+  .progress_bar {
+    background: repeating-linear-gradient(
+      45deg,
+      var(--color1) 25%,
+      var(--color1) 50%,
+      var(--color2) 50%,
+      var(--color2) 75%
+    );
+    background-size: var(--strip-size) var(--strip-size);
+    border-radius: 4px;
+    border-radius: 4px 0 0 4px;
+    height: 30px;
+    transition: width 0.6s ease;
+    animation: stripBackgroundPosition var(--duration) linear infinite;
+  }
+
+  @keyframes stripBackgroundPosition {
+    0% {
+      background-position: 0 0;
+    }
+    100% {
+      background-position: var(--strip-size) 0;
+    }
+  }
+}
