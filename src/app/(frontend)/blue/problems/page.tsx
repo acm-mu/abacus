@@ -43,7 +43,7 @@ export default async function BlueProblemsPage() {
               problems.docs.map((problem: BlueProblem) => (
                 <TableRow key={problem.id}>
                   <TableHeaderCell collapsing textAlign="center">
-                    {problem.pid}
+                    {problem.problemId}
                   </TableHeaderCell>
                   <TableCell>
                     <Link href={`/blue/problems/${problem.id}`}>{problem.title}</Link>

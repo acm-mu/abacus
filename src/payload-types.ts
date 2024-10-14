@@ -13,10 +13,13 @@ export interface Config {
   };
   collections: {
     admins: Admin;
+    faqs: Faq;
     users: User;
     media: Media;
     pages: Page;
     'blue-problems': BlueProblem;
+    skeletons: Skeleton;
+    'blue-submissions': BlueSubmission;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -26,6 +29,7 @@ export interface Config {
   };
   globals: {
     competition: Competition;
+    'blue-rules': BlueRule;
   };
   locale: null;
   user:
@@ -88,6 +92,31 @@ export interface Admin {
   loginAttempts?: number | null;
   lockUntil?: string | null;
   password?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "faqs".
+ */
+export interface Faq {
+  id: string;
+  question?: string | null;
+  answer?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -163,7 +192,22 @@ export interface BlueProblem {
   id: string;
   title?: string | null;
   practice?: boolean | null;
-  pid?: string | null;
+  problemId?: string | null;
+  cpu_time_limit?: number | null;
+  memory_limit?: number | null;
+  skeletons?:
+    | {
+        file?: (string | null) | Skeleton;
+        id?: string | null;
+      }[]
+    | null;
+  tests?:
+    | {
+        input?: string | null;
+        expected?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   description: {
     root: {
       type: string;
@@ -185,6 +229,46 @@ export interface BlueProblem {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "skeletons".
+ */
+export interface Skeleton {
+  id: string;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blue-submissions".
+ */
+export interface BlueSubmission {
+  id: string;
+  problem?: (string | null) | BlueProblem;
+  source?: string | null;
+  status?: string | null;
+  released?: boolean | null;
+  tests?:
+    | {
+        input?: string | null;
+        expected?: string | null;
+        stdout?: string | null;
+        result?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -193,6 +277,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'admins';
         value: string | Admin;
+      } | null)
+    | ({
+        relationTo: 'faqs';
+        value: string | Faq;
       } | null)
     | ({
         relationTo: 'users';
@@ -209,6 +297,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'blue-problems';
         value: string | BlueProblem;
+      } | null)
+    | ({
+        relationTo: 'skeletons';
+        value: string | Skeleton;
+      } | null)
+    | ({
+        relationTo: 'blue-submissions';
+        value: string | BlueSubmission;
       } | null);
   globalSlug?: string | null;
   user:
@@ -274,6 +370,31 @@ export interface Competition {
   practiceName: string;
   practiceStartDate: string;
   practiceEndDate: string;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blue-rules".
+ */
+export interface BlueRule {
+  id: string;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  _status?: ('draft' | 'published') | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }

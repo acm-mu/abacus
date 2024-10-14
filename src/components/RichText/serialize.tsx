@@ -17,6 +17,8 @@ import {
   IS_UNDERLINE,
 } from './nodeFormat'
 import type { Page } from '@/payload-types'
+import { Divider } from 'semantic-ui-react'
+import Link from 'next/link'
 
 export type NodeTypes =
   | DefaultNodeTypes
@@ -148,21 +150,36 @@ export function serializeLexical({ nodes }: Props): JSX.Element {
               </blockquote>
             )
           }
-          // case 'link': {
-          //   const fields = node.fields
+          case 'horizontalrule': {
+            return (
+              <Divider className='col-start-2' key={index} />
+            )
+          }
+          case 'link': {
+            const fields = node.fields
 
-          //   return (
-          //     <CMSLink
-          //       key={index}
-          //       newTab={Boolean(fields?.newTab)}
-          //       reference={fields.doc as any}
-          //       type={fields.linkType === 'internal' ? 'reference' : 'custom'}
-          //       url={fields.url}
-          //     >
-          //       {serializedChildren}
-          //     </CMSLink>
-          //   )
-          // }
+            return (
+              <Link
+                key={index}
+                target={fields.newTab ? '_blank' : '_self'}
+                href={fields.url}
+              >
+                {serializedChildren}
+              </Link>
+            )
+
+            //   return (
+            //     <CMSLink
+            //       key={index}
+            //       newTab={Boolean(fields?.newTab)}
+            //       reference={fields.doc as any}
+            //       type={fields.linkType === 'internal' ? 'reference' : 'custom'}
+            //       url={fields.url}
+            //     >
+            //       {serializedChildren}
+            //     </CMSLink>
+            //   )
+          }
 
           default:
             return null

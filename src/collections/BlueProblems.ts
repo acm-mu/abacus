@@ -7,7 +7,7 @@ import {
 } from "@payloadcms/richtext-lexical";
 import { CollectionConfig } from "payload";
 
-export const Problems: CollectionConfig = {
+export const BlueProblems: CollectionConfig = {
   slug: 'blue-problems',
   admin: {
     useAsTitle: 'title',
@@ -26,8 +26,41 @@ export const Problems: CollectionConfig = {
       defaultValue: false
     },
     {
-      name: 'pid',
+      name: 'problemId',
       type: 'text',
+    },
+    {
+      name: 'cpu_time_limit',
+      type: 'number',
+    },
+    {
+      name: 'memory_limit',
+      type: 'number',
+    },
+    {
+      name: 'skeletons',
+      type: 'array',
+      fields: [
+        {
+          name: 'file',
+          type: 'upload',
+          relationTo: 'skeletons',
+        },
+      ],
+    },
+    {
+      name: 'tests',
+      type: 'array',
+      fields: [
+        {
+          name: 'input',
+          type: 'code',
+        },
+        {
+          name: 'expected',
+          type: 'code',
+        }
+      ],
     },
     {
       name: 'description',
@@ -43,7 +76,7 @@ export const Problems: CollectionConfig = {
           ]
         },
       }),
-      
+
       required: true,
     },
   ],
