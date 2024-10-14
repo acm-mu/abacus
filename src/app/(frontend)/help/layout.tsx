@@ -1,11 +1,12 @@
 import DefaultNavigation from "@/components/navigation/default"
-import { Container } from "semantic-ui-react"
+import { Container, MenuItem } from "semantic-ui-react"
 
 export default async function SlugLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode,
 }) {
+
   return (
     <>
       <DefaultNavigation />

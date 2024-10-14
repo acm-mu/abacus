@@ -17,6 +17,11 @@ export default function RootLayout({
     <html lang="en">
       <body className="abacus">
         {children}
+
+        <footer>
+          Developed with 💙 by members of{' '}
+          <a href="https://mu.acm.org">Marquette ACM</a>
+        </footer>
       </body>
     </html>
   )

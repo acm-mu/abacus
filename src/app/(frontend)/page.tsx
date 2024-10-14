@@ -1,32 +1,19 @@
-import { Container, Icon, MenuItem, Message, MessageContent, MessageHeader } from 'semantic-ui-react'
-import Navigation from '@/components/navigation'
-import NavLink from '@/components/navlink'
+import { Container, Icon, Message, MessageContent, MessageHeader } from 'semantic-ui-react'
 import { getPayloadHMR } from '@payloadcms/next/utilities'
 import configPromise from '@payload-config'
 import Countdown from '@/components/countdown'
 import Block from '@/components/block'
+import DefaultNavigation from '@/components/navigation/default'
 
 const Page = async (): Promise<React.JSX.Element> => {
   const payload = await getPayloadHMR({ config: configPromise })
-
   const settings = await payload.findGlobal({
     slug: 'competition'
   })
 
-  const pages = await payload.find({
-    collection: 'pages',
-    limit: 5,
-  })
-
   return (
     <>
-      <Navigation>
-        <MenuItem as={NavLink} href="/">Home</MenuItem>
-        {pages?.docs.map((page) => (
-          <MenuItem as={NavLink} href={`/${page.slug}`} key={page.slug}>{page.tabTitle}</MenuItem>
-        ))}
-      </Navigation>
-
+      <DefaultNavigation />
       <Container text className="main">
         <Message icon color='green'>
           <Icon name='trophy' />
