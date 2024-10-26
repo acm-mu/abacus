@@ -8,11 +8,11 @@
 
 export interface Config {
   auth: {
-    admins: AdminAuthOperations;
+    superusers: SuperuserAuthOperations;
     users: UserAuthOperations;
   };
   collections: {
-    admins: Admin;
+    superusers: Superuser;
     faqs: Faq;
     users: User;
     media: Media;
@@ -33,14 +33,14 @@ export interface Config {
   };
   locale: null;
   user:
-    | (Admin & {
-        collection: 'admins';
+    | (Superuser & {
+        collection: 'superusers';
       })
     | (User & {
         collection: 'users';
       });
 }
-export interface AdminAuthOperations {
+export interface SuperuserAuthOperations {
   forgotPassword: {
     email: string;
     password: string;
@@ -60,27 +60,25 @@ export interface AdminAuthOperations {
 }
 export interface UserAuthOperations {
   forgotPassword: {
-    email: string;
-    password: string;
+    username: string;
   };
   login: {
-    email: string;
     password: string;
+    username: string;
   };
   registerFirstUser: {
-    email: string;
     password: string;
+    username: string;
   };
   unlock: {
-    email: string;
-    password: string;
+    username: string;
   };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "admins".
+ * via the `definition` "superusers".
  */
-export interface Admin {
+export interface Superuser {
   id: string;
   updatedAt: string;
   createdAt: string;
@@ -124,10 +122,10 @@ export interface Faq {
  */
 export interface User {
   id: string;
-  username: string;
   updatedAt: string;
   createdAt: string;
-  email: string;
+  email?: string | null;
+  username: string;
   resetPasswordToken?: string | null;
   resetPasswordExpiration?: string | null;
   salt?: string | null;
@@ -275,8 +273,8 @@ export interface PayloadLockedDocument {
   id: string;
   document?:
     | ({
-        relationTo: 'admins';
-        value: string | Admin;
+        relationTo: 'superusers';
+        value: string | Superuser;
       } | null)
     | ({
         relationTo: 'faqs';
@@ -309,8 +307,8 @@ export interface PayloadLockedDocument {
   globalSlug?: string | null;
   user:
     | {
-        relationTo: 'admins';
-        value: string | Admin;
+        relationTo: 'superusers';
+        value: string | Superuser;
       }
     | {
         relationTo: 'users';
@@ -327,8 +325,8 @@ export interface PayloadPreference {
   id: string;
   user:
     | {
-        relationTo: 'admins';
-        value: string | Admin;
+        relationTo: 'superusers';
+        value: string | Superuser;
       }
     | {
         relationTo: 'users';

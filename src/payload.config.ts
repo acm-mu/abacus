@@ -6,23 +6,23 @@ import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
-import { Media } from './collections/Media'
-import { Users } from './collections/Users'
-import { Admins } from './collections/Admins'
-import { Pages } from './collections/Pages'
-import { BlueProblems } from './collections/BlueProblems'
+import { Media } from './collections/media'
+import { Users } from './collections/users'
+import { Superusers } from './collections/superusers'
+import { Pages } from './collections/pages'
+import { BlueProblems } from './collections/blue-problems'
 import { Competition } from './globals/competition'
-import { BlueRules } from './globals/bluerules'
+import { BlueRules } from './globals/blue-rules'
 import { Skeletons } from './collections/skeletons'
-import { Faqs } from './collections/Faqs'
-import { BlueSubmissions } from './collections/BlueSubmissions'
+import { Faqs } from './collections/faqs'
+import { BlueSubmissions } from './collections/blue-submissions'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 export default buildConfig({
   admin: {
-    user: Admins.slug,
+    user: Superusers.slug,
     importMap: {
       baseDir: path.resolve(dirname),
     },
@@ -31,7 +31,7 @@ export default buildConfig({
     admin: "/admin"
   },
   globals: [Competition, BlueRules],
-  collections: [Admins, Faqs, Users, Media, Pages, BlueProblems, Skeletons, BlueSubmissions],
+  collections: [Superusers, Faqs, Users, Media, Pages, BlueProblems, Skeletons, BlueSubmissions],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
