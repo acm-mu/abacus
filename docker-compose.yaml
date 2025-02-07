@@ -33,3 +33,15 @@ services:
       - "80:80"
     depends_on:
       - mongodb
+  app:
+    container_name: app
+    restart: unless-stopped
+    build:
+      context: frontend
+    volumes:
+      - ./frontend/public:/app/public
+      - ./frontend/src:/app/src
+    ports:
+      - "3000:3000"
+    depends_on:
+      - server
