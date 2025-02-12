@@ -19,8 +19,6 @@
   },
   "homepage": "https://github.com/acm-mu/abacus#readme",
   "devDependencies": {
-    "@types/dotenv": "^8.2.3",
-    "@types/node": "^22.10.5",
     "@types/react": "^17.0.39",
     "@typescript-eslint/eslint-plugin": "^4.32.0",
     "@typescript-eslint/parser": "^4.32.0",
@@ -33,14 +31,5 @@
     "eslint-plugin-react": "^7.26.0",
     "prettier": "^2.4.1",
     "typescript": "^4.4.3"
-  },
-  "dependencies": {
-    "@types/mongodb": "^4.0.7",
-    "@types/react-router-dom": "^5.3.3",
-    "@types/socket.io-client": "^1.4.36",
-    "mongodb": "^6.12.0",
-    "react-router-dom": "^7.1.5",
-    "socket.io-client": "^4.8.1",
-    "uuid": "^11.0.5"
   }
 }

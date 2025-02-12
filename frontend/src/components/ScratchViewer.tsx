@@ -6,7 +6,7 @@ import './ScratchViewer.scss'
 
 interface ScratchViewerProps {
   project_id?: string
-  content?: JSX.Element
+  content?: React.JSX.Element
 }
 
 interface ScratchProject {
@@ -25,7 +25,7 @@ interface ScratchProject {
   }
 }
 
-const ScratchViewer = ({ project_id, content = <></> }: ScratchViewerProps): JSX.Element => {
+const ScratchViewer = ({ project_id, content = <></> }: ScratchViewerProps): React.JSX.Element => {
   const [project, setProject] = useState<ScratchProject>()
 
   useEffect(() => {

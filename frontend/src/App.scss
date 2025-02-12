@@ -28,7 +28,7 @@ html {
   outline: none;
 }
 
-body {
+body.abacus {
   background: var(--bg-color);
   color: #555;
   font-family: 'Open Sans', sans-serif;
@@ -56,7 +56,6 @@ h5,
 h6 {
   font-family: 'Open Sans', sans-serif;
   color: #2a353a;
-  font-family: 'Open Sans', sans-serif;
   font-weight: normal;
 }
 
@@ -104,9 +103,10 @@ h6 {
 /* Stretch the navigation container, and the main container */
 
 .ui.text.container,
-.ui.container {
+.ui.container,
+.ui.text.container.main {
   max-width: none !important;
-  width: 75vw;
+  width: 75vw !important;
 }
 
 form#loginForm {

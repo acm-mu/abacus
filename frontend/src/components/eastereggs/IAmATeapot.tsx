@@ -2,7 +2,7 @@ import React from 'react'
 import Moment from 'react-moment'
 import './IAmATeapot.scss'
 
-export const IAmATeapot = (): JSX.Element => {
+export const IAmATeapot = (): React.JSX.Element => {
   const wrappedHTML = [
     ``,
     `                                                                                                                    ,;i1111iiiiiii;;:,.                                                                                                                   `,

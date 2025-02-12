@@ -1,18 +1,17 @@
 import React, { useState } from 'react'
 import { Block } from 'components'
 import scratch from 'assets/scratch.png'
-import { Helmet } from 'react-helmet'
 import { Button, Icon, Message } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
+import { usePageTitle } from 'hooks'
 
-const Home = (): JSX.Element => {
+const Home = (): React.JSX.Element => {
+  usePageTitle("Abacus | Gold")
+
   const [isDismissed, setDismissed] = useState<boolean>(localStorage.dismissedRules)
 
   return (
     <>
-      <Helmet>
-        <title>Abacus | Gold</title>
-      </Helmet>
       {!isDismissed ? (
         <Message
           icon

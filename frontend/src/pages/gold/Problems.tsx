@@ -5,21 +5,17 @@ import { Link } from 'react-router-dom'
 import { Block, Countdown, PageLoading, Unauthorized } from 'components'
 import config from 'environment'
 import { AppContext } from 'context'
-import { Helmet } from 'react-helmet'
 import { userHome } from 'utils'
+import { usePageTitle } from 'hooks'
 
-const Problems = (): JSX.Element => {
+const Problems = (): React.JSX.Element => {
+  usePageTitle("Abacus | Gold Problems")
+
   const { user, settings } = useContext(AppContext)
   const [isMounted, setMounted] = useState(true)
   const [isLoading, setLoading] = useState(true)
   const [problems, setProblems] = useState<Problem[]>()
   const [submissions, setSubmissions] = useState<{ [key: string]: Submission[] }>()
-
-  const helmet = (
-    <Helmet>
-      <title>Abacus | Gold Problems</title>
-    </Helmet>
-  )
 
   useEffect(() => {
     loadProblems()
@@ -74,7 +70,6 @@ const Problems = (): JSX.Element => {
   if (!settings || new Date() < settings.practice_start_date)
     return (
       <>
-        {helmet}
         <Countdown />
         <Block size="xs-12">
           <h1>Competition not yet started!</h1>
@@ -90,7 +85,6 @@ const Problems = (): JSX.Element => {
 
   return (
     <>
-      {helmet}
       <Countdown />
       <Block size="xs-12" transparent>
         <Table celled>

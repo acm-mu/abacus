@@ -2,7 +2,7 @@ import MDEditor from '@uiw/react-md-editor'
 import React from 'react'
 import { ProblemStateProps } from '.'
 
-export const DescriptionEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Element => {
+export const DescriptionEditor = ({ problem, setProblem }: ProblemStateProps): React.JSX.Element => {
   if (!problem || !setProblem) return <></>
 
   return (

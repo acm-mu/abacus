@@ -1,17 +1,19 @@
 import { Problem } from 'abacus'
 import React, { ChangeEvent, useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Button, Label, Message, Table } from 'semantic-ui-react'
 import { Block, FileDialog } from 'components'
 import config from 'environment'
-import { Helmet } from 'react-helmet'
+import { usePageTitle } from 'hooks'
 
 interface ProblemItem extends Problem {
   checked: boolean
 }
 
-const UploadProblems = (): JSX.Element => {
-  const history = useHistory()
+const UploadProblems = (): React.JSX.Element => {
+  usePageTitle("Abacus | Admin Upload Problems")
+
+  const navigate = useNavigate()
   const [file, setFile] = useState<File>()
   const [existingProblems, setExistingProblems] = useState<{ [key: string]: Problem }>()
   const [newProblems, setNewProblems] = useState<ProblemItem[]>()
@@ -83,96 +85,88 @@ const UploadProblems = (): JSX.Element => {
           body: JSON.stringify(problem)
         })
         if (response.ok) {
-          history.push('/admin/problems')
+          navigate('/admin/problems')
         }
       }
     }
   }
 
-  return (
-    <>
-      <Helmet>
-        <title>Abacus | Admin Upload Problems</title>{' '}
-      </Helmet>
+  return <Block size="xs-12" transparent>
+    <h1>Upload Problems</h1>
+    <Block transparent size="xs-12">
+      <Button content="Back" icon="arrow left" labelPosition="left" onClick={() => navigate(-1)} />
+    </Block>
 
-      <Block size="xs-12" transparent>
-        <h1>Upload Problems</h1>
-        <Block transparent size="xs-12">
-          <Button content="Back" icon="arrow left" labelPosition="left" onClick={history.goBack} />
-        </Block>
-
-        <FileDialog
-          file={file}
-          onChange={uploadChange}
-          control={(file?: File) =>
-            file ? (
-              <>
-                <h3>Your upload will include the following files:</h3>
-                <ul>
-                  <li>
-                    {file.name} ({file.size} bytes)
-                  </li>
-                </ul>
-              </>
-            ) : (
-              <p>
-                <b>Drag & drop</b> a file here to upload <br />
-                <i>(Or click and choose file)</i>
-              </p>
-            )
-          }
-        />
-        {newProblems?.length ? (
+    <FileDialog
+      file={file}
+      onChange={uploadChange}
+      control={(file?: File) =>
+        file ? (
           <>
-            <Table>
-              <Table.Header>
-                <Table.Row>
-                  <Table.HeaderCell collapsing>
-                    <input
-                      type="checkbox"
-                      onChange={checkAll}
-                      checked={newProblems.length > 0 && newProblems.filter((problem) => !problem.checked).length == 0}
-                    />
-                  </Table.HeaderCell>
-                  <Table.HeaderCell>Id</Table.HeaderCell>
-                  <Table.HeaderCell>Problem Name</Table.HeaderCell>
-                </Table.Row>
-              </Table.Header>
-              <Table.Body>
-                {newProblems.map((problem, index) => (
-                  <Table.Row key={index}>
-                    <Table.HeaderCell collapsing>
-                      <input type="checkbox" checked={problem.checked} id={problem.pid} onChange={handleChange} />
-                    </Table.HeaderCell>
-                    <Table.Cell>
-                      {problem.pid}
-                      {Object.keys(existingProblems || {}).includes(problem.pid) ? (
-                        <Label color="blue" style={{ float: 'right' }}>
-                          Update Problem
-                        </Label>
-                      ) : (
-                        <Label color="green" style={{ float: 'right' }}>
-                          Brand New
-                        </Label>
-                      )}
-                    </Table.Cell>
-                    <Table.Cell>{problem.name}</Table.Cell>
-                  </Table.Row>
-                ))}
-              </Table.Body>
-            </Table>
-            <Button primary onClick={handleSubmit}>
-              Import problem(s)
-            </Button>
+            <h3>Your upload will include the following files:</h3>
+            <ul>
+              <li>
+                {file.name} ({file.size} bytes)
+              </li>
+            </ul>
           </>
-        ) : newProblems ? (
-          <Message warning icon="warning sign" content="The file contains no new or modified problem(s)." />
         ) : (
-          <></>
-        )}
-      </Block>
-    </>
-  )
+          <p>
+            <b>Drag & drop</b> a file here to upload <br />
+            <i>(Or click and choose file)</i>
+          </p>
+        )
+      }
+    />
+    {newProblems?.length ? (
+      <>
+        <Table>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell collapsing>
+                <input
+                  type="checkbox"
+                  onChange={checkAll}
+                  checked={newProblems.length > 0 && newProblems.filter((problem) => !problem.checked).length == 0}
+                />
+              </Table.HeaderCell>
+              <Table.HeaderCell>Id</Table.HeaderCell>
+              <Table.HeaderCell>Problem Name</Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {newProblems.map((problem, index) => (
+              <Table.Row key={index}>
+                <Table.HeaderCell collapsing>
+                  <input type="checkbox" checked={problem.checked} id={problem.pid} onChange={handleChange} />
+                </Table.HeaderCell>
+                <Table.Cell>
+                  {problem.pid}
+                  {Object.keys(existingProblems || {}).includes(problem.pid) ? (
+                    <Label color="blue" style={{ float: 'right' }}>
+                      Update Problem
+                    </Label>
+                  ) : (
+                    <Label color="green" style={{ float: 'right' }}>
+                      Brand New
+                    </Label>
+                  )}
+                </Table.Cell>
+                <Table.Cell>{problem.name}</Table.Cell>
+              </Table.Row>
+            ))}
+          </Table.Body>
+        </Table>
+        <Button primary onClick={handleSubmit}>
+          Import problem(s)
+        </Button>
+      </>
+    ) : newProblems ? (
+      <Message warning icon="warning sign" content="The file contains no new or modified problem(s)." />
+    ) : (
+      <></>
+    )}
+  </Block>
 }
 
 export default UploadProblems

@@ -2,7 +2,7 @@ import React, { ChangeEvent, MouseEvent, useState } from 'react'
 import { Form, Grid, Menu, MenuItemProps, TextArea } from 'semantic-ui-react'
 import { ProblemStateProps } from '.'
 
-const TestDataEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Element => {
+const TestDataEditor = ({ problem, setProblem }: ProblemStateProps): React.JSX.Element => {
   const [activeTestItem, setActiveTestItem] = useState(0)
 
   if (!problem) return <></>

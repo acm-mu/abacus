@@ -15,7 +15,7 @@ declare global {
   }
 }
 
-const Notifications = (): JSX.Element => {
+const Notifications = (): React.JSX.Element => {
   const [notifications, setNotifications] = useState<Notification[]>(window.notifications || [])
   const { user } = useContext(AppContext)
   const socket = useContext(SocketContext)

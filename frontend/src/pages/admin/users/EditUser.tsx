@@ -1,14 +1,16 @@
 import { User } from 'abacus'
 import React, { ChangeEvent, useEffect, useState } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Button, Checkbox, CheckboxProps, Form, Input, Label, Menu, Select } from 'semantic-ui-react'
 import config from 'environment'
 import { Block, NotFound, PageLoading } from 'components'
 import { divisions, roles } from 'utils'
-import { Helmet } from 'react-helmet'
 import StatusMessage, { StatusMessageType } from 'components/StatusMessage'
+import { usePageTitle } from 'hooks'
 
-const EditUser = (): JSX.Element => {
+const EditUser = (): React.JSX.Element => {
+  usePageTitle("Abacus | Edit User")
+
   const [user, setUser] = useState<User>()
   const [formUser, setFormUser] = useState<User>({
     uid: '',
@@ -25,7 +27,7 @@ const EditUser = (): JSX.Element => {
   const [message, setMessage] = useState<StatusMessageType>()
   const { uid } = useParams<{ uid: string }>()
 
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const handleChange = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>) =>
     setFormUser({ ...formUser, [name]: value })
@@ -102,9 +104,6 @@ const EditUser = (): JSX.Element => {
 
   return (
     <>
-      <Helmet>
-        <title>Abacus | Edit User</title>
-      </Helmet>
       <h1 className="justify-center">
         {user.display_name}
         {user.disabled && <Label color="red">Disabled</Label>}
@@ -187,7 +186,7 @@ const EditUser = (): JSX.Element => {
             placeholder="Password"
             required
           />
-          <Button floated="right" onClick={history.goBack}>
+          <Button floated="right" onClick={() => navigate(-1)}>
             Cancel
           </Button>
           <Button floated="right" primary type="submit" loading={isSaving} disabled={isSaving}>

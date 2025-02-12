@@ -3,7 +3,7 @@ import { CheckboxProps, Form, Input, Select } from 'semantic-ui-react'
 import { divisions } from 'utils'
 import { ProblemStateProps } from '.'
 
-const ProblemInfoEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Element => {
+const ProblemInfoEditor = ({ problem, setProblem }: ProblemStateProps): React.JSX.Element => {
   if (!problem || !setProblem) return <></>
 
   const handleChange = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>) =>

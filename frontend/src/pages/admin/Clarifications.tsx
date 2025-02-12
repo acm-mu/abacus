@@ -2,11 +2,11 @@ import { Clarification } from 'abacus'
 import { Block, ClarificationModal, DivisionLabel, PageLoading } from 'components'
 import config from 'environment'
 import React, { ChangeEvent, useEffect, useState } from 'react'
-import { Helmet } from 'react-helmet'
 import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
-import { Button, Checkbox, CheckboxProps, Label, Pagination, Table } from 'semantic-ui-react'
+import { Button, Checkbox, CheckboxProps, Label, Table } from 'semantic-ui-react'
 import { compare } from 'utils'
+import { usePageTitle } from 'hooks'
 
 interface ClarificationItem extends Clarification {
   checked: boolean
@@ -18,13 +18,13 @@ type SortConfig = {
   direction: 'ascending' | 'descending'
 }
 
-const Clarifications = (): JSX.Element => {
+const Clarifications = (): React.JSX.Element => {
+  usePageTitle("Abacus | Admin Clarifications")
+
   const [isLoading, setLoading] = useState(true)
   const [isDeleting, setDeleting] = useState(false)
   const [clarifications, setClarifications] = useState<ClarificationItem[]>([])
   const [showClosed, setShowClosed] = useState(false)
-  const [page, setPage] = useState<number>(1)
-  const [numberOfPages, setNumberOfPages] = useState<number>(4)
   const [{ column, direction }, setSortConfig] = useState<SortConfig>({
     column: 'date',
     direction: 'ascending'
@@ -37,26 +37,7 @@ const Clarifications = (): JSX.Element => {
   updates the new page of clarifications
   */
 
-  const loadClarifications = async (page: number) => {
-    const getTableSize = async () => {
-      const tableSizeRes = await fetch(`${config.API_URL}/tablesize?tablename=clarification`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.accessToken}`,
-          'Content-Type': 'application/json'
-        }
-      })
-
-      const numberOfPages = await tableSizeRes.json()
-      const { tableSize } = numberOfPages
-
-      setNumberOfPages(Math.ceil(tableSize))
-      if (tableSize < numberOfPages) {
-        setPage(numberOfPages)
-      }
-    }
-    if (clarifications.length !== 0) {
-      getTableSize()
-    }
+  const loadClarifications = async () => {
     //include page as query, so that API can fetch it.
     const response = await fetch(`${config.API_URL}/clarifications`, {
       method: 'GET',
@@ -64,11 +45,6 @@ const Clarifications = (): JSX.Element => {
     })
     if (response.ok) {
       const newClarifications = Object.values(await response.json()) as ClarificationItem[]
-      if (clarifications.length === 0 && newClarifications.length > 0) {
-        getTableSize()
-      } else if (clarifications.length === 0 && newClarifications.length === 0) {
-        setNumberOfPages(0)
-      }
       setClarifications(
         newClarifications
           .map((clarification) => ({ ...clarification, checked: false }))
@@ -100,9 +76,6 @@ const Clarifications = (): JSX.Element => {
   const checkAll = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) =>
     setClarifications(clarifications.map((clarification) => ({ ...clarification, checked })))
 
-  const handlePageChange = async (page: number) => {
-    setPage(page)
-  }
   const deleteSelected = async () => {
     setDeleting(true)
     const clarificationsToDelete = clarifications
@@ -117,20 +90,17 @@ const Clarifications = (): JSX.Element => {
       body: JSON.stringify({ cid: clarificationsToDelete })
     })
     setDeleting(false)
-    loadClarifications(page)
+    loadClarifications()
   }
 
   useEffect(() => {
-    loadClarifications(page)
-  }, [page])
+    loadClarifications()
+  }, [])
 
   if (isLoading) return <PageLoading />
 
   return (
     <>
-      <Helmet>
-        <title>Abacus | Admin Clarifications</title>
-      </Helmet>
       <ClarificationModal trigger={<Button content="Create Clarification" />} />
       {clarifications.filter((clarification) => clarification.checked).length ? (
         <Button

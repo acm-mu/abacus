@@ -10,7 +10,7 @@ import config from 'environment'
 import { userHome } from 'utils'
 import { Link } from 'react-router-dom'
 
-const GoldFeedback = (): JSX.Element => {
+const GoldFeedback = (): React.JSX.Element => {
   const { user } = useContext(AppContext)
   const { submission, setSubmission } = useContext(SubmissionContext)
 
@@ -93,7 +93,7 @@ const GoldFeedback = (): JSX.Element => {
   )
 }
 
-const GoldSubmission = (): JSX.Element => {
+const GoldSubmission = (): React.JSX.Element => {
   const { submission } = useContext(SubmissionContext)
 
   return (

@@ -5,7 +5,7 @@ import { Input, InputOnChangeData, Menu, MenuItemProps } from 'semantic-ui-react
 import { syntax_lang } from 'utils'
 import { ProblemStateProps } from '.'
 
-const SolutionsEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Element => {
+const SolutionsEditor = ({ problem, setProblem }: ProblemStateProps): React.JSX.Element => {
   const [activeSolution, setActiveSolution] = useState('python')
 
   if (!problem) return <></>
@@ -53,9 +53,10 @@ const SolutionsEditor = ({ problem, setProblem }: ProblemStateProps): JSX.Elemen
         ))}
         {setProblem && (
           <Menu.Item position="right">
-            {problem.solutions?.map((solution) =>
+            {problem.solutions?.map((solution, index) =>
               solution.language == activeSolution ? (
                 <Input
+                  key={`skeleton-input-${index}`}
                   label="Filename"
                   size="small"
                   name="filename"

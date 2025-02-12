@@ -1,13 +1,16 @@
 import { Submission as SubmissionType } from 'abacus'
 import React, { useState, useEffect, useContext } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { NotFound, PageLoading, StatusMessage, SubmissionView } from 'components'
 import config from 'environment'
-import { Helmet } from 'react-helmet'
 import { Button } from 'semantic-ui-react'
 import { AppContext, SocketContext } from 'context'
+import { saveAs } from 'file-saver'
+import { usePageTitle } from 'hooks'
 
-const Submission = (): JSX.Element => {
+const Submission = (): React.JSX.Element => {
+  usePageTitle("Abacus | Judge Submission")
+
   const socket = useContext(SocketContext)
   const { sid } = useParams<{ sid: string }>()
   const [submission, setSubmission] = useState<SubmissionType>()
@@ -19,7 +22,7 @@ const Submission = (): JSX.Element => {
 
   const { user } = useContext(AppContext)
 
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const loadSubmission = async () => {
     const response = await fetch(`${config.API_URL}/submissions?sid=${sid}`, {
@@ -157,13 +160,10 @@ const Submission = (): JSX.Element => {
 
   return (
     <>
-      <Helmet>
-        <title>Abacus | Judge Submission</title>
-      </Helmet>
 
       {error && <StatusMessage message={{ type: 'error', message: error }} />}
 
-      <Button content="Back" icon="arrow left" labelPosition="left" onClick={history.goBack} />
+      <Button content="Back" icon="arrow left" labelPosition="left" onClick={() => navigate(-1)} />
 
       {!submission.released ? (
         submission.claimed ? (

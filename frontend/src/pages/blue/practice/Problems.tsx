@@ -4,9 +4,11 @@ import { Breadcrumb, Button, Label, Loader, Table } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { Problem } from '.'
 import { Submission } from 'abacus'
-import { Helmet } from 'react-helmet'
+import { usePageTitle } from 'hooks'
 
-const PracticeProblems = (): JSX.Element => {
+const PracticeProblems = (): React.JSX.Element => {
+  usePageTitle("Abacus | Practice Problems")
+
   const [isMounted, setMounted] = useState(true)
   const [isLoading, setLoading] = useState(true)
 
@@ -36,19 +38,11 @@ const PracticeProblems = (): JSX.Element => {
   }, [])
 
   if (isLoading) {
-    return (
-      <>
-        <title>Abacus | Practice</title>
-        <Loader active inline="centered" content="Loading..." />
-      </>
-    )
+    return <Loader active inline="centered" content="Loading..." />
   }
 
   return (
     <>
-      <Helmet>
-        <title>Abacus | Practice Problems</title>
-      </Helmet>
       <Countdown />
       <Block transparent size="xs-12">
         <Breadcrumb>

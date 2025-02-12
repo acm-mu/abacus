@@ -5,20 +5,23 @@ import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
 import config from 'environment'
 import { compare } from 'utils'
-import { Helmet } from 'react-helmet'
 import { PageLoading } from 'components'
 import { AppContext, SocketContext } from 'context'
+import { saveAs } from 'file-saver'
+import { usePageTitle } from 'hooks'
 
 interface SubmissionItem extends Submission {
   checked: boolean
 }
-type SortKey = 'date' | 'sid' | 'sub_no' | 'language' | 'status' | 'runtime' | 'date' | 'score'
+type SortKey = 'date' | 'sid' | 'sub_no' | 'language' | 'status' | 'runtime' | 'score'
 type SortConfig = {
   column: SortKey
   direction: 'ascending' | 'descending'
 }
 
-const Submissions = (): JSX.Element => {
+const Submissions = (): React.JSX.Element => {
+  usePageTitle("Abacus | Judge Submissions")
+
   const socket = useContext(SocketContext)
   const [isLoading, setLoading] = useState(true)
   const [submissions, setSubmissions] = useState<SubmissionItem[]>([])
@@ -159,10 +162,6 @@ const Submissions = (): JSX.Element => {
 
   return (
     <>
-      <Helmet>
-        <title>Abacus | Judge Submissions</title>
-      </Helmet>
-
       <Button content="Download Submissions" onClick={downloadSubmissions} />
       {submissions.filter((submission) => submission.checked).length ? (
         <Button

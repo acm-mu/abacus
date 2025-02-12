@@ -1,14 +1,13 @@
 import { Problem, Submission } from 'abacus'
 import { Block, Countdown, FileDialog, NotFound, PageLoading } from 'components'
 import React, { ChangeEvent, useEffect, useState } from 'react'
-import { Helmet } from 'react-helmet'
-import { useHistory, useParams } from 'react-router'
-import { Link } from 'react-router-dom'
+import { useNavigate, useParams, Link } from 'react-router-dom'
 import { Breadcrumb, Button, Form } from 'semantic-ui-react'
 import { Language, languages } from 'utils'
 import { v4 as uuidv4 } from 'uuid'
+import { usePageTitle } from 'hooks'
 
-const SubmitPractice = (): JSX.Element => {
+const SubmitPractice = (): React.JSX.Element => {
   const { id } = useParams<{ id: string }>()
   const [isLoading, setLoading] = useState(false)
   const [isPageLoading, setPageLoading] = useState(true)
@@ -17,7 +16,9 @@ const SubmitPractice = (): JSX.Element => {
 
   const [language, setLanguage] = useState<Language>()
   const [file, setFile] = useState<File>()
-  const history = useHistory()
+  const navigate = useNavigate()
+
+  usePageTitle(`Abacus | Submit Practice ${problem?.id ?? ""}`)
 
   useEffect(() => {
     fetch(`/problems/${id}.json`)
@@ -106,9 +107,7 @@ const SubmitPractice = (): JSX.Element => {
         source: data.toString()
       })
 
-      await fetch
-
-      history.push(`/blue/practice/${sid}`)
+      navigate(`/blue/practice/${sid}`)
     }
 
     fileReader.readAsText(file)
@@ -141,9 +140,6 @@ const SubmitPractice = (): JSX.Element => {
 
   return (
     <>
-      <Helmet>
-        <title>Abacus | Submit Practice {problem.id}</title>
-      </Helmet>
       <Countdown />
       <Block transparent size="xs-12">
         <Breadcrumb>

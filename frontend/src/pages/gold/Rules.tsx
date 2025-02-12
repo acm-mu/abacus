@@ -1,11 +1,13 @@
 import React, { useContext } from 'react'
 import { Block } from 'components'
-import { Helmet } from 'react-helmet'
 import { Divider } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { AppContext } from 'context'
+import { usePageTitle } from 'hooks'
 
-const Rules = (): JSX.Element => {
+const Rules = (): React.JSX.Element => {
+  usePageTitle("Abacus | Gold Rules")
+
   const { user } = useContext(AppContext)
   const { settings } = useContext(AppContext)
 
@@ -14,9 +16,6 @@ const Rules = (): JSX.Element => {
 
   return (
     <>
-      <Helmet>
-        <title>Abacus | Gold Rules</title>
-      </Helmet>
       <Block size="xs-12">
         <h1>Rules</h1>
         <p>

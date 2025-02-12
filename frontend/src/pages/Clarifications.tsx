@@ -2,8 +2,7 @@ import { Clarification } from 'abacus'
 import { Block, PageLoading, Unauthorized } from 'components'
 import ClarificationModal from 'components/ClarificationModal'
 import { AppContext, SocketContext } from 'context'
-import React, { FormEvent, useCallback, useContext, useEffect, useState } from 'react'
-import { Helmet } from 'react-helmet'
+import React, { FormEvent, useContext, useEffect, useState } from 'react'
 import Moment from 'react-moment'
 import { useParams } from 'react-router-dom'
 import {
@@ -24,8 +23,11 @@ import {
 } from 'semantic-ui-react'
 import config from '../environment'
 import './Clarifications.scss'
+import { usePageTitle } from 'hooks'
 
-const Clarifications = (): JSX.Element => {
+const Clarifications = (): React.JSX.Element => {
+  usePageTitle("Abacus | Clarifications")
+
   const { user } = useContext(AppContext)
   const [isLoading, setLoading] = useState(true)
   const [clarifications, setClarifications] = useState<{ [key: string]: Clarification }>()
@@ -33,28 +35,29 @@ const Clarifications = (): JSX.Element => {
   const [activeItem, setActiveItem] = useState<string>(cid || '')
   const [showClosed, setShowClosed] = useState(false)
   const socket = useContext(SocketContext)
-  const helmet = (
-    <Helmet>
-      <title>Abacus | Clarifications</title>
-    </Helmet>
-  )
+
   const loadClarifications = async (): Promise<{ [key: string]: Clarification }> => {
     let clarifications = {}
 
-    const response = await fetch(`${config.API_URL}/clarifications`, {
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.accessToken}` }
-    })
+    try {
+      const response = await fetch(`${config.API_URL}/clarifications`, {
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.accessToken}` }
+      })
 
-    if (response.ok) {
-      clarifications = await response.json()
+      if (response.ok) {
+        clarifications = await response.json()
+      }
+
+      setClarifications(clarifications)
+    } catch (e) {
+      console.error(e)
     }
 
-    setClarifications(clarifications)
     setLoading(false)
     return clarifications
   }
 
-  socket?.on('new_clarification',() => loadClarifications())
+  socket?.on('new_clarification', () => loadClarifications())
 
   useEffect(() => {
     loadClarifications()
@@ -255,40 +258,30 @@ const Clarifications = (): JSX.Element => {
   )
 
   if (!clarifications || Object.values(clarifications).length == 0)
-    return (
-      <>
-        {helmet}
-        <Block size="xs-12" transparent>
-          <h2>Clarifications</h2>
-          {askClarification}
-          <p>There are no active clarifications right now!</p>
-        </Block>
-      </>
-    )
+    return <Block size="xs-12" transparent>
+      <h2>Clarifications</h2>
+      {askClarification}
+      <p>There are no active clarifications right now!</p>
+    </Block>
 
   const clarification = Object.keys(clarifications).includes(activeItem) ? clarifications[activeItem] : undefined
 
-  return (
-    <>
-      {helmet}
-      <Block size="xs-12" transparent>
-        <h2>Clarifications</h2>
-        {askClarification}
-        <Segment>
-          <Grid columns={2}>
-            <Grid.Row>
-              <Grid.Column width={4}>
-                <ClarificationsMenu clarifications={Object.values(clarifications)} />
-              </Grid.Column>
-              <Grid.Column width={12}>
-                <ClarificationView clarification={clarification} />
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
-        </Segment>
-      </Block>
-    </>
-  )
+  return <Block size="xs-12" transparent>
+    <h2>Clarifications</h2>
+    {askClarification}
+    <Segment>
+      <Grid columns={2}>
+        <Grid.Row>
+          <Grid.Column width={4}>
+            <ClarificationsMenu clarifications={Object.values(clarifications)} />
+          </Grid.Column>
+          <Grid.Column width={12}>
+            <ClarificationView clarification={clarification} />
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
+    </Segment>
+  </Block>
 }
 
 export default Clarifications

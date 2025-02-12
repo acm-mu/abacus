@@ -6,10 +6,10 @@ import MDEditor from '@uiw/react-md-editor'
 import { Block, Countdown, NotFound, ClarificationModal, PageLoading, Unauthorized } from 'components'
 import config from 'environment'
 import { AppContext } from 'context'
-import { Helmet } from 'react-helmet'
 import { userHome } from 'utils'
+import { usePageTitle } from 'hooks'
 
-const Problem = (): JSX.Element => {
+const Problem = (): React.JSX.Element => {
   const { user, settings } = useContext(AppContext)
   const [isLoading, setLoading] = useState(true)
   const [problem, setProblem] = useState<ProblemType>()
@@ -27,6 +27,8 @@ const Problem = (): JSX.Element => {
   }, [submissions])
 
   const [isMounted, setMounted] = useState(true)
+
+  usePageTitle(`Abacus | ${problem?.name ?? ""}`)
 
   useEffect(() => {
     loadProblem().then(() => {
@@ -75,9 +77,6 @@ const Problem = (): JSX.Element => {
 
   return (
     <>
-      <Helmet>
-        <title>Abacus | {problem.name}</title>
-      </Helmet>
       <Countdown />
       <Block transparent size="xs-12">
         <Breadcrumb>

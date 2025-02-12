@@ -1,14 +1,16 @@
 import { Problem, Submission } from 'abacus'
 import React, { ChangeEvent, useContext, useEffect, useState } from 'react'
 import { Form, Button, Breadcrumb } from 'semantic-ui-react'
-import { Link, useHistory, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Block, Countdown, FileDialog, NotFound, PageLoading, StatusMessage, Unauthorized } from 'components'
 import config from 'environment'
 import { AppContext } from 'context'
 import { Language, languages } from 'utils'
-import { Helmet } from 'react-helmet'
+import { usePageTitle } from 'hooks'
 
-const Submit = (): JSX.Element => {
+const Submit = (): React.JSX.Element => {
+  usePageTitle("Abacus | Blue Submit")
+
   const { user } = useContext(AppContext)
   const [submissions, setSubmissions] = useState<Submission[]>()
   const [problem, setProblem] = useState<Problem>()
@@ -17,11 +19,12 @@ const Submit = (): JSX.Element => {
   const [file, setFile] = useState<File>()
   const [isSubmitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string>()
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const [isMounted, setMounted] = useState(true)
 
   const { pid } = useParams<{ pid: string }>()
+
   useEffect(() => {
     loadProblem()
     return () => {
@@ -85,7 +88,7 @@ const Submit = (): JSX.Element => {
     const body: Submission = await res.json()
     setSubmitting(false)
 
-    history.push(`/blue/submissions/${body.sid}`)
+    navigate(`/blue/submissions/${body.sid}`)
   }
 
   const uploadChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -118,9 +121,6 @@ const Submit = (): JSX.Element => {
   if (user.disabled) {
     return (
       <>
-        <Helmet>
-          <title>Abacus | Blue Submit</title>
-        </Helmet>
         <Countdown />
         <Block size="xs-12">
           <h2>Your account has been disabled!</h2>
@@ -133,9 +133,6 @@ const Submit = (): JSX.Element => {
   if (submissions?.filter((e) => e.status == 'accepted').length !== 0) {
     return (
       <>
-        <Helmet>
-          <title>Abacus | Blue Submit</title>
-        </Helmet>
         <Countdown />
         <Block size="xs-12">
           <h2>You Already Solved This Problem!</h2>
@@ -152,9 +149,6 @@ const Submit = (): JSX.Element => {
   if (submissions?.filter(({ status, released }) => status == 'pending' || !released).length !== 0) {
     return (
       <>
-        <Helmet>
-          <title>Abacus | Blue Submit</title>
-        </Helmet>
         <Countdown />
         <Block size="xs-12">
           <h2>Cannot submit to {problem.name}</h2>
@@ -169,9 +163,6 @@ const Submit = (): JSX.Element => {
 
   return (
     <>
-      <Helmet>
-        <title>Abacus | Blue Submit</title>
-      </Helmet>
       <Countdown />
       <Block transparent size="xs-12">
         <Breadcrumb>
@@ -223,7 +214,7 @@ const Submit = (): JSX.Element => {
               loading={isSubmitting}
               disabled={isSubmitting}
             />
-            <Button onClick={history.goBack}>Cancel</Button>
+            <Button onClick={() => navigate(-1)}>Cancel</Button>
           </Form.Group>
         </Form>
       </Block>

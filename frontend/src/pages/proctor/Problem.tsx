@@ -6,14 +6,16 @@ import MDEditor from '@uiw/react-md-editor'
 import { Block, Countdown, NotFound, PageLoading } from 'components'
 import config from 'environment'
 import './Problem.scss'
-import { Helmet } from 'react-helmet'
 import SolutionsEditor from 'components/editor/SolutionsEditor'
 import TestDataEditor from 'components/editor/TestDataEditor'
+import { usePageTitle } from 'hooks'
 
-const Problem = (): JSX.Element => {
+const Problem = (): React.JSX.Element => {
   const [isLoading, setLoading] = useState(true)
   const [problem, setProblem] = useState<ProblemType>()
   const { pid } = useParams<{ pid: string }>()
+
+  usePageTitle(`Abacus | Proctor ${problem?.name ?? ""}`)
 
   const [isMounted, setMounted] = useState(true)
 
@@ -53,9 +55,6 @@ const Problem = (): JSX.Element => {
 
   return (
     <>
-      <Helmet>
-        <title>Abacus | Proctor {problem.name}</title>
-      </Helmet>
       <Countdown />
 
       <Menu attached="top" tabular>

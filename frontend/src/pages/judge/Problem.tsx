@@ -7,15 +7,17 @@ import { Block, Countdown, NotFound, PageLoading } from 'components'
 import config from 'environment'
 import { AppContext } from 'context'
 import './Problem.scss'
-import { Helmet } from 'react-helmet'
+import { usePageTitle } from 'hooks'
 
-const Problem = (): JSX.Element => {
+const Problem = (): React.JSX.Element => {
   const { user } = useContext(AppContext)
   const [isLoading, setLoading] = useState(true)
   const [problem, setProblem] = useState<ProblemType>()
   const { pid } = useParams<{ pid: string }>()
 
   const [isMounted, setMounted] = useState(true)
+
+  usePageTitle(`Abacus | ${problem?.name ?? ""}`)
 
   useEffect(() => {
     loadProblem()
@@ -49,9 +51,6 @@ const Problem = (): JSX.Element => {
 
   return (
     <>
-      <Helmet>
-        <title>Abacus | {problem.name}</title>
-      </Helmet>
       <Countdown />
 
       <Block size="xs-9" className="problem">

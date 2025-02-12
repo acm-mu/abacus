@@ -5,7 +5,7 @@ interface DivisionLabelProps {
   division?: string
 }
 
-const DivisionLabel = ({ division }: DivisionLabelProps): JSX.Element => {
+const DivisionLabel = ({ division }: DivisionLabelProps): React.JSX.Element => {
   switch (division) {
     case 'gold':
       return <Label className="gold" color="yellow" content="Gold" />

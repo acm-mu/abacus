@@ -3,28 +3,29 @@ import { Block, DivisionLabel, PageLoading } from 'components'
 import { SocketContext } from 'context'
 import config from 'environment'
 import React, { ChangeEvent, useContext, useEffect, useMemo, useState } from 'react'
-import { Helmet } from 'react-helmet'
 import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
-import { Button, Checkbox, Grid, Label, Menu, MenuItemProps, Pagination, Table } from 'semantic-ui-react'
+import { Button, Checkbox, Grid, Label, Menu, MenuItemProps, Table } from 'semantic-ui-react'
 import { compare } from 'utils'
+import { saveAs } from 'file-saver'
+import { usePageTitle } from 'hooks'
 
 interface SubmissionItem extends Submission {
   checked: boolean
 }
-type SortKey = 'date' | 'sid' | 'sub_no' | 'language' | 'status' | 'runtime' | 'date' | 'score'
+type SortKey = 'date' | 'sid' | 'sub_no' | 'language' | 'status' | 'runtime' | 'score'
 type SortConfig = {
   column: SortKey
   direction: 'ascending' | 'descending'
 }
 
-const Submissions = (): JSX.Element => {
+const Submissions = (): React.JSX.Element => {
+  usePageTitle("Abacus | Admin Submissions")
+
   const socket = useContext(SocketContext)
   const [isLoading, setLoading] = useState(true)
   const [submissions, setSubmissions] = useState<SubmissionItem[]>([])
   const [isDeleting, setDeleting] = useState(false)
-  const [page, setPage] = useState<number>(1)
-  const [numberOfPages, setNumberOfPages] = useState<number>(4)
   const [showReleased, setShowReleased] = useState(false)
   const [activeDivision, setActiveDivision] = useState('blue')
 
@@ -46,38 +47,16 @@ const Submissions = (): JSX.Element => {
   }
 
   useEffect(() => {
-    loadSubmissions(page).then(() => setLoading(false))
-    socket?.on('new_submission', () => loadSubmissions(page))
-    socket?.on('update_submission', () => loadSubmissions(page))
-  }, [page])
-
-  const handlePageChange = async (page: number) => {
-    setPage(page)
-  }
+    loadSubmissions().then(() => setLoading(false))
+    socket?.on('new_submission', () => loadSubmissions())
+    socket?.on('update_submission', () => loadSubmissions())
+  }, [])
 
   /*
   @param page - page to query when paginating
   updates the new page of submissions
   */
-  const loadSubmissions = async (page: number) => {
-    const getTableSize = async () => {
-      const tableSizeRes = await fetch(`${config.API_URL}/tablesize?tablename=submission`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.accessToken}`,
-          'Content-Type': 'application/json'
-        }
-      })
-      //table call response
-      const numberOfPages = await tableSizeRes.json()
-      const { tableSize } = numberOfPages
-      setNumberOfPages(Math.ceil(tableSize))
-      if (tableSize < numberOfPages) {
-        setPage(numberOfPages)
-      }
-    }
-    if (submissions.length !== 0) {
-      getTableSize()
-    }
+  const loadSubmissions = async () => {
     //include page as query, so that API can fetch it.
     const response = await fetch(`${config.API_URL}/submissions`, {
       headers: {
@@ -86,11 +65,6 @@ const Submissions = (): JSX.Element => {
       }
     })
     const newSubmissions = Object.values(await response.json()) as SubmissionItem[]
-    if (submissions.length === 0 && newSubmissions.length > 0) {
-      getTableSize()
-    } else if (newSubmissions.length === 0 && submissions.length === 0) {
-      setNumberOfPages(0)
-    }
     setSubmissions(newSubmissions.map((submission) => ({ ...submission, checked: false })))
   }
 
@@ -136,7 +110,7 @@ const Submissions = (): JSX.Element => {
           content: 'We deleted the submissions you selected!'
         })
       }
-      loadSubmissions(page)
+      loadSubmissions()
       setDeleting(false)
     }
   }
@@ -156,9 +130,6 @@ const Submissions = (): JSX.Element => {
 
   return (
     <Grid>
-      <Helmet>
-        <title>Abacus | Admin Submissions</title>
-      </Helmet>
       <Button content="Download Submissions" onClick={downloadSubmissions} />
       {submissions.filter((submission) => submission.checked && submission.division == activeDivision).length ? (
         <Button

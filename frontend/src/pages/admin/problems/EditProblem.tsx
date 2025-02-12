@@ -2,12 +2,14 @@ import { Problem } from 'abacus'
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import config from 'environment'
-import { Helmet } from 'react-helmet'
 import { ProblemEditor } from 'components/editor'
 import { PageLoading, StatusMessage } from 'components'
 import { StatusMessageType } from 'components/StatusMessage'
+import { usePageTitle } from 'hooks'
 
-const EditProblems = (): JSX.Element => {
+const EditProblems = (): React.JSX.Element => {
+  usePageTitle("Abacus | Admin Edit Problem")
+
   const { pid } = useParams<{ pid: string }>()
   const [problem, setProblem] = useState<Problem>()
 
@@ -64,10 +66,6 @@ const EditProblems = (): JSX.Element => {
 
   return (
     <>
-      <Helmet>
-        <title>Abacus | Admin Edit Problem</title>
-      </Helmet>
-
       <h1>{problem?.name}</h1>
       <StatusMessage message={message} onDismiss={() => setMessage(undefined)} />
 

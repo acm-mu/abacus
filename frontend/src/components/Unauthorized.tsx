@@ -1,16 +1,13 @@
 import React from 'react'
-import { Helmet } from 'react-helmet'
+import { usePageTitle } from 'hooks'
 
-const Unauthorized = (): JSX.Element => (
-  <>
-    <Helmet>
-      <title>Abacus | Unauthorized</title>
-    </Helmet>
-    <div>
-      <h1>Error 401 - Unauthorized</h1>
-      <p>You do not have permission to access this page!</p>
-    </div>
-  </>
-)
+const Unauthorized = (): React.JSX.Element => {
+  usePageTitle("Abacus | Unauthorized")
+
+  return <div>
+    <h1>Error 401 - Unauthorized</h1>
+    <p>You do not have permission to access this page!</p>
+  </div>
+}
 
 export default Unauthorized
