@@ -1,26 +1,23 @@
 import { Submission } from 'abacus'
+import { Block, Countdown, PageLoading, Unauthorized } from 'components'
+import { AppContext } from 'context'
+import config from 'environment'
+import { useIsMounted, usePageTitle } from 'hooks'
 import React, { useContext, useEffect, useState } from 'react'
 import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
-import { Block, Countdown, PageLoading, Unauthorized } from 'components'
-import { AppContext } from 'context'
-import config from 'environment'
-import { usePageTitle } from 'hooks'
 
 const Submissions = (): React.JSX.Element => {
   usePageTitle("Abacus | Blue Submissions")
+  const isMounted = useIsMounted()
 
   const { user } = useContext(AppContext)
-  const [isMounted, setMounted] = useState(true)
   const [isLoading, setLoading] = useState(true)
   const [submissions, setSubmissions] = useState<Submission[]>()
 
   useEffect(() => {
     loadSubmissions()
-    return () => {
-      setMounted(false)
-    }
   }, [])
 
   const loadSubmissions = async () => {
@@ -29,7 +26,7 @@ const Submissions = (): React.JSX.Element => {
         Authorization: `Bearer ${localStorage.accessToken}`
       }
     })
-    if (!isMounted) return
+    if (!isMounted()) return
     if (response.ok) {
       setSubmissions(Object.values(await response.json()))
     }

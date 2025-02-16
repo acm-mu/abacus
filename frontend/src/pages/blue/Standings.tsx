@@ -1,30 +1,30 @@
 import { Problem, StandingsUser } from 'abacus'
+import { Block, Countdown, PageLoading, StatusMessage } from 'components'
+import { AppContext, SocketContext } from 'context'
+import config from 'environment'
+import '../Standings.scss'
+import { useIsMounted, usePageTitle } from 'hooks'
 import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
-import { Block, Countdown, PageLoading, StatusMessage } from 'components'
-import config from 'environment'
-import '../Standings.scss'
-import { AppContext, SocketContext } from 'context'
 import { isThirtyMinutesBefore } from 'utils'
-import { usePageTitle } from 'hooks'
 
 const Standings = (): React.JSX.Element => {
   usePageTitle("Abacus | Blue Standings")
+  const isMounted = useIsMounted()
 
   const { user, settings } = useContext(AppContext)
   const socket = useContext(SocketContext)
   const [problems, setProblems] = useState<Problem[]>()
   const [standings, setStandings] = useState<StandingsUser[]>()
   const [isLoading, setLoading] = useState(true)
-  const [isMounted, setMounted] = useState(true)
 
   const loadData = async () => {
     const response = await fetch(`${config.API_URL}/standings?division=blue`)
 
     const data = await response.json()
 
-    if (!isMounted) return
+    if (!isMounted()) return
 
     setStandings(data.standings)
 
@@ -40,9 +40,6 @@ const Standings = (): React.JSX.Element => {
 
   useEffect(() => {
     loadData()
-    return () => {
-      setMounted(false)
-    }
   }, [])
 
   if (!settings || new Date() < settings.practice_start_date)

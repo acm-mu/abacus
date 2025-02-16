@@ -1,15 +1,16 @@
 import { User } from 'abacus'
+import { Block, NotFound, PageLoading } from 'components'
+import StatusMessage, { StatusMessageType } from 'components/StatusMessage'
+import config from 'environment'
+import { useIsMounted, usePageTitle } from 'hooks'
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Button, Checkbox, CheckboxProps, Form, Input, Label, Menu, Select } from 'semantic-ui-react'
-import config from 'environment'
-import { Block, NotFound, PageLoading } from 'components'
 import { divisions, roles } from 'utils'
-import StatusMessage, { StatusMessageType } from 'components/StatusMessage'
-import { usePageTitle } from 'hooks'
 
 const EditUser = (): React.JSX.Element => {
   usePageTitle("Abacus | Edit User")
+  const isMounted = useIsMounted()
 
   const [user, setUser] = useState<User>()
   const [formUser, setFormUser] = useState<User>({
@@ -22,7 +23,6 @@ const EditUser = (): React.JSX.Element => {
     password: ''
   })
   const [isLoading, setLoading] = useState(true)
-  const [isMounted, setMounted] = useState(true)
   const [isSaving, setSaving] = useState(false)
   const [message, setMessage] = useState<StatusMessageType>()
   const { uid } = useParams<{ uid: string }>()
@@ -81,7 +81,7 @@ const EditUser = (): React.JSX.Element => {
         authorization: `Bearer ${localStorage.accessToken}`
       }
     })
-    if (!isMounted) return
+    if (!isMounted()) return
 
     const users: User[] = Object.values(await response.json())
     if (users.length > 0) {
@@ -94,9 +94,6 @@ const EditUser = (): React.JSX.Element => {
 
   useEffect(() => {
     loadUser()
-    return () => {
-      setMounted(false)
-    }
   }, [])
 
   if (isLoading) return <PageLoading />

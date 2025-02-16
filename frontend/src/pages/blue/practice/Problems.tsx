@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react'
-import { Block, Countdown } from 'components'
-import { Breadcrumb, Button, Label, Loader, Table } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
-import { Problem } from '.'
 import { Submission } from 'abacus'
-import { usePageTitle } from 'hooks'
+import { Block, Countdown } from 'components'
+import { useIsMounted, usePageTitle } from 'hooks'
+import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { Breadcrumb, Button, Label, Loader, Table } from 'semantic-ui-react'
+import { Problem } from '.'
 
 const PracticeProblems = (): React.JSX.Element => {
   usePageTitle("Abacus | Practice Problems")
+  const isMounted = useIsMounted()
 
-  const [isMounted, setMounted] = useState(true)
   const [isLoading, setLoading] = useState(true)
 
   const [problems, setProblems] = useState<Problem[]>([])
@@ -25,16 +25,13 @@ const PracticeProblems = (): React.JSX.Element => {
 
   const loadProblems = async () => {
     const response = await fetch('/problems/index.json')
-    if (!isMounted) return
+    if (!isMounted()) return
     setProblems(await response.json())
     setLoading(false)
   }
 
   useEffect(() => {
     loadProblems()
-    return () => {
-      setMounted(false)
-    }
   }, [])
 
   if (isLoading) {

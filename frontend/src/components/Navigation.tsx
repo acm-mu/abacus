@@ -1,11 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { Container, Dropdown, Menu } from 'semantic-ui-react'
-import { AppContext } from 'context'
 import fulllogoy from 'assets/fulllogoy.png'
 import { LoginModal } from 'components'
-import { userHome } from 'utils'
+import { AppContext } from 'context'
 import config from 'environment'
+import { useIsMounted } from 'hooks'
+import React, { useContext } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { Container, Dropdown, Menu } from 'semantic-ui-react'
+import { userHome } from 'utils'
 
 type Props = {
   children: React.ReactNode
@@ -13,12 +14,13 @@ type Props = {
 }
 
 const Navigation = (props: Props): React.JSX.Element => {
+  const isMounted = useIsMounted()
+
   const navigate = useNavigate()
   const { user, setUser } = useContext(AppContext)
-  const [isMounted, setMounted] = useState(false)
 
   const handleLogout = () => {
-    if (isMounted) {
+    if (isMounted()) {
       localStorage.removeItem('accessToken')
       // When clicking the logout button, the username onClick fires and redirects to user home.
       // Redirect to homepage 20ms later
@@ -28,13 +30,6 @@ const Navigation = (props: Props): React.JSX.Element => {
       }, 1)
     }
   }
-
-  useEffect(() => {
-    setMounted(true)
-    return () => {
-      setMounted(false)
-    }
-  })
 
   return (
     <>

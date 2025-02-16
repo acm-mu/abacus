@@ -1,20 +1,20 @@
 import { Submission as SubmissionType } from 'abacus'
-import React, { useState, useEffect, useContext } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
 import { NotFound, PageLoading, SubmissionView } from 'components'
-import config from 'environment'
-import { Button, Grid } from 'semantic-ui-react'
 import { AppContext } from 'context'
+import config from 'environment'
 import { saveAs } from 'file-saver'
-import { usePageTitle } from 'hooks'
+import { useIsMounted, usePageTitle } from 'hooks'
+import React, { useContext, useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { Button, Grid } from 'semantic-ui-react'
 
 const Submission = (): React.JSX.Element => {
   usePageTitle("Abacus | Admin Submission")
+  const isMounted = useIsMounted()
 
   const { sid } = useParams<{ sid: string }>()
   const [submission, setSubmission] = useState<SubmissionType>()
   const [isLoading, setLoading] = useState(true)
-  const [isMounted, setMounted] = useState(true)
   const [isRerunning, setRerunning] = useState(false)
   const [isReleasing, setReleasing] = useState(false)
   const [isDeleting, setDeleting] = useState(false)
@@ -31,7 +31,7 @@ const Submission = (): React.JSX.Element => {
       headers: { Authorization: `Bearer ${localStorage.accessToken}` }
     })
 
-    if (!isMounted) return
+    if (!isMounted()) return
 
     if (response.ok) {
       setSubmission(Object.values(await response.json())[0] as SubmissionType)
@@ -41,9 +41,6 @@ const Submission = (): React.JSX.Element => {
 
   useEffect(() => {
     loadSubmission()
-    return () => {
-      setMounted(false)
-    }
   }, [])
 
   if (isLoading) return <PageLoading />

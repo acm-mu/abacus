@@ -1,10 +1,10 @@
 import { Problem } from 'abacus'
+import { Block, FileDialog } from 'components'
+import config from 'environment'
+import { useIsMounted, usePageTitle } from 'hooks'
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button, Label, Message, Table } from 'semantic-ui-react'
-import { Block, FileDialog } from 'components'
-import config from 'environment'
-import { usePageTitle } from 'hooks'
 
 interface ProblemItem extends Problem {
   checked: boolean
@@ -12,12 +12,12 @@ interface ProblemItem extends Problem {
 
 const UploadProblems = (): React.JSX.Element => {
   usePageTitle("Abacus | Admin Upload Problems")
+  const isMounted = useIsMounted()
 
   const navigate = useNavigate()
   const [file, setFile] = useState<File>()
   const [existingProblems, setExistingProblems] = useState<{ [key: string]: Problem }>()
   const [newProblems, setNewProblems] = useState<ProblemItem[]>()
-  const [isMounted, setMounted] = useState(true)
 
   const uploadChange = ({ target: { files } }: ChangeEvent<HTMLInputElement>) => {
     if (!files?.length) return
@@ -48,15 +48,13 @@ const UploadProblems = (): React.JSX.Element => {
       }
     )
 
-    if (!response.ok || !isMounted) return
+    if (!response.ok || !isMounted()) return
 
     setExistingProblems(await response.json())
   }
 
   useEffect(() => {
     loadExistingProblems()
-
-    return () => setMounted(false)
   }, [])
 
   const filterProblem = (problem1: Problem, p2: Problem) => {

@@ -1,20 +1,21 @@
 import { Clarification, Submission } from 'abacus'
-import { AppContext } from 'context'
 import { Block, DivisionLabel, NotFound, PageLoading } from 'components'
+import { AppContext } from 'context'
+import { useIsMounted, usePageTitle } from 'hooks'
 import React, { useContext, useEffect, useState } from 'react'
 import Moment from 'react-moment'
-import { useNavigate, useParams } from 'react-router-dom'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Button, ButtonProps, Comment, Divider, Form, Label, Message, Table } from 'semantic-ui-react'
-import config from '../../environment'
+import config from 'environment'
 import './Clarification.scss'
-import { usePageTitle } from 'hooks'
 
 interface ClarificationProps {
   clarification: Clarification
 }
 
 const ClarificationPage = (): React.JSX.Element => {
+  const isMounted = useIsMounted()
+
   const navigate = useNavigate()
   const { user } = useContext(AppContext)
   const { cid } = useParams<{ cid: string }>()
@@ -22,7 +23,6 @@ const ClarificationPage = (): React.JSX.Element => {
   const [submissions, setSubmissions] = useState<Submission[]>([])
   const [body, setBody] = useState('')
   const [isLoading, setLoading] = useState(true)
-  const [isMounted, setMounted] = useState(true)
   const [isChangingState, setChangingState] = useState(false)
   const [isReplying, setReplying] = useState(false)
 
@@ -49,7 +49,7 @@ const ClarificationPage = (): React.JSX.Element => {
     })
     const submissions = Object.values(await response.json()) as Submission[]
 
-    if (!isMounted) return
+    if (!isMounted()) return
 
     setSubmissions(submissions.map((submission) => ({ ...submission, checked: false })))
     setLoading(false)
@@ -58,9 +58,6 @@ const ClarificationPage = (): React.JSX.Element => {
   useEffect(() => {
     loadClarification()
     if (clarification) loadSubmissions()
-    return () => {
-      setMounted(false)
-    }
   }, [])
 
   const handleSubmit = async () => {

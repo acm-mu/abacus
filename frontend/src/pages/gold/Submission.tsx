@@ -1,26 +1,23 @@
 import { Submission as SubmissionType } from 'abacus'
+import { Block, Countdown, NotFound, PageLoading, SubmissionView, Unauthorized } from 'components'
+import { AppContext } from 'context'
+import config from 'environment'
+import { useIsMounted, usePageTitle } from 'hooks'
 import React, { useContext, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { Block, Countdown, NotFound, PageLoading, SubmissionView, Unauthorized } from 'components'
-import config from 'environment'
 import { Breadcrumb } from 'semantic-ui-react'
-import { AppContext } from 'context'
-import { usePageTitle } from 'hooks'
 
 const Submission = (): React.JSX.Element => {
   usePageTitle("Abacus | Gold Submission")
+  const isMounted = useIsMounted()
 
   const { sid } = useParams<{ sid: string }>()
   const { user } = useContext(AppContext)
   const [submission, setSubmission] = useState<SubmissionType>()
-  const [isMounted, setMounted] = useState(true)
   const [isLoading, setLoading] = useState(true)
 
   useEffect(() => {
     loadSubmission()
-    return () => {
-      setMounted(false)
-    }
   }, [sid])
 
   const loadSubmission = async () => {
@@ -30,7 +27,7 @@ const Submission = (): React.JSX.Element => {
       }
     })
 
-    if (!isMounted) return
+    if (!isMounted()) return
 
     if (response.ok) {
       setSubmission(Object.values(await response.json())[0] as SubmissionType)

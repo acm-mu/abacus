@@ -6,7 +6,7 @@ import config from 'environment'
 import { compare } from 'utils'
 import { PageLoading } from 'components'
 import { AppContext, SocketContext } from 'context'
-import { usePageTitle } from 'hooks'
+import { useIsMounted, usePageTitle } from 'hooks'
 
 type SortKey = 'date' | 'sid' | 'sub_no' | 'language'
 type SortConfig = {
@@ -16,11 +16,11 @@ type SortConfig = {
 
 const Submissions = (): React.JSX.Element => {
   usePageTitle("Abacus | Proctor Submissions")
+  const isMounted = useIsMounted()
 
   const socket = useContext(SocketContext)
   const [isLoading, setLoading] = useState(true)
   const [submissions, setSubmissions] = useState<Submission[]>([])
-  const [isMounted, setMounted] = useState(true)
   const [showViewed, setShowViewed] = useState(false)
 
   const { user } = useContext(AppContext)
@@ -46,7 +46,6 @@ const Submissions = (): React.JSX.Element => {
     loadSubmissions().then(() => setLoading(false))
     socket?.on('new_submission', loadSubmissions)
     socket?.on('update_submission', loadSubmissions)
-    return () => setMounted(false)
   }, [])
 
   const loadSubmissions = async () => {
@@ -57,7 +56,7 @@ const Submissions = (): React.JSX.Element => {
     })
     const submissions = Object.values(await response.json()) as Submission[]
 
-    if (!isMounted) return
+    if (!isMounted()) return
 
     setSubmissions(submissions.map((submission) => ({ ...submission, checked: false })))
   }
