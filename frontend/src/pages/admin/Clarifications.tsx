@@ -88,7 +88,6 @@ const Clarifications = (): React.JSX.Element => {
     const clarificationsToDelete = clarifications
       .filter((clarification) => clarification.checked)
       .map((clarification) => clarification.cid)
-      //what is this fetch doing?
     await fetch(`${config.API_URL}/clarifications`, {
       method: 'DELETE',
       headers: {
