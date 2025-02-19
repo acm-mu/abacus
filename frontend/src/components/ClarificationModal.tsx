@@ -12,6 +12,7 @@ interface ClarificationModalProps {
   title?: string
   context?: Context
   callback?: (clarification: Clarification) => void
+  onCreate?: () => void;
 }
 
 const ClarificationModal = ({ trigger, title = '', context }: ClarificationModalProps): React.JSX.Element => {
