@@ -129,10 +129,7 @@ export const postSubmissions = async (req: Request, res: Response): Promise<void
       start_date,
       end_date,
       practice_start_date,
-      practice_end_date,
-      points_per_yes,
-      points_per_minute,
-      points_per_no
+      practice_end_date
     } = await contest.get_settings()
     const now = Date.now()
     if (problem.practice) {
@@ -215,7 +212,7 @@ export const postSubmissions = async (req: Request, res: Response): Promise<void
         source: data.toString('utf-8')
       }
       let status = 'accepted'
-      for (let test of problem.tests) {
+      /*for (let test of problem.tests) {
         // Copy tests from problem
         submission.tests = problem.tests
 
@@ -249,10 +246,10 @@ export const postSubmissions = async (req: Request, res: Response): Promise<void
         } catch (e) {
           console.log(e)
         }
-      }
+      }*/
       submission.status = status
       // Calculate Score
-      if (status == 'accepted') {
+      /*if (status == 'accepted') {
         let minutes = 0
         if (problem.practice) {
           minutes = ((submission.date as any) - practice_start_date) / 60
@@ -265,6 +262,7 @@ export const postSubmissions = async (req: Request, res: Response): Promise<void
       } else {
         submission.score = 0
       }
+      */
 
       // Save submission to database
       await contest.update_submission(submission.sid as string, { ...submission, sid: submission.sid })
