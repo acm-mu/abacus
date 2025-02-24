@@ -62,12 +62,14 @@ declare module 'abacus' {
     pid: string
     runtime: number
     released: boolean
+    released_date?: number
     score: number
     status: string
     sub_no: number
     tid: string
     tests: Test[]
     claimed?: string | User
+    claimed_date?: number
     viewed?: boolean
     flagged?: string | User
   }

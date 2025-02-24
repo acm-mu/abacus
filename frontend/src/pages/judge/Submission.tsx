@@ -85,13 +85,14 @@ const Submission = (): React.JSX.Element => {
         feedback: submission.feedback,
         score: submission.score,
         released: true,
+        released_date: Date.now() / 1000,
         claimed: undefined,
         status: submission.status
       })
     })
     if (response.ok) {
       const result = await response.json()
-      setSubmission({ ...submission, released: result.released, claimed: undefined })
+      setSubmission({ ...submission, released: result.released, released_date: Date.now() / 1000, claimed: undefined })
     } else {
       try {
         const { message } = await response.json()
@@ -111,11 +112,11 @@ const Submission = (): React.JSX.Element => {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.accessToken}`
       },
-      body: JSON.stringify({ sid, claimed: user?.uid })
+      body: JSON.stringify({ sid, claimed: user?.uid, claimed_date: Date.now() / 1000 })
     })
 
     if (response.ok) {
-      setSubmission({ ...submission, claimed: user })
+      setSubmission({ ...submission, claimed: user, claimed_date: Date.now() / 1000})
     } else {
       try {
         const { message } = await response.json()

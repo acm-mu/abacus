@@ -51,10 +51,11 @@ export const rerunSubmission = async (req: Request, res: Response): Promise<void
       await contest.get_settings()
     if (submission) {
       submission.tests = problem.tests
+      let num_testcases_wrong = 0
       // Update status to 'pending'
       // await updateItem('', { submission.sid }, { status: 'pending' });
       // Extract details and set defaults
-      let status = 'accepted'
+      //let status = 'accepted'
       for (let test of problem.tests) {
         // Copy tests from problem
         submission.tests = problem.tests
@@ -124,15 +125,21 @@ export const rerunSubmission = async (req: Request, res: Response): Promise<void
           }
         )
         test['stdout'] = res.data.run.code == 0 ? res.data.run.stdout : res.data.run.stderr
+
+        //console.log("backend/src/api/submissions/rerunSubmission.ts res.data.run.stdout", res.data.run.stdout.trim())
+        //console.log("backend/src/api/submissions/rerunSubmission.ts test.out", test.out.trim())
+
         if(((res.data.run.stdout.trim() as string) == (test.out.trim() as string)))
         {
           console.log('Result: ACCEPTED')
+          //submission.status = 'accepted'
           test['result'] = 'accepted'
         }
         else
         {
           console.log('Result: REJECTED')
-          status = 'rejected'
+         //submission.status = 'rejected'
+          num_testcases_wrong += 1
           test['result'] = 'rejected'
         }
       }
@@ -140,10 +147,19 @@ export const rerunSubmission = async (req: Request, res: Response): Promise<void
         console.log(e)
       }
     }
-    submission.status
-    //Calculate Score
-    if(status == "accepted")
+    //submission.status
+    if(num_testcases_wrong > 0)
     {
+      submission.status = "rejected"
+    }
+    else
+    {
+      submission.status = "accepted"
+    }
+    //Calculate Score
+    if(submission.status == "accepted" || submission.status == "rejected")
+    {
+      submission.sub_no = num_testcases_wrong
       let minutes = 0
       if(problem.practice)
       {
@@ -153,6 +169,8 @@ export const rerunSubmission = async (req: Request, res: Response): Promise<void
       {
         minutes = ((submission.date as any) - start_date) / 60
       }
+
+      //console.log("backend/src/api/submissions/rerunSubmission.ts submission.sub_no", submission.sub_no)
       submission.score = Math.floor(minutes * points_per_minute + points_per_no * (submission.sub_no as any) + points_per_yes)
     }
     else

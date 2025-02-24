@@ -211,7 +211,7 @@ export const postSubmissions = async (req: Request, res: Response): Promise<void
         tests: problem.tests,
         source: data.toString('utf-8')
       }
-      let status = 'accepted'
+      let status = 'pending'
       /*for (let test of problem.tests) {
         // Copy tests from problem
         submission.tests = problem.tests

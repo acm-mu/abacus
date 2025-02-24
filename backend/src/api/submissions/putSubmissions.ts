@@ -57,8 +57,18 @@ export const schema: Record<string, ParamSchema> = {
     isBoolean: true,
     optional: true
   },
+  released_date: {
+    in: 'body',
+    isNumeric: true,
+    optional: true
+  },
   claimed: {
     in: 'body',
+    optional: true
+  },
+  claimed_date: {
+    in: 'body',
+    isNumeric: true,
     optional: true
   },
   score: {
@@ -155,8 +165,13 @@ export const putSubmissions = async (req: Request, res: Response): Promise<void>
   }
   const item = matchedData(req)
 
+  //console.log("backend/src/api/submissions/putSubmission.ts:", req)
+  //console.log("backend/src/api/submissions/putSubmission.ts: item", item)
+
   try {
     const submission = await contest.get_submission(item.sid)
+
+    //console.log("backend/src/api/submissions/putSubmission.ts: here")
 
     if (item.claimed !== undefined && submission.claimed !== undefined) {
       // Trying to change a claimed submission
@@ -166,7 +181,14 @@ export const putSubmissions = async (req: Request, res: Response): Promise<void>
       }
     }
 
+    //console.log("backend/src/api/submissions/putSubmission.ts: before update submission")
+    //console.log("backend/src/api/submissions/putSubmission.ts: item.sid", item.sid)
+    //console.log("backend/src/api/submissions/putSubmission.ts: item", item)
+
     await contest.update_submission(item.sid, item)
+
+    
+    //console.log("backend/src/api/submissions/putSubmission.ts: after update submission")
 
     if (item.released == true) notifyTeam(item)
 
