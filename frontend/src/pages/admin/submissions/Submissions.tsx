@@ -60,7 +60,7 @@ const Submissions = (): React.JSX.Element => {
   */
   const loadSubmissions = async (page: number) => {
     //include page as query, so that API can fetch it.
-    const response = await fetch(`${config.API_URL}/submissions?page=${currentPage}`, {
+    const response = await fetch(`${config.API_URL}/submissions?page=${page}`, {
       headers: {
         Authorization: `Bearer ${localStorage.accessToken}`,
         'Content-Type': 'application/json'
