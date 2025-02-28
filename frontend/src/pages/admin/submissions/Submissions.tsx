@@ -153,7 +153,8 @@ const Submissions = (): React.JSX.Element => {
       />
       <Button
         content="Next Page"
-        onClick={() => setCurrentPage(prev => prev + 1)} 
+        onClick={() => setCurrentPage(prev => prev + 1)}
+        disabled={submissions.length < 25} //only gives pages with existing entries (edge case bug if page has exactly 25)
       />
 
 

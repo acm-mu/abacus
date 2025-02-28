@@ -60,7 +60,6 @@ const Submissions = (): React.JSX.Element => {
   }, [currentPage])
 
   const loadSubmissions = async (page: number) => {
-    console.log('in loadSubmissions: page is ', page)
     const response = await fetch(`${config.API_URL}/submissions?page=${page}?division=${user?.division}`, {
       headers: {
         Authorization: `Bearer ${localStorage.accessToken}`
@@ -190,7 +189,8 @@ const Submissions = (): React.JSX.Element => {
       />
       <Button
         content="Next Page"
-        onClick={() => setCurrentPage(prev => prev + 1)} 
+        onClick={() => setCurrentPage(prev => prev + 1)}
+        disabled={submissions.length < 25} //only gives pages with existing entries (edge case bug if page has exactly 25)
       />
 
       <Table singleLine sortable>
