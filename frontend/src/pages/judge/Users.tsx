@@ -5,6 +5,7 @@ import config from 'environment'
 import { AppContext } from 'context'
 import { PageLoading, StatusMessage } from 'components'
 import { usePageTitle } from 'hooks'
+import {Button} from 'semantic-ui-react'
 
 type SortKey = 'uid' | 'display_name' | 'username' | 'role' | 'division' | 'school'
 type SortConfig = {
@@ -21,11 +22,12 @@ const Teams = (): React.JSX.Element => {
   const [isLoading, setLoading] = useState(true)
   const [error, setError] = useState<string>()
 
-  const [isMounted, setMounted] = useState(true)
   const [{ column, direction }, setSortConfig] = useState<SortConfig>({
     column: 'username',
     direction: 'ascending'
   })
+
+  const[currentPage, setCurrentPage] = useState<number>(1)
 
   const sort = (newColumn: SortKey, users_list: User[] = users) => {
     const newDirection = column === newColumn && direction === 'ascending' ? 'descending' : 'ascending'
@@ -40,24 +42,20 @@ const Teams = (): React.JSX.Element => {
   }
 
   useEffect(() => {
-    loadUsers()
-    return () => {
-      setMounted(false)
-    }
-  }, [])
+    loadUsers(currentPage)
+    }, [currentPage])
 
-  const loadUsers = async () => {
+  const loadUsers = async (page: number) => {
     try {
-      const response = await fetch(`${config.API_URL}/users?division=${user?.division}&role=team`, {
+      const response = await fetch(`${config.API_URL}/users?division=${user?.division}&role=team&page=${page}`, {
         headers: {
           Authorization: `Bearer ${localStorage.accessToken}`
         }
       })
-      if (isMounted) {
         const data = Object.values(await response.json()) as User[]
-        sort('username', data)
+        sort('username', data.map((user) => ({...user, checked: false}))
+      )
         setLoading(false)
-      }
     } catch (err) {
       setError(err as string)
     }
@@ -97,6 +95,15 @@ const Teams = (): React.JSX.Element => {
         )
       })}
     </Table.Body>
+    <Button
+            content="Previous Page"
+            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} // Decrease page number but not below 1
+            disabled={currentPage <= 1} // Disable button if on the first page
+          />
+          <Button 
+            content="Next Page" 
+            onClick={() => setCurrentPage(prev => prev + 1)} // Increment page number
+          />
   </Table>
 }
 
