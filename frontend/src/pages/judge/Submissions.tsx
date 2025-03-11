@@ -74,6 +74,24 @@ const Submissions = (): React.JSX.Element => {
     )
   }
 
+  const enqueue = async (submission: Submission) => {
+      //const submission = submissions.find((submission) => submission.sid === sid)
+      const response = await fetch(`${config.API_URL}/submissions/submissionsEnqueue`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.accessToken}`
+        },
+        body: JSON.stringify({submission})
+      })
+  
+      console.log("/frontend/src/pages/judge/Submission.tsx enqueue response:", response)
+  
+      if (response.ok) {
+        console.log("frontend/src/pages/judge/Submission.tsx enqueue here")
+      }
+    }
+
   const onFilterChange = () => setShowReleased(!showReleased)
 
   const downloadSubmissions = () =>
@@ -110,11 +128,14 @@ const Submissions = (): React.JSX.Element => {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.accessToken}`
       },
-      body: JSON.stringify({ sid, claimed: user?.uid })
+      body: JSON.stringify({ sid, claimed: user?.uid, claimed_date: Date.now() / 1000 })
     })
 
     if (response.ok) {
       setSubmissions(submissions.map((sub) => (sub.sid == sid ? { ...sub, claimed: user } : sub)))
+      const oldSubmission = submissions.filter((sub) => sub.sid === sid)[0]
+      const updatedSubmission = { ...oldSubmission, claimed: user, claimed_date: Date.now() / 1000 } as Submission
+      enqueue(updatedSubmission)
     }
 
     setClaiming({ ...isClaiming, [sid]: false })
@@ -152,6 +173,18 @@ const Submissions = (): React.JSX.Element => {
         return true
     }
   }
+
+  const claim_enqueue = (sid: string) => {
+    claim(sid)
+    //enqueue()
+  }
+
+  // function claim_enqueue(sid: string)
+  // {
+  //   claim(sid)
+  //   enqueue()
+
+  // }
 
   const filteredSubmissions = useMemo(
     () => submissions.filter((submission) => showReleased || (!submission.released && urlFilter(submission))),
@@ -266,7 +299,7 @@ const Submissions = (): React.JSX.Element => {
                       <Button
                         content="Claim"
                         icon={'hand rock'}
-                        onClick={() => claim(submission.sid)}
+                        onClick={() => claim_enqueue(submission.sid)}
                         loading={isClaiming[submission.sid]}
                         disabled={isClaiming[submission.sid]}
                         labelPosition={'left'}

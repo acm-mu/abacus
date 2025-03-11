@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 import { matchedData, ParamSchema, validationResult } from 'express-validator'
 import { io, sendNotification } from '../../server'
 import contest from '../../abacus/contest'
+//import { submissionsQueue } from './submissionsQueue'
 
 export const schema: Record<string, ParamSchema> = {
   sid: {
@@ -90,7 +91,7 @@ export const schema: Record<string, ParamSchema> = {
   }
 }
 
-const notifyTeam = async (item: Record<string, unknown>) => {
+export const notifyTeam = async (item: Record<string, unknown>) => {
   const res = await contest.get_submissions({ sid: item.sid })
   if (!res) return
 
@@ -104,6 +105,8 @@ const notifyTeam = async (item: Record<string, unknown>) => {
     }
   })
 }
+
+//const submissionsQueue = new SubmissionsQueue<Submission>()
 
 /**
  * @swagger
@@ -186,6 +189,10 @@ export const putSubmissions = async (req: Request, res: Response): Promise<void>
     //console.log("backend/src/api/submissions/putSubmission.ts: item", item)
 
     await contest.update_submission(item.sid, item)
+
+    //submissionsQueue.enqueue(submission)
+
+    //console.log("backend/src/spi/submissions/putSubmissions.ts submissionsQueue:", submissionsQueue)
 
     
     //console.log("backend/src/api/submissions/putSubmission.ts: after update submission")

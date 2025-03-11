@@ -19,6 +19,7 @@ const Submission = (): React.JSX.Element => {
   const [isReleasing, setReleasing] = useState(false)
   const [isClaiming, setClaiming] = useState<{ [key: string]: boolean }>({})
   const [error, setError] = useState<string>()
+  const [queue, setQueue] = useState<SubmissionType[]>([])
 
   const { user } = useContext(AppContext)
 
@@ -36,13 +37,53 @@ const Submission = (): React.JSX.Element => {
     setLoading(false)
   }
 
+  const loadQueue = async () => {
+    const response = await fetch(`${config.API_URL}/submissions/submissionsQueue`,{
+      headers: { Authorization: `Bearer ${localStorage.accessToken}` }
+    })
+
+    console.log("/frontend/src/pages/judge/Submission.tsx loadQueue response:", response)
+
+    if (response.ok) {
+      const queueData = await response.json()
+      setQueue(queueData)
+      console.log("frontend/src/pages/judge/Submission.tsx loadQueue here")
+    }
+  }
+
+  /*
+  const addToQueue = async () => {
+    const response = await fetch(`${config.API_URL}/submissions/submissionsQueue`,{
+      headers: { Authorization: `Bearer ${localStorage.accessToken}` }
+    })
+
+    console.log("/frontend/src/pages/judge/Submission.tsx addToQueue response:", response)
+
+    if (response.ok) {
+      const queueData = await response.json()
+      setQueue(queueData);
+      console.log("frontend/src/pages/judge/Submission.tsx addToQueue here")
+    }
+  }
+    */
+
   useEffect(() => {
     loadSubmission().then(() => setLoading(false))
+    loadQueue()
     socket?.on('update_submission', loadSubmission)
   }, [sid])
 
   if (isLoading) return <PageLoading />
   if (!submission) return <NotFound />
+
+  // const loadSubmissionsQueue = async () => {
+  //   const response = await fetch(`${config.API_URL}/submissions/submissionsQueue`, {
+  //     headers: { Authorization: `Bearer ${localStorage.accessToken}`}
+  //   })
+
+  //   //if(response.ok)
+  // }
+
 
   const rerun = async () => {
     if (!setSubmission) return
@@ -70,6 +111,7 @@ const Submission = (): React.JSX.Element => {
     }
     setRerunning(false)
   }
+
   const release = async () => {
     if (!setSubmission) return
     if (!submission) return
@@ -116,7 +158,12 @@ const Submission = (): React.JSX.Element => {
     })
 
     if (response.ok) {
-      setSubmission({ ...submission, claimed: user, claimed_date: Date.now() / 1000})
+      setSubmission({...submission, claimed: user, claimed_date: Date.now() / 1000})
+      const updatedSubmission = { ...submission, claimed: user, claimed_date: Date.now() / 1000}
+      //setSubmission(updatedSubmission)
+      enqueue(updatedSubmission)
+      loadQueue()
+      //addToQueue()
     } else {
       try {
         const { message } = await response.json()
@@ -158,6 +205,74 @@ const Submission = (): React.JSX.Element => {
     submission?.source &&
     submission.filename &&
     saveAs(new File([submission?.source], submission.filename, { type: 'text/plain;charset=utf-8' }))
+  
+  const enqueue = async (submission: SubmissionType) => {
+    const response = await fetch(`${config.API_URL}/submissions/submissionsEnqueue`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.accessToken}`
+      },
+      body: JSON.stringify({submission})
+    })
+
+    console.log("/frontend/src/pages/judge/Submission.tsx enqueue response:", response)
+
+    if (response.ok) {
+      //loadQueue()
+      const queueData = await response.json()
+      setQueue(queueData)
+      loadQueue()
+      console.log("frontend/src/pages/judge/Submission.tsx enqueue here")
+    }
+  }
+
+  const dequeue = async () => {
+    const response = await fetch(`${config.API_URL}/submissions/submissionsDequeue`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.accessToken}`
+      },
+      body: JSON.stringify({sid: submission.sid})
+    })
+
+    console.log("/frontend/src/pages/judge/Submission.tsx dequeue response:", response)
+
+    if (response.ok) {
+      console.log("frontend/src/pages/judge/Submission.tsx dequeue here")
+    }
+  }
+
+  const refresh = () =>
+    window.location.reload()
+
+  const rerun_dequeue_refresh = () => {
+    rerun()
+    dequeue()
+    refresh()
+  }
+
+  // const claim_refresh = (sid: string) => {
+  //   claim(sid)
+  //   refresh()
+  // }
+
+  // function rerun_dequeue_refresh()
+  // {
+  //   rerun()
+  //   dequeue()
+  //   refresh()
+  // }
+
+  const claim_loadQueue = (sid: string) => {
+    claim(sid)
+    loadQueue()
+  }
+
+  console.log("frontend/src/pages/judge/submission.tsx queue:", queue)
+
+  const isRerunDisabled = !queue.some((item) => item.sid === submission?.sid)
 
   return (
     <>
@@ -181,12 +296,12 @@ const Submission = (): React.JSX.Element => {
                 />
                 {submission.division == 'blue' && (
                   <Button
-                    disabled={isRerunning || submission.claimed?.uid != user?.uid}
+                    disabled={isRerunning || submission.claimed?.uid != user?.uid || isRerunDisabled}
                     loading={isRerunning}
                     content="Rerun"
                     icon="redo"
                     labelPosition="left"
-                    onClick={rerun}
+                    onClick={rerun_dequeue_refresh}
                   />
                 )}
                 <Button
@@ -206,7 +321,7 @@ const Submission = (): React.JSX.Element => {
           <Button
             content="Claim"
             icon={'hand rock'}
-            onClick={() => claim(submission.sid)}
+            onClick={() => claim_loadQueue(submission.sid)}
             loading={isClaiming[submission.sid]}
             disabled={isClaiming[submission.sid]}
             labelPosition={'left'}
