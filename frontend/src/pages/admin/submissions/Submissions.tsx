@@ -146,17 +146,6 @@ const Submissions = (): React.JSX.Element => {
       )}
       <Checkbox toggle label="Show Released" checked={showReleased} onClick={onReleaseChange} />
 
-      <Button
-        content="Previous Page"
-        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} 
-        disabled={currentPage <= 1} 
-      />
-      <Button
-        content="Next Page"
-        onClick={() => setCurrentPage(prev => prev + 1)}
-        disabled={submissions.length < 25} //only gives pages with existing entries (edge case bug if page has exactly 25)
-      />
-
 
       <Block size="xs-12" transparent>
         <Menu pointing secondary>
@@ -242,6 +231,17 @@ const Submissions = (): React.JSX.Element => {
           </Table.Body>
         </Table>
       </Block>
+      <Button
+        content="Previous Page"
+        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} 
+        disabled={currentPage <= 1} 
+      />
+      <Button
+        content="Next Page"
+        onClick={() => setCurrentPage(prev => prev + 1)}
+        disabled={submissions.length < 25} //only gives pages with existing entries (edge case bug if page has exactly 25)
+      />
+
     </Grid>
   )
 }
