@@ -247,10 +247,14 @@ const Submission = (): React.JSX.Element => {
   const refresh = () =>
     window.location.reload()
 
-  const rerun_dequeue_refresh = () => {
+  const rerun_refresh = () => {
     rerun()
-    dequeue()
     refresh()
+  }
+
+  const dequeue_release = () => {
+    release()
+    dequeue()
   }
 
   // const claim_refresh = (sid: string) => {
@@ -301,7 +305,7 @@ const Submission = (): React.JSX.Element => {
                     content="Rerun"
                     icon="redo"
                     labelPosition="left"
-                    onClick={rerun_dequeue_refresh}
+                    onClick={rerun_refresh}
                   />
                 )}
                 <Button
@@ -310,7 +314,7 @@ const Submission = (): React.JSX.Element => {
                   icon="right arrow"
                   content="Release"
                   labelPosition="left"
-                  onClick={release}
+                  onClick={dequeue_release}
                 />
               </>
             ) : (

@@ -21,6 +21,7 @@ const Submission = (): React.JSX.Element => {
   const [isFlagging, setFlagging] = useState<{ [key: string]: boolean }>({})
   const [isUnFlagging, setUnFlagging] = useState<{ [key: string]: boolean }>({})
   const [isSaving, setSaving] = useState(false)
+  const [queue, setQueue] = useState<SubmissionType[]>([])
 
   const { user } = useContext(AppContext)
 
@@ -39,8 +40,23 @@ const Submission = (): React.JSX.Element => {
     setLoading(false)
   }
 
+  const loadQueue = async () => {
+      const response = await fetch(`${config.API_URL}/submissions/submissionsQueue`,{
+        headers: { Authorization: `Bearer ${localStorage.accessToken}` }
+      })
+  
+      console.log("/frontend/src/pages/judge/Submission.tsx loadQueue response:", response)
+  
+      if (response.ok) {
+        const queueData = await response.json()
+        setQueue(queueData)
+        console.log("frontend/src/pages/judge/Submission.tsx loadQueue here")
+      }
+    }
+
   useEffect(() => {
     loadSubmission()
+    loadQueue()
     return () => {
       setMounted(false)
     }
@@ -175,6 +191,30 @@ const Submission = (): React.JSX.Element => {
     submission?.source &&
     submission.filename &&
     saveAs(new File([submission?.source], submission.filename, { type: 'text/plain;charset=utf-8' }))
+  
+  const dequeue = async () => {
+    const response = await fetch(`${config.API_URL}/submissions/submissionsDequeue`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.accessToken}`
+      },
+      body: JSON.stringify({sid: submission.sid})
+    })
+  
+    console.log("/frontend/src/pages/judge/Submission.tsx dequeue response:", response)
+  
+    if (response.ok) {
+      console.log("frontend/src/pages/judge/Submission.tsx dequeue here")
+    }
+  }
+  
+  const dequeue_release = () => {
+    release()
+    dequeue()
+  }
+
+  console.log("frontend/src/pages/judge/submission.tsx queue:", queue)
 
   return (
     <Grid>
@@ -196,7 +236,7 @@ const Submission = (): React.JSX.Element => {
           icon="right arrow"
           content="Release"
           labelPosition="left"
-          onClick={release}
+          onClick={dequeue_release}
         />
       )}
       {submission.flagged ? (
