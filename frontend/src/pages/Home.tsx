@@ -40,9 +40,9 @@ const Home = (): React.JSX.Element => {
     }
   }, [] )
 
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const endIndex = startIndex + ITEMS_PER_PAGE;
-  const paginatedTeams = teams.slice(startIndex, endIndex); 
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
+  const endIndex = startIndex + ITEMS_PER_PAGE
+  const paginatedTeams = teams.slice(startIndex, endIndex) 
 
   return (
     <>
@@ -129,7 +129,7 @@ const Home = (): React.JSX.Element => {
         </Block>
       </Block>
     </>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home
