@@ -8,9 +8,7 @@ services:
       - "8080:80"
       - "443:443"
     volumes:
-      - ./frontend/default.conf:/etc/nginx/conf.d/default.conf
-      - ./frontend/abacus.crt:/etc/nginx/ssl/abacus.crt
-      - ./frontend/abaucs.key:/etc/nginx/ssl/abacus.key
+      - ./frontend:/frontend
     depends_on:
       - server
       - app
