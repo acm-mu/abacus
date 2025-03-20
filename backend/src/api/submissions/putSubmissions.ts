@@ -2,8 +2,8 @@ import { Request, Response } from 'express'
 import { matchedData, ParamSchema, validationResult } from 'express-validator'
 import { io, sendNotification } from '../../server'
 import contest from '../../abacus/contest'
-//import { submissionsQueue } from './submissionsQueue'
 
+// Define the validation schema for the request body
 export const schema: Record<string, ParamSchema> = {
   sid: {
     in: 'body',
@@ -91,22 +91,24 @@ export const schema: Record<string, ParamSchema> = {
   }
 }
 
+// Function to send notification to the team when a submission is graded
 export const notifyTeam = async (item: Record<string, unknown>) => {
+  // Get the submission using the provided submission ID (sid)
   const res = await contest.get_submissions({ sid: item.sid })
-  if (!res) return
+  // If no submission is found, return early
+  if (!res) return 
 
+  // Send a notification to the team associated with the submission
   sendNotification({
-    to: `uid:${res[0].tid}`,
-    header: 'Feedback!',
-    content: 'Your submission has been graded!',
+    to: `uid:${res[0].tid}`, // Send to the team (tid) associated with the submission
+    header: 'Feedback!', // Notification header
+    content: `Submission ${res[0].sid.substring(0, 7)} has been graded!`, // Notification content
     context: {
-      type: 'sid',
-      id: item.sid as string
+      type: 'sid', // Specify the context type as submission ID (sid)
+      id: item.sid as string // Attach the submission ID to the notification context
     }
   })
 }
-
-//const submissionsQueue = new SubmissionsQueue<Submission>()
 
 /**
  * @swagger
@@ -160,22 +162,25 @@ export const notifyTeam = async (item: Record<string, unknown>) => {
  *       500:
  *         description: A server error occured while trying to complete request.
  */
+
+// Function to handle PUT request for updating a submission
 export const putSubmissions = async (req: Request, res: Response): Promise<void> => {
+  // Check for validation errors in the request body
   const errors = validationResult(req).array()
   if (errors.length > 0) {
+    // If validation fails, return a 400 Bad Request response
     res.status(400).json({ message: errors[0].msg })
     return
   }
+
+  // Extract matched data from the request body
   const item = matchedData(req)
 
-  //console.log("backend/src/api/submissions/putSubmission.ts:", req)
-  //console.log("backend/src/api/submissions/putSubmission.ts: item", item)
-
   try {
+    // Get the existing submission using the submission ID (sid)
     const submission = await contest.get_submission(item.sid)
 
-    //console.log("backend/src/api/submissions/putSubmission.ts: here")
-
+    // Check if the 'claimed' field is being modified
     if (item.claimed !== undefined && submission.claimed !== undefined) {
       // Trying to change a claimed submission
       if (req.user?.role !== 'admin' && item.claimed !== null) {
@@ -184,25 +189,19 @@ export const putSubmissions = async (req: Request, res: Response): Promise<void>
       }
     }
 
-    //console.log("backend/src/api/submissions/putSubmission.ts: before update submission")
-    //console.log("backend/src/api/submissions/putSubmission.ts: item.sid", item.sid)
-    //console.log("backend/src/api/submissions/putSubmission.ts: item", item)
-
+    // Update the submission with the new data provided in the request
     await contest.update_submission(item.sid, item)
 
-    //submissionsQueue.enqueue(submission)
-
-    //console.log("backend/src/spi/submissions/putSubmissions.ts submissionsQueue:", submissionsQueue)
-
-    
-    //console.log("backend/src/api/submissions/putSubmission.ts: after update submission")
-
+    // If the submission is released, notify the team
     if (item.released == true) notifyTeam(item)
 
+    // Emit a socket event to notify other services or clients about the updated submission
     io.emit('update_submission', { sid: item.sid })
 
+    // Return the updated submission data in the response
     res.send(item)
   } catch (err) {
+    // Handle any errors that occur during the process and send a 500 Internal Server
     console.error(err)
     res.sendStatus(500)
   }

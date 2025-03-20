@@ -1,8 +1,9 @@
 import { RawSubmission, Submission } from "abacus"
 
+// Define a Node clas to store a Submission and links to the next and previous nodes
 class Node_<Submission extends RawSubmission>
 {
-    data: Submission;
+    data: Submission
     next: Node_<Submission> | null = null
     prev: Node_<Submission> | null = null
 
@@ -12,12 +13,14 @@ class Node_<Submission extends RawSubmission>
     }
 }
 
+// Define a Doubly Linked List class to manage a list of submissions
 class DoublyLinkedList<Submission extends RawSubmission>
 {
     head: Node_<Submission> | null = null
     tail: Node_<Submission> | null = null
     size: number = 0
 
+    // Function to append a new node with submission data to the end of the list
     append(data: Submission): void
     {
         const newNode = new Node_(data)
@@ -32,9 +35,9 @@ class DoublyLinkedList<Submission extends RawSubmission>
             this.head = this.tail = newNode
         }
         this.size++
-        console.log("backend/src/api/submissions/unranSubmissionsDoublyLL append:", this.print())
     }
 
+    // Function to prepend a new node with submission data to the beginning of the list
     prepend(data: Submission): void
     {
         const newNode = new Node_(data)
@@ -51,6 +54,7 @@ class DoublyLinkedList<Submission extends RawSubmission>
         this.size++
     }
 
+    // Function to remove the last node in the list
     remove(): void
     {
         if (this.tail)
@@ -68,6 +72,7 @@ class DoublyLinkedList<Submission extends RawSubmission>
         }
     }
 
+    // Function to remove the first node in the list
     removeFirst(): void
     {
         if (this.head)
@@ -82,38 +87,35 @@ class DoublyLinkedList<Submission extends RawSubmission>
                 this.head = this.tail = null
             }
             this.size--
-            console.log("backend/src/api/submissions/unranSubmissionsDoublyLL removeFirst:", this.print())
         }
     }
 
+    // Function to get a node at a specific index in the list
     getNodeAt(index: number): Node_<Submission> | null
     {
-        //if(index < 0 || index >= this.size) return null;
-
-        let currentNode = this.head;
+        let currentNode = this.head
         for (let i = 0; i < index; i++)
         {
-            currentNode = currentNode?.next || null;
+            currentNode = currentNode?.next || null
         }
 
-        //this.removeFirst();
-
-        console.log("backend/src/api/submissions/unranSubmissionsDoublyLL getNodeAt:", currentNode)
-
-        return currentNode;
+        return currentNode
     }
 
+    // Function to clear the entire list
     clear(): void
     {
         this.head = this.tail = null
         this.size = 0
     }
 
+    // Function to check if the list is empty
     isEmpty(): boolean
     {
         return this.size === 0
     }
 
+    // Function to print the content of the list as a string
     print(): void {
         let currentNode = this.head
         let result = ""
@@ -125,5 +127,5 @@ class DoublyLinkedList<Submission extends RawSubmission>
     }
 }
 
+// Create an instance of DoublyLinkedList
 export const doublyLinkedList = new DoublyLinkedList<Submission>()
-//doublyLinkedList.clear();
