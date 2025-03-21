@@ -252,6 +252,11 @@ const Submission = (): React.JSX.Element => {
       },
       body: JSON.stringify({sid: submission.sid}) // Send submission to dequeue
     })
+    
+    if(response.ok)
+    {
+      console.log("frontend/src/pages/judge/Submission.tsx dequeue here")
+    }
   }
 
   // Function to refresh the page

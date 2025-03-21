@@ -236,6 +236,11 @@ const Submission = (): React.JSX.Element => {
       },
       body: JSON.stringify({sid: submission.sid})
     })
+
+    if (response.ok)
+    {
+      console.log("frontend/src/pages/admin/submissions/Submission.tsx dequeue here")
+    }
   }
   
   // Function to dequeue and release submission

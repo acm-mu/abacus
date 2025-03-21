@@ -100,6 +100,11 @@ const Submissions = (): React.JSX.Element => {
         },
         body: JSON.stringify({submission})
       })
+
+      if (response.ok)
+      {
+        console.log("frontend/src/pages/judge/Submissions.tsx enqueue here")
+      }
     }
 
     // Toggle filter for showing released submissions
