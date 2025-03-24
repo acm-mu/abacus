@@ -19,9 +19,9 @@ services:
       dockerfile: Dockerfile.prod
     environment:
       - MONGO_HOST=mongodb
-      - MONGO_USER=username
-      - MONGO_PASS=password
-      - MONGO_DBNAME=abacus
+      - MONGO_USER=MUad
+      - MONGO_PASS=ep16y11BPqP
+      - MONGO_DBNAME=admin
     ports:
       - "8080:80"
     depends_on:
@@ -32,6 +32,6 @@ services:
       context: frontend
       dockerfile: Dockerfile.prod
     ports:
-      - "8081:80"
+      - "80:80"
     depends_on:
       - server
