@@ -8,7 +8,9 @@ services:
       - "8080:80"
       - "443:443"
     volumes:
-      - ./frontend:/frontend
+      - ./frontend/abacus.crt:/etc/nginx/ssl/abacus.crt  # Correct mount for SSL certificate
+      - ./frontend/abacus.key:/etc/nginx/ssl/abacus.key  # Correct mount for SSL key
+      - ./frontend/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - server
       - app
