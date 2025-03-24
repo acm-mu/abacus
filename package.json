@@ -17,7 +17,7 @@
   "bugs": {
     "url": "https://github.com/acm-mu/abacus/issues"
   },
-  "homepage": "https://github.com/acm-mu/abacus#readme",
+  "homepage": "/",
   "devDependencies": {
     "@types/react": "^17.0.39",
     "@typescript-eslint/eslint-plugin": "^4.32.0",
