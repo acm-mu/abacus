@@ -25,7 +25,7 @@ const Submissions = (): React.JSX.Element => {
   const socket = useContext(SocketContext)
   const [isLoading, setLoading] = useState(true)
   const [submissions, setSubmissions] = useState<SubmissionItem[]>([])
-  const [isMounted, setMounted] = useState(true)
+ // const [isMounted, setMounted] = useState(true)
   const [isDeleting, setDeleting] = useState(false)
   const [isClaiming, setClaiming] = useState<{ [key: string]: boolean }>({})
   const [showReleased, setShowReleased] = useState(false)
@@ -37,6 +37,8 @@ const Submissions = (): React.JSX.Element => {
     column: 'date',
     direction: 'ascending'
   })
+
+  const[currentPage, setCurrentPage] = useState<number>(1) //pagination change setup
 
   const sort = (newColumn: SortKey, submission_list: SubmissionItem[] = submissions) => {
     const newDirection = column === newColumn && direction == 'ascending' ? 'descending' : 'ascending'
@@ -51,21 +53,20 @@ const Submissions = (): React.JSX.Element => {
   }
 
   useEffect(() => {
-    loadSubmissions().then(() => setLoading(false))
-    socket?.on('new_submission', loadSubmissions)
-    socket?.on('update_submission', loadSubmissions)
-    return () => setMounted(false)
-  }, [])
+    loadSubmissions(currentPage).then(() => setLoading(false))
+    socket?.on('new_submission', () => loadSubmissions(currentPage))
+    socket?.on('update_submission', () => loadSubmissions(currentPage))
+    //return () => setMounted(false) //only needed if we don't do pagination
+  }, [currentPage])
 
-  const loadSubmissions = async () => {
-    const response = await fetch(`${config.API_URL}/submissions?division=${user?.division}`, {
+  const loadSubmissions = async (page: number) => {
+    const response = await fetch(`${config.API_URL}/submissions?page=${page}?division=${user?.division}`, {
       headers: {
         Authorization: `Bearer ${localStorage.accessToken}`
       }
     })
     const submissions = Object.values(await response.json()) as SubmissionItem[]
-
-    if (!isMounted) return
+    //if (!isMounted) return //No longer needed. This is to make sure the same list isn't shown twice. But that's allowed if we paginate
 
     setSubmissions(
       submissions
@@ -97,7 +98,7 @@ const Submissions = (): React.JSX.Element => {
       body: JSON.stringify({ sid: submissionsToDelete })
     })
     if (response.ok) {
-      loadSubmissions()
+      loadSubmissions(currentPage)
     }
     setDeleting(false)
   }
@@ -180,6 +181,17 @@ const Submissions = (): React.JSX.Element => {
         </Button>
       )}
       <Checkbox toggle label="Show Released" checked={showReleased} onClick={onFilterChange} />
+
+      <Button
+        content="Previous Page"
+        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} 
+        disabled={currentPage <= 1} 
+      />
+      <Button
+        content="Next Page"
+        onClick={() => setCurrentPage(prev => prev + 1)}
+        disabled={submissions.length < 25} //only gives pages with existing entries (edge case bug if page has exactly 25)
+      />
 
       <Table singleLine sortable>
         <Table.Header>
