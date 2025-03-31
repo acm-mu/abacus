@@ -6,13 +6,13 @@ interface Config {
 
 const prod: Config = {
   isLocal: false,
-  API_URL: process.env.API_URL || 'https://abacus.cs.mu.edu:8080',
+  API_URL: process.env.API_URL || 'https://abacus.cs.mu.edu',
   environmentText: ''
 }
 
 const dev: Config = {
   isLocal: true,
-  API_URL: 'http://localhost',
+  API_URL: 'http://localhost:80',
   environmentText: 'LOCAL ENV.'
 }
 

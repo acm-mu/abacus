@@ -32,7 +32,7 @@ services:
       context: frontend
       dockerfile: Dockerfile.prod
     volumes:
-      - ./frontend/abacus.crt:/etc/nginx/ssl/abacus.crt  # Correct mount for SSL certificate
+      - ./frontend/abacus.crt:/etc/nginx/ssl/abacus.crt 
       - ./frontend/abacus.key:/etc/nginx/ssl/abacus.key
     ports:
       - "80:80"
