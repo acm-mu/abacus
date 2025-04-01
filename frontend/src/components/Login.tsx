@@ -33,6 +33,7 @@ const LoginModal = ({ trigger, open }: LoginModalProps): React.JSX.Element => {
   const handleSubmit = async () => {
     try {
       setLoggingIn(true)
+      console.log("Sending login request to:", `${config.API_URL}/auth`)
       const response = await fetch(`${config.API_URL}/auth`, {
         method: 'POST',
         headers: {
@@ -40,6 +41,7 @@ const LoginModal = ({ trigger, open }: LoginModalProps): React.JSX.Element => {
         },
         body: JSON.stringify(formData)
       })
+      
       if (response.status == 200) {
         const { accessToken, ...user } = await response.json()
         localStorage.setItem('accessToken', accessToken)
