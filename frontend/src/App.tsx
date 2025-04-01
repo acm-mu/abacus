@@ -16,10 +16,7 @@ const App = (): React.JSX.Element => {
 
   const error_id = uuidv4()
 
-  const socket = io('wss://abacus.cs.mu.edu', {
-    transport: ['websocket', 'polling'],
-    secure: true
-  })
+  const socket = io(config.API_URL, { transports: ['websocket'] })
 
   const checkAuth = async () => {
     try {
@@ -31,27 +28,23 @@ const App = (): React.JSX.Element => {
       }
       return true
     } catch (err) {
-      console.error('Auth check failed:', err)
       return false
     }
   }
 
   const loadSettings = async (): Promise<boolean> => {
-    try {
-      const response = await fetch(`${config.API_URL}/contest`)
-      if (response.ok) {
-        const data = await response.json()
-        setSettings({
-          ...data,
-          start_date: new Date(parseInt(data.start_date) * 1000),
-          end_date: new Date(parseInt(data.end_date) * 1000),
-          practice_start_date: new Date(parseInt(data.practice_start_date) * 1000),
-          practice_end_date: new Date(parseInt(data.practice_end_date) * 1000)
-        })
-        return true
-      }
-    } catch (err) {
-      console.error('Failed to load settings:', err)
+    const response = await fetch(`${config.API_URL}/contest`)
+    if (response.ok) {
+      const data = await response.json()
+
+      setSettings({
+        ...data,
+        start_date: new Date(parseInt(data.start_date) * 1000),
+        end_date: new Date(parseInt(data.end_date) * 1000),
+        practice_start_date: new Date(parseInt(data.practice_start_date) * 1000),
+        practice_end_date: new Date(parseInt(data.practice_end_date) * 1000)
+      })
+      return true
     }
     return false
   }

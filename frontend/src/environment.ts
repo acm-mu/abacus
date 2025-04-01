@@ -12,7 +12,7 @@ const prod: Config = {
 
 const dev: Config = {
   isLocal: true,
-  API_URL: 'http://localhost:80',
+  API_URL: 'http://localhost',
   environmentText: 'LOCAL ENV.'
 }
 
