@@ -314,7 +314,7 @@ const Submission = (): React.JSX.Element => {
                   <Button
                     disabled={isRerunning || submission.claimed?.uid != user?.uid || isRerunDisabled}
                     loading={isRerunning}
-                    content="Rerun"
+                    content="Score"
                     icon="redo"
                     labelPosition="left"
                     onClick={rerun_refresh}

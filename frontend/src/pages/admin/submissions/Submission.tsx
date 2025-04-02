@@ -261,7 +261,7 @@ const Submission = (): React.JSX.Element => {
       <Button
         disabled={isRerunning}
         loading={isRerunning}
-        content="Rerun"
+        content="Score"
         icon="redo"
         labelPosition="left"
         onClick={rerun}

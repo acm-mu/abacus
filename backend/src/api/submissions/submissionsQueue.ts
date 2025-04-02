@@ -19,8 +19,8 @@ export class SubmissionsQueue<Submission extends RawSubmission>
             const judgeInfo = item.claimed as User
             sendNotification({
                 to: `uid:${judgeInfo.uid}`,
-                header: 'Rerun Currently Unavailable!',
-                content: `Submission ${item.sid.substring(0, 7)} is not in the queue, so it cannot be ran yet`,
+                header: 'Scoring Currently Unavailable!',
+                content: `Submission ${item.sid.substring(0, 7)} is not in the queue, so it cannot be scored yet`,
                 context: {
                     type: 'sid',
                     id: item.sid as string
@@ -51,8 +51,8 @@ export class SubmissionsQueue<Submission extends RawSubmission>
             const judgeInfo = submission.claimed as User
             sendNotification({
                 to: `uid:${judgeInfo.uid}`,
-                header: 'Rerun Now Available!',
-                content: `Submission ${submission.sid.substring(0, 7)} can now be ran`,
+                header: 'Scoring Now Available!',
+                content: `Submission ${submission.sid.substring(0, 7)} can now be scored`,
                 context: {
                     type: 'sid',
                     id: submission.sid as string
