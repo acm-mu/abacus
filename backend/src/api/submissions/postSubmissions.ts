@@ -7,6 +7,7 @@ import { UploadedFile } from 'express-fileupload'
 import contest from '../../abacus/contest'
 import { Submission } from 'abacus'
 
+// Define the validation schema for the request body
 export const schema: Record<string, ParamSchema> = {
   pid: {
     in: 'body',
@@ -90,51 +91,61 @@ export const schema: Record<string, ParamSchema> = {
  *
  */
 
+// Function to handle the POST request for submissions
 export const postSubmissions = async (req: Request, res: Response): Promise<void> => {
+  // Check for validation errors in the request
   const errors = validationResult(req).array()
   if (errors.length > 0) {
+    // If validation fails, return an error response
     res.status(400).json({ message: errors[0].msg })
     return
   }
 
+  // Check to see if the user is authenticated
   if (!req.user) {
     res.status(401).send({ message: 'Your credentials could not be recognized!' })
     return
   }
   try {
+    // Get matched data from the request
     const item = matchedData(req)
 
+    // Get user data using the user's ID
     const user = await contest.get_user(req.user?.uid)
     if (!user) {
       res.status(401).send({ message: 'Your credentials could not be recognized!' })
       return
     }
 
+    // Check if the user account is disabled
     if (user.disabled) {
       res.status(403).send({ message: 'Your account is disabled!' })
       return
     }
 
+    // Get the problem data associated with the submission
     const problem = await contest.get_problem(item.pid)
     if (!problem) {
       res.status(400).send({ message: 'Problem does not exist!' })
       return
     }
+
+    // Checks if user is allowed to submit to the selected problem's division
     if (user?.division != problem.division) {
       res.status(403).send({ message: 'You can not submit to problems in this division!' })
       return
     }
 
+    // Get contest settings for the competition or practice period
     const {
       start_date,
       end_date,
       practice_start_date,
-      practice_end_date,
-      points_per_yes,
-      points_per_minute,
-      points_per_no
+      practice_end_date
     } = await contest.get_settings()
     const now = Date.now()
+
+    // Check if the problem is in the practice period or competition period
     if (problem.practice) {
       if (now < practice_start_date * 1000) {
         res.status(403).send({ message: 'The practice period has not yet begun!' })
@@ -153,8 +164,10 @@ export const postSubmissions = async (req: Request, res: Response): Promise<void
       }
     }
 
+    // Get the user's previous submissions for the same problem
     const submissions = (await contest.get_submissions({ tid: req.user?.uid, pid: item.pid })) as Submission[]
 
+    // Check if the user has already solved the problem or if there are pending submissions
     if (submissions) {
       for (const submission of submissions) {
         if (submission.status === 'accepted' && problem.division != 'gold') {
@@ -173,6 +186,7 @@ export const postSubmissions = async (req: Request, res: Response): Promise<void
       }
     }
 
+    // Create a new submission object
     let submission: Record<string, unknown> = {
       sid: uuidv4().replace(/-/g, ''),
       pid: item.pid,
@@ -184,27 +198,30 @@ export const postSubmissions = async (req: Request, res: Response): Promise<void
       score: 0,
       date: Date.now() / 1000
     }
+
+    // Checks to see if the 'language' field is provided for blue submissions
     if (!item.language) {
       res.status(400).json({ message: 'language not provided' })
       return
     }
-    // Only run for new items
 
-    // Find submission from event metadata
-
-    // Get problem and competition details
+    // Handle blue division submissions
     if (item.division === 'blue') {
       if (req.files?.source == undefined) {
         res.status(400).json({ message: 'source not provided' })
         return
       }
+
+      // Get problem details
       const problem = await contest.get_problem(item.pid)
 
-      // Update status to 'pending'
-      // await updateItem('', { submission.sid }, { status: 'pending' });
+      // Create the submission
       await contest.create_submission({ sid: submission.sid, status: 'pending' })
+      
       // Extract details and set defaults
       const { name: filename, size: filesize, md5, data } = req.files.source as UploadedFile
+
+      // Update the submission with additional details
       submission = {
         ...submission,
         language: item.language,
@@ -214,67 +231,23 @@ export const postSubmissions = async (req: Request, res: Response): Promise<void
         tests: problem.tests,
         source: data.toString('utf-8')
       }
-      let status = 'accepted'
-      for (let test of problem.tests) {
-        // Copy tests from problem
-        submission.tests = problem.tests
 
-        // Run tests
-        const file = { name: submission.filename as string, content: submission['source'] as string }
-        // Await response from piston execution
-        try {
-          const res = await axios.post(
-            'https://piston.tabot.sh/api/v2/execute',
-            {
-              language: item.language,
-              files: [file],
-              version: item.language === 'python' ? '3.9.4' : '15.0.2',
-              stdin: test.in
-            },
-            {
-              headers: {
-                'Content-Type': 'application/json'
-              }
-            }
-          )
-          test['stdout'] = res.data.run.code == 0 ? res.data.run.stdout : res.data.run.stderr
-          if ((res.data.run.output.trim() as string) == (test.out.trim() as string) && res.data.run.code === 0) {
-            console.log('Result: ACCEPTED')
-            test['result'] = 'accepted'
-          } else {
-            console.log('Result: REJECTED')
-            status = 'rejected'
-            test['result'] = 'rejected'
-          }
-        } catch (e) {
-          console.log(e)
-        }
-      }
-      submission.status = status
-      // Calculate Score
-      if (status == 'accepted') {
-        let minutes = 0
-        if (problem.practice) {
-          minutes = ((submission.date as any) - practice_start_date) / 60
-        } else {
-          minutes = ((submission.date as any) - start_date) / 60
-        }
-        submission.score = Math.floor(
-          minutes * points_per_minute + points_per_no * (submission.sub_no as any) + points_per_yes
-        )
-      } else {
-        submission.score = 0
-      }
+      // Set the submission status to 'pending'
+      submission.status = 'pending'
 
       // Save submission to database
       await contest.update_submission(submission.sid as string, { ...submission, sid: submission.sid })
-    } else if (req.user?.division == 'gold') {
+    }
+    // Handle gold division submissions (Scratch projects)
+    else if (req.user?.division == 'gold') {
+      // Fetch Scratch projects data using the project ID
       const scratchResponse = await axios.get(`https://api.scratch.mit.edu/projects/${item.project_id}`)
       if (scratchResponse.status !== 200) {
         res.status(400).send({ message: 'Server cannot access project with that id!' })
         return
       }
 
+      // Create a gold submission and mark it as accepted
       submission = {
         ...submission,
         status: 'accepted',
@@ -282,10 +255,12 @@ export const postSubmissions = async (req: Request, res: Response): Promise<void
         design_document: item.design_document,
         project_id: item.project_id
       }
+      // Save the gold submission
       await contest.create_submission(submission)
     }
     io.emit('new_submission', { sid: submission.sid })
 
+    // Send the submission details as the response
     res.send(submission)
   } catch (err) {
     console.error(err)
