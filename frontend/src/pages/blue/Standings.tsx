@@ -19,10 +19,13 @@ const Standings = (): React.JSX.Element => {
   const [isLoading, setLoading] = useState(true)
   const [isMounted, setMounted] = useState(true)
 
+  
   const loadData = async () => {
     const response = await fetch(`${config.API_URL}/standings?division=blue`)
 
     const data = await response.json()
+
+    //console.log("/frontend/src/pages/blue/Standings.tsx data:", data)
 
     if (!isMounted) return
 
@@ -35,6 +38,46 @@ const Standings = (): React.JSX.Element => {
 
     setLoading(false)
   }
+  
+
+  /*
+  const loadData = async () => {
+    const response = await fetch(`${config.API_URL}/standingsBlueDB?division=blue`)
+
+    const data = await response.json()
+
+    //const standing =  await data.get_standing('blue')
+
+    if (!isMounted) return
+
+    if (Date.now() < (data.time_updated + (15 * 60 * 1000)))
+    {
+      setStandings(data.standings)
+
+      if (data.problems) {
+        const problems = Object.values(data.problems) as Problem[]
+        setProblems(problems.sort((p1, p2) => p1.id.localeCompare(p2.id)))
+      }
+
+      setLoading(false)
+    }
+    else
+    {
+      const response = await fetch(`${config.API_URL}/standings?division=blue`)
+
+      const data = await response.json()
+
+      setStandings(data.standings)
+
+      if (data.problems) {
+        const problems = Object.values(data.problems) as Problem[]
+        setProblems(problems.sort((p1, p2) => p1.id.localeCompare(p2.id)))
+      }
+
+      setLoading(false)
+    }
+  }
+  */
 
   socket?.on('new_submission', loadData)
 

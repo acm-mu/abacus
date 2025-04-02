@@ -103,7 +103,28 @@ interface BlueTeam {
   >
 }
 
-const getBlueStandings = async (isPractice: boolean): Promise<Standings<BlueTeam>> => {
+/*
+const isStandingExistDB = async (division: string): Promise<boolean> => {
+  console.log("/backend/src/api/standings/getStandings.ts isStandingExistDB before get_standing")
+  
+  const count = await contest.get_standing_table_size('standing', { where: { division: division } })
+  console.log("/backend/src/api/standings/getStandings.ts isStandingExistDB count", count)
+
+  console.log("/backend/src/api/standings/getStandings.ts isStandingExistDB before if")
+
+  if (count === 0)
+  {
+    console.log("/backend/src/api/standings/getStandings.ts isStandingExistDB after if")
+    return false
+  }
+  else
+  {
+    return true
+  }
+}
+*/
+
+const calculateBlueStandings = async (isPractice: boolean): Promise<Standings<BlueTeam>> => {
   let teams = await contest.get_users({ role: 'team', division: 'blue' })
   teams = teams.filter((user) => !user.disabled)
 
@@ -191,11 +212,261 @@ const getBlueStandings = async (isPractice: boolean): Promise<Standings<BlueTeam
       return s2.solved - s1.solved
     })
 
+    const division = 'blue'
+    const time_updated = Date.now()
+
+    const standing = {
+      division,
+      problems,
+      standings,
+      time_updated
+    }
+
+    await contest.update_standing('blue', standing)
+
   return {
     problems: Object.values(problems),
     standings
   }
 }
+
+/*
+const createStandingDB = async (isPractice: boolean, division: 'blue' | 'gold'): Promise<any> => {
+  if (division === 'blue') {
+    const standings = calculateBlueStandings(isPractice)
+
+    const problems = (await standings).problems
+    const blue_standings = (await standings).standings
+    const time_updated = Date.now()
+
+    const standing = {
+      division,
+      problems,
+      blue_standings,
+      time_updated
+    }  
+
+    await contest.create_standing(standing)
+
+    return {
+      problems: Object.values(problems),
+      standings: blue_standings
+    }
+  }
+  else {
+    const standings = calculateGoldStandings(isPractice)
+
+    const problems = (await standings).problems
+    const gold_standings = (await standings).standings
+    const time_updated = Date.now()
+
+    const standing = {
+      division,
+      problems,
+      gold_standings,
+      time_updated
+    }
+
+    await contest.create_standing(standing)
+
+    return {
+      problems: Object.values(problems),
+      standings: gold_standings
+    }
+  }
+}
+*/
+
+/*
+const createBlueStandingDB = async (isPractice: boolean): Promise<Standings<BlueTeam>> => {
+  const standings = calculateBlueStandings(isPractice)
+  const problems = (await standings).problems
+  const blue_standings = (await standings).standings
+
+  const division = 'blue'
+
+  const time_updated = Date.now()
+
+  const standing = {
+    division,
+    problems,
+    blue_standings,
+    time_updated
+  }  
+
+  await contest.create_standing(standing)
+
+  return {
+    problems: Object.values(problems),
+    standings: blue_standings
+  }
+}
+*/
+
+const isTimeToUpdateStandings = async (time_updated: number): Promise<boolean> => {
+  const current_time = Date.now()
+
+  if (current_time < (time_updated + (15 * 60 * 1000))) {
+    return false
+  }
+  else
+    return true
+}
+
+const getBlueStandings = async (isPractice: boolean): Promise<Standings<BlueTeam>> => {
+  const standing = await contest.get_standing('blue')
+
+  if (await isTimeToUpdateStandings(standing.time_updated) === false) {
+    console.log("/backend/src/api/standings/getStandings.ts get blue standings from DB")
+    return {
+      problems: Object.values(standing.problems),
+      standings: standing.standings
+    }
+  }
+  else {
+    const standing = calculateBlueStandings(isPractice)
+    console.log("/backend/src/api/standings/getStandings.ts calculate new blue standings")
+    
+    //await contest.update_standing('blue', await standing)
+
+    return {
+      problems: Object.values((await standing).problems),
+      standings: (await standing).standings
+    }
+  }
+}
+
+/*
+const getBlueStandings = async (isPractice: boolean): Promise<Standings<BlueTeam>> => {
+  const current_time = Date.now()
+
+  const current_standing = await contest.get_standing("blue")
+
+  const updated_time = current_standing.time_updated
+
+  if (current_time < (updated_time + (15 * 60 * 1000)))
+  {
+    const problems = current_standing.problems
+    const standings = current_standing.standings
+
+    console.log("/backend/src/api/standings/getStandings.ts standings from DB")
+
+    return {
+      problems: Object.values(problems),
+      standings
+    }
+  }
+  else
+  {
+    console.log("/backend/src/api/standings/getStandings.ts new standings")
+
+    let teams = await contest.get_users({ role: 'team', division: 'blue' })
+    teams = teams.filter((user) => !user.disabled)
+
+    const submissions = await contest.get_submissions({ division: 'blue' })
+
+    let problemsList = await contest.get_problems({ division: 'blue' }, ['pid', 'division', 'id', 'name', 'practice'])
+    problemsList = problemsList.filter(({ practice }) => {
+      if (isPractice) return practice
+      return practice == undefined || practice == false
+    })
+
+    const problems = transpose(problemsList, 'pid')
+
+    const subs: Record<string, Record<string, SubmissionObject[]>> = {}
+
+    Object.values(submissions).forEach((submission: SubmissionObject) => {
+      const { tid, pid } = submission
+      if (!Object.keys(problems).includes(pid)) return
+      if (!(tid in subs)) subs[tid] = {}
+      if (!(pid in subs[tid])) subs[tid][pid] = []
+
+      delete submission.source
+      delete submission.filename
+      delete submission.filesize
+      delete submission.md5
+      delete submission.division
+      delete submission.language
+      delete submission.tests
+      delete submission.runtime
+
+      if (!submission.released) {
+        submission.status = 'pending'
+      }
+
+      subs[tid][pid].push(submission)
+    })
+
+    const standings = teams
+      .map((team) => {
+        const team_problems: Record<
+          string,
+          { num_submissions: number; problem_score: number; solved: boolean; submissions: SubmissionObject[] }
+        > = {}
+        let time = 0
+        let solved = 0
+
+        Object.values(problems)
+          .sort((p1, p2) => p1.id.localeCompare(p2.id))
+          .forEach((problem) => {
+            team_problems[problem.id] = {
+              solved: false,
+              problem_score: 0,
+              num_submissions: 0,
+              submissions: []
+            }
+            if (team.uid in subs) {
+              if (problem.pid in subs[team.uid]) {
+                team_problems[problem.id].num_submissions = subs[team.uid][problem.pid].length
+                team_problems[problem.id].submissions = subs[team.uid][problem.pid]
+                subs[team.uid][problem.pid].every((sub) => {
+                  if (sub.status === 'accepted') {
+                    team_problems[problem.id].problem_score = sub.score
+                    team_problems[problem.id].solved = true
+                    solved++
+                    time += sub.score
+                    return false
+                  }
+                  return true
+                })
+              }
+            }
+          })
+
+        return {
+          uid: team.uid,
+          username: team.username,
+          display_name: team.display_name,
+          time,
+          solved,
+          problems: team_problems
+        }
+      })
+      .sort((s1, s2) => {
+        if (s1.solved == s2.solved) return s1.time - s2.time
+        return s2.solved - s1.solved
+      })
+
+      const division = 'blue'
+
+      const time_updated = Date.now()
+
+      const standing = {
+        division,
+        problems,
+        standings,
+        time_updated
+      }
+
+      await contest.update_standing('blue', standing)
+
+    return {
+      problems: Object.values(problems),
+      standings
+    }
+  }
+}
+*/
 
 interface GoldTeam {
   display_name: string
@@ -205,7 +476,7 @@ interface GoldTeam {
   problems: Record<string, { score: number; status: string }>
 }
 
-const getGoldStandings = async (isPractice: boolean): Promise<Standings<GoldTeam>> => {
+const calculateGoldStandings = async (isPractice: boolean): Promise<Standings<GoldTeam>> => {
   let teams = Object.values(await contest.get_users({ role: 'team', division: 'gold' }))
   teams = teams.filter((user) => !user.disabled)
 
@@ -286,9 +557,44 @@ const getGoldStandings = async (isPractice: boolean): Promise<Standings<GoldTeam
       return s2.score - s1.score
     })
 
+    const division = 'gold'
+    const time_updated = Date.now()
+
+    const standing = {
+      division,
+      problems,
+      standings,
+      time_updated
+    }
+
+    await contest.update_standing('gold', standing)
+
   return {
     problems: Object.values(problems),
     standings
+  }
+}
+
+const getGoldStandings = async (isPractice: boolean): Promise<Standings<GoldTeam>> => {
+  const standing = await contest.get_standing('gold')
+
+  if (await isTimeToUpdateStandings(standing.time_updated) === false) {
+    console.log("/backend/src/api/standings/getStandings.ts get gold standings from DB")
+    return {
+      problems: Object.values(standing.problems),
+      standings: standing.standings
+    }
+  }
+  else {
+    const standing = calculateGoldStandings(isPractice)
+    console.log("/backend/src/api/standings/getStandings.ts calculate new gold standings")
+    
+    //await contest.update_standing('blue', await standing)
+
+    return {
+      problems: Object.values((await standing).problems),
+      standings: (await standing).standings
+    }
   }
 }
 
@@ -309,6 +615,8 @@ export const getStandings = async (req: Request, res: Response): Promise<void> =
   const isPractice = now < settings.practice_end_date
 
   const { division } = matchedData(req)
+
+  console.log("/backend/src/api/standings/getStandings.ts getStandings division", division)
 
   if (division == 'blue') {
     res.send(await getBlueStandings(isPractice))

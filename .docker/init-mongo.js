@@ -1,8 +1,8 @@
 db.getSiblingDB('abacus')
 
 db.createUser({
-    user: "username",
-    pwd: "password",
+    user: "MUad",
+    pwd: "ep16y11BPqP",
     roles: [{
         role: "readWrite",
         db: "abacus"
@@ -695,6 +695,7 @@ db.setting.insert({
     points_per_minute: "1"
 })
 
+db.createCollection('standing')
 
 db.createCollection('problem')
 

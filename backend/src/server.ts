@@ -51,6 +51,19 @@ io.on('connection', (socket: Socket) => {
   })
 })
 
+/*
+const updateBlueStandings = async () => {
+  
+}
+
+const updateGoldStandings = async () => {
+  
+}
+
+setInterval(updateBlueStandings, 15 * 60 * 1000)
+setInterval(updateGoldStandings, 15 * 60 * 1000)
+*/
+
 server.listen(PORT, () => {
   console.log(`🚀 Server is running at :${PORT}`)
 })

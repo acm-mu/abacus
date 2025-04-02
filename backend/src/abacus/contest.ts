@@ -1,4 +1,4 @@
-import { Args, Clarification, Item, Problem, ResolvedSubmission, Settings, Submission, User } from 'abacus'
+import { Args, Clarification, Item, Problem, ResolvedSubmission, Settings, Submission, User, Standing } from 'abacus'
 import { Lambda } from 'aws-sdk'
 import { Database } from '../services'
 import { MongoDB } from '../services/db'
@@ -142,6 +142,25 @@ class ContestService {
   save_settings(settings: Record<string, number | string>): Promise<Settings> {
     return this.db.update('setting', {}, settings) as Promise<Settings>
   }
+
+  /* Standings */
+
+  async create_standing(item: Item): Promise<Standing> {
+    return this.db.put('standing', item) as Promise<Standing>
+  }
+
+  async get_standing(division: string): Promise<Standing> {
+    return this.db.get('standing', {division}) as Promise<Standing>
+  }
+
+  async update_standing(division: string, item: Item): Promise<Standing> {
+    return this.db.update('standing', {division}, item) as Promise<Standing>
+  }
+  /*
+  async get_standing_table_size(table: string, args?: any): Promise<number> {
+    return this.db.count(table, { args }) as Promise<number>
+  }
+  */
 }
 
 export default new ContestService()
