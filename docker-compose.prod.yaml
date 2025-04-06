@@ -9,8 +9,7 @@ services:
       dockerfile: Dockerfile.mongo
     volumes:
       - ./mongo-volume:/data/db
-    ports:
-      - 27017:27017
+    command: mongod --bind_ip=127.0.0.1,mongo
   server:
     container_name: server
     restart: unless-stopped
