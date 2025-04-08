@@ -204,6 +204,8 @@ const calculateBlueStandings = async (isPractice: boolean): Promise<Standings<Bl
 
     await contest.update_standing('blue', standing)
 
+    console.log("test github workflow")
+
   return {
     problems: Object.values(problems),
     standings
