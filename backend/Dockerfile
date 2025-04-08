@@ -1,5 +1,5 @@
 # pull official base image
-FROM node:16
+FROM node:18
 
 ENV CHOKIDAR_USEPOLLING true
 
