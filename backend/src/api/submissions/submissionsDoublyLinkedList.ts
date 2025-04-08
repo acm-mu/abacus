@@ -1,4 +1,5 @@
 import { RawSubmission, Submission } from "abacus"
+import { io } from '../../server'
 
 // Define a Node clas to store a Submission and links to the next and previous nodes
 class Node_<Submission extends RawSubmission>
@@ -35,6 +36,8 @@ class DoublyLinkedList<Submission extends RawSubmission>
             this.head = this.tail = newNode
         }
         this.size++
+
+        io.emit('update_doubly_linked_list', { sid: data.sid })
     }
 
     // Function to prepend a new node with submission data to the beginning of the list
@@ -77,6 +80,8 @@ class DoublyLinkedList<Submission extends RawSubmission>
     {
         if (this.head)
         {
+            io.emit('update_doubly_linked_list', { sid: this.head.data.sid })
+
             if (this.head.next)
             {
                 this.head = this.head.next
@@ -124,6 +129,19 @@ class DoublyLinkedList<Submission extends RawSubmission>
             currentNode = currentNode.next
         }
         console.log(result.slice(0, -4))
+    }
+
+    // Returns the current list of submission in the doubly linked list
+    get(): Submission[] {
+        let currentNode = this.head
+        const doublyLinkedList: Submission[] = []
+
+        while (currentNode) {
+            doublyLinkedList.push(currentNode.data)
+            currentNode = currentNode.next
+        }
+
+        return doublyLinkedList
     }
 }
 

@@ -11,6 +11,4 @@ const standings = Router()
 
 standings.get('/standings', checkSchema(getStandingsSchema), getStandings)
 
-//standings.get('/standingsBlueDB', getStandingsBlueDB)
-
 export default standings

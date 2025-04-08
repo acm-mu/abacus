@@ -31,6 +31,8 @@ const Submission = (): React.JSX.Element => {
   const [error, setError] = useState<string>()
   // State to store submission queue
   const [queue, setQueue] = useState<SubmissionType[]>([])
+  // State to track score button click status
+  const [isScoreClickedOn, setScoreClickedOn] = useState(false)
 
   // Get user details from context
   const { user } = useContext(AppContext)
@@ -76,6 +78,8 @@ const Submission = (): React.JSX.Element => {
     loadQueue()
     // Listen for 'update_submission' events from socket
     socket?.on('update_submission', loadSubmission)
+    // Listen for 'update_queue' events from socket
+    socket?.on('update_queue', loadQueue)
   }, [sid]) // Dependency on 'sid' to refetch data when it changes
 
   // Show loading screen while fetching data
@@ -88,6 +92,7 @@ const Submission = (): React.JSX.Element => {
     if (!setSubmission) return
     // Start rerun process
     setRerunning(true)
+    scoreButtonTimeOut()
     const response = await fetch(`${config.API_URL}/submissions/rerun`, {
       method: 'POST',
       headers: {
@@ -170,8 +175,6 @@ const Submission = (): React.JSX.Element => {
       const updatedSubmission = { ...submission, claimed: user, claimed_date: Date.now() / 1000}
       // Enqueue the claimed submission
       enqueue(updatedSubmission)
-      // Reload queue after claiming
-      loadQueue()
     } else {
       try {
         const { message } = await response.json()
@@ -237,8 +240,6 @@ const Submission = (): React.JSX.Element => {
       const queueData = await response.json()
       // Update the queue state
       setQueue(queueData)
-      // Reload the queue after enqueuing
-      loadQueue()
     }
   }
 
@@ -259,26 +260,19 @@ const Submission = (): React.JSX.Element => {
     }
   }
 
-  // Function to refresh the page
-  const refresh = () =>
-    window.location.reload()
-
-  // Function to rerun the submission and refresh the page after
-  const rerun_refresh = () => {
-    rerun()
-    refresh()
-  }
-
   // Function to release and dequeue the submission
   const release_dequeue = () => {
     release()
     dequeue()
   }
 
-  // Function to claim a submission and reload the queue
-  const claim_loadQueue = (sid: string) => {
-    claim(sid)
-    loadQueue()
+  // Function to disable score button for 30s after it has been clicked
+  const scoreButtonTimeOut = () => {
+    setScoreClickedOn(true)
+
+    setTimeout(() => {
+      setScoreClickedOn(false)
+    }, 30000)
   }
 
   /* This displays the queue in the console tab when inspecting the web site (right click on website and select inspect). 
@@ -287,7 +281,7 @@ const Submission = (): React.JSX.Element => {
   console.log("frontend/src/pages/judge/submission.tsx queue:", queue)
 
   // Disable rerun button if submission is not in the queue
-  const isRerunDisabled = !queue.some((item) => item.sid === submission?.sid)
+  const isNotInQueue = !queue.some((item) => item.sid === submission?.sid)  
 
   // Render submission page with buttons for various actions
   return (
@@ -312,12 +306,12 @@ const Submission = (): React.JSX.Element => {
                 />
                 {submission.division == 'blue' && (
                   <Button
-                    disabled={isRerunning || submission.claimed?.uid != user?.uid || isRerunDisabled}
+                    disabled={isRerunning || isScoreClickedOn || submission.claimed?.uid != user?.uid || isNotInQueue}
                     loading={isRerunning}
-                    content="Score"
-                    icon="redo"
+                    content={'Score'}
+                    icon={'redo'}
                     labelPosition="left"
-                    onClick={rerun_refresh}
+                    onClick={rerun}
                   />
                 )}
                 <Button
@@ -337,7 +331,7 @@ const Submission = (): React.JSX.Element => {
           <Button
             content="Claim"
             icon={'hand rock'}
-            onClick={() => claim_loadQueue(submission.sid)}
+            onClick={() => claim(submission.sid)}
             loading={isClaiming[submission.sid]}
             disabled={isClaiming[submission.sid]}
             labelPosition={'left'}

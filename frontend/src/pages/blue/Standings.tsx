@@ -9,23 +9,29 @@ import { AppContext, SocketContext } from 'context'
 import { isThirtyMinutesBefore } from 'utils'
 import { usePageTitle } from 'hooks'
 
+// Functional component for viewing and interacting with the standings
 const Standings = (): React.JSX.Element => {
+  // Set the page title for the current view
   usePageTitle("Abacus | Blue Standings")
 
+  // Get user details from context
   const { user, settings } = useContext(AppContext)
+  // Contexts to get socket connection and app-wide state
   const socket = useContext(SocketContext)
+  // State to hold problems
   const [problems, setProblems] = useState<Problem[]>()
+  // State to hold standings
   const [standings, setStandings] = useState<StandingsUser[]>()
+  // State for loading status
   const [isLoading, setLoading] = useState(true)
+  // State to track mounting status
   const [isMounted, setMounted] = useState(true)
 
-  
+  // Function to load standings
   const loadData = async () => {
     const response = await fetch(`${config.API_URL}/standings?division=blue`)
 
     const data = await response.json()
-
-    //console.log("/frontend/src/pages/blue/Standings.tsx data:", data)
 
     if (!isMounted) return
 
@@ -39,48 +45,10 @@ const Standings = (): React.JSX.Element => {
     setLoading(false)
   }
   
-
-  /*
-  const loadData = async () => {
-    const response = await fetch(`${config.API_URL}/standingsBlueDB?division=blue`)
-
-    const data = await response.json()
-
-    //const standing =  await data.get_standing('blue')
-
-    if (!isMounted) return
-
-    if (Date.now() < (data.time_updated + (15 * 60 * 1000)))
-    {
-      setStandings(data.standings)
-
-      if (data.problems) {
-        const problems = Object.values(data.problems) as Problem[]
-        setProblems(problems.sort((p1, p2) => p1.id.localeCompare(p2.id)))
-      }
-
-      setLoading(false)
-    }
-    else
-    {
-      const response = await fetch(`${config.API_URL}/standings?division=blue`)
-
-      const data = await response.json()
-
-      setStandings(data.standings)
-
-      if (data.problems) {
-        const problems = Object.values(data.problems) as Problem[]
-        setProblems(problems.sort((p1, p2) => p1.id.localeCompare(p2.id)))
-      }
-
-      setLoading(false)
-    }
-  }
-  */
-
+  // Listen for 'new_submission' events from socket
   socket?.on('new_submission', loadData)
 
+  // Hook to get standings data when component is mounted
   useEffect(() => {
     loadData()
     return () => {
@@ -88,6 +56,7 @@ const Standings = (): React.JSX.Element => {
     }
   }, [])
 
+  // Render standing page
   if (!settings || new Date() < settings.practice_start_date)
     return (
       <>

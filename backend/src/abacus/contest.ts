@@ -156,11 +156,6 @@ class ContestService {
   async update_standing(division: string, item: Item): Promise<Standing> {
     return this.db.update('standing', {division}, item) as Promise<Standing>
   }
-  /*
-  async get_standing_table_size(table: string, args?: any): Promise<number> {
-    return this.db.count(table, { args }) as Promise<number>
-  }
-  */
 }
 
 export default new ContestService()

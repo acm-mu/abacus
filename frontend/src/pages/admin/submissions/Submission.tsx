@@ -4,15 +4,17 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { NotFound, PageLoading, SubmissionView } from 'components'
 import config from 'environment'
 import { Button, Grid } from 'semantic-ui-react'
-import { AppContext } from 'context'
+import { AppContext, SocketContext } from 'context'
 import { saveAs } from 'file-saver'
 import { usePageTitle } from 'hooks'
 
-// unctional component for viewing and interacting with a specific submission
+// Functional component for viewing and interacting with a specific submission
 const Submission = (): React.JSX.Element => {
   // Set page title
   usePageTitle("Abacus | Admin Submission")
 
+  // Contexts to get socket connection and app-wide state
+  const socket = useContext(SocketContext)
   // Get the submission ID from URL params
   const { sid } = useParams<{ sid: string }>()
   // State to hold submission details
@@ -79,6 +81,10 @@ const Submission = (): React.JSX.Element => {
     loadSubmission()
     // Load the queue data
     loadQueue()
+    // Listen for 'update_submission' events from socket
+    socket?.on('update_submission', loadSubmission)
+    // Listen for 'update_queue' events from socket
+    socket?.on('update_queue', loadQueue)
     return () => {
       setMounted(false)
     }
@@ -258,14 +264,23 @@ const Submission = (): React.JSX.Element => {
   return (
     <Grid>
       <Button content="Back" icon="arrow left" labelPosition="left" onClick={() => navigate(-1)} />
-      <Button
-        disabled={isRerunning}
-        loading={isRerunning}
+      {submission.released ? (
+        <Button
+        disabled={true}
         content="Score"
         icon="redo"
         labelPosition="left"
-        onClick={rerun}
       />
+      ) : (
+        <Button
+          disabled={isRerunning}
+          loading={isRerunning}
+          content="Score"
+          icon="redo"
+          labelPosition="left"
+          onClick={rerun}
+        />
+      )}
       {submission.released ? (
         <Button icon="check" positive content="Released" labelPosition="left" />
       ) : (
