@@ -18,6 +18,7 @@ jobs:
           node-version: '16'
       - uses: actions/cache@v4
         with:
+          path: backend/package.json
           key: npm-${{ hashFiles('package-lock.json') }}
       - run: yarn install
         working-directory: backend
