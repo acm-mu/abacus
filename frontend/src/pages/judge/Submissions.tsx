@@ -19,20 +19,30 @@ type SortConfig = {
   direction: 'ascending' | 'descending'
 }
 
+// Functional component for viewing and interacting with multiple submissions
 const Submissions = (): React.JSX.Element => {
+  // Set the page title for the submissions page
   usePageTitle("Abacus | Judge Submissions")
 
+  // Using socket context for real-time updates
   const socket = useContext(SocketContext)
+  // Track loading state
   const [isLoading, setLoading] = useState(true)
+  // Store the submissions list
   const [submissions, setSubmissions] = useState<SubmissionItem[]>([])
  // const [isMounted, setMounted] = useState(true)
   const [isDeleting, setDeleting] = useState(false)
+  // Track claiming state for each submission
   const [isClaiming, setClaiming] = useState<{ [key: string]: boolean }>({})
+  // Flag to toggle visibility of released submissions
   const [showReleased, setShowReleased] = useState(false)
+  // Get filter query parameter from URL
   const filter = new URLSearchParams(window.location.search).get('filter')
 
+  // Access the user context to retrieve current user data
   const { user } = useContext(AppContext)
 
+  // Sort configuration state management
   const [{ column, direction }, setSortConfig] = useState<SortConfig>({
     column: 'date',
     direction: 'ascending'
@@ -44,6 +54,7 @@ const Submissions = (): React.JSX.Element => {
     const newDirection = column === newColumn && direction == 'ascending' ? 'descending' : 'ascending'
     setSortConfig({ column: newColumn, direction: newDirection })
 
+    // Sorting the list of submissions based on the column and direction
     setSubmissions(
       submission_list.sort(
         (s1: Submission, s2: Submission) =>
@@ -52,6 +63,7 @@ const Submissions = (): React.JSX.Element => {
     )
   }
 
+  // Effect hook to load submissions on component mount and set up socket listeners for real-time updates
   useEffect(() => {
     loadSubmissions(currentPage).then(() => setLoading(false))
     socket?.on('new_submission', () => loadSubmissions(currentPage))
@@ -75,20 +87,45 @@ const Submissions = (): React.JSX.Element => {
     )
   }
 
+  // Function to enqueue a submission to the queue
+  const enqueue = async (submission: Submission) => {
+      const response = await fetch(`${config.API_URL}/submissions/submissionsEnqueue`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.accessToken}`
+        },
+        body: JSON.stringify({submission})
+      })
+
+      if (response.ok)
+      {
+        console.log("frontend/src/pages/judge/Submissions.tsx enqueue here")
+      }
+    }
+
+    // Toggle filter for showing released submissions
   const onFilterChange = () => setShowReleased(!showReleased)
 
+  // Function to download submissions as a JSON file
   const downloadSubmissions = () =>
     saveAs(new File([JSON.stringify(submissions, null, '\t')], 'submissions.json', { type: 'text/json;charset=utf-8' }))
+
+  // Handle individual checkbox state change
   const handleChange = ({ target: { id, checked } }: ChangeEvent<HTMLInputElement>) =>
     setSubmissions(submissions.map((submission) => (submission.sid == id ? { ...submission, checked } : submission)))
+
+  // Handle "check all" checkbox state change
   const checkAll = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) =>
     setSubmissions(submissions.map((submission) => ({ ...submission, checked })))
 
+  // Delete selected submissions
   const deleteSelected = async () => {
     setDeleting(true)
     const submissionsToDelete = submissions
       .filter((submission) => submission.checked)
       .map((submission) => submission.sid)
+    // Send request to delete selected submissions
     const response = await fetch(`${config.API_URL}/submissions`, {
       method: 'DELETE',
       headers: {
@@ -103,6 +140,7 @@ const Submissions = (): React.JSX.Element => {
     setDeleting(false)
   }
 
+  // Function to claim a submission (assign it to the current user)
   const claim = async (sid: string) => {
     setClaiming({ ...isClaiming, [sid]: true })
     const response = await fetch(`${config.API_URL}/submissions`, {
@@ -111,16 +149,21 @@ const Submissions = (): React.JSX.Element => {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.accessToken}`
       },
-      body: JSON.stringify({ sid, claimed: user?.uid })
+      body: JSON.stringify({ sid, claimed: user?.uid, claimed_date: Date.now() / 1000 })
     })
 
     if (response.ok) {
       setSubmissions(submissions.map((sub) => (sub.sid == sid ? { ...sub, claimed: user } : sub)))
+      const oldSubmission = submissions.filter((sub) => sub.sid === sid)[0]
+      const updatedSubmission = { ...oldSubmission, claimed: user, claimed_date: Date.now() / 1000 } as Submission
+      // Enqueue the updated submission
+      enqueue(updatedSubmission)
     }
 
     setClaiming({ ...isClaiming, [sid]: false })
   }
 
+  // Function to unclaim a submission (release it from the current user)
   const unclaim = async (sid: string) => {
     setClaiming({ ...isClaiming, [sid]: true })
     const response = await fetch(`${config.API_URL}/submissions`, {
@@ -139,6 +182,7 @@ const Submissions = (): React.JSX.Element => {
     setClaiming({ ...isClaiming, [sid]: false })
   }
 
+  // URL filter function for filtering based on submission status
   const urlFilter = ({ claimed }: Submission) => {
     switch (filter) {
       case 'my_claimed':
@@ -154,11 +198,13 @@ const Submissions = (): React.JSX.Element => {
     }
   }
 
+  // Filter list of submissions based on the selected filter and showReleased flag
   const filteredSubmissions = useMemo(
     () => submissions.filter((submission) => showReleased || (!submission.released && urlFilter(submission))),
     [submissions, showReleased, filter]
   )
 
+  // Show loading spinner if data is still being fetched
   if (isLoading) return <PageLoading />
 
   return (

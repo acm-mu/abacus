@@ -62,12 +62,14 @@ declare module 'abacus' {
     pid: string
     runtime: number
     released: boolean
+    released_date?: number
     score: number
     status: string
     sub_no: number
     tid: string
     tests: Test[]
     claimed?: string | User
+    claimed_date?: number
     viewed?: boolean
     flagged?: string | User
   }
@@ -100,6 +102,8 @@ declare module 'abacus' {
    *           type: integer
    *         released:
    *           type: boolean
+   *         released_date:
+   *           type: integer
    *         score:
    *           type: integer
    *         status:
@@ -114,12 +118,15 @@ declare module 'abacus' {
    *             $ref: '#/components/schemas/Test'
    *         claimed:
    *           type: string
+   *         claimed_date:
+   *           type: integer
    *         viewed:
    *           type: boolean
    *         flagged:
    *           type: string
    *       required: [sid, date, filename, filesize, source, language, md5, pid, runtime, released, score, status, sub_no, tid, tests]
    */
+  
   export interface Submission extends RawSubmission {
     claimed?: string
     flagged?: string

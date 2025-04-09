@@ -18,6 +18,7 @@ declare module 'abacus' {
     division: string
     language: string
     released: boolean
+    released_date?: number
     claimed?: User
     tid: string
     team?: Team
@@ -27,6 +28,7 @@ declare module 'abacus' {
     score: number
     feedback?: string
     claimed?: User
+    claimed_date?: number
     flagged?: User
     viewed?: boolean
     //Blue
