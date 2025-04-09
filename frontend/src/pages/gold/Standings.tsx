@@ -35,8 +35,6 @@ const Standings = (): React.JSX.Element => {
   const loadData = async () => {
     const response = await fetch(`${config.API_URL}/standings?division=gold`)
 
-    console.log("test github workflow (attempt 6)")
-
     const data = await response.json()
 
     if (!isMounted) return
