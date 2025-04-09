@@ -16,6 +16,7 @@ services:
     build:
       context: backend
       dockerfile: Dockerfile.prod
+      network: host
     environment:
       - MONGO_HOST=mongodb
       - MONGO_USER=MUad
@@ -30,6 +31,7 @@ services:
     build:
       context: frontend
       dockerfile: Dockerfile.prod
+      network: host
     ports:
       - "80:80"
     depends_on:

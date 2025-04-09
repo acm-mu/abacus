@@ -22,6 +22,9 @@ RUN yarn build
 # production environment
 FROM nginx:stable-alpine
 
+# Copy your custom Nginx config into the container
+COPY default.conf /etc/nginx/conf.d/default.conf
+
 # copy over app
 COPY --from=build /app/build /usr/share/nginx/html
 
