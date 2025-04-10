@@ -214,7 +214,7 @@ const calculateBlueStandings = async (isPractice: boolean): Promise<Standings<Bl
 const isTimeToUpdateStandings = async (time_updated: number): Promise<boolean> => {
   const current_time = Date.now()
 
-  if (current_time < (time_updated + (15 * 60 * 1000))) {
+  if (current_time < (time_updated + (5 * 60 * 1000))) {
     return false
   }
   else
