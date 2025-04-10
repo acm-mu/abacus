@@ -9,17 +9,18 @@ services:
     volumes:
       - ./mongo-volume:/data/db
     ports:
-      - 27017:27017
+      - "27017:27017"
   server:
     container_name: server
     restart: unless-stopped
     build:
       context: backend
+      network: host
     environment:
       - MONGO_HOST=mongo
-      - MONGO_USER=username
-      - MONGO_PASS=password
-      - MONGO_DBNAME=abacus
+      - MONGO_USER=MUad
+      - MONGO_PASS=ep16y11BPqP
+      - MONGO_DBNAME=admin
     volumes:
       - "./backend/src:/app/src"
     ports:
@@ -31,6 +32,7 @@ services:
     restart: unless-stopped
     build:
       context: frontend
+      network: host
     volumes:
       - ./frontend/public:/app/public
       - ./frontend/src:/app/src
