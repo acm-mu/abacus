@@ -7,6 +7,7 @@ import { postSubmissions, schema as postSchema } from './postSubmissions'
 import { putSubmissions, schema as putSchema } from './putSubmissions'
 import { rerunSubmission, schema as rerunSchema } from './rerunSubmission'
 import { submissionsQueue } from './submissionsQueue'
+import { doublyLinkedList } from './submissionsDoublyLinkedList'
 
 /**
  * @swagger
@@ -47,6 +48,11 @@ submissions.post('/submissions/submissionsDequeue', isAuthenticated, (req: Reque
 submissions.post('/submissions/submissionsEnqueue', isAuthenticated, (req: Request, _res: Response) => {
     const { submission } = req.body
     submissionsQueue.enqueue(submission)
+})
+
+// Route to get the current state of the doubly linked list
+submissions.get('/submissions/submissionsDoublyLinkedList', isAuthenticated, (_req: Request, res: Response) => {
+    res.json(doublyLinkedList.get())
 })
 
 // Export the 'submissions' router to be used in the main app

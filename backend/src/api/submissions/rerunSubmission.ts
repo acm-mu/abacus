@@ -2,6 +2,7 @@ import axios from 'axios'
 import { Request, Response } from 'express'
 import { matchedData, ParamSchema, validationResult } from 'express-validator'
 import { contest } from '../../abacus'
+import { io } from '../../server'
 
 // Define the validation schema for the request body
 export const schema: Record<string, ParamSchema> = {
@@ -151,6 +152,9 @@ export const rerunSubmission = async (req: Request, res: Response): Promise<void
 
     // Save the updated submission to the database
     await contest.update_submission(submission.sid as string, {...submission, sid: submission.sid})
+
+    // Emit a socket event to notify other services or clients about the updated submission
+    io.emit('update_submission', { sid: submission.sid })
 
     // Send the updated submission as a response
     res.send(submission)

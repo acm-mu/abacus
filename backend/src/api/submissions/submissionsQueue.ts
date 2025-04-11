@@ -1,6 +1,6 @@
 import { RawSubmission, Submission, User } from "abacus"
 import { doublyLinkedList } from "./submissionsDoublyLinkedList"
-import { sendNotification } from '../../server'
+import { io, sendNotification } from '../../server'
 
 // Class that represents the submissions queue
 export class SubmissionsQueue<Submission extends RawSubmission>
@@ -29,6 +29,7 @@ export class SubmissionsQueue<Submission extends RawSubmission>
             return
         }
         this.submissions.push(item)
+        io.emit('update_queue', { sid: item.sid })
     }
 
     /* Removes a submission for the queue by its submission ID (sid). 
@@ -40,13 +41,14 @@ export class SubmissionsQueue<Submission extends RawSubmission>
 
         if (index !== -1)
         {
+            io.emit('update_queue', { sid: this.submissions[index].sid })
             this.submissions.splice(index, 1)
         }
 
         if (!doublyLinkedList.isEmpty())
         {
             const submission = doublyLinkedList.getNodeAt(0)?.data as Submission
-            this.submissions.push(submission)
+            this.enqueue(submission)
             doublyLinkedList.removeFirst()
             const judgeInfo = submission.claimed as User
             sendNotification({

@@ -8,6 +8,8 @@ interface ClientToServerEvents {
   new_clarification: () => void;
   update_submission: (submission: Submission) => void
   delete_submission: (submission: Submission) => void
+  update_queue: (submission: Submission) => void
+  update_doubly_linked_list: (submission: Submission) => void
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface

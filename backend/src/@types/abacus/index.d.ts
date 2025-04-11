@@ -386,6 +386,13 @@ declare module 'abacus' {
     type?: 'success' | 'warning' | 'error'
   }
 
+  export interface Standing extends Record<string, unknown> {
+    division: string
+    problems: Problem[]
+    standings: any
+    time_updated: number
+  }
+  
   export type Item = Record<string, unknown>
   export type Args = Record<string, unknown>
 }

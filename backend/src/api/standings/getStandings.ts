@@ -103,7 +103,8 @@ interface BlueTeam {
   >
 }
 
-const getBlueStandings = async (isPractice: boolean): Promise<Standings<BlueTeam>> => {
+// Function that calculates blue standings and stores the standings in the database
+const calculateBlueStandings = async (isPractice: boolean): Promise<Standings<BlueTeam>> => {
   let teams = await contest.get_users({ role: 'team', division: 'blue' })
   teams = teams.filter((user) => !user.disabled)
 
@@ -191,9 +192,51 @@ const getBlueStandings = async (isPractice: boolean): Promise<Standings<BlueTeam
       return s2.solved - s1.solved
     })
 
+    const division = 'blue'
+    const time_updated = Date.now()
+
+    const standing = {
+      division,
+      problems,
+      standings,
+      time_updated
+    }
+
+    await contest.update_standing('blue', standing)
+
   return {
     problems: Object.values(problems),
     standings
+  }
+}
+
+// Function that checks whether it is time to recalculate the standings
+const isTimeToUpdateStandings = async (time_updated: number): Promise<boolean> => {
+  const current_time = Date.now()
+
+  if (current_time < (time_updated + (5 * 60 * 1000))) {
+    return false
+  }
+  else
+    return true
+}
+
+// Function that returns the blue standings
+const getBlueStandings = async (isPractice: boolean): Promise<Standings<BlueTeam>> => {
+  const standing = await contest.get_standing('blue')
+
+  if (await isTimeToUpdateStandings(standing.time_updated) === false) {
+    return {
+      problems: Object.values(standing.problems),
+      standings: standing.standings
+    }
+  }
+  else {
+    const standing = calculateBlueStandings(isPractice)
+    return {
+      problems: Object.values((await standing).problems),
+      standings: (await standing).standings
+    }
   }
 }
 
@@ -205,7 +248,8 @@ interface GoldTeam {
   problems: Record<string, { score: number; status: string }>
 }
 
-const getGoldStandings = async (isPractice: boolean): Promise<Standings<GoldTeam>> => {
+// Function that calculates gold standings and stores the standings in the database
+const calculateGoldStandings = async (isPractice: boolean): Promise<Standings<GoldTeam>> => {
   let teams = Object.values(await contest.get_users({ role: 'team', division: 'gold' }))
   teams = teams.filter((user) => !user.disabled)
 
@@ -286,12 +330,45 @@ const getGoldStandings = async (isPractice: boolean): Promise<Standings<GoldTeam
       return s2.score - s1.score
     })
 
+    const division = 'gold'
+    const time_updated = Date.now()
+
+    const standing = {
+      division,
+      problems,
+      standings,
+      time_updated
+    }
+
+    await contest.update_standing('gold', standing)
+
   return {
     problems: Object.values(problems),
     standings
   }
 }
 
+// Function that returns the gold standings
+const getGoldStandings = async (isPractice: boolean): Promise<Standings<GoldTeam>> => {
+  const standing = await contest.get_standing('gold')
+
+  if (await isTimeToUpdateStandings(standing.time_updated) === false) {
+    return {
+      problems: Object.values(standing.problems),
+      standings: standing.standings
+    }
+  }
+  else {
+    const standing = calculateGoldStandings(isPractice)
+
+    return {
+      problems: Object.values((await standing).problems),
+      standings: (await standing).standings
+    }
+  }
+}
+
+// Function that returns either blue or gold standings
 export const getStandings = async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req).array()
   if (errors.length > 0) {
