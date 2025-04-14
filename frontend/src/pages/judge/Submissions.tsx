@@ -69,6 +69,7 @@ const Submissions = (): React.JSX.Element => {
   // Effect hook to load submissions on component mount and set up socket listeners for real-time updates
   useEffect(() => {
     loadSubmissions().then(() => setLoading(false))
+    loadQueue()
     socket?.on('new_submission', loadSubmissions)
     socket?.on('update_submission', loadSubmissions)
     socket?.on('update_queue', loadQueue)
@@ -202,8 +203,12 @@ const Submissions = (): React.JSX.Element => {
       setSubmissions(submissions.map((sub) => (sub.sid == sid ? { ...sub, claimed: undefined, claimed_date: undefined } : sub)))
       const submission = submissions.filter((sub) => sub.sid === sid)[0]
       console.log('/frontend/src/pages/judge/Submissions.tsx submission', submission)
+      console.log('/frontend/src/pages/judge/Submissions.tsx queue before blue', queue)
       if (submission.division === 'blue') {
+        console.log('/frontend/src/pages/judge/Submissions.tsx isBlue here')
+        console.log('/frontend/src/pages/judge/Submissions.tsx queue after blue', queue)
         const isInQueue = queue.some((item) => item.sid === submission?.sid)
+        console.log('/frontend/src/pages/judge/Submissions.tsx isInQueue', isInQueue)
         if (isInQueue) {
           dequeue(submission)
         }

@@ -60,5 +60,10 @@ submissions.post('/submissions/removeAtDoublyLinkedList', isAuthenticated, (req:
     doublyLinkedList.removeAt(sid)
 })
 
+submissions.post('/submissions/clearQueueAndDoublyLinkedList', isAuthenticated, (_req: Request, _res: Response) => {
+    submissionsQueue.clear()
+    doublyLinkedList.clear()
+})
+
 // Export the 'submissions' router to be used in the main app
 export default submissions

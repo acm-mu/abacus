@@ -4,7 +4,7 @@ import { AppContext, SocketContext } from 'context'
 import { Block, PageLoading } from 'components'
 import config from 'environment'
 import moment from 'moment'
-import { Table } from 'semantic-ui-react'
+import { Table, Button } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { usePageTitle } from 'hooks'
 
@@ -36,6 +36,20 @@ const Home = (): React.JSX.Element => {
       )
     )
     setLoading(false)
+  }
+
+  const clearQueue = async () => {
+    const response = await fetch(`${config.API_URL}/submissions/clearQueueAndDoublyLinkedList`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.accessToken}`
+      },
+    })
+
+    if (response.ok) {
+      console.log("Queue has been cleared")
+    }
   }
 
   useEffect(() => {
@@ -103,7 +117,20 @@ const Home = (): React.JSX.Element => {
   return (
     <>
       <Block size="xs-12">
-        <h1>Admin Dashboard</h1>
+        <div style={{ position: 'relative' }}> 
+          <h1 style={{ marginBottom: 0 }}>Admin Dashboard</h1>
+          <Button
+            color="red"
+            content="Clear Queue"
+            onClick={ clearQueue }
+            style={{
+              position: 'absolute',
+              top: 0,
+              right: 0
+            }}
+          >
+          </Button>
+        </div>
       </Block>
 
       <Block size="xs-6">

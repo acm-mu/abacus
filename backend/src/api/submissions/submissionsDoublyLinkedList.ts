@@ -150,6 +150,7 @@ class DoublyLinkedList<Submission extends RawSubmission>
     {
         this.head = this.tail = null
         this.size = 0
+        io.emit('update_doubly_linked_list')
     }
 
     // Function to check if the list is empty
