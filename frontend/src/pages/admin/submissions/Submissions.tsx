@@ -34,6 +34,8 @@ const Submissions = (): React.JSX.Element => {
     direction: 'ascending'
   })
 
+  const[currentPage, setCurrentPage] = useState<number>(1) //pagination change setup
+
   const sort = (newColumn: SortKey, submission_list: SubmissionItem[] = submissions) => {
     const newDirection = column === newColumn ? 'descending' : 'ascending'
     setSortConfig({ column: newColumn, direction: newDirection })
@@ -47,18 +49,18 @@ const Submissions = (): React.JSX.Element => {
   }
 
   useEffect(() => {
-    loadSubmissions().then(() => setLoading(false))
-    socket?.on('new_submission', () => loadSubmissions())
-    socket?.on('update_submission', () => loadSubmissions())
-  }, [])
+    loadSubmissions(currentPage).then(() => setLoading(false))
+    socket?.on('new_submission', () => loadSubmissions(currentPage))
+    socket?.on('update_submission', () => loadSubmissions(currentPage))
+  }, [currentPage])
 
   /*
   @param page - page to query when paginating
   updates the new page of submissions
   */
-  const loadSubmissions = async () => {
+  const loadSubmissions = async (page: number) => {
     //include page as query, so that API can fetch it.
-    const response = await fetch(`${config.API_URL}/submissions`, {
+    const response = await fetch(`${config.API_URL}/submissions?page=${page}`, {
       headers: {
         Authorization: `Bearer ${localStorage.accessToken}`,
         'Content-Type': 'application/json'
@@ -110,7 +112,7 @@ const Submissions = (): React.JSX.Element => {
           content: 'We deleted the submissions you selected!'
         })
       }
-      loadSubmissions()
+      loadSubmissions(currentPage)
       setDeleting(false)
     }
   }
@@ -143,6 +145,7 @@ const Submissions = (): React.JSX.Element => {
         <></>
       )}
       <Checkbox toggle label="Show Released" checked={showReleased} onClick={onReleaseChange} />
+
 
       <Block size="xs-12" transparent>
         <Menu pointing secondary>
@@ -228,6 +231,17 @@ const Submissions = (): React.JSX.Element => {
           </Table.Body>
         </Table>
       </Block>
+      <Button
+        content="Previous Page"
+        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} 
+        disabled={currentPage <= 1} 
+      />
+      <Button
+        content="Next Page"
+        onClick={() => setCurrentPage(prev => prev + 1)}
+        disabled={submissions.length < 25} //only gives pages with existing entries (edge case bug if page has exactly 25)
+      />
+
     </Grid>
   )
 }

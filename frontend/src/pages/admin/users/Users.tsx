@@ -21,36 +21,6 @@ type SortConfig = {
   column: SortKey
   direction: 'ascending' | 'descending'
 }
-/*
- <Table sortable>
-        <Table.Header>
-        map shit here -> 
-         {users.map((user: UserItem) => (
-          <Table.Row>
-         {content}
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-         map each row here -> {users.map((user: UserItem) => (
-            <Table.Row key={user.uid} uuid={`${user.uid}`}>
-              <Table.Cell>
-                <input type="checkbox" checked={user.checked} id={user.uid} onChange={handleChange} />
-              </Table.Cell>
-              <Table.Cell className="space-between">
-                <Link to={`/admin/users/${user.uid}`}>{user.username}</Link>
-                {user.disabled && <Label color="red" content="Disabled" />}
-              </Table.Cell>
-              <Table.Cell>{user.role}</Table.Cell>
-              <Table.Cell>
-                <DivisionLabel division={user.division} />
-              </Table.Cell>
-              <Table.Cell>{user.school}</Table.Cell>
-              <Table.Cell>{user.display_name}</Table.Cell>
-            </Table.Row>
-          ))}
-        </Table.Body>
-      </Table>
-*/
 
 const Users = (): React.JSX.Element => {
   usePageTitle("Abacus | Users")
@@ -61,6 +31,10 @@ const Users = (): React.JSX.Element => {
   const [isDeleting, setDeleting] = useState(false)
   const [isImporting, setImporting] = useState(false)
   const [error, setError] = useState<string>()
+  
+  // Added state to track the current page
+  const [currentPage, setCurrentPage] = useState<number>(1) 
+
   const [{ column, direction }, setSortConfig] = useState<SortConfig>({
     column: 'username',
     direction: 'ascending'
@@ -81,18 +55,15 @@ const Users = (): React.JSX.Element => {
     )
   }
 
+  // Changed useEffect to load users based on the current page
   useEffect(() => {
-    loadUsers()
-  }, [])
+    loadUsers(currentPage) // Fetch users based on currentPage
+  }, [currentPage]) // Re-run this effect whenever the currentPage changes
 
-  /*
-  @param page - page to query when paginating
-  updates the new page of users.
-  */
-  const loadUsers = async () => {
+  const loadUsers = async (page: number) => {
     try {
-      //include page as query, so that API can fetch it.
-      const response = await fetch(`${config.API_URL}/users`, {
+      // API now includes the page parameter
+      const response = await fetch(`${config.API_URL}/users?page=${page}`, {
         headers: {
           Authorization: `Bearer ${localStorage.accessToken}`,
           'Content-Type': 'application/json'
@@ -176,18 +147,18 @@ const Users = (): React.JSX.Element => {
 
   const handleChange = ({ target: { id, checked } }: ChangeEvent<HTMLInputElement>) =>
     setUsers(users.map((user) => (user.uid == id ? { ...user, checked } : user)))
+
   const checkAll = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) =>
     setUsers(users.map((user) => ({ ...user, checked })))
 
   const createUserCallback = (response: Response) => {
-    if (response.ok) loadUsers()
+    if (response.ok) loadUsers(currentPage) // Reload users when a new user is created
   }
 
   const deleteSelected = async () => {
-    if (window.confirm('are you sure you want to delete these users?')) {
-      //if the user selects ok, then the code below runs, otherwise nothing occurs
+    if (window.confirm('Are you sure you want to delete these users?')) {
       if (users.filter((u) => u.checked && u.uid == user?.uid).length > 0) {
-        alert('Cannot delete currently logged in user!')
+        alert('Cannot delete the currently logged-in user!')
         return
       }
 
@@ -204,7 +175,7 @@ const Users = (): React.JSX.Element => {
       })
 
       if (response.ok) {
-        loadUsers()
+        loadUsers(currentPage) // Reload users after deletion
         const id = usersToDelete.join()
         window.sendNotification({
           id,
@@ -246,6 +217,18 @@ const Users = (): React.JSX.Element => {
         sort={{ column, direction }}
         onClickHeaderItem={(item: string) => sort(item)}
         onCheckAll={checkAll}
+      />
+      {/* Pagination controls */}
+      
+      <Button
+        content="Previous Page"
+        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} // Decrease page number but not below 1
+        disabled={currentPage <= 1} // Disable button if on the first page
+      />
+      <Button 
+        content="Next Page" 
+        onClick={() => setCurrentPage(prev => prev + 1)} // Increment page number
+        disabled={users.length<25} //only gives pages with existing entries (edge case bug if page has exactly 25)
       />
     </Grid>
   )

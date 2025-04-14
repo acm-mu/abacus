@@ -30,6 +30,9 @@ const Clarifications = (): React.JSX.Element => {
     direction: 'ascending'
   })
 
+//Track the current page
+  const[currentPage, setCurrentPage] = useState<number>(1)
+
   const onFilterChange = (event: React.FormEvent<HTMLInputElement>, { checked }: CheckboxProps) =>
     setShowClosed(checked || false)
   /*
@@ -37,9 +40,9 @@ const Clarifications = (): React.JSX.Element => {
   updates the new page of clarifications
   */
 
-  const loadClarifications = async () => {
+  const loadClarifications = async (page: number) => {
     //include page as query, so that API can fetch it.
-    const response = await fetch(`${config.API_URL}/clarifications`, {
+    const response = await fetch(`${config.API_URL}/clarifications?page=${page}`, {
       method: 'GET',
       headers: { Authorization: `Bearer ${localStorage.accessToken}` }
     })
@@ -55,6 +58,10 @@ const Clarifications = (): React.JSX.Element => {
     }
 
     setLoading(false)
+  }
+
+  const handleClarificationsCreated = () => {
+    loadClarifications(currentPage)
   }
 
   const sort = (newColumn: SortKey, clarification_list: ClarificationItem[] = clarifications) => {
@@ -90,18 +97,20 @@ const Clarifications = (): React.JSX.Element => {
       body: JSON.stringify({ cid: clarificationsToDelete })
     })
     setDeleting(false)
-    loadClarifications()
+    //restore clarifications again when deleting
+    loadClarifications(currentPage)
   }
 
+  //Load users based on current page 
   useEffect(() => {
-    loadClarifications()
-  }, [])
+    loadClarifications(currentPage)
+  }, [currentPage])
 
   if (isLoading) return <PageLoading />
 
   return (
     <>
-      <ClarificationModal trigger={<Button content="Create Clarification" />} />
+      <ClarificationModal trigger={<Button content="Create Clarification" />} onCreate={handleClarificationsCreated} />
       {clarifications.filter((clarification) => clarification.checked).length ? (
         <Button
           content="Delete Selected"
@@ -195,6 +204,12 @@ const Clarifications = (): React.JSX.Element => {
             )}
           </Table.Body>
         </Table>
+
+        <Button content="Previous Page" 
+        onClick={() => setCurrentPage(prev => Math.max(prev -1, 1))} disabled = {currentPage <= 1}/>
+        <Button content="Next Page" 
+        onClick= {() => setCurrentPage( prev => prev + 1 )} />
+      
       </Block>
     </>
   )
