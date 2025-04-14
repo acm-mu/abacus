@@ -108,7 +108,7 @@ const Problem = (): React.JSX.Element => {
         {settings && new Date() < settings?.end_date ? (
           <>
             <Button
-              disabled={submissions?.filter(({ status, released }) => status == 'pending' || !released).length !== 0}
+              disabled={submissions?.filter(({ status, released }) => status == 'pending' || status === 'accepted' || !released).length !== 0}
               as={Link}
               to={`/gold/problems/${problem?.id}/submit`}
               content="Submit"
