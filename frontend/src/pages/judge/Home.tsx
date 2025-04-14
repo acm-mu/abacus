@@ -94,138 +94,236 @@ const Home = (): React.JSX.Element => {
   if (!user) return <Unauthorized />
 
   // Render home page with tables
+  if (user.division === 'blue') {
+    return (
+      <>
+        <Block transparent size="xs-6">
+          <h1>
+            <Link to="/judge/submissions?filter=my_claimed">My Claimed Submissions</Link>
+          </h1>
+          <Table>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell content="Submission" />
+                <Table.HeaderCell content="User" />
+                <Table.HeaderCell content="Problem" />
+                <Table.HeaderCell content="Language" />
+              </Table.Row>
+            </Table.Header>
+
+            <Table.Body>
+              {myClaimedSubmissions && myClaimedSubmissions.length > 0 ? (
+                myClaimedSubmissions.slice(0, 5).map((submission) => {
+                  return (
+                    <Table.Row key={`my-claimed-${submission.sid}`}>
+                      <Table.Cell>
+                        <Link to={`/judge/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <Link to={`/judge/teams/${submission.tid}`}>{submission.team.display_name}</Link>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <Link to={`/judge/problems/${submission.pid}`}>{submission.problem.name}</Link>
+                      </Table.Cell>
+                      <Table.Cell>{submission.language}</Table.Cell>
+                    </Table.Row>
+                  )
+                })
+              ) : (
+                <Table.Row>
+                  <Table.Cell colSpan={'100%'}>There are no submissions that match this description.</Table.Cell>
+                </Table.Row>
+              )}
+            </Table.Body>
+          </Table>
+        </Block>
+
+        <Block transparent size="xs-6">
+          <h1>
+            <Link to="/judge/submissions?filter=pending">Unclaimed Submissions</Link>
+          </h1>
+
+          <Table>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell content="Submission" />
+                <Table.HeaderCell content="User" />
+                <Table.HeaderCell content="Problem" />
+                <Table.HeaderCell content="Language" />
+              </Table.Row>
+            </Table.Header>
+
+            <Table.Body>
+              {pendingSubmissions && pendingSubmissions.length > 0 ? (
+                pendingSubmissions.slice(0, 5).map((submission) => {
+                  return (
+                    <Table.Row key={`pending-${submission.sid}`}>
+                      <Table.Cell>
+                        <Link to={`/judge/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <Link to={`/judge/teams/${submission.tid}`}>{submission.team.display_name}</Link>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <Link to={`/judge/problems/${submission.pid}`}>{submission.problem.name}</Link>
+                      </Table.Cell>
+                      <Table.Cell>{submission.language}</Table.Cell>
+                    </Table.Row>
+                  )
+                })
+              ) : (
+                <Table.Row>
+                  <Table.Cell colSpan={'100%'}>There are no submissions that match this description.</Table.Cell>
+                </Table.Row>
+              )}
+            </Table.Body>
+          </Table>
+        </Block>
+
+        <Block transparent size="xs-12">
+          <h1>
+            <span>Submissions Next in Queue</span>
+          </h1>
+
+          <Table>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell content="Position" />
+                <Table.HeaderCell content="Submission" />
+                <Table.HeaderCell content="User" />
+                <Table.HeaderCell content="Problem" />
+                <Table.HeaderCell content="Claimer" />
+                <Table.HeaderCell content="Language" />
+              </Table.Row>
+            </Table.Header>
+
+            <Table.Body>
+              {doublyLinkedList && doublyLinkedList.length > 0 ? (
+                doublyLinkedList.slice(0, 5).map((submission, index) => {
+                  const position = index === 0 ? "Up Next" : (index + 1).toString()
+                  return (
+                    <Table.Row key={`claimed-${submission.sid}`}>
+                      <Table.Cell>{position}</Table.Cell>
+                      <Table.Cell>
+                        <Link to={`/judge/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <Link to={`/judge/teams/${submission.tid}`}>{submission.team.display_name}</Link>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <Link to={`/judge/problems/${submission.pid}`}>{submission.problem.name}</Link>
+                      </Table.Cell>
+                      <Table.Cell>{submission.claimed?.display_name}</Table.Cell>
+                      <Table.Cell>{submission.language}</Table.Cell>
+                    </Table.Row>
+                  )
+                })
+              ) : (
+                <Table.Row>
+                  <Table.Cell colSpan={'100%'}>There are no submissions that match this description.</Table.Cell>
+                </Table.Row>
+              )}
+            </Table.Body>
+          </Table>
+        </Block>
+      </>
+    )
+  }
+
+  if (user.division === 'gold') {
+    return (
+      <>
+        <Block transparent size="xs-6">
+          <h1>
+            <Link to="/judge/submissions?filter=my_claimed">My Claimed Submissions</Link>
+          </h1>
+          <Table>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell content="Submission" />
+                <Table.HeaderCell content="User" />
+                <Table.HeaderCell content="Problem" />
+                <Table.HeaderCell content="Language" />
+              </Table.Row>
+            </Table.Header>
+
+            <Table.Body>
+              {myClaimedSubmissions && myClaimedSubmissions.length > 0 ? (
+                myClaimedSubmissions.slice(0, 5).map((submission) => {
+                  return (
+                    <Table.Row key={`my-claimed-${submission.sid}`}>
+                      <Table.Cell>
+                        <Link to={`/judge/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <Link to={`/judge/teams/${submission.tid}`}>{submission.team.display_name}</Link>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <Link to={`/judge/problems/${submission.pid}`}>{submission.problem.name}</Link>
+                      </Table.Cell>
+                      <Table.Cell>{submission.language}</Table.Cell>
+                    </Table.Row>
+                  )
+                })
+              ) : (
+                <Table.Row>
+                  <Table.Cell colSpan={'100%'}>There are no submissions that match this description.</Table.Cell>
+                </Table.Row>
+              )}
+            </Table.Body>
+          </Table>
+        </Block>
+
+        <Block transparent size="xs-6">
+          <h1>
+            <Link to="/judge/submissions?filter=pending">Unclaimed Submissions</Link>
+          </h1>
+
+          <Table>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell content="Submission" />
+                <Table.HeaderCell content="User" />
+                <Table.HeaderCell content="Problem" />
+                <Table.HeaderCell content="Language" />
+              </Table.Row>
+            </Table.Header>
+
+            <Table.Body>
+              {pendingSubmissions && pendingSubmissions.length > 0 ? (
+                pendingSubmissions.slice(0, 5).map((submission) => {
+                  return (
+                    <Table.Row key={`pending-${submission.sid}`}>
+                      <Table.Cell>
+                        <Link to={`/judge/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <Link to={`/judge/teams/${submission.tid}`}>{submission.team.display_name}</Link>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <Link to={`/judge/problems/${submission.pid}`}>{submission.problem.name}</Link>
+                      </Table.Cell>
+                      <Table.Cell>{submission.language}</Table.Cell>
+                    </Table.Row>
+                  )
+                })
+              ) : (
+                <Table.Row>
+                  <Table.Cell colSpan={'100%'}>There are no submissions that match this description.</Table.Cell>
+                </Table.Row>
+              )}
+            </Table.Body>
+          </Table>
+        </Block>
+      </>
+    )
+  }
+
   return (
-    <>
-      <Block transparent size="xs-6">
-        <h1>
-          <Link to="/judge/submissions?filter=my_claimed">My Claimed Submissions</Link>
-        </h1>
-        <Table>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell content="Submission" />
-              <Table.HeaderCell content="User" />
-              <Table.HeaderCell content="Problem" />
-              <Table.HeaderCell content="Language" />
-            </Table.Row>
-          </Table.Header>
-
-          <Table.Body>
-            {myClaimedSubmissions && myClaimedSubmissions.length > 0 ? (
-              myClaimedSubmissions.slice(0, 5).map((submission) => {
-                return (
-                  <Table.Row key={`my-claimed-${submission.sid}`}>
-                    <Table.Cell>
-                      <Link to={`/judge/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <Link to={`/judge/teams/${submission.tid}`}>{submission.team.display_name}</Link>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <Link to={`/judge/problems/${submission.pid}`}>{submission.problem.name}</Link>
-                    </Table.Cell>
-                    <Table.Cell>{submission.language}</Table.Cell>
-                  </Table.Row>
-                )
-              })
-            ) : (
-              <Table.Row>
-                <Table.Cell colSpan={'100%'}>There are no submissions that match this description.</Table.Cell>
-              </Table.Row>
-            )}
-          </Table.Body>
-        </Table>
-      </Block>
-
-      <Block transparent size="xs-6">
-        <h1>
-          <Link to="/judge/submissions?filter=pending">Unclaimed Submissions</Link>
-        </h1>
-
-        <Table>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell content="Submission" />
-              <Table.HeaderCell content="User" />
-              <Table.HeaderCell content="Problem" />
-              <Table.HeaderCell content="Language" />
-            </Table.Row>
-          </Table.Header>
-
-          <Table.Body>
-            {pendingSubmissions && pendingSubmissions.length > 0 ? (
-              pendingSubmissions.slice(0, 5).map((submission) => {
-                return (
-                  <Table.Row key={`pending-${submission.sid}`}>
-                    <Table.Cell>
-                      <Link to={`/judge/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <Link to={`/judge/teams/${submission.tid}`}>{submission.team.display_name}</Link>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <Link to={`/judge/problems/${submission.pid}`}>{submission.problem.name}</Link>
-                    </Table.Cell>
-                    <Table.Cell>{submission.language}</Table.Cell>
-                  </Table.Row>
-                )
-              })
-            ) : (
-              <Table.Row>
-                <Table.Cell colSpan={'100%'}>There are no submissions that match this description.</Table.Cell>
-              </Table.Row>
-            )}
-          </Table.Body>
-        </Table>
-      </Block>
-
-      <Block transparent size="xs-12">
-        <h1>
-          <span>Submissions Next in Queue</span>
-        </h1>
-
-        <Table>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell content="Position" />
-              <Table.HeaderCell content="Submission" />
-              <Table.HeaderCell content="User" />
-              <Table.HeaderCell content="Problem" />
-              <Table.HeaderCell content="Claimer" />
-              <Table.HeaderCell content="Language" />
-            </Table.Row>
-          </Table.Header>
-
-          <Table.Body>
-            {doublyLinkedList && doublyLinkedList.length > 0 ? (
-              doublyLinkedList.slice(0, 5).map((submission, index) => {
-                const position = index === 0 ? "Up Next" : (index + 1).toString()
-                return (
-                  <Table.Row key={`claimed-${submission.sid}`}>
-                    <Table.Cell>{position}</Table.Cell>
-                    <Table.Cell>
-                      <Link to={`/judge/submissions/${submission.sid}`}>{submission.sid.substring(0, 7)}</Link>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <Link to={`/judge/teams/${submission.tid}`}>{submission.team.display_name}</Link>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <Link to={`/judge/problems/${submission.pid}`}>{submission.problem.name}</Link>
-                    </Table.Cell>
-                    <Table.Cell>{submission.claimed?.display_name}</Table.Cell>
-                    <Table.Cell>{submission.language}</Table.Cell>
-                  </Table.Row>
-                )
-              })
-            ) : (
-              <Table.Row>
-                <Table.Cell colSpan={'100%'}>There are no submissions that match this description.</Table.Cell>
-              </Table.Row>
-            )}
-          </Table.Body>
-        </Table>
-      </Block>
-    </>
+    <Block transparent size="xs-12">
+      <h1>Welcome Judge</h1>
+      <p>Division is not recognized.</p>
+    </Block>
   )
 }
 

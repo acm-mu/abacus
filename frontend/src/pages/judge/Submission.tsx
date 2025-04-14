@@ -174,7 +174,9 @@ const Submission = (): React.JSX.Element => {
       setSubmission({...submission, claimed: user, claimed_date: Date.now() / 1000})
       const updatedSubmission = { ...submission, claimed: user, claimed_date: Date.now() / 1000}
       // Enqueue the claimed submission
-      enqueue(updatedSubmission)
+      if (updatedSubmission.division === 'blue') {
+        enqueue(updatedSubmission)
+      }
     } else {
       try {
         const { message } = await response.json()
@@ -199,12 +201,21 @@ const Submission = (): React.JSX.Element => {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.accessToken}`
       },
-      body: JSON.stringify({ sid, claimed: null })
+      body: JSON.stringify({ sid, claimed: '', claimed_date: 0 })
     })
 
     if (response.ok) {
       // Clear claimed status
-      setSubmission({ ...submission, claimed: undefined })
+      setSubmission({ ...submission, claimed: undefined, claimed_date: undefined })
+      if (submission.division === 'blue') {
+        const isInQueue = queue.some((item) => item.sid === submission?.sid)
+        if (isInQueue) {
+          dequeue()
+        }
+        else {
+          removeAtDoublyLinkedList()
+        }
+      }
     } else {
       try {
         const { message } = await response.json()
@@ -260,10 +271,28 @@ const Submission = (): React.JSX.Element => {
     }
   }
 
+  const removeAtDoublyLinkedList = async () => {
+    const response = await fetch(`${config.API_URL}/submissions/removeAtDoublyLinkedList`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.accessToken}`
+      },
+      body: JSON.stringify({sid: submission.sid}) // Send submission to be removed from linked list
+    })
+    
+    if(response.ok)
+    {
+      console.log("frontend/src/pages/judge/Submission.tsx removed from linked list")
+    }
+  }
+
   // Function to release and dequeue the submission
-  const release_dequeue = () => {
+  const release_dequeue = async (division: string) => {
     release()
-    dequeue()
+    if (division === 'blue') {
+      dequeue()
+    }
   }
 
   // Function to disable score button for 30s after it has been clicked
@@ -320,7 +349,7 @@ const Submission = (): React.JSX.Element => {
                   icon="right arrow"
                   content="Release"
                   labelPosition="left"
-                  onClick={release_dequeue}
+                  onClick={() => release_dequeue(submission.division)}
                 />
               </>
             ) : (

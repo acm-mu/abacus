@@ -180,6 +180,7 @@ export const putSubmissions = async (req: Request, res: Response): Promise<void>
     // Get the existing submission using the submission ID (sid)
     const submission = await contest.get_submission(item.sid)
 
+    /*
     // Check if the 'claimed' field is being modified
     if (item.claimed !== undefined && submission.claimed !== undefined) {
       // Trying to change a claimed submission
@@ -188,6 +189,14 @@ export const putSubmissions = async (req: Request, res: Response): Promise<void>
         return
       }
     }
+    */
+
+    
+    if (item.claimed === '' && submission.claimed !== undefined) {
+      item.claimed = null
+      item.claimed_date = null
+    }
+    
 
     // Update the submission with the new data provided in the request
     await contest.update_submission(item.sid, item)

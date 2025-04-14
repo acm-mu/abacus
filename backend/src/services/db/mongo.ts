@@ -85,6 +85,7 @@ export default class MongoDB extends Database {
     })
   }
 
+  /*
   update(TableName: string, Key: Key, Item: Item): Promise<Item> {
     return new Promise((resolve, reject) => {
       const unsetFields = Object.assign(
@@ -106,6 +107,40 @@ export default class MongoDB extends Database {
             return
           }
           if (data) resolve(data as unknown as Item)
+        }
+      )
+    })
+  }
+  */
+
+  update(TableName: string, Key: Key, Item: Item): Promise<Item> {
+    return new Promise((resolve, reject) => {
+      const setFields: Record<string, any> = {}
+      const unsetFields: Record<string, any> = {}
+
+      // Separate the fields into $set and $unset
+      for (const key in Item) {
+        if (Item[key] === null) {
+          unsetFields[key] = "" // Remove the field if it's null
+        } else {
+          setFields[key] = Item[key] // Update the field with the new value
+        }
+      }
+
+      const updateOps: Record<string, any> = {}
+      if (Object.keys(setFields).length) updateOps['$set'] = setFields
+      if (Object.keys(unsetFields).length) updateOps['$unset'] = unsetFields
+
+      // Perform the update
+      this.db.collection(TableName).updateOne(
+        Key,
+        updateOps, // Apply both $set and $unset as needed
+        (err, data) => {
+          if (err) {
+            reject(err)
+            return
+          }
+          if (data) resolve(Item) // Return the original item as confirmation
         }
       )
     })
