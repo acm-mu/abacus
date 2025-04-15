@@ -62,6 +62,8 @@ class DoublyLinkedList<Submission extends RawSubmission>
     {
         if (this.tail)
         {
+            io.emit('update_doubly_linked_list', { sid: this.tail.data.sid })
+
             if (this.tail.prev)
             {
                 this.tail = this.tail.prev
@@ -95,6 +97,43 @@ class DoublyLinkedList<Submission extends RawSubmission>
         }
     }
 
+    // Function to remove node with specified sid 
+    removeAt(sid: string): void
+    {
+        let currentNode = this.head
+
+        while (currentNode)
+        {
+            if (currentNode.data.sid === sid)
+            {
+                if (currentNode === this.head)
+                {
+                    this.removeFirst()
+                }
+                else if (currentNode === this.tail)
+                {
+                    this.remove()
+                }
+                else
+                {
+                    if (currentNode.prev)
+                    {
+                        currentNode.prev.next = currentNode.next
+                    }
+                    if (currentNode.next)
+                    {
+                        currentNode.next.prev = currentNode.prev
+                    }
+                    this.size--
+
+                    io.emit('update_doubly_linked_list', { sid: sid })
+                }
+                return
+            }
+            currentNode = currentNode.next
+        }
+    }
+
     // Function to get a node at a specific index in the list
     getNodeAt(index: number): Node_<Submission> | null
     {
@@ -112,6 +151,7 @@ class DoublyLinkedList<Submission extends RawSubmission>
     {
         this.head = this.tail = null
         this.size = 0
+        io.emit('update_doubly_linked_list')
     }
 
     // Function to check if the list is empty

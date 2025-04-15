@@ -55,5 +55,17 @@ submissions.get('/submissions/submissionsDoublyLinkedList', isAuthenticated, (_r
     res.json(doublyLinkedList.get())
 })
 
+// Route to remove submission from doubly linked list
+submissions.post('/submissions/removeAtDoublyLinkedList', isAuthenticated, (req: Request, _res: Response) => {
+    const { sid } = req.body
+    doublyLinkedList.removeAt(sid)
+})
+
+// Route to clear both the queue and the doubly linked list
+submissions.post('/submissions/clearQueueAndDoublyLinkedList', isAuthenticated, (_req: Request, _res: Response) => {
+    submissionsQueue.clear()
+    doublyLinkedList.clear()
+})
+
 // Export the 'submissions' router to be used in the main app
 export default submissions

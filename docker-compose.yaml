@@ -17,10 +17,10 @@ services:
       context: backend
       network: host
     environment:
-      - MONGO_HOST=mongo
-      - MONGO_USER=MUad
-      - MONGO_PASS=ep16y11BPqP
-      - MONGO_DBNAME=admin
+      - MONGO_HOST=mongodb
+      - MONGO_USER=username
+      - MONGO_PASS=password
+      - MONGO_DBNAME=abacus
     volumes:
       - "./backend/src:/app/src"
     ports:

@@ -85,6 +85,7 @@ export class SubmissionsQueue<Submission extends RawSubmission>
     clear(): void
     {
         this.submissions = []
+        io.emit('update_queue')
     }
 
     // Checks if the specified submission is already in the queue

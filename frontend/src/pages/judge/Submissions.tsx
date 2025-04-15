@@ -40,6 +40,8 @@ const Submissions = (): React.JSX.Element => {
   const [showReleased, setShowReleased] = useState(false)
   // Get filter query parameter from URL
   const filter = new URLSearchParams(window.location.search).get('filter')
+  // State to store submission queue
+  const [queue, setQueue] = useState<Submission[]>([])
 
   // Access the user context to retrieve current user data
   const { user } = useContext(AppContext)
@@ -64,11 +66,13 @@ const Submissions = (): React.JSX.Element => {
     )
   }
 
-  // Effect hook to load submissions on component mount and set up socket listeners for real-time updates
+  // Effect hook to load submissions and queue on component mount and set up socket listeners for real-time updates
   useEffect(() => {
     loadSubmissions().then(() => setLoading(false))
+    loadQueue()
     socket?.on('new_submission', loadSubmissions)
     socket?.on('update_submission', loadSubmissions)
+    socket?.on('update_queue', loadQueue)
     return () => setMounted(false)
   }, [])
 
@@ -88,6 +92,20 @@ const Submissions = (): React.JSX.Element => {
         .filter((submission) => !submission.team.disabled)
         .map((submission) => ({ ...submission, checked: false }))
     )
+  }
+
+  // Function to load submissions queue
+  const loadQueue = async () => {
+    const response = await fetch(`${config.API_URL}/submissions/submissionsQueue`,{
+      headers: { Authorization: `Bearer ${localStorage.accessToken}` }
+    })
+
+    if (response.ok) {
+      // Get the submission queue data
+      const queueData = await response.json()
+      // Set the queue data to state
+      setQueue(queueData)
+    }
   }
 
   // Function to enqueue a submission to the queue
@@ -161,7 +179,9 @@ const Submissions = (): React.JSX.Element => {
       const oldSubmission = submissions.filter((sub) => sub.sid === sid)[0]
       const updatedSubmission = { ...oldSubmission, claimed: user, claimed_date: Date.now() / 1000 } as Submission
       // Enqueue the updated submission
-      enqueue(updatedSubmission)
+      if (updatedSubmission.division === 'blue') {
+        enqueue(updatedSubmission)
+      }
     }
 
     setClaiming({ ...isClaiming, [sid]: false })
@@ -176,14 +196,58 @@ const Submissions = (): React.JSX.Element => {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.accessToken}`
       },
-      body: JSON.stringify({ sid, claimed: null })
+      body: JSON.stringify({ sid, claimed: '', claimed_date: 0 })
     })
 
     if (response.ok) {
-      setSubmissions(submissions.map((sub) => (sub.sid == sid ? { ...sub, claimed: undefined } : sub)))
+      setSubmissions(submissions.map((sub) => (sub.sid == sid ? { ...sub, claimed: undefined, claimed_date: undefined } : sub)))
+      const submission = submissions.filter((sub) => sub.sid === sid)[0]
+      if (submission.division === 'blue') {
+        const isInQueue = queue.some((item) => item.sid === submission?.sid)
+        if (isInQueue) {
+          dequeue(submission)
+        }
+        else {
+          removeAtDoublyLinkedList(submission)
+        }
+      }
     }
 
     setClaiming({ ...isClaiming, [sid]: false })
+  }
+
+  // Function to dequeue a submission from the submission queue
+  const dequeue = async (submission: Submission) => {
+    const response = await fetch(`${config.API_URL}/submissions/submissionsDequeue`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.accessToken}`
+      },
+      body: JSON.stringify({sid: submission.sid}) // Send submission to dequeue
+    })
+    
+    if(response.ok)
+    {
+      console.log("frontend/src/pages/judge/Submission.tsx dequeue here")
+    }
+  }
+
+  // Function to remove submission from doubly linked list
+  const removeAtDoublyLinkedList = async (submission: Submission) => {
+    const response = await fetch(`${config.API_URL}/submissions/removeAtDoublyLinkedList`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.accessToken}`
+      },
+      body: JSON.stringify({sid: submission.sid}) // Send submission to be removed from linked list
+    })
+    
+    if(response.ok)
+    {
+      console.log("frontend/src/pages/judge/Submission.tsx removed from linked list")
+    }
   }
 
   // URL filter function for filtering based on submission status
