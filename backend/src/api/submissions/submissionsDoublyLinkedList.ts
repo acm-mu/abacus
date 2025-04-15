@@ -97,6 +97,7 @@ class DoublyLinkedList<Submission extends RawSubmission>
         }
     }
 
+    // Function to remove node with specified sid 
     removeAt(sid: string): void
     {
         let currentNode = this.head

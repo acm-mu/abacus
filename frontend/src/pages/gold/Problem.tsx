@@ -9,13 +9,20 @@ import { AppContext } from 'context'
 import { userHome } from 'utils'
 import { usePageTitle } from 'hooks'
 
+// Gold Problems Page Component
 const Problem = (): React.JSX.Element => {
+  // Access the user and settings context to retrieve current user data and setting data
   const { user, settings } = useContext(AppContext)
+  // Track loading state
   const [isLoading, setLoading] = useState(true)
+  // Store the problem
   const [problem, setProblem] = useState<ProblemType>()
+  // Route param (problem ID from URL)
   const { pid } = useParams<{ pid: string }>()
 
+  // Store the submissions list
   const [submissions, setSubmissions] = useState<Submission[]>()
+  // Get latest submission (if any) using useMemo to avoid unnecessary recalculations
   const latestSubmission = useMemo(() => {
     if (!submissions?.length || !user) return <></>
     const { sid } = submissions[submissions.length - 1]
@@ -26,10 +33,13 @@ const Problem = (): React.JSX.Element => {
     )
   }, [submissions])
 
+  // Track component mounted status
   const [isMounted, setMounted] = useState(true)
 
+  // Set the page title dynamically
   usePageTitle(`Abacus | ${problem?.name ?? ""}`)
 
+  // Effect hook to load problem on component mount
   useEffect(() => {
     loadProblem().then(() => {
       setLoading(false)
@@ -39,6 +49,7 @@ const Problem = (): React.JSX.Element => {
     }
   }, [])
 
+  // Function to load problem data and user's submissions for this specific problem
   const loadProblem = async () => {
     let response = await fetch(
       `${config.API_URL}/problems?division=gold&id=${pid}&columns=description,project_id,design_document`,
@@ -69,12 +80,16 @@ const Problem = (): React.JSX.Element => {
     }
   }
 
+  // If competition hasn't started and user isn't in the right division or role, block access
   if (!settings || new Date() < settings.start_date)
     if (user?.division != 'gold' && user?.role != 'admin') return <Unauthorized />
 
+  // Show loading spinner while data is being fetched
   if (isLoading) return <PageLoading />
+  // If problem data doesn't exist, show not found page
   if (!problem) return <NotFound />
 
+  // Main component rendering
   return (
     <>
       <Countdown />

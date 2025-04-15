@@ -271,6 +271,7 @@ const Submission = (): React.JSX.Element => {
     }
   }
 
+  // Function to remove submission from doubly linked list
   const removeAtDoublyLinkedList = async () => {
     const response = await fetch(`${config.API_URL}/submissions/removeAtDoublyLinkedList`, {
       method: 'POST',

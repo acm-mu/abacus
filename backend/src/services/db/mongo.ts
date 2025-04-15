@@ -85,34 +85,6 @@ export default class MongoDB extends Database {
     })
   }
 
-  /*
-  update(TableName: string, Key: Key, Item: Item): Promise<Item> {
-    return new Promise((resolve, reject) => {
-      const unsetFields = Object.assign(
-        {},
-        ...Object.entries(Item)
-          .filter((obj) => obj[1] === undefined || obj[1] === null)
-          .map((obj) => ({ [`${obj[0]}`]: 1 }))
-      )
-
-      this.db.collection(TableName).updateOne(
-        Key,
-        {
-          $set: Item,
-          $unset: unsetFields
-        },
-        (err, data) => {
-          if (err) {
-            reject(err)
-            return
-          }
-          if (data) resolve(data as unknown as Item)
-        }
-      )
-    })
-  }
-  */
-
   update(TableName: string, Key: Key, Item: Item): Promise<Item> {
     return new Promise((resolve, reject) => {
       const setFields: Record<string, any> = {}

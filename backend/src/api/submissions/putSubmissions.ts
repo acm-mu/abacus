@@ -180,24 +180,12 @@ export const putSubmissions = async (req: Request, res: Response): Promise<void>
     // Get the existing submission using the submission ID (sid)
     const submission = await contest.get_submission(item.sid)
 
-    /*
-    // Check if the 'claimed' field is being modified
-    if (item.claimed !== undefined && submission.claimed !== undefined) {
-      // Trying to change a claimed submission
-      if (req.user?.role !== 'admin' && item.claimed !== null) {
-        res.status(403).send({ message: 'This submission is already claimed!' })
-        return
-      }
-    }
-    */
-
-    
+    // Set claimed and claimed_date to null to remove those attributes from the submission data entry in the database
     if (item.claimed === '' && submission.claimed !== undefined) {
       item.claimed = null
       item.claimed_date = null
     }
     
-
     // Update the submission with the new data provided in the request
     await contest.update_submission(item.sid, item)
 
