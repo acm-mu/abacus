@@ -23,6 +23,7 @@ const BlueNavigation = (): React.JSX.Element => {
       {hasAccessTo() ? <Menu.Item as={NavLink} to="/blue/submissions" content="Submissions" /> : <></>}
       {hasAccessTo() ? <Menu.Item as={NavLink} to="/blue/clarifications" content="Clarifications" /> : <></>}
       {isBeforeCompetition() ? <Menu.Item as={NavLink} to="/blue/practice" content="Practice" /> : <></>}
+      {hasAccessTo() ? <Menu.Item as={NavLink} to="/blue/IDE" content="IDE"/> : <></>}
     </Navigation>
   )
 }

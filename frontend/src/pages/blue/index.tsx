@@ -13,6 +13,7 @@ import Submit from './Submit'
 import Clarifications from '../Clarifications'
 import Practice from './practice'
 import Rules from './Rules'
+import IDE from './IDE'
 
 const Blue = (): React.JSX.Element => (
   <>
@@ -32,6 +33,7 @@ const Blue = (): React.JSX.Element => (
         <Route path="clarifications" element={<Clarifications />} />
         <Route path="practice" element={<Practice />} />
         <Route path="rules" element={<Rules />} />
+        <Route path="IDE" element={<IDE />} />
         <Route path="" element={<Home />} />
         <Route element={<NotFound />} />
       </Routes>

@@ -63,7 +63,7 @@ export const postAuth = async (req: Request, res: Response): Promise<void> => {
   const bodyData = matchedData(req)
   bodyData.username = bodyData.username.toLowerCase()
   bodyData.password = createHash('sha256').update(bodyData.password).digest('hex')
-
+  
   try {
     const users = await contest.get_users(bodyData)
     if (!users?.length) {

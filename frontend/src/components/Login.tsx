@@ -40,6 +40,8 @@ const LoginModal = ({ trigger, open }: LoginModalProps): React.JSX.Element => {
         },
         body: JSON.stringify(formData)
       })
+      console.log(formData) 
+      console.log(response) 
       if (response.status == 200) {
         const { accessToken, ...user } = await response.json()
         localStorage.setItem('accessToken', accessToken)

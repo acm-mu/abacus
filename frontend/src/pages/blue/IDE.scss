@@ -1,0 +1,46 @@
+.IDEMain{
+    width: 100vw; 
+    height: 100vh;
+    margin-left: 0; 
+    padding-left: 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.IDEExecutables{ 
+    display: flex;
+}
+
+.executeCode{ 
+    display: flex;
+    padding-left: 444px;
+}
+
+.executeCode-btn{ 
+    background-color: white;
+    border: none;   
+    border-radius: 6px;
+    color: black;
+}
+
+.executeCode-btn:hover{ 
+    background-color: darkGrey;
+}
+
+.executeCode-btn:active{ 
+    background-color: gray;
+}
+
+.IDEContainer{ 
+    display: flex; 
+    justify-content: flex-start;
+    height: 80%;
+    width: 60%;
+}
+
+.IDEResults{ 
+    width: 39%; 
+    height: 80%;
+    border: 1px solid grey;  
+    border-radius: 5px;
+}

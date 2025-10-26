@@ -12,12 +12,12 @@ export default class MongoDB extends Database {
   constructor() {
     super()
 
-    const { MONGO_HOST, MONGO_USER, MONGO_PASS, MONGO_DBNAME } = process.env
-    const url = `mongodb://${MONGO_USER}:${MONGO_PASS}@${MONGO_HOST}/${MONGO_DBNAME}`
+    const { MONGO_HOST, /*MONGO_USER, MONGO_PASS,*/ MONGO_DBNAME } = process.env
+    const url = `mongodb://${MONGO_HOST}/${MONGO_DBNAME}`
 
     MongoClient.connect(url, (err, db) => {
       if (err) throw err
-      if (!db) throw new Error('Could not connect to MongoDB database')
+      if (!db) throw new Error('Could not connect to MongoDB database') 
       this.db = db.db('abacus')
     })
   }
